@@ -1,0 +1,53 @@
+.score1{
+    background: linear-gradient(153deg, #FFE2EE 16.88%, #FFC8DA 94.79%)!important;
+    color:#D07775
+}
+.score2{
+    background: linear-gradient(153deg, #F0F3FD 16.88%, #BECBFC 94.79%) !important;
+    color:#7D85C0
+}
+.score3{
+    background: linear-gradient(153deg, #DCFEE1 16.88%, #BDFDC3 94.79%)!important;
+    color:#6FAF6E
+}
+.score4{
+    background: linear-gradient(153deg, #E2F7FF 16.88%, #BEE9FF 94.79%)!important;
+    color:#6CA6C1;
+}
+.score5{
+    background: linear-gradient(153deg, #FFEEE3 16.88%, #FEDBC6 94.79%)!important;
+    color:#CB9A65
+}
+.text-score1{
+    color:#FFC8DB
+
+}
+.text-score2{
+    color:#D8E1FF
+}
+.text-score3{
+    color:#CBFFD1
+
+}
+.text-score4{
+    color:#C0EAFF
+}
+.text-score5{
+    color:#FFE2D1
+}
+
+.score1{
+    color:#D07775
+}
+.DScore2{
+    color:#7D85C0
+}
+.DScore3{
+    color:#6FAF6E
+}
+.DScore4{
+    color:#6CA6C1;
+}
+.DScore5{
+    color:#CB9A65
+}

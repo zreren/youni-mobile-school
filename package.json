@@ -1,12 +1,23 @@
 {
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3005",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
+    "@babel/preset-react": "^7.18.6",
+    "@fullcalendar/common": "^5.11.3",
+    "@fullcalendar/daygrid": "^5.11.3",
+    "@fullcalendar/interaction": "^5.11.3",
+    "@fullcalendar/react": "^5.11.2",
+    "@fullcalendar/timegrid": "^5.11.3",
+    "classnames": "^2.3.2",
+    "daisyui": "^2.31.0",
+    "eslint": "^8.25.0",
     "next": "latest",
+    "next-transpile-modules": "^9.1.0",
+    "prettier": "^2.7.1",
     "react": "18.1.0",
     "react-dom": "18.1.0"
   },
