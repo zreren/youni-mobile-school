@@ -1,0 +1,4 @@
+.fc-theme-standard td, .fc-theme-standard th{
+   border:none !important; 
+   background: black;
+}

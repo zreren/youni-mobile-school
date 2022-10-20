@@ -40,7 +40,12 @@ module.exports = {
       'score3': '#6FAF6E',
       'score4': '#6CA6C1',
       'score5': '#CB9A65',
+      'blueTitle': '#37455C'
   },
+  colors:{
+    'bg':'#f6f6f6',
+    'light-yellow':'#f6f6f6'
+  }
 },
   },
   plugins: [

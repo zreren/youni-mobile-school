@@ -28,14 +28,16 @@ export default function CCircleRanking(props: TCCRating) {
   const classNames1 = classnames('radial-progress bg-transparent', [
     `${styles[colorTable(score)]}`,
   ]);
-  const textClassNames = classnames('font-bold bg-transparent text-opacity-100', [
-    `${styles[`DScore${String(score).substring(0,1)}`]}`,
-  ]);
+  const textClassNames = classnames(
+    'font-bold bg-transparent text-opacity-100',
+    [`${styles[`DScore${String(score).substring(0, 1)}`]}`],
+  );
   const text2ClassNames = classnames('text-xs ', [
-    `${styles[`DScore${String(score).substring(0,1)}`]}`,
+    `${styles[`DScore${String(score).substring(0, 1)}`]}`,
   ]);
   return (
     <>
+      {/* @ts-ignore */}
       <div className={classNames1} style={{ '--value': score * 20 }}>
         <div className="w-full flex flex-col justify-center items-center">
           <div className={textClassNames}>{score}</div>

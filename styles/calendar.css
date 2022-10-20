@@ -1,0 +1,13 @@
+.fc-theme-standard th{
+   border:none !important; 
+}
+.fc-theme-standard td{
+   border: none !important;;
+   border-bottom:1px dashed rgba(220, 221, 225, 1) !important;
+}
+tbody tr:nth-child(2n){
+   color:rgba(220, 221, 225, 1) !important;
+}
+tbody tr:nth-child(n){
+   color: rgba(169, 176, 192, 1)!important;;
+}

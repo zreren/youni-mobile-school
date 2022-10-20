@@ -51,3 +51,11 @@
 .DScore5{
     color:#CB9A65
 }
+
+.light-blue{
+    background: linear-gradient(153deg, #E2F7FF 16.88%, #BEE9FF 94.79%);
+}
+
+.light-purple{
+    background: linear-gradient(153deg, #F0F3FD 16.88%, #BECBFC 94.79%);
+}
