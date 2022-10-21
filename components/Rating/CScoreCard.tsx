@@ -27,7 +27,7 @@ export default function CScoreCard(props) {
     case 2:
       return (
         <div className="w-24 h-14">
-          <div className="w-full h-1.8/3 bg-gray-200 text-center rounded-t-lg font-medium">
+          <div className="w-full text-blueTitle text-lg h-1.8/3 bg-gray-200 text-center rounded-t-lg font-medium">
             3.2
           </div>
           <div className="w-full h-1.2/3 bg-gray-100 text-center text-gray-400">

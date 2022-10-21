@@ -6,7 +6,7 @@ import './index.module.css';
 function Calendar() {
   // const
   return (
-    <CommonLayout>
+    <div>
       <div className="h-full w-full">
         <FullCalendar
           plugins={[dayGridPlugin]}
@@ -15,22 +15,27 @@ function Calendar() {
           events={[
             {
               id: 'a',
-              title: 'my event',
+              title: 'ADMS',
               content:'111',
               start: '2022-10-19T10:30:00',
               end: '2022-10-19T12:30:00',
               extendedProps: {
-                department: 'BioChemistry'
+                department: 'HNE 038',
+                online:true,
+                section:'S',
               },
-              descrition: 'Lecture',
+              description: 'Lecture',
               type: 0
             },
           ]}
           eventContent={
             (arg:any)=>(
             <div className='flex flex-col justify-center h-full items-center'>
-              <div className='font-medium text-xs'>{arg.event.title}</div>
-               <div className='font-light'>{arg.event.extendedProps.descrition}</div>
+              <div className='font-light text-xs overflow-hidden'>{arg.event.title}</div>
+               <div className='font-light'>Section {arg.event.extendedProps.section}</div>
+               <div className='font-light'>{arg.event.extendedProps.department}</div>
+               <div className='font-light'>{arg.event.extendedProps.online?'线上课程':'线下课程'}</div>
+
             </div>
             )
           }
@@ -61,7 +66,7 @@ function Calendar() {
           // h-screen"
         />
       </div>
-    </CommonLayout>
+    </div>
   );
 }
 export default Calendar;

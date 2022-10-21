@@ -29,10 +29,13 @@ const Home: NextPage = () => {
         course-evaluation
       </a>
       <Link href="/Schedules/Schedules">
-    Schedules
+     课程表
+      </Link>
+      <Link href="/Course/course" className='link'>
+        课程分类
       </Link>
       <a className="link" href="./professor/professor-evaluation">
-      professor-evaluation
+      教授列表
       </a>
       <CButton size="normal">添加</CButton>
       <CButton size="full">添加</CButton>

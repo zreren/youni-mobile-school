@@ -1,0 +1,21 @@
+.red{
+    background: linear-gradient(260.85deg, #FE8B8E -1.17%, #FB5D62 94.12%);
+}
+
+
+.blue{
+    background: linear-gradient(260.85deg, #5BAAFF -1.17%, #2F88FF 94.12%);
+}
+.yellow{
+    background: linear-gradient(260.85deg, #FFC06C -1.17%, #FFA241 94.12%);
+}
+.green{
+    background: linear-gradient(260.85deg, #37B9B4 -1.17%, #00A7A9 94.12%);
+}
+
+.pink{
+    background: linear-gradient(260.85deg, #FF77D0 -1.17%, #FF34AE 94.12%);
+}
+.purple{
+    background: linear-gradient(260.85deg, #7230F1 -1.17%, #7230F1 94.12%);
+}

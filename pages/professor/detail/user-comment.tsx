@@ -22,8 +22,8 @@ export default function userComment() {
         <div className="text-blueTitle">ADMS 1000</div>
       </div>
       <div className='flex space-x-2 mb-1 mt-1'>
-        <div className="text-gray-300">课程名称:</div>
-        <div className="text-blueTitle">ADMS 1000</div>
+        <div className="text-gray-300">最终成绩:</div>
+        <div className="text-blueTitle">B+</div>
       </div>
       <div className="flex justify-between mt-4">
         <CScoreCard type={2}></CScoreCard>

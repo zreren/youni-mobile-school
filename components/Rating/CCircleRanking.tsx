@@ -25,7 +25,7 @@ export default function CCircleRanking(props: TCCRating) {
       return 'text-score5';
     }
   };
-  const classNames1 = classnames('radial-progress bg-transparent', [
+  const classNames1 = classnames('radial-progress ', [
     `${styles[colorTable(score)]}`,
   ]);
   const textClassNames = classnames(
