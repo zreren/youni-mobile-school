@@ -1,13 +1,49 @@
 .fc-theme-standard th{
-   border:none !important; 
+   border:none ; 
+   border-bottom: 1px dashed rgba(220, 221, 225, 1) ;
+
+}
+.fc-col-header {
+   border-bottom: 1px solid rgba(220, 221, 225);
 }
 .fc-theme-standard td{
-   border: none !important;;
-   border-bottom:1px dashed rgba(220, 221, 225, 1) !important;
+   border: none ;
+   border-bottom: 1px dashed rgba(220, 221, 225, 1) !important;
+   font-size: 10px;
 }
 tbody tr:nth-child(2n){
-   color:rgba(220, 221, 225, 1) !important;
+   color:rgba(220, 221, 225, 1) ;
 }
-tbody tr:nth-child(n){
-   color: rgba(169, 176, 192, 1)!important;;
+tbody tr:nth-child(2n+1){
+   color: rgba(169, 176, 192, 1);
+}
+tbody tr:last-child{
+ border-bottom: 1px solid rgba(255, 255, 255, 1) !important;
+}
+.fc-event-main .fc-event-title-container{
+   display: flex ;
+   justify-content: center ;
+   align-items: center ;
+}
+.fc-event-title {
+   text-align: center ;
+}
+
+.fc-timegrid-slot .fc-timegrid-slot-label .fc-scrollgrid-shrink{
+   width: 10px;
+}
+.fc-timegrid-axis{
+   width: 10px;
+}
+.fc-day-today .fc-col-header-cell-cushion {
+   font-size: 14px;
+   color: #FFD036 ;
+}
+
+.fc-day-past .fc-col-header-cell-cushion {
+   font-size: 12px;
+   color:#c3c3c3 ;
+}
+.fc-scrollgrid {
+   background: white;
 }
