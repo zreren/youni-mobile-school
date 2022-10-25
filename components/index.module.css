@@ -1,0 +1,15 @@
+.origin {
+  color: rgba(255, 129, 0, 1);
+}
+
+.lightOrigin {
+  color: #f0f3fd;
+}
+
+.Cbg-lightOrigin {
+  background-color: rgba(255, 230, 215, 0.5);
+}
+
+.Cbg-origin {
+  background: linear-gradient(246.83deg, #ff9550 1.14%, #ff8100 93.03%), #ffffff;
+}

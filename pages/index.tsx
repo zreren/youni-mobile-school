@@ -10,6 +10,8 @@ import CourseScoreCard from '../components/CourseScoreCard';
 import Header from '../components/Header';
 import CButtonNoLine from '../components/Button/CButtonNoLine';
 import Link from 'next/link';
+import SaveToLibButton from '@/components/Button/SaveToLibButton';
+import CDataGrip from '@/components/CDataGrip';
 const Home: NextPage = () => {
   enum TSize {
     normal,
@@ -22,20 +24,23 @@ const Home: NextPage = () => {
   ];
   return (
     <div className="bg-gray-50 p-4 flex flex-col space-y-8">
-      <Header title='临时展示页面'>
+      <Header title="临时展示页面">
         <CButton size="normal">添加</CButton>
       </Header>
+      <CDataGrip></CDataGrip>
       <a className="link" href="./course-evaluation">
-        course-evaluation
+       课程评价
       </a>
-      <Link href="/Schedules/Schedules">
-     课程表
-      </Link>
-      <Link href="/Course/course" className='link'>
+      <Link href="/Schedules/Schedules">课程表</Link>
+      <div className="w-full flex space-x-2">
+        <SaveToLibButton color="#3665FF" icon="wechat" title="保存到相册"></SaveToLibButton>
+        <SaveToLibButton color="#FFD036" icon="share" title="分享课表"></SaveToLibButton>
+      </div>
+      <Link href="/Course/course" className="link">
         课程分类
       </Link>
       <a className="link" href="./professor/professor-evaluation">
-      教授列表
+        教授列表
       </a>
       <CButton size="normal">添加</CButton>
       <CButton size="full">添加</CButton>
@@ -50,7 +55,7 @@ const Home: NextPage = () => {
         return <ProfessorCard data={item}></ProfessorCard>;
       })}
       <div className="p-5">
-        <CProgress data={{id:1,item:'text',percent:'3'}}></CProgress>
+        <CProgress data={{ id: 1, item: 'text', percent: '3' }}></CProgress>
       </div>
       <div>
         <CCircleRanking score={4.1}></CCircleRanking>
@@ -68,11 +73,11 @@ const Home: NextPage = () => {
   );
 };
 export const getStaticProps = async (context) => {
-  console.log(context,'context')
+  console.log(context, 'context');
   return {
     props: {
-      deals: []
+      deals: [],
     },
   };
-}
+};
 export default Home;

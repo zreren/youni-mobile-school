@@ -11,7 +11,7 @@ export default function Header(props: any) {
           onClick={() => {
             router.back();
           }}
-          className="w-1/3"
+          className="w-1/6"
         >
           <svg
             width="8"
@@ -28,8 +28,8 @@ export default function Header(props: any) {
             />
           </svg>
         </div>
-        <div className="text-lg font-medium w-1/3 text-center">{title}</div>
-        <div className='w-1/3 flex justify-end'>{children}</div>
+        <div className="text-lg font-medium w-2/3 text-center">{title}</div>
+        <div className="w-1/6 flex justify-end">{children}</div>
       </div>
       <div className="mb-11"></div>
     </>

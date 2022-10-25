@@ -8,7 +8,7 @@ interface ICourseScoreCard {
 export default function CourseScoreCard(props: ICourseScoreCard) {
   const { score } = props.data;
   return (
-    <div className="flex p-6 items-align bg-white justify-between">
+    <div className="flex p-6 items-align bg-white justify-between rounded-xl">
       <div className="h-1/1 flex flex-col content-between  ">
         <div className="text-xl ">ECON 1000</div>
         <div className="text-gray-400 text-sm flex-grow">
@@ -33,7 +33,9 @@ export default function CourseScoreCard(props: ICourseScoreCard) {
           </div>
         </div>
       </div>
+      <div className='h-full'>
       <CCircleRanking score={score}></CCircleRanking>
+      </div>
     </div>
   );
 }

@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 export default function professorEvaluation() {
   const router = useRouter();
   return (
-    <CommonLayout>
+    <CommonLayout isBottom={true}>
       <Header title="教授列表"></Header>
       <Search placeholder="搜索教授"></Search>
       <Title title="教授列表"></Title>
@@ -21,7 +21,7 @@ export default function professorEvaluation() {
               data={item}
               key={item.id}
               onClick={() => {
-                router.push(`./detail/${item.id}`)
+                router.push(`/professor/detail/${item.id}`)
               }}
             ></ProfessorCard>
           );

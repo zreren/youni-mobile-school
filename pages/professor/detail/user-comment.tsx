@@ -33,15 +33,15 @@ export default function userComment() {
       <div className='mt-2 mb-2'>
       这门课需要大量的练习和时间，但有可能做得好。
       </div>
-      <div>
+      <div className='pb-2'>
         <div className='text-sm font-bold text-blueTile'>课程内容</div>
         <div className='text-sm tracking-wide	 font-extralight  text-blueTile leading-normal'>这是普通化学序列的第一部分，在第一单元中涵盖了CHM1025的大部分内容。</div>
       </div>
-      <div>
+      <div className='pb-2'>
         <div className='text-sm font-bold text-blueTile'>对课程的评价</div>
         <div className='text-sm tracking-wide	 font-extralight text-blueTile leading-normal'>哈里斯博士是一位乐于助人、招人喜欢的教授。比起他的讲座视频，我更喜欢阅读教科书和额外的在线资源，但在面授和办公时间，他很细心，知识渊博。</div>
       </div>
-      <div>
+      <div className='pb-2'>
         <div className='text-sm font-bold text-blueTile'>
         建议
         </div>

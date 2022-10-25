@@ -8,23 +8,24 @@ import CButtonNoLine from '@/components/Button/CButtonNoLine';
 import CourseScoreCard from '@/components/CourseScoreCard';
 export default function course() {
   return (
-    <CommonLayout>
+    <CommonLayout  isBottom={true}>
       <Header title="课程评价" />
       <Title title="按专业查询"></Title>
       <Search placeholder="搜索课程"></Search>
-      <div className="space-y-4 mt-4">
-        <div className="flex space-x-4">
+      <div className="space-y-2 mt-4">
+        <div className="flex space-x-2">
           <CategoryButton color="red"></CategoryButton>
           <CategoryButton color="blue"></CategoryButton>
         </div>
-        <div className="flex space-x-4">
+        <div className="flex space-x-2">
           <CategoryButton color="yellow"></CategoryButton>
           <CategoryButton color="green"></CategoryButton>
         </div>
-        <div className="flex space-x-4">
+        <div className="flex space-x-2">
           <CategoryButton color="pink"></CategoryButton>
           <CategoryButton color="purple"></CategoryButton>
         </div>
+        <button className='btn border-none btn-sm w-full bg-white text-gray-400'>查看全部</button>
       </div>
       <Title title="热门课程">
         <CButtonNoLine></CButtonNoLine>

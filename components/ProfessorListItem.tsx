@@ -14,7 +14,7 @@ const ProfessorCard:React.FunctionComponent<TProfessorCard>=(props)=> {
     <div onClick={props.onClick} className="w-4/4 bg-white flex justify-between shadow-sm rounded items-center overflow-hidden	">
       <div className="flex items-center space-x-3 ml-4">
         <div className="avatar placeholder">
-          <div className="bg-neutral-focus text-neutral-content rounded-full w-8">
+          <div className="bg-neutral-focus text-neutral-content rounded-full w-6">
             <img src="https://placeimg.com/192/192/people" />
           </div>
         </div>

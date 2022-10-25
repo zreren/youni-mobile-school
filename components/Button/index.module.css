@@ -19,3 +19,6 @@
 .purple{
     background: linear-gradient(260.85deg, #7230F1 -1.17%, #7230F1 94.12%);
 }
+.text-PingFang{
+    font-family: 'PingFang SC';
+}

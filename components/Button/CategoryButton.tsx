@@ -12,10 +12,10 @@ export default function CategoryButton(props) {
       )}
     >
       <div>
-        <div className="text-md font-semibold">ADMS</div>
+        <div className="text-base font-semibold text-PingFang">ADMS</div>
         <div className="text-xs font-normal text-opacity-80">行政管理</div>
       </div>
-      <div className='pr-2'>
+      <div className="pr-2">
         <svg
           width="16"
           height="16"
