@@ -6,7 +6,7 @@ import Logo from './logo.png';
 import Button from '@mui/material/Button';
 import WeChat from './wechat.svg';
 import CommonLayout from '@/components/Layout/CommonLayout';
-export default function index() {
+export default function index(props) {
   return (
     <div className="bg-fixed	w-full  h-screen relative">
       <div className="absolute z-0 inset-0	">
