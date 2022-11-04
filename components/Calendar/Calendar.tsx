@@ -1,11 +1,32 @@
 import FullCalendar from '@fullcalendar/react'; // must go before plugins
-import dayGridPlugin from '@fullcalendar/timegrid'; // a plugin!
+import timeGridPlugin from '@fullcalendar/timegrid'; // a plugin!
 import classNames from 'classnames';
 import ReactDOM from 'react-dom';
+import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import CommonLayout from '../Layout/CommonLayout';
+import interactionPlugin from "@fullcalendar/interaction";
+import React from 'react';
 import './index.module.css';
 import Icon from './Icon';
-function Calendar() {
+import { createRef, useEffect, useRef, useState } from 'react';
+function Calendar(props) {
+  const [setting,setSetting] = useState(props.setting);
+  const viewMap = {
+    'day':'timeGridWeek',
+    'week':'timeGridWeek',
+    'today':'dayGrid',
+    'month':'dayGridMonth',
+  }
+  const calendarRef = createRef<any>()
+  useEffect(()=>{
+    setSetting(props.setting);
+    // calendarRef.current.getApi().changeView(viewMap[setting.view]);
+    // calendarRef.current.getApi().next();
+
+  },[props.setting.view])
+  useEffect(()=>{
+      calendarRef.current.getApi().changeView(viewMap[setting.view]);
+  },[setting])
   const day = {
     en: [
       'Sunday',
@@ -22,20 +43,24 @@ function Calendar() {
     <div>
       <div className="h-full w-full  bg-white">
         <FullCalendar
-          plugins={[dayGridPlugin]}
-          viewDidMount={(view: any) => {
-            ReactDOM.render(
-              <div className="w-full h-full flex justify-center items-center">
-                <Icon></Icon>
-              </div>,
-              view.el.getElementsByClassName('fc-timegrid-axis')[0],
-            );
-            // find('.fc-timegrid-axis').html('<span>Your content</span>');
-          }}
+          plugins={[timeGridPlugin,dayGridPlugin]}
+          ref={calendarRef}
+          // viewDidMount={(view: any) => {
+          //   ReactDOM.render(
+          //     <div className="w-full h-full flex justify-center items-center">
+          //       <Icon></Icon>
+          //     </div>,
+          //     view.el.getElementsByClassName('fc-timegrid-axis')[0],
+          //   );
+          //   // find('.fc-timegrid-axis').html('<span>Your content</span>');
+          // }}
           headerToolbar={false}
           displayEventTime={false}
           dayHeaderContent={(arg) => {
             console.log(arg);
+            if(setting.view === "month"){
+              return <div></div>
+            }
             return (
               <div
                 className={arg.isToday ? 'text-yellow-400' : 'text-gray-400'}
@@ -116,7 +141,7 @@ function Calendar() {
           slotMaxTime="22:00:00"
           slotDuration="00:30:00"
           slotLabelInterval="00:30"
-          weekends={false}
+          weekends={setting.view==="week"?true:false}
           //     viewClassNames="
           // h-screen"
         />

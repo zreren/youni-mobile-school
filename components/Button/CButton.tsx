@@ -3,11 +3,13 @@ import classnames from 'classnames';
 import classNames from 'classnames';
 type TSize = 'normal' | 'full';
 interface TCButton {
-  [x: string]: ReactNode;
+  // [x: string]: ReactNode;
   className?: string;
   size: TSize;
   type?: number;
   color?: string;
+  onClick?: React.MouseEventHandler;
+  children:ReactNode;
 }
 export const CButton: React.FunctionComponent<TCButton> = function (Props) {
   const { className, size, type, color } = Props;
@@ -39,7 +41,7 @@ export const CButton: React.FunctionComponent<TCButton> = function (Props) {
     'text-sm': true,
   });
   return (
-    <div>
+    <div onClick={Props.onClick}>
       <button className={classNames}>
         <span> {Props.children}</span>
       </button>

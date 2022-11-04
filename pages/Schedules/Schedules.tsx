@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Calendar from '@/components/Calendar/Calendar';
 import Header from '@/components/Header';
 import CButton from '@/components/Button/CButton';
 import Icon from '@/components/Icon';
+import Tooltips from './components/Tooltips';
+import classnames from 'classnames';
 export default function Schedules() {
+  const [addCourse,setAddCourse] = useState(false);
+  const [setting,setSetting] = useState({
+    view: "day",
+  });
   return (
     <div className="bg-bg space-y-1">
       <div className="f-11 text-left pl-5 ">
@@ -12,25 +18,30 @@ export default function Schedules() {
       </div>
       <div className="h-11 flex items-center justify-between pl-5 pr-5 bg-bg">
         <div className="rounded-xl bg-white h-8 w-2/3 flex items-center justify-around">
-          <button className='"btn  p-1 text-sm btn-active bg-gray-50 text-yellow-300 rounded-sm'>
+          <button onClick={()=>{setSetting({...setting,view:"day"})}} className={classnames('"btn  p-1 text-sm  bg-gray-50  rounded-sm',{'text-yellow-300':setting.view==="day"})}>
             近五天
           </button>
-          <button className='"btn text-sm   text-gray-400'>
+          <button onClick={()=>{setSetting({...setting,view:"week"})}} className={classnames("text-sm bg-white  text-gray-400",{'text-yellow-300':setting.view==="week"})}>
           近一周
           </button>
-          <button className='"btn text-sm  text-gray-400'>
+          <button  onClick={()=>{setSetting({...setting,view:"today"})}} className={classnames("text-sm bg-white text-gray-400",{'text-yellow-300':setting.view==="today"})} >
           今日
           </button>
-          <button className='"btn text-sm  text-gray-400'>
+          <button onClick={()=>{setSetting({...setting,view:"month"})}} className={classnames("text-sm bg-white text-gray-400",{'text-yellow-300':setting.view==="month"})}>
           校历
           </button>
         </div>
         <div className='flex items-center space-x-2'>
           <Icon type="menu1"></Icon>
-          <CButton size="normal">添加</CButton>
+          <Tooltips open={addCourse} 
+          add={()=>{console.log('addCourse')}}
+          
+          >
+          <CButton size="normal" >添加</CButton>
+          </Tooltips>
         </div>
       </div>
-      <Calendar></Calendar>
+      <Calendar setting={setting}></Calendar>
     </div>
   );
 }

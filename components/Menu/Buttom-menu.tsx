@@ -31,7 +31,7 @@ export default function LabelBottomNavigation() {
   );
   return (
     <BottomNavigation
-      className="fixed w-full  bottom-0	left-0"
+      className="fixed w-full  bottom-0	left-0 z-30"
       value={value}
       showLabels={true}
       onChange={handleChange}
