@@ -97,13 +97,16 @@ export default function Icon(props) {
     </svg>
   );
   const Top1Icon = (
-    <Image src={Top1} alt=""></Image>
+    // <Image src={Top1} alt=""></Image>
+    <Top1></Top1>
   );
   const Top2Icon = (
-    <Image src={Top2} alt=""></Image>
+    // <Image src={Top2} alt=""></Image>
+    <Top2></Top2>
   );
   const Top3Icon = (
-    <Image src={Top3} alt=""></Image>
+    // <Image src={Top3} alt=""></Image>
+    <Top3></Top3>
   );
   const iconList = {
     menu1: menu1,
