@@ -18,16 +18,16 @@ export default function Schedules() {
       </div>
       <div className="h-11 flex items-center justify-between pl-5 pr-5 bg-bg">
         <div className="rounded-xl bg-white h-8 w-2/3 flex items-center justify-around">
-          <button onClick={()=>{setSetting({...setting,view:"day"})}} className={classnames('"btn  p-1 text-sm  bg-gray-50  rounded-sm',{'text-yellow-300':setting.view==="day"})}>
+          <button onClick={()=>{setSetting({...setting,view:"day"})}} className={classnames('"btn  p-1 text-sm    rounded-sm',{'text-yellow-300 bg-gray-50':setting.view==="day"})}>
             近五天
           </button>
-          <button onClick={()=>{setSetting({...setting,view:"week"})}} className={classnames("text-sm bg-white  text-gray-400",{'text-yellow-300':setting.view==="week"})}>
+          <button onClick={()=>{setSetting({...setting,view:"week"})}} className={classnames("text-sm   rounded-sm text-gray-400",{'text-yellow-300 bg-gray-50':setting.view==="week"})}>
           近一周
           </button>
-          <button  onClick={()=>{setSetting({...setting,view:"today"})}} className={classnames("text-sm bg-white text-gray-400",{'text-yellow-300':setting.view==="today"})} >
+          <button  onClick={()=>{setSetting({...setting,view:"today"})}} className={classnames("text-sm  rounded-sm text-gray-400",{'text-yellow-300 bg-gray-50':setting.view==="today"})} >
           今日
           </button>
-          <button onClick={()=>{setSetting({...setting,view:"month"})}} className={classnames("text-sm bg-white text-gray-400",{'text-yellow-300':setting.view==="month"})}>
+          <button onClick={()=>{}} className={classnames("text-sm  rounded-sm text-gray-400",{'text-yellow-300 bg-gray-50':setting.view==="month"})}>
           校历
           </button>
         </div>

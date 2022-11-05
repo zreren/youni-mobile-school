@@ -3,7 +3,7 @@ import CScoreCard from '@/components/Rating/CScoreCard';
 
 export default function userComment() {
   return (
-    <div className="bg-white p-4 rounded-lg">
+    <div className="bg-white p-4 rounded-lg  mb-20">
       <div className="flex items-center mb-4">
         <div className="avatar placeholder">
           <div className="bg-neutral-focus text-neutral-content rounded-full w-14">

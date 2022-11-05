@@ -20,8 +20,6 @@ function Calendar(props) {
   const calendarRef = createRef<any>()
   useEffect(()=>{
     setSetting(props.setting);
-    // calendarRef.current.getApi().changeView(viewMap[setting.view]);
-    // calendarRef.current.getApi().next();
 
   },[props.setting.view])
   useEffect(()=>{
@@ -45,15 +43,16 @@ function Calendar(props) {
         <FullCalendar
           plugins={[timeGridPlugin,dayGridPlugin]}
           ref={calendarRef}
-          // viewDidMount={(view: any) => {
-          //   ReactDOM.render(
-          //     <div className="w-full h-full flex justify-center items-center">
-          //       <Icon></Icon>
-          //     </div>,
-          //     view.el.getElementsByClassName('fc-timegrid-axis')[0],
-          //   );
-          //   // find('.fc-timegrid-axis').html('<span>Your content</span>');
-          // }}
+          viewDidMount={(view: any) => {
+            setting.view==="week" || setting.view==="day"?
+            ReactDOM.render(
+              <div className="w-full h-full flex justify-center items-center">
+                <Icon></Icon>
+              </div>,
+              view.el.getElementsByClassName('fc-timegrid-axis')[0],
+            ):'';
+            // find('.fc-timegrid-axis').html('<span>Your content</span>');
+          }}
           headerToolbar={false}
           displayEventTime={false}
           dayHeaderContent={(arg) => {
@@ -92,8 +91,8 @@ function Calendar(props) {
               id: 'a',
               title: 'ADMS 2000',
               content: '111',
-              start: '2022-10-19T10:30:00',
-              end: '2022-10-19T13:00:00',
+              start: '2022-11-05T10:30:00',
+              end: '2022-11-05T13:00:00',
               extendedProps: {
                 department: 'HNE 038',
                 online: true,
@@ -102,9 +101,24 @@ function Calendar(props) {
               description: 'Lecture',
               type: 0,
             },
+            {
+              id: 'b',
+              title: 'ADMS 2000',
+              content: '111',
+              start: '2022-11-03T13:30:00',
+              end: '2022-11-03T16:00:00',
+              extendedProps: {
+                department: 'HNE 038',
+                online: false,
+                section: 'S',
+              },
+              description: 'Lecture',
+              type: 0,
+            },
           ]}
           eventContent={(arg: any) => (
-            <div className="flex flex-col justify-center h-full w-full items-center">
+            
+              setting.view==="day"?<div className="flex flex-col justify-center h-full w-full items-center">
               <div className="font-bold	 scale-75 text-xs text-center  whitespace-nowrap">
                 {arg.event.title}
               </div>
@@ -117,7 +131,24 @@ function Calendar(props) {
               <div className="font-light leading-none	 scale-90	  ">
                 {arg.event.extendedProps.online ? '线上课程' : '线下课程'}
               </div>
+            </div>:
+            <div className="flex flex-col justify-center h-full w-full items-center">
+            <div className="font-bold	 scale-50 text-xs text-center  whitespace-nowrap">
+              {arg.event.title}
             </div>
+            <div className="font-bold 	text-center text-xs leading-none whitespace-nowrap scale-50">
+              Section {arg.event.extendedProps.section}
+            </div>
+            <div className="font-bold leading-none	whitespace-nowrap text-xs scale-50	  ">
+              {arg.event.extendedProps.department}
+            </div>
+            <div className="font-light leading-none	 scale-90	  ">
+              {arg.event.extendedProps.online ? '线上' : '线下'}
+            </div>
+          </div>
+
+            
+            
           )}
           eventBackgroundColor="#EBE5FE"
           eventTextColor="#A972F0"

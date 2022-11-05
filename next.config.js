@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const withPlugins = require("next-compose-plugins");
+const withSvgr = require("next-svgr");
 const withTM = require("next-transpile-modules")([
   "@fullcalendar/common",
   "@babel/preset-react",
@@ -9,5 +11,7 @@ const withTM = require("next-transpile-modules")([
   "@fullcalendar/timegrid",
 ]);
 
-module.exports = withTM({
-})
+module.exports = withPlugins([
+  withTM,
+  withSvgr
+])

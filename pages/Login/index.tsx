@@ -13,7 +13,7 @@ export default function index(props) {
         <Image src={backgroundImage1} alt="Picture of the author" />
       </div>
       <div className="z-10 flex flex-col items-center  mt-11">
-        <Image src={Logo}></Image>
+        <Image src={Logo} alt=""></Image>
         <div>走进千家万户,共享轻松生活</div>
         {/* <Button variant="outlined" startIcon={<WeChat />}>
           Delete
