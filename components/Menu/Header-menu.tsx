@@ -113,7 +113,7 @@ const StyledTab = styled((props: StyledTabProps) => (
 
 export default function CustomizedTabs(props) {
   const [value, setValue] = React.useState(0);
-
+  const {headerMenuList} = props;
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
     props.switchMenu(newValue);
@@ -128,11 +128,14 @@ export default function CustomizedTabs(props) {
         aria-label="styled tabs example"
         className="max-w-screen"
       >
-        <StyledTab sx={{ padding: '0px' }} label="简介" />
-        <StyledTab sx={{ padding: '0px' }} label="教授 " />
+        {headerMenuList.map((item)=>{
+          return  <StyledTab sx={{ padding: '0px' }} label={item.label} />
+        })}
+       
+        {/* <StyledTab sx={{ padding: '0px' }} label="教授 " />
         <StyledTab sx={{ padding: '0px' }} label="课评" />
         <StyledTab sx={{ padding: '0px' }} label="群聊" />
-        <StyledTab sx={{ padding: '0px' }} label="资料库" />
+        <StyledTab sx={{ padding: '0px' }} label="资料库" /> */}
       </StyledTabs>
     </Box>
   );

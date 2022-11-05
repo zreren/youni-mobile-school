@@ -24,7 +24,7 @@ export default function LabelBottomNavigation() {
         setValue(index);
       } 
     });
-  },[router.pathname]);
+  },[router]);
   const handleChange = (event: React.SyntheticEvent, newValue: any) => {
     setValue(newValue);
     router.push(routerTable[newValue]);

@@ -2,6 +2,7 @@ import React from 'react';
 import SearchInSchool from './SearchAtSchool';
 import SwiperAtSchool from './SwiperAtSchool';
 import SchoolIcon from './school.svg';
+import Link from 'next/link';
 export default function HeaderLayout(props) {
   const { school } = props;
   return (

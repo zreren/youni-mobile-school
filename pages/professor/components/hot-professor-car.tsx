@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from '@/components/Icon';
 import CScanRating from '@/components/Rating/CScanRating';
+import { useRouter } from 'next/router';
 const ProfessorItem = (props) => {
     const {id, score, name } = props;
     return (
@@ -17,10 +18,12 @@ const ProfessorItem = (props) => {
     );
   };
 export default function HotProfessorCar(props) {
- 
+  const router = useRouter()
   const { professorList } = props;
   return (
-    <div className="bg-white  w-full pt-4 pb-4 h-auto rounded-lg space-y-4">
+    <div onClick={()=>{
+      router.push('/professor/detail/1')
+    }} className="bg-white  w-full pt-4 pb-4 h-auto rounded-lg space-y-4">
       {professorList?.map((professor) => {
         return (
           <ProfessorItem

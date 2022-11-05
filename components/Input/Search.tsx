@@ -1,8 +1,13 @@
+import { useRouter } from 'next/router';
 import React from 'react';
+
 export default function Search(props) {
   const { placeholder } = props;
+  const router = useRouter()
   return (
-    <div className="w-full relative">
+    <div onClick={()=>{
+      router.push('/Search');
+    }} className="w-full relative">
       <div className='absolute left-3 top-3'>
         <svg
           width="16"

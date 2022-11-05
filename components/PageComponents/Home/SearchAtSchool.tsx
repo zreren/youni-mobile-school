@@ -1,7 +1,9 @@
+import Link from 'next/link';
 import React from 'react';
 export default function SearchInSchool(props) {
   const { placeholder } = props;
   return (
+   <Link href='/Search'>
     <div className="flex justify-center w-full relative pl-4 pr-4">
       {/* <div className='absolute left-1/3 top-3 pl-20'>
         <svg
@@ -25,5 +27,6 @@ export default function SearchInSchool(props) {
         text-center input input-md	h-10 w-full rounded-full"
       />
     </div>
+   </Link>
   );
 }
