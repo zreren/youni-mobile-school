@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React from 'react';
 import CCircleRanking from './Rating/CCircleRanking';
 interface ICourseScoreCard {
@@ -7,8 +8,11 @@ interface ICourseScoreCard {
 }
 export default function CourseScoreCard(props: ICourseScoreCard) {
   const { score } = props.data;
+  const router = useRouter()
   return (
-    <div className="flex p-6 items-align bg-white justify-between rounded-xl">
+    <div onClick={()=>{
+      router.push('/course-evaluation')
+    }} className="flex p-6 items-align bg-white justify-between rounded-xl">
       <div className="h-1/1 flex flex-col content-between  ">
         <div className="text-xl ">ECON 1000</div>
         <div className="text-gray-400 text-sm flex-grow">

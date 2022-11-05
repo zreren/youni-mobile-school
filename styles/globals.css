@@ -6,3 +6,7 @@
   font-family: 'pingFang';
   src: url('../public/PingFang-medium.ttf');
 } */
+
+.MuiButtonBase-root{
+  min-width: 'none'!important;
+}

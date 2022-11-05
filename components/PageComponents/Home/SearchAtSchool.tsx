@@ -22,7 +22,7 @@ export default function SearchInSchool(props) {
         placeholder={placeholder ? placeholder : 'Search'}
         className="
         border-none
-        text-center pl-10 input input-md	h-10 w-full rounded-full"
+        text-center input input-md	h-10 w-full rounded-full"
       />
     </div>
   );

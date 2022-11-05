@@ -8,50 +8,83 @@ import Title from '@/components/Title/Title';
 import { professorList } from '@/mock/data';
 import HotProfessorCar from './professor/components/hot-professor-car';
 import { useRouter } from 'next/router';
+import Introduce from '@/components/PageComponents/Course/Introduce';
 export default function courseEvaluation() {
-  const professorRankList= [
+  const Pending = () =>{
+    return (
+      <div className="alert alert-info mt-10 w-2/3 mx-auto">
+      <div>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          className="stroke-current flex-shrink-0 w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
+        </svg>
+        <span>等待高保真</span>
+      </div>
+    </div>
+    )
+  }
+  const evaluation = () => {
+    return (
+      <CommonLayout>
+        <Search></Search>
+        <Title title="热门教授"></Title>
+        <HotProfessorCar professorList={professorRankList}></HotProfessorCar>
+        <Title title="教授列表"></Title>
+        <div className="space-y-4">
+          {professorList.map((item) => {
+            return (
+              <ProfessorCard
+                data={item}
+                key={item.id}
+                onClick={() => {
+                  router.push(`/professor/detail/${item.id}`);
+                }}
+              ></ProfessorCard>
+            );
+          })}
+        </div>
+      </CommonLayout>
+    );
+  };
+  const professorRankList = [
     {
       id: 1,
       name: 'Leonard Eli Karakowsky',
-      score:4.5
+      score: 4.5,
     },
     {
       id: 2,
       name: 'Test Professor 1',
-      score: 3.2
+      score: 3.2,
     },
     {
       id: 3,
       name: 'Test Professor 1',
-      score: 1.7
-    }
-  ]
-  const router = useRouter()
+      score: 1.7,
+    },
+  ];
+  const menuList = [Introduce, evaluation,Pending,Pending,Pending];
+  const router = useRouter();
+  const [menu, setMenu] = React.useState(Introduce);
   return (
-    <div className='bg-bg w-full h-screen'>
+    <div className="bg-bg w-screen h-screen">
       <Header title="课程评价"></Header>
-      <HeaderMenu></HeaderMenu>
+      <HeaderMenu
+        switchMenu={(val) => {
+          setMenu(menuList[val]);
+        }}
+      ></HeaderMenu>
       {/* <div className='mt-6'></div> */}
-      <CommonLayout>
-      <Search></Search>
-      <Title title="热门教授"></Title>
-      <HotProfessorCar professorList={professorRankList}></HotProfessorCar>
-      <Title title="教授列表"></Title>
-      <div className="space-y-4">
-        {professorList.map((item) => {
-          return (
-            <ProfessorCard
-              data={item}
-              key={item.id}
-              onClick={() => {
-                router.push(`/professor/detail/${item.id}`)
-              }}
-            ></ProfessorCard>
-          );
-        })}
-      </div>
-      </CommonLayout>
-      
+      {menu}
     </div>
   );
 }

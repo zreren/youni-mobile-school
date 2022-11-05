@@ -6,7 +6,9 @@ import Title from '@/components/Title/Title';
 import Search from '@/components/Input/Search';
 import CButtonNoLine from '@/components/Button/CButtonNoLine';
 import CourseScoreCard from '@/components/CourseScoreCard';
+import { useRouter } from 'next/router';
 export default function course() {
+  const router = useRouter()
   return (
     <CommonLayout  isBottom={true}>
       <Header title="课程评价" />
@@ -25,7 +27,7 @@ export default function course() {
           <CategoryButton color="pink"></CategoryButton>
           <CategoryButton color="purple"></CategoryButton>
         </div>
-        <button className='btn border-none btn-sm w-full bg-white text-gray-400'>查看全部</button>
+        <button onClick={()=>{router.push('./AllSubject')}} className='btn border-none btn-sm w-full bg-white text-gray-400'>查看全部</button>
       </div>
       <Title title="热门课程">
         <CButtonNoLine></CButtonNoLine>
