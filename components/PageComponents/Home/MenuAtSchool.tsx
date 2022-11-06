@@ -12,7 +12,7 @@ export default function MenuAtSchool() {
         },
         {
             label:"教授评价",
-            path:"/professor/detail/1"
+            path:"/professor/professor-evaluation"
         },
         {
             label:"我的课表",

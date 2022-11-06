@@ -24,6 +24,7 @@ function Calendar(props) {
   },[props.setting.view])
   useEffect(()=>{
       calendarRef.current.getApi().changeView(viewMap[setting.view]);
+      setSetting(setting);
   },[setting])
   const day = {
     en: [
@@ -172,7 +173,7 @@ function Calendar(props) {
           slotMaxTime="22:00:00"
           slotDuration="00:30:00"
           slotLabelInterval="00:30"
-          weekends={setting.view==="week"?true:false}
+          weekends={setting.view==="week"|| setting.view==="today"?true:false}
           //     viewClassNames="
           // h-screen"
         />

@@ -9,6 +9,7 @@ import { professorList } from '@/mock/data';
 import HotProfessorCar from './professor/components/hot-professor-car';
 import { useRouter } from 'next/router';
 import Introduce from '@/components/PageComponents/Course/Introduce';
+import FilterIcon from  '../public/filter.svg';
 export default function courseEvaluation() {
   const Pending = () => {
     return (
@@ -38,7 +39,11 @@ export default function courseEvaluation() {
         <Search></Search>
         <Title title="热门教授"></Title>
         <HotProfessorCar professorList={professorRankList}></HotProfessorCar>
-        <Title title="教授列表"></Title>
+        <Title title="教授列表" customClick={()=>{
+          
+        }}>
+          <FilterIcon></FilterIcon>
+        </Title>
         <div className="space-y-4">
           {professorList.map((item) => {
             return (
