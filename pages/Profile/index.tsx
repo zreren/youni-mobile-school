@@ -1,8 +1,12 @@
 import React from 'react'
 import CommonLayout from '@/components/Layout/CommonLayout'
-import Header from '@/components/Header'
+import Header from '@/components/Header';
+import ProfileHeader from '@/components/PageComponents/Profile/ProfileHeader';
 export default function index() {
   return (
+    // <div className='w-screen h-screen'>
+    //   <ProfileHeader></ProfileHeader>
+    //   </div>
    <CommonLayout>
     <Header title="我的"></Header>
     <div className="alert alert-info shadow-lg">

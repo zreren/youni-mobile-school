@@ -25,21 +25,21 @@ export default function CCircleRanking(props: TCCRating) {
       return 'text-score5';
     }
   };
-  const classNames1 = classnames('radial-progress ', [
+  const classNames1 = classnames('radial-progress bg-gray-50', [
     `${styles[colorTable(score)]}`,
   ]);
   const textClassNames = classnames(
     'font-bold bg-transparent text-opacity-100',
     [`${styles[`DScore${String(score).substring(0, 1)}`]}`],
   );
-  const text2ClassNames = classnames('text-xs ', [
+  const text2ClassNames = classnames('text-xs', [
     `${styles[`DScore${String(score).substring(0, 1)}`]}`,
   ]);
   return (
     <>
       {/* @ts-ignore */}
       <div className={classNames1} style={{ '--value': score * 20 }}>
-        <div className="w-full flex flex-col justify-center items-center">
+        <div className="w-16 h-16 flex flex-col justify-center items-center  bg-white rounded-full">
           <div className={textClassNames}>{score}</div>
           <div className={text2ClassNames}>综合评分</div>
         </div>
