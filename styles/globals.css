@@ -10,9 +10,13 @@
 .MuiList-root hr:last-child {
   display: none;
 }
-.MuiList-root hr{
+.MuiList-root hr {
   opacity: 0.4;
 }
-.MuiListItem-divider{
+.MuiListItem-divider {
   /* border-bottom: 1px solid rgba(255, 255 255, 0.01) !important; */
 }
+/* .comment-detail-header {
+  background: linear-gradient(to bottom, #ffc285 40%, #ffdbba 60%);
+  border-radius: 8px 0px 0px 0px;
+} */

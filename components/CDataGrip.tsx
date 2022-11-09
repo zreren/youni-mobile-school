@@ -24,7 +24,7 @@ const Card = (props) => {
 };
 export default function CDataGrip() {
   return (
-    <div className='card w-full bg-base-100 '>
+    <div className='card rounded-lg w-full bg-base-100 '>
       <div className='card-body p-4'>
       <div className='flex space-x-2'>
         <Card label="平均成绩" score="4.5" color="origin"></Card>

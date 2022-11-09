@@ -17,7 +17,7 @@ export default function ProfessorDetail() {
   });
 
   return (
-    <CommonLayout>
+    <CommonLayout className="min-h-screen pb-14">
       <Header title="教授评价"></Header>
       <ProfessorInfoCard></ProfessorInfoCard>
       <Title title="分值分布"></Title>
@@ -50,6 +50,7 @@ export default function ProfessorDetail() {
         })}
       </div>
       <div className="mb-4"></div>
+      <UserComment></UserComment>
       <UserComment></UserComment>
     </CommonLayout>
   );

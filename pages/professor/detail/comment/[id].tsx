@@ -1,15 +1,13 @@
 import React from 'react';
 import CScoreCard from '@/components/Rating/CScoreCard';
-import Super from './surper.svg';
-import Like from './like.svg';
-import DisLike from './disLike.svg';
-import Comments from './comments.svg';
-import Discussion from './discussion.svg';
-import { useRouter } from 'next/router';
+import Super from '../surper.svg';
+import Like from '../like.svg';
+import DisLike from '../disLike.svg';
+import Comments from '../comments.svg';
+import Discussion from '../discussion.svg';
 export default function userComment() {
-  const router = useRouter()
   return (
-    <div onClick={()=>{router.push('./comment/1')}} className="bg-white p-4 rounded-lg  mb-4">
+    <div className="bg-white p-4 rounded-lg  mb-4">
       <div className="flex items-center mb-4">
         <div className="avatar placeholder">
           <div className="bg-neutral-focus text-neutral-content rounded-full w-14">
@@ -23,18 +21,20 @@ export default function userComment() {
           <div className="text-gray-200 ml-4">2022届 · B.Com Accounting</div>
         </div>
       </div>
-      <div className="flex justify-between items-center">
+      {/* <Super></Super> */}
+      <div
+        className="flex justify-between items-center comment-detail-header to-yellow-50 w-full "
+      >
         <div>
           <div className="flex space-x-2 mb-1 mt-1">
-            <div className="text-gray-300">课程名称:</div>
+            <div className="text-gray-200">课程名称:</div>
             <div className="text-blueTitle">ADMS 1000</div>
           </div>
           <div className="flex space-x-2 mb-1 mt-1">
-            <div className="text-gray-300">最终成绩:</div>
+            <div className="text-gray-200">最终成绩:</div>
             <div className="text-blueTitle">B+</div>
           </div>
         </div>
-        <Super></Super>
       </div>
 
       <div className="flex justify-between mt-4">
@@ -66,21 +66,23 @@ export default function userComment() {
         </div>
       </div>
       <div className="flex justify-between mt-3">
-        <div className='flex space-x-4 '>
-        <div className="flex">
-          <Like></Like>
-          <div className="text-xs text-gray-300">600</div>
+        <div className="flex space-x-4 ">
+          <div className="flex">
+            <Like></Like>
+            <div className="text-xs text-gray-300">600</div>
+          </div>
+          <div className="flex">
+            <DisLike></DisLike>
+            <div className="text-xs text-gray-300">600</div>
+          </div>
+          <div className="flex">
+            <Comments></Comments>
+            <div className="text-xs text-gray-300">600</div>
+          </div>
         </div>
-        <div className="flex">
-          <DisLike></DisLike>
-          <div className="text-xs text-gray-300">600</div>
+        <div>
+          <Discussion></Discussion>
         </div>
-        <div className="flex">
-          <Comments></Comments>
-          <div className="text-xs text-gray-300">600</div>
-        </div>
-        </div>
-        <div><Discussion></Discussion></div>
       </div>
     </div>
   );

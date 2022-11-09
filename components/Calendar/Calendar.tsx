@@ -92,8 +92,8 @@ function Calendar(props) {
               id: 'a',
               title: 'ADMS 2000',
               content: '111',
-              start: '2022-11-05T10:30:00',
-              end: '2022-11-05T13:00:00',
+              start: '2022-11-07T10:30:00',
+              end: '2022-11-07T13:00:00',
               extendedProps: {
                 department: 'HNE 038',
                 online: true,
@@ -106,8 +106,8 @@ function Calendar(props) {
               id: 'b',
               title: 'ADMS 2000',
               content: '111',
-              start: '2022-11-03T13:30:00',
-              end: '2022-11-03T16:00:00',
+              start: '2022-11-08T13:30:00',
+              end: '2022-11-08T16:00:00',
               extendedProps: {
                 department: 'HNE 038',
                 online: false,
@@ -119,7 +119,9 @@ function Calendar(props) {
           ]}
           eventContent={(arg: any) => (
             
-              setting.view==="day"?<div className="flex flex-col justify-center h-full w-full items-center">
+              setting.view==="day"?<div onClick={()=>{
+                props.clickEvent(arg)
+              }} className="flex flex-col justify-center h-full w-full items-center">
               <div className="font-bold	 scale-75 text-xs text-center  whitespace-nowrap">
                 {arg.event.title}
               </div>

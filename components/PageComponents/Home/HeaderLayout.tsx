@@ -12,7 +12,7 @@ export default function HeaderLayout(props) {
      pb-4
      "
     >
-      <div className='flex items-center p-4 pb-0 mb-3'>
+      <div onClick={()=>{props.selectSchool()}} className='flex items-center p-4 pb-0 mb-3'>
         <SchoolIcon className=" mr-4"></SchoolIcon>
         <div className="text-lg font-medium ">{school}</div>
       </div>
