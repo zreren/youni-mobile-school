@@ -7,9 +7,14 @@ import Comments from './comments.svg';
 import Discussion from './discussion.svg';
 import { useRouter } from 'next/router';
 export default function userComment() {
-  const router = useRouter()
+  const router = useRouter();
   return (
-    <div onClick={()=>{router.push('./comment/1')}} className="bg-white p-4 rounded-lg  mb-4">
+    <div
+      onClick={() => {
+        router.push('./comment/1');
+      }}
+      className="bg-white p-4 rounded-lg  mb-4"
+    >
       <div className="flex items-center mb-4">
         <div className="avatar placeholder">
           <div className="bg-neutral-focus text-neutral-content rounded-full w-14">
@@ -65,22 +70,24 @@ export default function userComment() {
           </div>
         </div>
       </div>
-      <div className="flex justify-between mt-3">
-        <div className='flex space-x-4 '>
-        <div className="flex">
-          <Like></Like>
-          <div className="text-xs text-gray-300">600</div>
+      <div className="flex justify-between mt-3 items-center">
+        <div className="flex space-x-4 ">
+          <div className="flex">
+            <Like></Like>
+            <div className="text-xs text-gray-300">600</div>
+          </div>
+          <div className="flex">
+            <DisLike></DisLike>
+            <div className="text-xs text-gray-300">600</div>
+          </div>
+          <div className="flex">
+            <Comments></Comments>
+            <div className="text-xs text-gray-300">600</div>
+          </div>
         </div>
-        <div className="flex">
-          <DisLike></DisLike>
-          <div className="text-xs text-gray-300">600</div>
+        <div>
+          <Discussion></Discussion>
         </div>
-        <div className="flex">
-          <Comments></Comments>
-          <div className="text-xs text-gray-300">600</div>
-        </div>
-        </div>
-        <div><Discussion></Discussion></div>
       </div>
     </div>
   );

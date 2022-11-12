@@ -6,6 +6,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
+import { useRouter } from 'next/router';
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -29,6 +30,7 @@ const style = {
 export default function Tooltips(props) {
   const { children } = props;
   const [open, setOpen] = useState(props.open);
+  const router = useRouter();
   useEffect(() => {
     setOpen(props.open);
   }, [props.open]);
@@ -49,11 +51,11 @@ export default function Tooltips(props) {
                     <ListItemText className='order-opacity-40	' primary="一键导入课表" />
                   </ListItem>
                   <Divider />
-                  <ListItem button  className='border-opacity-40'>
+                  <ListItem button  onClick={()=>{router.push('/Schedules/AddCourse?id=1')}} className='border-opacity-40'>
                     <ListItemText className=' border-opacity-40	' primary="添加课程" />
                   </ListItem>
                   <Divider />
-                  <ListItem button>
+                  <ListItem button onClick={()=>{router.push('/Schedules/AddCourse?id=2')}}>
                     <ListItemText className='' primary="添加日程" />
                   </ListItem>
                   <Divider light />

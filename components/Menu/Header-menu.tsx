@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-
+import classnames from 'classnames';
 const AntTabs = styled(Tabs)({
   borderBottom: '1px solid #e8e8e8',
   '& .MuiTabs-indicator': {
@@ -75,7 +75,8 @@ const StyledTabs = styled((props: any) => (
 });
 
 interface StyledTabProps {
-  label: string;
+  label?: any;
+  icon?: any;
 }
 
 const StyledTab = styled((props: StyledTabProps) => (
@@ -105,6 +106,7 @@ const StyledTab = styled((props: StyledTabProps) => (
   ].join(','),
   '&.Mui-selected': {
     color: 'rgba(255, 208, 54, 1)',
+    fill: 'red',
   },
   '&.Mui-focusVisible': {
     backgroundColor: 'rgba(100, 95, 228, 0.32)',
@@ -112,15 +114,25 @@ const StyledTab = styled((props: StyledTabProps) => (
 }));
 
 export default function CustomizedTabs(props) {
-  const [value, setValue] = React.useState(0);
-  const {headerMenuList} = props;
+  let { id } = props;
+  if (!id) {
+    id = 0;
+  }
+  const [value, setValue] = React.useState(id);
+  const { headerMenuList, className } = props;
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
     props.switchMenu(newValue);
   };
-
+  const getIcon = (props) => {
+    const Icon = props;
+    return <Icon></Icon>;
+  };
   return (
-    <Box sx={{ bgcolor: '#fff', width: '100%' }} className="sticky z-10 top-11 text-xs">
+    <Box
+      sx={{ bgcolor: '#fff', width: '100%' }}
+      className={classnames('sticky z-10 top-11 text-xs', className)}
+    >
       <StyledTabs
         variant="fullWidth"
         value={value}
@@ -128,10 +140,16 @@ export default function CustomizedTabs(props) {
         aria-label="styled tabs example"
         className="max-w-screen"
       >
-        {headerMenuList.map((item)=>{
-          return  <StyledTab sx={{ padding: '0px' }} label={item.label} />
+        {headerMenuList.map((item) => {
+          return (
+            <StyledTab
+              sx={{ padding: '0px' }}
+              icon={item.icon}
+              label={item.label}
+            />
+          );
         })}
-       
+
         {/* <StyledTab sx={{ padding: '0px' }} label="教授 " />
         <StyledTab sx={{ padding: '0px' }} label="课评" />
         <StyledTab sx={{ padding: '0px' }} label="群聊" />

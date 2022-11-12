@@ -39,9 +39,11 @@ module.exports = {
         score4: '#6CA6C1',
         score5: '#CB9A65',
         blueTitle: '#37455C',
+        gold:"rgba(249, 230, 195, 1)",
       },
       colors: {
         bg: '#f6f6f6',
+        gold:"rgba(249, 230, 195, 1)",
         'light-yellow': '#f6f6f6',
       },
       fontFamily: {

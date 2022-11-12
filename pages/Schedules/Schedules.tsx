@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Calendar from '@/components/Calendar/Calendar';
 import Header from '@/components/Header';
 import CButton from '@/components/Button/CButton';
-import Icon from '@/components/Icon';
+import Icon from './setting.svg';
 import Tooltips from './components/Tooltips';
 import classnames from 'classnames';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
@@ -11,6 +11,16 @@ import { grey } from '@mui/material/colors';
 import Box from '@mui/material/Box';
 import Location from './location.svg';
 import TimeIconActive from './icon_time.svg';
+import SaveToLibButton from '@/components/Button/SaveToLibButton';
+import Icon1 from './components/timeIcon/1.svg';
+import Icon2 from './components/timeIcon/2.svg';
+import Icon3 from './components/timeIcon/3.svg';
+import Icon4 from './components/timeIcon/4.svg';
+import Icon5 from './components/timeIcon/5.svg';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import IOSSwitch from './components/ios';
+import RightIcon from '@/components/PageComponents/Profile/right.svg';
+
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
   height: 6,
@@ -20,6 +30,108 @@ const Puller = styled(Box)(({ theme }) => ({
   top: 8,
   left: 'calc(50% - 15px)',
 }));
+
+const CCourseInput = (props) => {
+  const { title, Icon, children: Children } = props;
+  return (
+    <div className="rounded-lg w-full h-12  bg-white p-4">
+      <div className="flex justify-between items-center h-full  space-x-4">
+        <div className="flex items-center">
+          <Icon className="mr-1"></Icon>{' '}
+          <div className="text-blueTitle font-medium">{title}</div>
+        </div>
+        <div>{Children ? Children : null}</div>
+      </div>
+    </div>
+  );
+};
+const SetSchedule = (props) => {
+  return (
+    <SwipeableDrawer
+      anchor="bottom"
+      open={props.visible}
+      onClose={() => {
+        props.setVisible(false);
+      }}
+      onOpen={() => {
+        props.setVisible(true);
+      }}
+      className="h-screen"
+    >
+      <div className="w-full h-96	 bg-white p-4 mb-14">
+        <div className="w-full flex space-x-2">
+          <SaveToLibButton
+            color="#3665FF"
+            icon="wechat"
+            title="保存到相册"
+          ></SaveToLibButton>
+          <SaveToLibButton
+            color="#FFD036"
+            icon="share"
+            title="分享课表"
+          ></SaveToLibButton>
+        </div>
+        <div className="w-full p-2 mt-2">
+          <CCourseInput Icon={Icon1} title="打开时显示"></CCourseInput>
+          <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
+          <CCourseInput title="课表视图显示日程" Icon={Icon2}>
+            <div>
+              <FormControlLabel
+                control={<IOSSwitch defaultChecked />}
+                label=""
+              />
+            </div>
+          </CCourseInput>
+          <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
+          <CCourseInput title="添加课程/日程" Icon={Icon3}>
+            {' '}
+            <RightIcon className="mr-2"></RightIcon>
+          </CCourseInput>
+          <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
+          <CCourseInput title="自定义背景" Icon={Icon4}>
+            <RightIcon className="mr-2"></RightIcon>
+          </CCourseInput>
+          <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
+          <CCourseInput title="切换课表" Icon={Icon5}></CCourseInput>
+          <div className="flex justify-between mt-4 pr-4 pl-4">
+            <div className="flex flex-col items-center">
+              <div className="avatar placeholder  flex flex-col">
+                <div className="bg-gray-300 text-neutral-content rounded-full w-14">
+                  <span className="text-3xl"></span>
+                </div>
+              </div>
+              <div className="text-xs">课程评价</div>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="avatar placeholder  flex flex-col">
+                <div className="bg-gray-300 text-neutral-content rounded-full w-14">
+                  <span className="text-3xl"></span>
+                </div>
+              </div>
+              <div className="text-xs">课程评价</div>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="avatar placeholder  flex flex-col">
+                <div className="bg-gray-300 text-neutral-content rounded-full w-14">
+                  <span className="text-3xl"></span>
+                </div>
+              </div>
+              <div className="text-xs">课程评价</div>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="avatar placeholder  flex flex-col">
+                <div className="bg-gray-300 text-neutral-content rounded-full w-14">
+                  <span className="text-3xl"></span>
+                </div>
+              </div>
+              <div className="text-xs">课程评价</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </SwipeableDrawer>
+  );
+};
 const CourseDetailCard = (props) => {
   const { arg } = props;
   if (!arg) return null;
@@ -85,7 +197,7 @@ const CourseDetailCard = (props) => {
             </div>
           </div>
           <div className="mt-4 mb-4">
-            <div className='mb-4'>
+            <div className="mb-4">
               <div className="flex items-center">
                 <TimeIconActive></TimeIconActive>
                 <div className="text-sm text-gray-400 ml-3">周二</div>
@@ -99,37 +211,37 @@ const CourseDetailCard = (props) => {
             </div>
           </div>
           <div className="flex justify-between">
-          <div className='flex flex-col items-center'>
+            <div className="flex flex-col items-center">
               <div className="avatar placeholder  flex flex-col">
                 <div className="bg-gray-300 text-neutral-content rounded-full w-14">
                   <span className="text-3xl"></span>
                 </div>
               </div>
-              <div className='text-xs'>课程评价</div>
+              <div className="text-xs">课程评价</div>
             </div>
-            <div className='flex flex-col items-center'>
+            <div className="flex flex-col items-center">
               <div className="avatar placeholder  flex flex-col">
                 <div className="bg-gray-300 text-neutral-content rounded-full w-14">
                   <span className="text-3xl"></span>
                 </div>
               </div>
-              <div className='text-xs'>课程评价</div>
+              <div className="text-xs">课程评价</div>
             </div>
-            <div className='flex flex-col items-center'>
+            <div className="flex flex-col items-center">
               <div className="avatar placeholder  flex flex-col">
                 <div className="bg-gray-300 text-neutral-content rounded-full w-14">
                   <span className="text-3xl"></span>
                 </div>
               </div>
-              <div className='text-xs'>课程评价</div>
+              <div className="text-xs">课程评价</div>
             </div>
-            <div className='flex flex-col items-center'>
+            <div className="flex flex-col items-center">
               <div className="avatar placeholder  flex flex-col">
                 <div className="bg-gray-300 text-neutral-content rounded-full w-14">
                   <span className="text-3xl"></span>
                 </div>
               </div>
-              <div className='text-xs'>课程评价</div>
+              <div className="text-xs">课程评价</div>
             </div>
           </div>
         </div>
@@ -140,6 +252,7 @@ const CourseDetailCard = (props) => {
 
 export default function Schedules() {
   const [visible, setVisible] = useState(false);
+  const [scheduleVisible, setScheduleVisible] = useState(false);
   const [addCourse, setAddCourse] = useState(false);
   const [arg, setArg] = useState();
   const [setting, setSetting] = useState({
@@ -193,7 +306,13 @@ export default function Schedules() {
           </button>
         </div>
         <div className="flex items-center space-x-2">
-          <Icon type="menu1"></Icon>
+          <div
+            onClick={() => {
+              setScheduleVisible(true);
+            }}
+          >
+            <Icon type="menu1"></Icon>
+          </div>
           <Tooltips
             open={addCourse}
             add={() => {
@@ -204,6 +323,10 @@ export default function Schedules() {
           </Tooltips>
         </div>
       </div>
+      <SetSchedule
+        visible={scheduleVisible}
+        setVisible={setScheduleVisible}
+      ></SetSchedule>
       <CourseDetailCard
         visible={visible}
         setVisible={setVisible}
