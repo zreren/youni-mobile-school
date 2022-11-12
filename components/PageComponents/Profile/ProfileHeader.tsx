@@ -1,6 +1,6 @@
 import React from 'react';
 import RightIcon from './right.svg';
-import Subtract from './subtract.svg';
+import Subtract from './Subtract.svg';
 import Button from './Button.svg';
 const UserData = () => {
   return (

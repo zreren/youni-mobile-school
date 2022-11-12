@@ -1,9 +1,9 @@
 import React from 'react';
 import CScoreCard from '@/components/Rating/CScoreCard';
 import Super from '../surper.svg';
-import Like from '../like.svg';
+import Like from '../Like.svg';
 import DisLike from '../disLike.svg';
-import Comments from '../comments.svg';
+import Comments from '../Comments.svg';
 import Discussion from '../discussion.svg';
 export default function userComment() {
   return (
