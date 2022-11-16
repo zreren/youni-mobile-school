@@ -16,13 +16,13 @@ import FilterIcon from  '../public/filter.svg';
 export default function courseEvaluation() {
   const Pending = () => {
     return (
-      <div className="alert alert-info mt-10 w-2/3 mx-auto">
+      <div className="w-2/3 mx-auto mt-10 alert alert-info">
         <div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            className="stroke-current flex-shrink-0 w-6 h-6"
+            className="flex-shrink-0 w-6 h-6 stroke-current"
           >
             <path
               stroke-linecap="round"
@@ -77,7 +77,7 @@ export default function courseEvaluation() {
     },
     {
       id: 3,
-      name: 'Test Professor 1',
+      name: 'Test Professor 2',
       score: 1.7,
     },
   ];
@@ -102,7 +102,7 @@ export default function courseEvaluation() {
     },
   ];
   return (
-    <div className="bg-bg w-screen h-screen">
+    <div className="w-screen h-screen bg-bg">
       <Header title="课程评价"></Header>
       <HeaderMenu
         headerMenuList={headerMenuList}

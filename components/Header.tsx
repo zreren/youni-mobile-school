@@ -1,15 +1,16 @@
 import React from 'react';
 import { useRouter } from 'next/router';
+import classnames from 'classnames';
 export default function Header(props: any) {
-  const { children, title } = props;
+  const { children, title , className,returnClick} = props;
   const router = useRouter();
 
   return (
     <>
-      <div className="shadow w-full fixed inset-0 top-0 p-5 h-11 bg-gray-50 flex justify-between items-center  z-50	">
+      <div className={classnames("fixed inset-0 top-0 z-50 flex items-center justify-between w-full p-5 shadow h-11 bg-gray-50 ",className)}>
         <div
           onClick={() => {
-            router.back();
+            returnClick?returnClick():router.back();
           }}
           className="w-1/6"
         >
@@ -28,8 +29,8 @@ export default function Header(props: any) {
             />
           </svg>
         </div>
-        <div className="text-lg font-medium w-2/3 text-center">{title}</div>
-        <div className="w-1/6 flex justify-end">{children}</div>
+        <div className="w-2/3 text-lg font-medium text-center">{title}</div>
+        <div className="flex justify-end w-1/6">{children}</div>
       </div>
       <div className="mb-11"></div>
     </>

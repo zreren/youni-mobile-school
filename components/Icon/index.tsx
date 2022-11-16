@@ -24,7 +24,7 @@ export default function Icon(props) {
     </div>
   );
   const menu2 = (
-    <div className="btn btn-square bg-transparent border-none btn-link">
+    <div className="bg-transparent border-none btn btn-square btn-link">
       <svg
         width="36"
         height="36"
@@ -59,7 +59,7 @@ export default function Icon(props) {
             y2="12.9027"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stop-color="#FFC400" />
+            <stop stopColor="#FFC400" />
             <stop offset="1" stop-color="#FEE278" />
           </linearGradient>
         </defs>
