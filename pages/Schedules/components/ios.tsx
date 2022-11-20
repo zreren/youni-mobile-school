@@ -18,7 +18,7 @@ const IOSSwitch = styled((props: SwitchProps) => (
       transform: 'translateX(16px)',
       color: '#fff',
       '& + .MuiSwitch-track': {
-        backgroundColor: theme.palette.mode === 'dark' ? '#2ECA45' : '#65C466',
+        backgroundColor: theme.palette.mode === 'dark' ? 'rgb(255,208,54)' : 'rgb(255,208,54)',
         opacity: 1,
         border: 0,
       },
@@ -27,7 +27,7 @@ const IOSSwitch = styled((props: SwitchProps) => (
       },
     },
     '&.Mui-focusVisible .MuiSwitch-thumb': {
-      color: '#33cf4d',
+      color: 'rgb(255,208,54)',
       border: '6px solid #fff',
     },
     '&.Mui-disabled .MuiSwitch-thumb': {

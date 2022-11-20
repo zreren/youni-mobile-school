@@ -9,9 +9,18 @@ import { styled } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import classnames from 'classnames';
 import Header from '@/components/Header';
-const CountyList = (props) => {
+const RedCountyList = (props) => {
   const { arg } = props;
   const [select, setSelect] = useState('Canada');
+  const CountryButton = (props1) => {
+    const { title } = props1;
+    return (
+      <div onClick={()=>{
+        props.setVisible(false);
+        props.setSelectSchool(true)
+      }} className="z-50 p-2 text-sm text-center h-9 bg-bg">{title}</div>
+    );
+  };
   return (
     <div className="">
       <SwipeableDrawer
@@ -25,17 +34,48 @@ const CountyList = (props) => {
         }}
         className="h-screen"
       >
-         <div className="flex w-screen h-screen p-4 bg-bg">
-            <div className='w-full h-48 red-gradient card'>
-              <div className='p-0 card-body'>
-                <Image src="/assets/hot.png"  width={13} height={83} className="absolute z-99"></Image>
+        <div className="w-screen h-screen p-4 pt-6 space-y-4 bg-bg">
+          <div className="w-full h-auto overflow-visible red-gradient card">
+            <div className="relative w-full h-full p-4">
+              <div className="absolute right-3 -top-3">
+                <Image src="/assets/hot.png" width={73} height={83}></Image>
+              </div>
+              <div className="text-base font-medium text-white">
+                热门国家和地区
+              </div>
+              <div className="z-50 grid grid-cols-3 gap-2 pt-2">
+                <CountryButton title="美国"></CountryButton>
+                <CountryButton title="美国"></CountryButton>
+                <CountryButton title="美国"></CountryButton>
+                <CountryButton title="美国"></CountryButton>
               </div>
             </div>
-         </div>
+          </div>
+          <div className="w-full h-auto overflow-visible bg-white card">
+            <div className="relative w-full h-full p-4">
+              <div className="text-base font-medium ">北美洲</div>
+              <div className="z-50 grid grid-cols-3 gap-2 pt-2">
+                <CountryButton title="美国"></CountryButton>
+                <CountryButton title="美国"></CountryButton>
+                <CountryButton title="美国"></CountryButton>
+                <CountryButton title="美国"></CountryButton>
+                <CountryButton title="美国"></CountryButton>
+                <CountryButton title="美国"></CountryButton>
+                <CountryButton title="美国"></CountryButton>
+                <CountryButton title="美国"></CountryButton>
+                <CountryButton title="美国"></CountryButton>
+                <CountryButton title="美国"></CountryButton>
+                <CountryButton title="美国"></CountryButton>
+                <CountryButton title="美国"></CountryButton>
+              </div>
+            </div>
+          </div>
+        </div>
       </SwipeableDrawer>
     </div>
   );
 };
+
 const SchoolList = (props) => {
   const { arg } = props;
   const [select, setSelect] = useState('Canada');
@@ -135,7 +175,9 @@ const SchoolList = (props) => {
           <div className="w-4/5 h-full">
             {countrySchoolList[select].map((item) => {
               return (
-                <div className="h-12 pt-3 pl-4">
+                <div className="h-12 pt-3 pl-4" onClick={()=>{
+                  props.setVisible(false);
+                }}>
                   <div className="flex items-center h-4 space-x-2">
                     <div> {item.cnLabel}</div>
                     <div className="p-1 text-xs bg-bg">{item.short}</div>
@@ -153,9 +195,18 @@ const SchoolList = (props) => {
 function SchoolPage(props) {
   console.log(props, 'SchoolPage');
   const [isSelect, setIsSelect] = useState(false);
+  const [schoolSelect,setSelectSchool] = useState(false);
+
   return (
     <div className="w-screen h-screen">
-      <CountyList setVisible={setIsSelect} visible={isSelect}></CountyList>
+      <RedCountyList
+        setVisible={setIsSelect}
+        visible={isSelect}
+        setSelectSchool={setSelectSchool}
+      ></RedCountyList>
+      <SchoolList  setVisible={setSelectSchool}
+        visible={schoolSelect && !isSelect}>
+      </SchoolList>
       {/* <SchoolList
         setVisible={setIsSelect}
         visible={isSelect}
