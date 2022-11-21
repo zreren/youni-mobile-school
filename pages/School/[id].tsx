@@ -9,6 +9,9 @@ import { styled } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import classnames from 'classnames';
 import Header from '@/components/Header';
+import { useDispatch, useSelector } from "react-redux";
+import { selectAuthState, setAuthState } from "@/stores/authSlice";
+
 const RedCountyList = (props) => {
   const { arg } = props;
   const [select, setSelect] = useState('Canada');
@@ -196,7 +199,10 @@ function SchoolPage(props) {
   console.log(props, 'SchoolPage');
   const [isSelect, setIsSelect] = useState(false);
   const [schoolSelect,setSelectSchool] = useState(false);
-
+  const dispatch = useDispatch()
+  React.useEffect(()=>{
+    dispatch(setAuthState(true))
+  },[])
   return (
     <div className="w-screen h-screen">
       <RedCountyList
@@ -233,6 +239,7 @@ function SchoolPage(props) {
 }
 
 export async function getServerSideProps({ params }) {
+
   const School = [
     {
       id: 1,

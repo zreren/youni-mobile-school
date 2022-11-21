@@ -19,6 +19,55 @@
 .red-gradient{
   background: linear-gradient(177.81deg, #FF5440 1.84%, #FB7C62 14.57%, #FEFCFB 32.84%), #FFFFFF;
 }
+
+.btn-enter {
+  transform: translate(100%, 0);
+  opacity: 0;
+}
+
+.btn-enter-active {
+  transform: translate(0, 0);
+  opacity: 1;
+  transition: all 500ms;
+}
+
+.btn-exit {
+  transform: translate(0, 0);
+  opacity: 1;
+}
+
+.btn-exit-active {
+  transform: translate(-100%, 0);
+  opacity: 0;
+  transition: all 500ms;
+}
+.title-enter, .title-appear {
+  opacity: 0;
+  transform: scale(.8);
+}
+
+.title-enter-active, .title-appear-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.title-exit {
+  opacity: 1;
+}
+
+.title-exit-active {
+  opacity: 0;
+  transform: scale(.8);
+  transition: opacity 300ms, transform 300ms;
+}
+.bg-white-mask{
+  background: rgb(255,255,255);
+  background: linear-gradient(180deg, rgba(255,255,255,0.5284488795518207) 0%, rgba(255,255,255,1) 9%, rgba(255,255,255,1) 100%);
+}
+/* .mask{
+  -webkit-mask-image: linear-gradient(to top,#000,transparent);
+} */
 /* .comment-detail-header {
   background: linear-gradient(to bottom, #ffc285 40%, #ffdbba 60%);
   border-radius: 8px 0px 0px 0px;

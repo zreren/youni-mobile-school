@@ -4,8 +4,8 @@ export default function SearchInSchool(props) {
   const { placeholder } = props;
   return (
    <Link href='/Search'>
-    <div className="flex justify-center w-full relative pl-4 pr-4">
-      {/* <div className='absolute left-1/3 top-3 pl-20'>
+    <div className="relative flex justify-center w-full pl-4 pr-4">
+      {/* <div className='absolute pl-20 left-1/3 top-3'>
         <svg
           width="16"
           height="16"
@@ -22,9 +22,7 @@ export default function SearchInSchool(props) {
       <input
         type="text"
         placeholder={placeholder ? placeholder : 'Search'}
-        className="
-        border-none
-        text-center input input-md	h-10 w-full rounded-full"
+        className="w-full h-10 text-center border-none rounded-full input input-md"
       />
     </div>
    </Link>

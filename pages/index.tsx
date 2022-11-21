@@ -12,7 +12,11 @@ import CButtonNoLine from '../components/Button/CButtonNoLine';
 import Link from 'next/link';
 import SaveToLibButton from '@/components/Button/SaveToLibButton';
 import CDataGrip from '@/components/CDataGrip';
+import { useDispatch, useSelector } from "react-redux";
+import { selectAuthState, setAuthState } from "@/stores/authSlice";
 const Home: NextPage = () => {
+  const dispatch = useDispatch();
+  dispatch(setAuthState(true))
   enum TSize {
     normal,
     full,
@@ -23,7 +27,7 @@ const Home: NextPage = () => {
     { avatar: '', name: 'Test Prof 3', score: 4.1 },
   ];
   return (
-    <div className="bg-gray-50 p-4 flex flex-col space-y-8">
+    <div className="flex flex-col p-4 space-y-8 bg-gray-50">
       <Header title="临时展示页面">
         <CButton size="normal">添加</CButton>
       </Header>
@@ -32,7 +36,7 @@ const Home: NextPage = () => {
        课程评价
       </a>
       <Link href="/Schedules/Schedules">课程表</Link>
-      <div className="w-full flex space-x-2">
+      <div className="flex w-full space-x-2">
         <SaveToLibButton color="#3665FF" icon="wechat" title="保存到相册"></SaveToLibButton>
         <SaveToLibButton color="#FFD036" icon="share" title="分享课表"></SaveToLibButton>
       </div>

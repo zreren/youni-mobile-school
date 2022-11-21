@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Header from '@/components/Header';
 import HeaderMenu from '@/components/Menu/Header-menu';
+import Link from 'next/link';
 import ProfileHeader from '@/components/PageComponents/Profile/ProfileHeader';
 import Icon1 from './1.svg';
 import Icon2 from './2.svg';
@@ -28,9 +29,9 @@ const Identify = () => {
       onClick={() => {
         router.push('./Profile/valid');
       }}
-      className="w-full p-4 h-16 bg-black rounded-xl text-gold flex justify-between items-center"
+      className="flex items-center justify-between w-full h-16 p-4 bg-black rounded-xl text-gold"
     >
-      <div className="flex space-x-2 items-center">
+      <div className="flex items-center space-x-2">
         <Icon4></Icon4>
         <div>学生认证</div>
       </div>
@@ -42,7 +43,7 @@ const Identify = () => {
 };
 const ProfileMenu = () => {
   return (
-    <div className="flex justify-between p-4  ">
+    <div className="flex justify-between p-4 ">
       <div className="flex flex-col items-center space-y-3">
         <MenuIcon1></MenuIcon1>
         <div className="text-xs">每日签到</div>
@@ -64,18 +65,18 @@ const ProfileMenu = () => {
 };
 const Setting = () => {
   return (
-    <div className="card rounded-lg w-full bg-base-100 ">
-      <div className="card-body  p-4  pl-0 pr-0 ">
-        <div className="grid  grid-cols-4	">
-          <div className="flex  flex-col items-center space-y-3">
+    <div className="w-full rounded-lg card bg-base-100 ">
+      <div className="p-4 pl-0 pr-0 card-body ">
+        <div className="grid grid-cols-4 ">
+          <div className="flex flex-col items-center space-y-3">
             <SettingIcon1></SettingIcon1>
             <div className="text-xs">账号</div>
           </div>
-          <div className="flex   flex-col items-center space-y-3">
+          <div className="flex flex-col items-center space-y-3">
             <SettingIcon2></SettingIcon2>
             <div className="text-xs">语言</div>
           </div>
-          <div className="flex   flex-col items-center space-y-3">
+          <div className="flex flex-col items-center space-y-3">
             <SettingIcon3></SettingIcon3>
             <div className="text-xs">客服</div>
           </div>
@@ -84,20 +85,20 @@ const Setting = () => {
             <div className="text-xs">设置</div>
           </div>
         </div>
-        <div className="grid  grid-cols-4">
-          <div className="flex  flex-col items-center space-y-3">
+        <div className="grid grid-cols-4">
+          <div className="flex flex-col items-center space-y-3">
             <SettingIcon5></SettingIcon5>
             <div className="text-xs">草稿箱</div>
           </div>
-          <div className="flex   flex-col items-center space-y-3">
+          <div className="flex flex-col items-center space-y-3">
             <SettingIcon6></SettingIcon6>
             <div className="text-xs">历史</div>
           </div>
-          <div className="flex  flex-col items-center space-y-3">
+          <div className="flex flex-col items-center space-y-3">
             <SettingIcon7></SettingIcon7>
             <div className="text-xs">邀请好友</div>
           </div>
-          <div className="flex    flex-col items-center space-y-3">
+          <div className="flex flex-col items-center space-y-3">
             <SettingIcon8></SettingIcon8>
             <div className="text-xs">功能请求</div>
           </div>
@@ -108,10 +109,13 @@ const Setting = () => {
 };
 const Profile1 = () => {
   return (
-    <div className="bg-bg w-full h-screen p-5">
+    <div className="w-full h-screen p-5 bg-bg">
       <Identify></Identify>
       <ProfileMenu></ProfileMenu>
       <Setting></Setting>
+      <div className='text-center'>
+        <Link href="/Login/signup"> 临时进入登录页面</Link>
+      </div>
     </div>
   );
 };
@@ -138,9 +142,9 @@ export default function index() {
   ];
   const [menu, setMenu] = useState(Profile1);
   return (
-    <div className="w-screen h-screen">
+    <div className="w-screen h-screen overflow-hidden">
       <ProfileHeader></ProfileHeader>
-      <div className="rounded-full w-full overflow-hidden  ">
+      <div className="w-full overflow-hidden rounded-full ">
         <HeaderMenu
           headerMenuList={headerList}
           switchMenu={(val) => {
@@ -152,13 +156,13 @@ export default function index() {
     </div>
     //  <CommonLayout>
     //   <Header title="我的"></Header>
-    //   <div className="alert alert-info shadow-lg">
+    //   <div className="shadow-lg alert alert-info">
     //       <div>
     //         <svg
     //           xmlns="http://www.w3.org/2000/svg"
     //           fill="none"
     //           viewBox="0 0 24 24"
-    //           className="stroke-current flex-shrink-0 w-6 h-6"
+    //           className="flex-shrink-0 w-6 h-6 stroke-current"
     //         >
     //           <path
     //             stroke-linecap="round"

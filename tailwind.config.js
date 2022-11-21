@@ -33,6 +33,7 @@ module.exports = {
   theme: {
     extend: {
       textColor: {
+        darkYellow:'#D9A823',
         score1: '#D07775',
         score2: '#7D85C0',
         score3: '#6FAF6E',

@@ -5,7 +5,10 @@ import Add from './add.svg';
 import Icon from '../Icon';
 import { styled } from '@mui/material/styles';
 import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from "react-redux";
+import { selectAuthState, setAuthState } from "@/stores/authSlice";
 export default function LabelBottomNavigation() {
+  const dispatch = useDispatch();
   const router = useRouter();
   const routerTable = [
     '///',
@@ -43,15 +46,15 @@ export default function LabelBottomNavigation() {
   );
   return (
     <BottomNavigation
-      className="fixed transition-all	 w-full text-sm bottom-0	left-0 z-30"
+      className="fixed bottom-0 left-0 z-30 w-full text-sm transition-all"
       value={value}
       showLabels={true}
       onChange={handleChange}
     >
-      <MyAction className="transition-all	" label="看看" value={1} />
+      <MyAction className="transition-all " label="看看" value={1} />
       <MyAction label="课表" value={2} />
       <MyAction
-        className="transition duration-2000 ease-in-out"
+        className="transition ease-in-out duration-2000"
         label=" "
         icon={<Icon type="add"></Icon>}
         value={3}

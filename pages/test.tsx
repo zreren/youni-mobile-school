@@ -3,30 +3,34 @@ import Header from '../components/Header';
 import Link from 'next/link';
 import CButton from '../components/Button/CButton';
 import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from "react-redux";
+import { selectAuthState, setAuthState } from "@/stores/authSlice";
 export default function test() {
   const  router = useRouter()
+  const dispatch = useDispatch();
+  dispatch(setAuthState(true))
   return (
-    <div className="space-y-2 p-8 pt-16">
+    <div className="p-8 pt-16 space-y-2">
       <Header title="测试链接页" />
-      <button onClick={()=>{router.push('/')}} className="btn btn-sm w-full bg-gray-500">
+      <button onClick={()=>{router.push('/')}} className="w-full bg-gray-500 btn btn-sm">
         <Link href="/">组件展示页</Link>
       </button>
-      <button onClick={()=>{router.push('/School/York')}} className="btn btn-sm w-full bg-gray-500">
+      <button onClick={()=>{router.push('/School/York')}} className="w-full bg-gray-500 btn btn-sm">
         <Link href="/School/York">约克大学入口</Link>
       </button>
-      <button onClick={()=>{router.push('/School/Harvard')}} className="btn btn-sm w-full bg-gray-500">
+      <button onClick={()=>{router.push('/School/Harvard')}} className="w-full bg-gray-500 btn btn-sm">
         <Link href="/School/Harvard">牛津大学入口</Link>
       </button>
-      <button onClick={()=>{router.push('/School/Stanford')}}  className="btn btn-sm w-full bg-gray-500">
+      <button onClick={()=>{router.push('/School/Stanford')}}  className="w-full bg-gray-500 btn btn-sm">
         <Link href="/School/Stanford">斯坦福大学入口</Link>
       </button>
-      <div className="alert alert-info shadow-lg">
+      <div className="shadow-lg alert alert-info">
         <div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            className="stroke-current flex-shrink-0 w-6 h-6"
+            className="flex-shrink-0 w-6 h-6 stroke-current"
           >
             <path
               stroke-linecap="round"
