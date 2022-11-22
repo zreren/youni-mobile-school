@@ -107,7 +107,7 @@ const SelectLanguage = (props) => {
           /> */}
         </div>
       </div>
-      <div className="w-full h-44"></div>
+      <div className="w-full h-22"></div>
       <div className="p-4 space-y-10">
         <div className="flex items-center justify-center w-full h-32 text-xl rounded flex-2xl bg-bg">
           EngLish
@@ -233,7 +233,7 @@ const ChooseYourRole = (props) => {
               : null;
           }}
           className={classnames(
-            'w-full bg-gray-400 border-0 rounded-full btn',
+            'w-full bg-gray-400 border-0 rounded-full btn hover:bg-gray-300',
             {
               'bg-yellow-400': phoneNumber.length > 5 && school.length,
             },

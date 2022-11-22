@@ -20,7 +20,7 @@ import SettingIcon5 from './setting/setting@2x-4.svg';
 import SettingIcon6 from './setting/setting@2x-5.svg';
 import SettingIcon7 from './setting/setting@2x-6.svg';
 import SettingIcon8 from './setting/setting@2x-7.svg';
-
+import BgSVG from './bg.svg';
 import { useRouter } from 'next/router';
 const Identify = () => {
   const router = useRouter();
@@ -29,7 +29,7 @@ const Identify = () => {
       onClick={() => {
         router.push('./Profile/valid');
       }}
-      className="flex items-center justify-between w-full h-16 p-4 bg-black rounded-xl text-gold"
+      className="relative flex items-center justify-between w-full h-16 p-4 pt-0 pb-0 bg-black rounded-xl text-gold"
     >
       <div className="flex items-center space-x-2">
         <Icon4></Icon4>
@@ -38,6 +38,7 @@ const Identify = () => {
       <div className="text-xs">
         <div>30秒认证在校生身份</div> <div>解锁YoUni全部功能</div>
       </div>
+      <BgSVG className="absolute w-26 h-22 -right-0"></BgSVG>
     </div>
   );
 };

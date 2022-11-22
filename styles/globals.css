@@ -63,7 +63,7 @@
 }
 .bg-white-mask{
   background: rgb(255,255,255);
-  background: linear-gradient(180deg, rgba(255,255,255,0.5284488795518207) 0%, rgba(255,255,255,1) 9%, rgba(255,255,255,1) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,1) 9%, rgba(255,255,255,1) 100%);
 }
 /* .mask{
   -webkit-mask-image: linear-gradient(to top,#000,transparent);

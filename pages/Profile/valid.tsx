@@ -11,14 +11,14 @@ const InputComponent = (props) => {
       <input
         type="text"
         placeholder="info@site.com"
-        className="input placeholder-gray-300 font-medium	text-gray-500 text-sm hover:outline-none	border-none text-right"
+        className="text-sm font-medium text-right text-gray-500 placeholder-gray-300 border-none input hover:outline-none"
       />
     );
   };
   return (
-    <div className="rounded-full bg-white w-full ">
-      <label className="input-group   w-full flex justify-between h-12">
-        <span className="bg-white  font-medium text-blueTitle text-sm">
+    <div className="w-full bg-white rounded-full ">
+      <label className="flex justify-between w-full h-12 input-group">
+        <span className="text-sm font-medium bg-white text-blueTitle">
           {label}
         </span>
         {type === 'input' ? <Input /> : <Input /> }
@@ -36,39 +36,39 @@ const MailValid = () => {
   ];
   return (
     <div className="w-full space-y-4">
-      {/* <div className="rounded-full bg-white w-full ">
-        <label className="input-group   w-full flex justify-between h-12">
-          <span className="bg-white  font-medium text-blueTitle text-sm">
+      {/* <div className="w-full bg-white rounded-full ">
+        <label className="flex justify-between w-full h-12 input-group">
+          <span className="text-sm font-medium bg-white text-blueTitle">
             课程代码
           </span>
           <input
             type="text"
             placeholder="info@site.com"
-            className="input placeholder-gray-300 font-medium	text-gray-500 text-sm hover:outline-none	border-none text-right"
+            className="text-sm font-medium text-right text-gray-500 placeholder-gray-300 border-none input hover:outline-none"
           />
         </label>
       </div>
-      <div className="rounded-full bg-white w-full ">
-        <label className="input-group   w-full flex justify-between h-12">
-          <span className="bg-white  font-medium text-blueTitle text-sm">
+      <div className="w-full bg-white rounded-full ">
+        <label className="flex justify-between w-full h-12 input-group">
+          <span className="text-sm font-medium bg-white text-blueTitle">
             入学年份
           </span>
           <input
             type="text"
             placeholder="info@site.com"
-            className="input placeholder-gray-300 font-medium	text-gray-500 text-sm hover:outline-none	border-none text-right"
+            className="text-sm font-medium text-right text-gray-500 placeholder-gray-300 border-none input hover:outline-none"
           />
         </label>
       </div>
-      <div className="rounded-full bg-white w-full ">
-        <label className="input-group   w-full flex justify-between h-12">
-          <span className="bg-white  font-medium text-blueTitle text-sm">
+      <div className="w-full bg-white rounded-full ">
+        <label className="flex justify-between w-full h-12 input-group">
+          <span className="text-sm font-medium bg-white text-blueTitle">
             专业
           </span>
           <input
             type="text"
             placeholder="info@site.com"
-            className="input placeholder-gray-300 font-medium	text-gray-500 text-sm hover:outline-none	border-none text-right"
+            className="text-sm font-medium text-right text-gray-500 placeholder-gray-300 border-none input hover:outline-none"
           />
         </label>
       </div> */}
@@ -77,18 +77,18 @@ const MailValid = () => {
           <InputComponent label={item.label} ></InputComponent>
         );
       })}
-      <div className="rounded-full bg-white w-full relative">
-        <label className="input-group   w-full flex justify-between h-12">
-          <span className="bg-white  font-medium text-blueTitle text-sm">
+      <div className="relative w-full bg-white rounded-full">
+        <label className="flex justify-between w-full h-12 input-group">
+          <span className="text-sm font-medium bg-white text-blueTitle">
             验证码
           </span>
           <input
             type="text"
-            placeholder=""
-            className="input placeholder-gray-300 font-medium	text-gray-500 text-sm hover:outline-none	border-none text-right"
+            placeholder="输入验证码"
+            className="mr-20 text-sm font-medium text-right text-gray-500 placeholder-gray-300 border-none input hover:outline-none"
           />
         </label>
-        <button className="bg-yellow-400 rounded-full h-8 w-20 right-0  absolute ">
+        <button className="absolute w-20 h-8 text-xs bg-yellow-400 rounded-full right-2 top-2">
           发送验证码
         </button>
       </div>
@@ -110,11 +110,11 @@ const CardValid = () => {
           <InputComponent label={item.label} type={item.type}></InputComponent>
         );
       })}
-      <div className='rounded-lg h-36 w-full bg-white p-4'>
+      <div className='w-full p-4 bg-white rounded-lg h-36'>
         <div>学生卡验证</div>
-        <div className='flex justify-between h-full pb-8 pt-2 space-x-4'>
-          <div className='w-full h-full bg-bg text-center'>正面</div>
-          <div className='w-full h-full bg-bg text-center'>反面</div>
+        <div className='flex justify-between h-full pt-2 pb-8 space-x-4'>
+          <div className='flex items-center justify-center w-full h-full text-center bg-bg'>正面</div>
+          <div className='flex items-center justify-center w-full h-full text-center bg-bg'>反面</div>
         </div>
       </div>
     </div>
@@ -132,7 +132,7 @@ export default function idValid() {
   const menuList = [MailValid, CardValid];
   const [menu, setMenu] = React.useState(MailValid);
   return (
-    <div className="bg-bg h-screen">
+    <div className="h-screen bg-bg">
       <Header title="课程评价"></Header>
       <HeaderMenu
         headerMenuList={headerMenuList}
@@ -140,7 +140,7 @@ export default function idValid() {
           setMenu(menuList[val]);
         }}
       ></HeaderMenu>
-      <div className="p-4 w-full h-1/1 fixed">{menu}</div>
+      <div className="fixed w-full p-4 h-1/1">{menu}</div>
     </div>
   );
 }
