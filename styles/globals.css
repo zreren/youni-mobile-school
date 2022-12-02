@@ -16,10 +16,23 @@
 .MuiListItem-divider {
   /* border-bottom: 1px solid rgba(255, 255 255, 0.01) !important; */
 }
+.red-full-gradient{
+  background: linear-gradient(269.61deg, #FFEAB1 -7.12%, #FF7978 14.91%, #FE543B 95.99%, #FE533A 96%);
+}
 .red-gradient{
   background: linear-gradient(177.81deg, #FF5440 1.84%, #FB7C62 14.57%, #FEFCFB 32.84%), #FFFFFF;
 }
-
+.org-gradient{
+  background: linear-gradient(180deg, #FF760F 0%, #FFA139 100%);
+  z-index: -100;
+}
+.yellow-gradient{
+  background: linear-gradient(63.15deg, #FFC400 18.1%, #FEE278 99.27%);
+  color: #B38314;
+}
+.z-bg{
+  z-index: -99;
+}
 .btn-enter {
   transform: translate(100%, 0);
   opacity: 0;

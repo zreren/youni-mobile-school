@@ -22,6 +22,10 @@ import SettingIcon7 from './setting/setting@2x-6.svg';
 import SettingIcon8 from './setting/setting@2x-7.svg';
 import BgSVG from './bg.svg';
 import { useRouter } from 'next/router';
+// const routerHook = (path:string) =>{
+//   const router = useRouter();
+//   router.push(path)
+// }
 const Identify = () => {
   const router = useRouter();
   return (
@@ -38,7 +42,7 @@ const Identify = () => {
       <div className="text-xs">
         <div>30秒认证在校生身份</div> <div>解锁YoUni全部功能</div>
       </div>
-      <BgSVG className="absolute w-26 h-22 -right-0"></BgSVG>
+      <BgSVG className="absolute h-10 scale-125 w-18 -right-0"></BgSVG>
     </div>
   );
 };
@@ -71,11 +75,11 @@ const Setting = () => {
         <div className="grid grid-cols-4 ">
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon1></SettingIcon1>
-            <div className="text-xs">账号</div>
+            <Link href="/Setting/account"><div className="text-xs">账号</div></Link>
           </div>
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon2></SettingIcon2>
-            <div className="text-xs">语言</div>
+            <Link href="/Setting/language"><div className="text-xs" >语言</div></Link>
           </div>
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon3></SettingIcon3>
@@ -83,7 +87,7 @@ const Setting = () => {
           </div>
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon4></SettingIcon4>
-            <div className="text-xs">设置</div>
+            <Link href="/Setting"><div className="text-xs">设置</div></Link>
           </div>
         </div>
         <div className="grid grid-cols-4">
@@ -155,26 +159,5 @@ export default function index() {
       </div>
       <div>{menu}</div>
     </div>
-    //  <CommonLayout>
-    //   <Header title="我的"></Header>
-    //   <div className="shadow-lg alert alert-info">
-    //       <div>
-    //         <svg
-    //           xmlns="http://www.w3.org/2000/svg"
-    //           fill="none"
-    //           viewBox="0 0 24 24"
-    //           className="flex-shrink-0 w-6 h-6 stroke-current"
-    //         >
-    //           <path
-    //             stroke-linecap="round"
-    //             stroke-linejoin="round"
-    //             stroke-width="2"
-    //             d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-    //           ></path>
-    //         </svg>
-    //         <span>等待高保真</span>
-    //       </div>
-    //     </div>
-    //  </CommonLayout>
   );
 }

@@ -92,6 +92,7 @@ const MailValid = () => {
           发送验证码
         </button>
       </div>
+      <button className="w-full border-none rounded-full yellow-gradient btn">提交</button>
     </div>
   );
 };
@@ -117,6 +118,7 @@ const CardValid = () => {
           <div className='flex items-center justify-center w-full h-full text-center bg-bg'>反面</div>
         </div>
       </div>
+      <button className="w-full border-none rounded-full yellow-gradient btn">提交</button>
     </div>
   );
 };
@@ -133,7 +135,7 @@ export default function idValid() {
   const [menu, setMenu] = React.useState(MailValid);
   return (
     <div className="h-screen bg-bg">
-      <Header title="课程评价"></Header>
+      <Header title="学生认证"></Header>
       <HeaderMenu
         headerMenuList={headerMenuList}
         switchMenu={(val) => {
