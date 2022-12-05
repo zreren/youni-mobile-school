@@ -6,9 +6,12 @@ import Title from '../../components/Title/Title';
 import CommonLayout from '../../components/Layout/CommonLayout';
 import Search from '../../components/Input/Search';
 import { useRouter } from 'next/router';
+import useSWR from 'swr';
+import { API_KEY } from '../api/api';
 // import CourseScoreCard from '../components/CourseScoreCard'
 export default function professorEvaluation() {
   const router = useRouter();
+  // const { data, error } = useSWR(API_KEY.USER.get.list,fetcher);
   return (
     <CommonLayout isBottom={true}>
       <Header title="教授列表"></Header>
@@ -21,7 +24,7 @@ export default function professorEvaluation() {
               data={item}
               key={item.id}
               onClick={() => {
-                router.push(`/professor/detail/${item.id}`)
+                router.push(`/professor/detail/${item.id}`);
               }}
             ></ProfessorCard>
           );
