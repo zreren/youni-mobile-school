@@ -85,3 +85,11 @@
   background: linear-gradient(to bottom, #ffc285 40%, #ffdbba 60%);
   border-radius: 8px 0px 0px 0px;
 } */
+
+.gap-bg{
+  background: linear-gradient(to bottom right, #EEEBFF 28px, #EFF6FF);
+}
+
+.pink-linergradient-bg{
+  background: linear-gradient(94.61deg, rgba(184, 122, 255, 0.3) 0.49%, rgba(184, 122, 255, 0) 103.04%);
+}

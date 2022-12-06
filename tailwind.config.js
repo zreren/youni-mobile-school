@@ -54,6 +54,9 @@ module.exports = {
       fontSize:{
         '8':'0.5rem',
         '10':"0.6rem"
+      },
+      rotate:{
+        "220":"235deg"
       }
     },
   },

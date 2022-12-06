@@ -10,6 +10,9 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { selectAuthState, setAuthState } from '../stores/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'next-i18next';
+import { appWithTranslation } from 'next-i18next';
+import nexti18nConfig from '../i18n';
 function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useDispatch();
   const authState = useSelector(selectAuthState);
@@ -21,6 +24,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     '/Course/course',
     '/Profile',
   ];
+  const { i18n } = useTranslation();
+  console.log(i18n)
   useEffect(() => {
     console.log(router.pathname);
       if (routerTable.indexOf(router.pathname) > -1) {
@@ -35,4 +40,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default wrapper.withRedux(MyApp);
+export default wrapper.withRedux(appWithTranslation(MyApp,nexti18nConfig));
