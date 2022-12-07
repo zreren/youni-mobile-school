@@ -7,7 +7,7 @@ import CommonLayout from '../../components/Layout/CommonLayout';
 import Search from '../../components/Input/Search';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
-import { API_KEY } from '../api/api';
+import { API_KEY } from '../../libs/api/api';
 // import CourseScoreCard from '../components/CourseScoreCard'
 export default function professorEvaluation() {
   const router = useRouter();

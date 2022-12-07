@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '@/components/Header';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Form from '@/components/Form/Form';
@@ -12,6 +12,8 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -34,9 +36,9 @@ function SimpleDialog(props: SimpleDialogProps) {
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>Set backup account</DialogTitle>
       <List sx={{ pt: 0 }}>
-          <ListItem button>
-            <ListItemText primary={"1"} />
-          </ListItem>
+        <ListItem button>
+          <ListItemText primary={"1"} />
+        </ListItem>
         <ListItem autoFocus button onClick={() => handleListItemClick('addAccount')}>
           <ListItemText primary="Add account" />
         </ListItem>
@@ -47,11 +49,40 @@ function SimpleDialog(props: SimpleDialogProps) {
 
 export default function account() {
   const LanguageSelect = () => {
+    const [school, setSchool] = useState('cn');
     return (
-      <div className="flex items-center text-gray-400">
-        <div>简体中文</div>
-        <RightIcon></RightIcon>
-      </div>
+      // <div className="flex items-center text-gray-400">
+      //   <div>简体中文</div>
+      //   <RightIcon></RightIcon>
+      // </div>
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        className="w-full p-0"
+        value={school}
+        sx={{
+          boxShadow: 'none',
+          padding: 0,
+          '.MuiOutlinedInput-input': { padding: 0 },
+          '.MuiOutlinedInput-notchedOutline': { border: 0 },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            border: 0,
+            'border-width': 0,
+            'border-color': 'transparent',
+          },
+        }}
+        label="select school"
+        onChange={(e) => {
+          setSchool(e.target.value);
+        }}
+      >
+        <MenuItem value={'cn'}>
+          简体中文
+        </MenuItem>
+        <MenuItem value={'en'}>
+          English
+        </MenuItem>
+      </Select>
     );
   };
   const List1 = [
@@ -59,13 +90,13 @@ export default function account() {
       title: '应用语言',
       intro: '选择默认应用语言',
       action: <LanguageSelect></LanguageSelect>,
-      event:()=>{setOpen(true)}
+      event: () => { setOpen(true) }
     },
     {
       title: '偏好语言',
       intro: '选择你熟悉的语言，以这些语言发布的内容将不会自动翻译。',
-      action: <RightIcon></RightIcon>,
-      event:()=>{}
+      action: <LanguageSelect></LanguageSelect>,
+      event: () => { }
     },
   ];
   const List2 = [
@@ -73,13 +104,13 @@ export default function account() {
       title: '翻译语言',
       intro: '你希望内容被翻译成哪一种语言',
       action: <LanguageSelect></LanguageSelect>,
-      event:()=>{}
+      event: () => { }
     },
     {
       title: '始终显示翻译',
       intro: '开启后，支持翻译的内容将始终以所选的翻译语言显示。',
       action: <IOSSwitch></IOSSwitch>,
-      event:()=>{}
+      event: () => { }
     },
   ];
   const [myItem, setMyItem] = useLocalStorage('my-item', null);
@@ -90,12 +121,6 @@ export default function account() {
       <Header title="语言"></Header>
       <Form header="语言设置" List={List1} ></Form>
       <Form header="翻译" List={List2}></Form>
-      
-      <SimpleDialog
-       open={open}
-       selectedValue={selectedValue}
-       onClose={()=>{setOpen(false)}}
-      ></SimpleDialog>
     </CommonLayout>
   );
 }
