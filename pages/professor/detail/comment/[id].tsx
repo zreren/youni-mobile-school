@@ -1,11 +1,191 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CScoreCard from '@/components/Rating/CScoreCard';
 import Super from '../surper.svg';
 import Like from '../Like.svg';
 import DisLike from '../disLike.svg';
 import Comments from '../Comments.svg';
 import Discussion from '../discussion.svg';
+import Union from "../Union.svg";
 export default function userComment() {
+  const comments = [
+    {
+      id: 1,
+      createdAt: '2022-12-07',
+      updatedAt: '2022-12-07',
+      content: 'This is the first comment',
+      children: [
+        {
+          id: 2,
+          createdAt: '2022-12-07',
+          updatedAt: '2022-12-07',
+          content: 'This is the first reply to the first comment',
+          children: [],
+          parent: 1,
+          evaluation: {},
+          student: {},
+          deletedAt: null
+        },
+        {
+          id: 3,
+          createdAt: '2022-12-07',
+          updatedAt: '2022-12-07',
+          content: 'This is the second reply to the first comment',
+          children: [],
+          parent: 1,
+          evaluation: {},
+          student: {},
+          deletedAt: null
+        },
+        {
+          id: 4,
+          createdAt: '2022-12-07',
+          updatedAt: '2022-12-07',
+          content: 'This is the third reply to the first comment',
+          children: [],
+          parent: 1,
+          evaluation: {},
+          student: {},
+          deletedAt: null
+        }
+      ],
+      parent: null,
+      evaluation: {},
+      student: {},
+      deletedAt: null
+    },
+    {
+      id: 5,
+      createdAt: '2022-12-07',
+      updatedAt: '2022-12-07',
+      content: 'This is the second comment',
+      children: [
+        {
+          id: 6,
+          createdAt: '2022-12-07',
+          updatedAt: '2022-12-07',
+          content: 'This is the first reply to the second comment',
+          children: [],
+          parent: 5,
+          evaluation: {},
+          student: {},
+          deletedAt: null
+        },
+        {
+          id: 7,
+          createdAt: '2022-12-07',
+          updatedAt: '2022-12-07',
+          content: 'This is the second reply to the second comment',
+          children: [],
+          parent: 5,
+          evaluation: {},
+          student: {},
+          deletedAt: null
+        },
+        {
+          id: 8,
+          createdAt: '2022-12-07',
+          updatedAt: '2022-12-07',
+          content: 'This is the third reply to the second comment',
+          children: [],
+          parent: 5,
+          evaluation: {},
+          student: {},
+          deletedAt: null
+        }
+      ],
+      parent: null,
+      evaluation: {},
+      student: {},
+      deletedAt: null
+    }
+  ];
+  const DiscussionComponentFooter = () => {
+    return (
+      <div className='w-full flex justify-between mt-2 mb-2'>
+        <div className='flex items-center space-x-2'>
+          <div className='text-xs text-lightGray'>4小时前</div>
+          <div className='text-xs font-semibold text-secondGray'>回复</div>
+        </div>
+        <div className='flex space-x-2'>
+          <div className="flex items-center text-xs">15</div>
+          <div className='flex items-center text-xs'>3</div>
+        </div>
+      </div>
+    )
+  }
+  const DiscussionComponent = ({ children }) => {
+    return (
+      <div className='w-full mt-2 flex justify-start space-x-3'>
+        <div>
+          <div className='bg-gray-500 rounded-full w-9 h-9'></div>
+        </div>
+        <div>
+          <div className='font-medium'>测试用户1</div>
+          <div className="text-xs text-secondGray mt-1">2022届 · B.Com Accounting</div>
+          <div className='text-sm mt-1'>文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖 @测试用户2</div>
+          <DiscussionComponentFooter></DiscussionComponentFooter>
+          <div>{children}</div>
+        </div>
+      </div>
+    )
+  }
+  const Discussion = () => {
+    return (
+      <div>
+        {
+          comments.map((item) => {
+            const [expand, setExpand] = useState(false);
+            return (
+              <div>
+                <DiscussionComponent>
+                  <div className=''>
+                    {expand ? item.children?.map((item) => {
+                      return (
+                        <div className='w-full mt-2 flex justify-start space-x-3'>
+                          <div>
+                            <div className='bg-gray-500 rounded-full w-6 h-6'></div>
+                          </div>
+                          <div>
+                            <div className='font-medium'>测试用户1</div>
+                            <div className="text-xs text-secondGray mt-1">2022届 · B.Com Accounting</div>
+                            <div className='text-sm mt-1'>文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖 @测试用户2</div>
+                            <DiscussionComponentFooter></DiscussionComponentFooter>
+                          </div>
+                        </div>
+                      )
+                    }) : item.children?.slice(0, 2).map((item) => {
+                      return (
+                        <div className='w-full mt-2 flex justify-start space-x-3'>
+                          <div>
+                            <div className='bg-gray-500 rounded-full w-6 h-6'></div>
+                          </div>
+                          <div>
+                            <div className='font-medium'>测试用户1</div>
+                            <div className="text-xs text-secondGray mt-1">2022届 · B.Com Accounting</div>
+                            <div className='text-sm mt-1'>文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖 @测试用户2</div>
+                            <DiscussionComponentFooter></DiscussionComponentFooter>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                  <div className='flex space-x-3'>
+                    <div>
+                      <div className='w-6 h-6'></div>
+                    </div>
+                    <div className='font-semibold text-primary text-xs' onClick={() => [setExpand(!expand)]}>
+                      {expand ? "收起" : "查看全部 3 条回复"}
+                    </div>
+                  </div>
+                </DiscussionComponent>
+              </div>
+            )
+          })
+        }
+      </div >
+    )
+
+  }
   return (
     <div className="bg-white p-4 rounded-lg  mb-4">
       <div className="flex items-center mb-4">
@@ -21,22 +201,28 @@ export default function userComment() {
           <div className="text-gray-200 ml-4">2022届 · B.Com Accounting</div>
         </div>
       </div>
-      {/* <Super></Super> */}
-      <div
-        className="flex justify-between items-center comment-detail-header to-yellow-50 w-full "
-      >
-        <div>
-          <div className="flex space-x-2 mb-1 mt-1">
-            <div className="text-gray-200">课程名称:</div>
-            <div className="text-blueTitle">ADMS 1000</div>
-          </div>
-          <div className="flex space-x-2 mb-1 mt-1">
-            <div className="text-gray-200">最终成绩:</div>
-            <div className="text-blueTitle">B+</div>
+      <div>
+        <div className="w-full rounded-t-xl org-gradient2 relative h-8">
+          <Super className="absolute right-1 bottom-0 z-10"></Super>
+          <Union className="absolute right-0 bottom-0"></Union>
+        </div>
+        <div className='bg-gradient-to-b from-yellow-50  p-4'>
+          <div
+            className="flex justify-between items-center comment-detail-header to-yellow-50 w-full "
+          >
+            <div>
+              <div className="flex space-x-2 mb-1 mt-1">
+                <div className="text-gray-200">课程名称:</div>
+                <div className="text-blueTitle">ADMS 1000</div>
+              </div>
+              <div className="flex space-x-2 mb-1 mt-1">
+                <div className="text-gray-200">最终成绩:</div>
+                <div className="text-blueTitle">B+</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
       <div className="flex justify-between mt-4">
         <CScoreCard type={2}></CScoreCard>
         <CScoreCard type={2}></CScoreCard>
@@ -65,7 +251,7 @@ export default function userComment() {
           </div>
         </div>
       </div>
-      <div className="flex justify-between mt-3">
+      {/* <div className="flex justify-between mt-3">
         <div className="flex space-x-4 ">
           <div className="flex">
             <Like></Like>
@@ -80,9 +266,10 @@ export default function userComment() {
             <div className="text-xs text-gray-300">600</div>
           </div>
         </div>
-        <div>
-          <Discussion></Discussion>
-        </div>
+      </div> */}
+      <div className="h-1 m-0 divider opacity-30"></div>
+      <div>
+        <Discussion></Discussion>
       </div>
     </div>
   );

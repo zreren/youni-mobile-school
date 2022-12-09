@@ -41,7 +41,9 @@ module.exports = {
         score5: '#CB9A65',
         blueTitle: '#37455C',
         gold:"rgba(249, 230, 195, 1)",
-        lightGray:"#DCDDE1"
+        lightGray:"#DCDDE1",
+        secondGray:"#A9B0C0",
+        primary: '#FFD036',
       },
       colors: {
         bg: '#f6f6f6',
