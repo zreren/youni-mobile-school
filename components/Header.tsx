@@ -7,7 +7,7 @@ export default function Header(props: any) {
 
   return (
     <>
-      <div className={classnames("fixed inset-0 top-0 z-50 flex items-center justify-between w-full p-5 shadow h-11 bg-gray-50 ",className)}>
+      <div className={classnames("fixed  inset-0 top-0 z-50 flex items-center justify-between w-full p-5 shadow h-11 bg-gray-50 ",className)}>
         <div
           onClick={() => {
             returnClick?returnClick():router.back();

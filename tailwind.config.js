@@ -32,11 +32,22 @@ module.exports = {
   },
   theme: {
     extend: {
+      height:{
+        px18:"18px"
+      },
+      padding:{
+        0.25:"0.1rem"
+      },
+      width:{
+        px18:"18px"
+      },
       textColor: {
         darkYellow:'#D9A823',
         score1: '#D07775',
         score2: '#7D85C0',
         score3: '#6FAF6E',
+        price:"#FF7978",
+        priceGray:"#A9B0C0",
         score4: '#6CA6C1',
         score5: '#CB9A65',
         blueTitle: '#37455C',
@@ -47,6 +58,7 @@ module.exports = {
       },
       colors: {
         bg: '#f6f6f6',
+        price:"#FF7978",
         gold:"rgba(249, 230, 195, 1)",
         'light-yellow': '#f6f6f6',
       },
@@ -55,6 +67,8 @@ module.exports = {
       },
       fontSize:{
         '8':'0.5rem',
+        '10':"0.6rem",
+        px10:"10px",
         '10':"0.6rem"
       },
       rotate:{

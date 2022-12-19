@@ -1,0 +1,12 @@
+.box{
+    width: 100%;   
+}
+.item{
+ width: 50%;
+}
+.item:nth-child(n){
+ float: left;
+}
+.item:nth-child(2n){
+ float: right;
+}
