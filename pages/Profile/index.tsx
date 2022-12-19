@@ -36,14 +36,14 @@ const Identify = () => {
       onClick={() => {
         router.push('./Profile/valid');
       }}
-      className="relative flex items-center justify-between w-full h-16 p-4 pt-0 pb-0 bg-black rounded-xl text-gold"
+      className="relative flex items-center justify-between w-full h-16 p-4 pt-0 pb-0 youni-vip rounded-xl text-gold"
     >
       <div className="flex items-center space-x-2">
         <Icon4></Icon4>
         {/* <div>{t("profile.identify.student.certification")}</div> */}
-        <div>学生认证</div>
+        <div className='text-brown'>学生认证</div>
       </div>
-      <div className="text-xs">
+      <div className="text-xs text-brown">
         <div>30秒认证在校生身份</div> <div>解锁YoUni全部功能</div>
       </div>
       <BgSVG className="absolute h-10 scale-125 w-18 -right-0"></BgSVG>
@@ -63,10 +63,6 @@ const ProfileMenu = () => {
       </div>
       <div className="flex flex-col items-center space-y-3">
         <MenuIcon3></MenuIcon3>
-        <div className="text-xs">每日签到</div>
-      </div>
-      <div className="flex flex-col items-center space-y-3">
-        <MenuIcon4></MenuIcon4>
         <div className="text-xs">每日签到</div>
       </div>
     </div>

@@ -38,6 +38,9 @@
   background: linear-gradient(180deg, #ff760f 0%, #ffa139 100%);
   z-index: -100;
 }
+.youni-vip{
+  background: linear-gradient(0deg, #FEE277 0%, #FED74C 100%);
+}
 .yellow-gradient {
   background: linear-gradient(63.15deg, #ffc400 18.1%, #fee278 99.27%);
   color: #b38314;

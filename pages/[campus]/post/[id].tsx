@@ -1,13 +1,14 @@
 import React from 'react';
 import UserHeader from '@/components/UserHeader';
-import  { useRef, useState } from "react";
+import { useRef, useState } from 'react';
 // Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper";
-import UserComment from '@/components/user-comment';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper';
+import Discussion from '@/components/Discussion';
+import UserInfo from '@/components/UserInfo';
 // Import Swiper styles
-import "swiper/css";
-import "swiper/css/pagination";
+import 'swiper/css';
+import 'swiper/css/pagination';
 export default function index() {
   // const UserHeader = ()=>{
   //   return (
@@ -28,8 +29,8 @@ export default function index() {
   // }
   return (
     <div>
-      <UserHeader returnClick={true}></UserHeader>
-        <Swiper
+      <UserHeader></UserHeader>
+      <Swiper
         spaceBetween={30}
         pagination={{
           clickable: true,
@@ -39,23 +40,43 @@ export default function index() {
         className="mySwiper"
       >
         <SwiperSlide>
-        <img height={500} src="https://fakeimg.pl/250x280" className='w-full' alt="" />
+          <img
+            height={500}
+            src="https://fakeimg.pl/250x280"
+            className="w-full"
+            alt=""
+          />
         </SwiperSlide>
         <SwiperSlide>
-         <img height={500} src="https://fakeimg.pl/250x280" className='w-full' alt="" />
+          <img
+            height={500}
+            src="https://fakeimg.pl/250x280"
+            className="w-full"
+            alt=""
+          />
         </SwiperSlide>
       </Swiper>
-      <div className='p-5'>
-        <div className='text-lg font-bold text-blueTitle'>出闲置AirPods耳机二代</div>
+      <div className="p-5 bg-white">
+        <div className="text-lg font-bold text-blueTitle">
+          出闲置AirPods耳机二代
+        </div>
         <div className="flex items-end mt-2 space-x-1 text-sm">
           <div className="text-2xl font-bold text-price"> 200</div>
           <div className="text-sm text-price">CAD</div>
           <div className="text-sm text-priceGray dele">348CAD</div>
         </div>
-        <div className='mt-4 post-content'>
-        AirPods pro 2，全新未拆封的，朋友送给我的，但是我有其他耳机，这个就出，挂个试试吧！赔太多就不出了。凑合用。 
+        <div className="mt-4 post-content">
+          AirPods pro
+          2，全新未拆封的，朋友送给我的，但是我有其他耳机，这个就出，挂个试试吧！赔太多就不出了。凑合用。
         </div>
-        <UserComment></UserComment>
+      </div>
+      <div className="w-full h-2 bg-bg"></div>
+      <div className="p-5 pt-4 pb-2">
+        <UserInfo></UserInfo>
+      </div>
+      <div className="w-full h-2 bg-bg"></div>
+      <div className="p-5">
+        <Discussion></Discussion>
       </div>
     </div>
   );

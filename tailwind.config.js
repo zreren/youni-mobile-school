@@ -33,7 +33,9 @@ module.exports = {
   theme: {
     extend: {
       height:{
-        px18:"18px"
+        px18:"18px",
+        px1:"1px",
+        px185:"185px"
       },
       padding:{
         0.25:"0.1rem"
@@ -46,6 +48,7 @@ module.exports = {
         score1: '#D07775',
         score2: '#7D85C0',
         score3: '#6FAF6E',
+        brown:"#8C6008",
         price:"#FF7978",
         priceGray:"#A9B0C0",
         score4: '#6CA6C1',
@@ -56,9 +59,15 @@ module.exports = {
         secondGray:"#A9B0C0",
         primary: '#FFD036',
       },
+      backgroundColor: {
+        primary: '#F7F8F9',
+      },
       colors: {
         bg: '#f6f6f6',
         price:"#FF7978",
+        userColor:"#798195",
+        postContent:"#37455C",
+        border:"rgb(247,248,249)",
         gold:"rgba(249, 230, 195, 1)",
         'light-yellow': '#f6f6f6',
       },
