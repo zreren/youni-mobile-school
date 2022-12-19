@@ -18,11 +18,10 @@ export default function Form(props) {
       {List?.map((item, index) => {
         const Icon = item.Icon;
         return (
-          <div className="items-start justify-between mb-4">
+          <div className="items-start justify-between mb-4" onClick={item.event}>
             <div className="flex justify-between">
-              {' '}
               <div className="flex space-x-2">
-                <div> {item.Icon ? <Icon className="mt-1"></Icon> : null}</div>
+                 {item.Icon ? <Icon className="mt-1"></Icon> : null}
                 <div className="mb-2 text-gray-500">{item.title}</div>
               </div>
               <div>{item.action}</div>

@@ -1,5 +1,17 @@
 /** @type {import('next').NextConfig} */
 const withPlugins = require("next-compose-plugins");
+const {i18n} =  require("./i18n")
+// const NextI18Next = require('next-i18next').default;
+
+// const i18Next = new NextI18Next({
+//   // Specify the languages you want to support
+//   defaultLanguage: 'en',
+//   otherLanguages: ['cn'],
+
+//   // Specify the location of your translation files
+//   localePath: typeof window === 'undefined' ? 'public/locales' : 'locales'
+// });
+
 const withSvgr = require("next-svgr");
 const withTM = require("next-transpile-modules")([
   "@fullcalendar/common",
@@ -11,7 +23,8 @@ const withTM = require("next-transpile-modules")([
   "@fullcalendar/timegrid",
 ]);
 
-module.exports = withPlugins([
+module.exports = 
+  withPlugins([
   withTM,
-  withSvgr
+  withSvgr,
 ])

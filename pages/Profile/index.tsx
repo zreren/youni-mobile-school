@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+ import React, { useState } from 'react';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Header from '@/components/Header';
 import HeaderMenu from '@/components/Menu/Header-menu';
@@ -22,12 +22,15 @@ import SettingIcon7 from './setting/setting@2x-6.svg';
 import SettingIcon8 from './setting/setting@2x-7.svg';
 import BgSVG from './bg.svg';
 import { useRouter } from 'next/router';
+import {useTranslation} from "next-i18next";
+import { withTranslation } from 'next-i18next';
 // const routerHook = (path:string) =>{
 //   const router = useRouter();
 //   router.push(path)
 // }
 const Identify = () => {
   const router = useRouter();
+  const { t } = useTranslation("translations");
   return (
     <div
       onClick={() => {
@@ -37,6 +40,7 @@ const Identify = () => {
     >
       <div className="flex items-center space-x-2">
         <Icon4></Icon4>
+        {/* <div>{t("profile.identify.student.certification")}</div> */}
         <div>学生认证</div>
       </div>
       <div className="text-xs">
@@ -130,7 +134,10 @@ const Profile2 = () => {
 const Profile3 = () => {
   return <div>3</div>;
 };
-export default function index() {
+function index(props) {
+  console.log(props,"porps");
+  const { i18n } = useTranslation("common");
+  console.log(i18n,"i18n")
   const headerList = [
     {
       icon: <Icon1></Icon1>,
@@ -148,7 +155,7 @@ export default function index() {
   const [menu, setMenu] = useState(Profile1);
   return (
     <div className="w-screen h-screen overflow-hidden">
-      <ProfileHeader></ProfileHeader>
+      <ProfileHeader ></ProfileHeader>
       <div className="w-full overflow-hidden rounded-full ">
         <HeaderMenu
           headerMenuList={headerList}
@@ -161,3 +168,5 @@ export default function index() {
     </div>
   );
 }
+// export default withTranslation('common')(Identify)
+export default index;

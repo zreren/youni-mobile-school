@@ -239,7 +239,7 @@ function SchoolPage(props) {
 }
 
 export async function getServerSideProps({ params }) {
-
+  console.log(params,"getServerSideProps params")
   const School = [
     {
       id: 1,

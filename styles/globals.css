@@ -30,6 +30,9 @@
   background: linear-gradient(63.15deg, #FFC400 18.1%, #FEE278 99.27%);
   color: #B38314;
 }
+.org-gradient2{
+  background: linear-gradient(89.32deg, #FF8001 2.44%, #FF962E 103.05%);
+}
 .z-bg{
   z-index: -99;
 }
@@ -85,3 +88,13 @@
   background: linear-gradient(to bottom, #ffc285 40%, #ffdbba 60%);
   border-radius: 8px 0px 0px 0px;
 } */
+
+.gap-bg{
+  background: linear-gradient(to bottom right, #EEEBFF 28px, #EFF6FF);
+}
+
+.pink-linergradient-bg{
+  background: linear-gradient(94.61deg, rgba(184, 122, 255, 0.3) 0.49%, rgba(184, 122, 255, 0) 103.04%);
+}
+
+
