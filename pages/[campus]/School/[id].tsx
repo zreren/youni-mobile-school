@@ -11,7 +11,7 @@ import classnames from 'classnames';
 import Header from '@/components/Header';
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuthState, setAuthState } from "@/stores/authSlice";
-
+import Waterfall from '@/components/Layout/Waterfall';
 const RedCountyList = (props) => {
   const { arg } = props;
   const [select, setSelect] = useState('Canada');
@@ -204,7 +204,7 @@ function SchoolPage(props) {
     dispatch(setAuthState(true))
   },[])
   return (
-    <div className="w-screen h-screen">
+    <div className="w-screen h-screen pb-36">
       <RedCountyList
         setVisible={setIsSelect}
         visible={isSelect}
@@ -234,6 +234,7 @@ function SchoolPage(props) {
           objectFit="contain"
         ></Image>
       </div>
+      <Waterfall></Waterfall>
     </div>
   );
 }

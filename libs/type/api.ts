@@ -95,7 +95,7 @@ type Campus ={
     config: CampusConfig;
     deptId: number;
     buildings: CampusBuilding[];
-    terms: CampusTerm[];
+    // terms: CampusTerm[];
     subjects: Subject[];
     courses: Course[];
     professors: Professor[];

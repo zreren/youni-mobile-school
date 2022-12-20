@@ -1,4 +1,4 @@
- import React, { useState } from 'react';
+import React, { useState } from 'react';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Header from '@/components/Header';
 import HeaderMenu from '@/components/Menu/Header-menu';
@@ -22,15 +22,17 @@ import SettingIcon7 from './setting/setting@2x-6.svg';
 import SettingIcon8 from './setting/setting@2x-7.svg';
 import BgSVG from './bg.svg';
 import { useRouter } from 'next/router';
-import {useTranslation} from "next-i18next";
+import { useTranslation } from 'next-i18next';
 import { withTranslation } from 'next-i18next';
+import Waterfall from '@/components/Layout/Waterfall';
+
 // const routerHook = (path:string) =>{
 //   const router = useRouter();
 //   router.push(path)
 // }
 const Identify = () => {
   const router = useRouter();
-  const { t } = useTranslation("translations");
+  const { t } = useTranslation('translations');
   return (
     <div
       onClick={() => {
@@ -41,7 +43,7 @@ const Identify = () => {
       <div className="flex items-center space-x-2">
         <Icon4></Icon4>
         {/* <div>{t("profile.identify.student.certification")}</div> */}
-        <div className='text-brown'>学生认证</div>
+        <div className="text-brown">学生认证</div>
       </div>
       <div className="text-xs text-brown">
         <div>30秒认证在校生身份</div> <div>解锁YoUni全部功能</div>
@@ -75,11 +77,15 @@ const Setting = () => {
         <div className="grid grid-cols-4 ">
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon1></SettingIcon1>
-            <Link href="/Setting/account"><div className="text-xs">账号</div></Link>
+            <Link href="/Setting/account">
+              <div className="text-xs">账号</div>
+            </Link>
           </div>
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon2></SettingIcon2>
-            <Link href="/Setting/language"><div className="text-xs" >语言</div></Link>
+            <Link href="/Setting/language">
+              <div className="text-xs">语言</div>
+            </Link>
           </div>
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon3></SettingIcon3>
@@ -87,7 +93,9 @@ const Setting = () => {
           </div>
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon4></SettingIcon4>
-            <Link href="/Setting"><div className="text-xs">设置</div></Link>
+            <Link href="/Setting">
+              <div className="text-xs">设置</div>
+            </Link>
           </div>
         </div>
         <div className="grid grid-cols-4">
@@ -114,26 +122,34 @@ const Setting = () => {
 };
 const Profile1 = () => {
   return (
-    <div className="w-full h-screen p-5 bg-bg">
+    <div className="w-full p-5 bg-bg">
       <Identify></Identify>
       <ProfileMenu></ProfileMenu>
       <Setting></Setting>
-      <div className='text-center'>
+      <div className="text-center">
         <Link href="/Login/signup"> 临时进入登录页面</Link>
       </div>
     </div>
   );
 };
 const Profile2 = () => {
-  return <div>2</div>;
+  return (
+    <div className='h-full'>
+      <Waterfall></Waterfall>
+    </div>
+  );
 };
 const Profile3 = () => {
-  return <div>3</div>;
+  return (
+    <div>
+      <Waterfall></Waterfall>
+    </div>
+  );
 };
 function index(props) {
-  console.log(props,"porps");
-  const { i18n } = useTranslation("common");
-  console.log(i18n,"i18n")
+  console.log(props, 'porps');
+  const { i18n } = useTranslation('common');
+  console.log(i18n, 'i18n');
   const headerList = [
     {
       icon: <Icon1></Icon1>,
@@ -150,8 +166,8 @@ function index(props) {
   ];
   const [menu, setMenu] = useState(Profile1);
   return (
-    <div className="w-screen h-screen overflow-hidden">
-      <ProfileHeader ></ProfileHeader>
+    <div className="w-screen h-screen">
+      <ProfileHeader></ProfileHeader>
       <div className="w-full overflow-hidden rounded-full ">
         <HeaderMenu
           headerMenuList={headerList}
@@ -160,7 +176,7 @@ function index(props) {
           }}
         ></HeaderMenu>
       </div>
-      <div>{menu}</div>
+      <div className='overflow-scroll'>{menu}</div>
     </div>
   );
 }
