@@ -84,7 +84,7 @@ const StyledTab = styled((props: StyledTabProps) => (
 ))(({ theme }) => ({
   textTransform: 'none',
   backgroundColor: '#fff',
-  className: 'w-1/5 min-w-0',
+  className: 'w-1/5 min-w-0 fill-yellow-500',
   minWidth: 0,
   [theme.breakpoints.up('sm')]: {
     minWidth: 0,

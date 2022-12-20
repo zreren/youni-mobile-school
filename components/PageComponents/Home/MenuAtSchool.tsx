@@ -4,19 +4,23 @@ export default function MenuAtSchool() {
     const menuList = [
         {
             label:"我的GPA",
-            path:"/Profile"
+            path:"/Profile",
+            icon: "/assets/index/1 (1).png"
         },
         {
             label:"课程评价",
-            path:"/course-evaluation"
+            path:"/course-evaluation",
+            icon: "/assets/index/1 (2).png"
         },
         {
             label:"教授评价",
-            path:"/professor/professor-evaluation"
+            path:"/professor/professor-evaluation",
+            icon: "/assets/index/1 (3).png"
         },
         {
             label:"我的课表",
-            path:"/Schedules/Schedules"
+            path:"/Schedules/Schedules",
+            icon: "/assets/index/1 (4).png"
         },
         {
             label:"我的GPA",
@@ -37,7 +41,7 @@ export default function MenuAtSchool() {
         
     ]
   return (
-    <div className="grid grid-cols-4 gap-4 w-full p-8">
+    <div className="grid w-full grid-cols-4 gap-4 p-8">
        {menuList.map((item)=>(
          <MenuItem data={item} />
        ))}

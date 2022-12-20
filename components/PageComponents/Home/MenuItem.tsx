@@ -1,15 +1,17 @@
 import { useRouter } from 'next/router';
 import React from 'react';
-
+import Image from 'next/image';
 export default function MenuItem(props) {
-  const { label, path } = props.data;
+  const { label, path ,icon} = props.data;
   const router = useRouter();
   return (
     <div className="flex flex-col items-center" onClick={()=>{router.push(path)}}>
-      <div className="avatar placeholder mb-2">
-        <div className="bg-red-50 text-neutral-content rounded-full w-12 h-12"></div>
+      <div className="mb-2 avatar placeholder">
+        <div className="w-12 h-12 rounded-full bg-red-50 text-neutral-content">
+          <Image width={48} height={48} src={icon}></Image>
+        </div>
       </div>
-      <div className="text-gray-400 text-xs">{label}</div>
+      <div className="text-xs text-gray-400">{label}</div>
     </div>
   );
 }

@@ -12,7 +12,7 @@ export default function LabelBottomNavigation() {
   const router = useRouter();
   const routerTable = [
     '///',
-    '/School/York',
+    '/York/School/York',
     '/Schedules/Schedules',
     '/Course/evaluation',
     '/Course/course',

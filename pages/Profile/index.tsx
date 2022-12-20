@@ -5,7 +5,10 @@ import HeaderMenu from '@/components/Menu/Header-menu';
 import Link from 'next/link';
 import ProfileHeader from '@/components/PageComponents/Profile/ProfileHeader';
 import Icon1 from './1.svg';
+import Icon1Select from './1-select.svg';
 import Icon2 from './2.svg';
+import Icon2Select from './2-select.svg';
+import Icon3Select from './3-select.svg';
 import Icon3 from './3.svg';
 import Icon4 from './4.svg';
 import MenuIcon1 from './menu/menu1.svg';
@@ -122,7 +125,7 @@ const Setting = () => {
 };
 const Profile1 = () => {
   return (
-    <div className="w-full p-5 bg-bg">
+    <div className="w-full h-[calc(100vh-320px)] p-5 bg-bg">
       <Identify></Identify>
       <ProfileMenu></ProfileMenu>
       <Setting></Setting>
@@ -150,21 +153,21 @@ function index(props) {
   console.log(props, 'porps');
   const { i18n } = useTranslation('common');
   console.log(i18n, 'i18n');
+  const [menuVal, setMenu] = useState(0);
   const headerList = [
     {
-      icon: <Icon1></Icon1>,
+      icon: menuVal === 0?<Icon1Select></Icon1Select>:<Icon1></Icon1>,
       menu: <Profile1></Profile1>,
     },
     {
-      icon: <Icon2></Icon2>,
+      icon:  menuVal === 1?<Icon2Select></Icon2Select>:<Icon2></Icon2>,
       menu: <Profile2></Profile2>,
     },
     {
-      icon: <Icon3></Icon3>,
+      icon: menuVal === 2?<Icon3Select></Icon3Select>:<Icon3></Icon3>,
       menu: <Profile3></Profile3>,
     },
   ];
-  const [menu, setMenu] = useState(Profile1);
   return (
     <div className="w-screen h-screen">
       <ProfileHeader></ProfileHeader>
@@ -172,11 +175,11 @@ function index(props) {
         <HeaderMenu
           headerMenuList={headerList}
           switchMenu={(val) => {
-            setMenu(headerList[val].menu);
+            setMenu(val);
           }}
         ></HeaderMenu>
       </div>
-      <div className='overflow-scroll'>{menu}</div>
+      <div className='overflow-scroll'>{headerList[menuVal].menu}</div>
     </div>
   );
 }
