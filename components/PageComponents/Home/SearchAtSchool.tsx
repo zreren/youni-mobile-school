@@ -4,7 +4,7 @@ export default function SearchInSchool(props) {
   const { placeholder } = props;
   return (
    <Link href='/Search'>
-    <div className="relative flex justify-center w-full pl-4 pr-4">
+    <div className="relative flex justify-center w-full px-4">
       {/* <div className='absolute pl-20 left-1/3 top-3'>
         <svg
           width="16"

@@ -12,7 +12,7 @@ export default function LabelBottomNavigation() {
   const router = useRouter();
   const routerTable = [
     '///',
-    '/York/School/York',
+    '/York/home',
     '/Schedules/Schedules',
     '/Course/evaluation',
     '/Course/course',
@@ -32,7 +32,7 @@ export default function LabelBottomNavigation() {
     setValue(newValue);
     router.push(routerTable[newValue]);
   };
-  const MyAction = styled(BottomNavigationAction)(
+  const MyAction = styled(BottomNavigationAction)( 
     `color: rgba(169, 176, 192, 1);
     font-size:1.25rem;
     transition-property: all;

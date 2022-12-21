@@ -53,6 +53,18 @@
   background: linear-gradient(41.99deg, #813fff 7.11%, #9c77ff 90.46%);
   color: white;
 }
+.pink-gradient{
+  background: linear-gradient(41.99deg, #FF5086 7.11%, #FF6CA0 90.46%);
+  color: white;
+}
+.carpool-gradient{
+  background: linear-gradient(41.99deg, #FE8800 7.11%, #FFB62F 90.46%);
+  color: white;
+}
+.green-gradient{
+  color: white;
+  background: linear-gradient(34.99deg, #58BB2E 12.35%, #88D44F 100%);
+}
 .tag-red {
   border: 1px solid #ffc1ba;
   color: #ff4241;

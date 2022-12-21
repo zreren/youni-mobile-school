@@ -7,17 +7,14 @@ export default function HeaderLayout(props) {
   const { school } = props;
   return (
     <div
-      className="h-auto bg-gradient-to-r
-     from-green-50 to-yellow-50 w-full
-     pb-4
-     "
+      className="w-full h-auto pb-2 bg-gradient-to-r from-green-50 to-yellow-50 "
     >
       <div onClick={()=>{props.selectSchool()}} className='flex items-center p-4 pb-0 mb-3'>
-        <SchoolIcon className=" mr-4"></SchoolIcon>
+        <SchoolIcon className="mr-4 "></SchoolIcon>
         <div className="text-lg font-medium ">{school}</div>
       </div>
       <SearchInSchool placeholder={'搜索教授/课程'}></SearchInSchool>
-      <SwiperAtSchool></SwiperAtSchool>
+      {/* <SwiperAtSchool></SwiperAtSchool> */}
     </div>
   );
 }

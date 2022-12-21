@@ -30,6 +30,7 @@ export default function index() {
   return (
     <div>
       <UserHeader></UserHeader>
+      <div className='min-h-[380px]'>
       <Swiper
         spaceBetween={30}
         pagination={{
@@ -56,6 +57,7 @@ export default function index() {
           />
         </SwiperSlide>
       </Swiper>
+      </div>
       <div className="p-5 bg-white">
         <div className="text-lg font-bold text-blueTitle">
           出闲置AirPods耳机二代

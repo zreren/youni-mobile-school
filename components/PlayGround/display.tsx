@@ -9,14 +9,21 @@ export default function Display(props) {
     闲置: 'yellow-gradient',
     新闻: 'blue-gradient',
     转租: 'purple-gradient',
+    活动: 'pink-gradient',
+    进群: 'green-gradient',
+    Carpool: "carpool-gradient"
   };
   const textColorMap = {
-    "red":"tag-red",
-    "blue":"tag-blue",
-  }
+    red: 'tag-red',
+    blue: 'tag-blue',
+  };
   return (
     <div className="w-full pl-0.5 pr-0.5">
-      <div onClick={()=>{router.push(`./post/${data.id}`)}}>
+      <div
+        onClick={() => {
+          router.push(`./post/${data.id}`);
+        }}
+      >
         <img src={data.img} className="w-full rounded-xl" />
       </div>
       <div className="mt-2">
@@ -43,9 +50,12 @@ export default function Display(props) {
         <div className="flex items-end mt-2 space-x-1 text-sm">
           {data.tag.map((item) => {
             return (
-              <div className={classnames("border rounded-sm  border-price text-px10 p-0.25",
-              textColorMap[item.color]
-              )}>
+              <div
+                className={classnames(
+                  'border rounded-sm  border-price text-px10 p-0.25',
+                  textColorMap[item.color],
+                )}
+              >
                 {item.name}{' '}
               </div>
             );

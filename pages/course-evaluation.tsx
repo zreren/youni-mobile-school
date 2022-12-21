@@ -9,8 +9,9 @@ import { professorList } from '@/mock/data';
 import HotProfessorCar from './professor/components/hot-professor-car';
 import { useRouter } from 'next/router';
 import Introduce from '@/components/PageComponents/Course/Introduce';
-import FilterIcon from  '../public/filter.svg';
-
+import FilterIcon from '../public/filter.svg';
+import CDataGrip from '@/components/CDataGrip';
+import Waterfall from '@/components/Layout/Waterfall';
 // import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function courseEvaluation() {
@@ -42,9 +43,7 @@ export default function courseEvaluation() {
         <Search></Search>
         <Title title="热门教授"></Title>
         <HotProfessorCar professorList={professorRankList}></HotProfessorCar>
-        <Title title="教授列表" customClick={()=>{
-          
-        }}>
+        <Title title="教授列表" customClick={() => {}}>
           <FilterIcon></FilterIcon>
         </Title>
         <div className="space-y-4">
@@ -81,7 +80,25 @@ export default function courseEvaluation() {
       score: 1.7,
     },
   ];
-  const menuList = [Introduce, evaluation, Pending, Pending, Pending];
+  const CourseEva = () => {
+    return (
+      <div className='p-4'>
+        <Title title="数据概览"></Title>
+        <CDataGrip></CDataGrip>
+        <Title title="课程点评" customClick={() => {}}>
+          <FilterIcon></FilterIcon>
+        </Title>
+      </div>
+    );
+  };
+  const GroupChat = ()=>{
+    return (
+      <div>
+        <Waterfall></Waterfall>
+      </div>
+    )
+  }
+  const menuList = [Introduce, evaluation, CourseEva, GroupChat, Pending];
   const router = useRouter();
   const [menu, setMenu] = React.useState(Introduce);
   const headerMenuList = [
