@@ -26,7 +26,7 @@ const SignUpButton = (props) => {
     <div className="z-50 flex items-center justify-between h-12 p-4 rounded-xl bg-bg">
       <div className="z-50 flex items-center space-x-2">
         <Icon></Icon>
-        <div>{label}</div>
+        <div className="text-xs font-medium text-userColor">{label}</div>
       </div>
       <div>
         <Stroke></Stroke>
@@ -70,12 +70,19 @@ const SelectSignUpWay = (props) => {
       </div>
       <div className="absolute bottom-0 z-30 w-full">
         <div className="w-full h-full p-10 pt-2 pb-2 text-xs text-center text-gray-300 bg-white">
-          By continuing, you agree to our Term of Service and acknowledge that
-          you have read our Privacy Policy to learn how we collect, use and
-          share your data.
+          By continuing, you agree to our{' '}
+          <Link href="">
+            <span className="text-[#3665FF]">Term of Service</span>
+          </Link>{' '}
+          and acknowledge that you have read our{' '}
+          <Link href="">
+            <span className="text-[#3665FF]">Privacy Policy</span>
+          </Link>{' '}
+          to learn how we collect, use and share your data.
         </div>
-        <div className="h-24 pt-8 text-center bg-bg">
-          Already have an account? Log in
+        <div className="h-24 pt-8 space-x-2 text-sm text-center bg-bg">
+          <span className="text-blueTitle">Already have an account? </span>
+          <span className="text-[#FFD036]"> Log in</span>
         </div>
       </div>
       {/* <Button variant="outlined" startIcon={<WeChat />}>
@@ -86,15 +93,10 @@ const SelectSignUpWay = (props) => {
 };
 const SelectLanguage = (props) => {
   return (
-    <div
-      className="z-10 flex flex-col w-full h-screen -appear in mt-11"
-      onClick={() => {
-        props.setProgress(2);
-      }}
-    >
+    <div className="z-10 flex flex-col w-full h-screen -appear in mt-11">
       {/* <Image src={Logo} alt=""></Image> */}
       <div className="z-10 pl-8 pr-8 text-2xl">Select Language</div>
-      <div className="z-10 pl-8 pr-8 mb-20 text-md">
+      <div className="z-10 pl-8 pr-8 mb-20 text-sm text-md text-userColor">
         Choose the language you speak most often. Changing this selection is
         possible at any time.
       </div>
@@ -107,12 +109,22 @@ const SelectLanguage = (props) => {
           /> */}
         </div>
       </div>
-      <div className="w-full h-22"></div>
-      <div className="p-4 space-y-10">
-        <div className="flex items-center justify-center w-full h-32 text-xl rounded flex-2xl bg-bg">
+      <div className="w-full h-48"></div>
+      <div
+        className="z-30 h-full p-4 space-y-10 bg-white-mask"
+        onClick={() => {
+          props.setProgress(2);
+        }}
+      >
+        <div className="flex items-center justify-center w-full h-32 text-xl rounded text-userColor flex-2xl bg-bg">
           EngLish
         </div>
-        <div className="flex items-center justify-center w-full h-32 text-xl rounded flex-2xl bg-bg">
+        <div
+          onClick={() => {
+            props.setProgress(2);
+          }}
+          className="flex items-center justify-center w-full h-32 text-xl rounded text-userColor flex-2xl bg-bg"
+        >
           中文
         </div>
       </div>

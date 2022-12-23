@@ -25,7 +25,7 @@ const dataList = [
   {
     id: 2,
     type: '转租',
-    title: '出闲置AirPods耳机二代占位占位占位',
+    title: '出闲置AirPods耳机二代占位rere占位',
     price: '200',
     unit: 'CAD',
     oldPrice: '348CAD',
@@ -36,7 +36,7 @@ const dataList = [
   {
     id: 3,
     type: '活动',
-    title: 'CUA2023春节联欢晚会欢晚会',
+    title: 'CUA2023春节联晚会',
     price: '200',
     unit: 'CAD',
     oldPrice: '348CAD',
@@ -76,7 +76,7 @@ const dataList = [
   {
     id: 3,
     type: '转租',
-    title: '出闲置AirPods耳机二代占位占位占位',
+    title: '出闲置AirPods耳机二代占位占位占位1111',
     price: '200',
     unit: 'CAD',
     oldPrice: '348CAD',
@@ -92,8 +92,8 @@ export default function Waterfall() {
         {dataList.map((item: any) => {
           return (
             <li key={item.id} className={styles.item}>
-              <Display data={item}></Display>
-            </li>
+              <Display  data={item}></Display>
+             </li>
           );
         })}
 
