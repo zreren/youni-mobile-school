@@ -70,12 +70,21 @@ const SelectSignUpWay = (props) => {
       </div>
       <div className="absolute bottom-0 z-30 w-full">
         <div className="w-full h-full p-10 pt-2 pb-2 text-xs text-center text-gray-300 bg-white">
-          By continuing, you agree to our Term of Service and acknowledge that
-          you have read our Privacy Policy to learn how we collect, use and
-          share your data.
+          By continuing, you agree to our{' '}
+          <Link href="">
+            <span className="text-[#3665FF]">Term of Service</span>
+          </Link>{' '}
+          and acknowledge that you have read our{' '}
+          <Link href="">
+            <span className="text-[#3665FF]">Privacy Policy</span>
+          </Link>{' '}
+          to learn how we collect, use and share your data.
         </div>
-        <div className="h-24 pt-8 text-center bg-bg">
-          Already have an account? Log in
+        <div className="h-24 pt-8 space-x-2 text-sm text-center bg-bg">
+          <span className="text-blueTitle">Don’t have an account? </span>
+          <Link href="./signup">
+            <span className="text-[#FFD036]"> Sign up</span>
+          </Link>{' '}
         </div>
       </div>
       {/* <Button variant="outlined" startIcon={<WeChat />}>
@@ -139,7 +148,7 @@ const ChooseYourRole = (props) => {
           you have read our Privacy Policy.
         </div>
         <button className="w-full bg-gray-400 border-0 rounded-full btn">
-        Log in
+          Log in
         </button>
       </div>
     );
@@ -218,14 +227,15 @@ const ChooseYourRole = (props) => {
             />
           </label>
         </div>
-        <div className="mb-10 text-xs text-gray-300">
+        <div className='h-[1px] bg-[#EAEBEC] w-full'></div>
+        {/* <div className="mb-10 text-xs text-gray-300">
           Your phone number will be used to improve your YoUni experience,
           including connecting you with people you may know, personalizing your
           ads experience, and more. If you sign up with SMS, SMS fees may apply.
           <Link href="#">
             <div className="text-blue-400">Learn more</div>
           </Link>
-        </div>
+        </div> */}
         <button
           onClick={() => {
             phoneNumber.length > 5 && school.length
@@ -233,9 +243,9 @@ const ChooseYourRole = (props) => {
               : null;
           }}
           className={classnames(
-            'w-full bg-gray-400 border-0 rounded-full btn hover:bg-gray-300',
+            'w-full bg-gray-400  text-[16px] font-medium border-0 rounded-full btn hover:bg-gray-300',
             {
-              'bg-yellow-400': phoneNumber.length > 5 && school.length,
+              'bg-yellow-400 text-[#8C6008]': phoneNumber.length > 5 && school.length,
             },
           )}
         >
@@ -251,7 +261,7 @@ const ChooseYourRole = (props) => {
     <div className="z-10 flex flex-col w-full h-full overflow-hidden transition mt-11">
       {/* <Image src={Logo} alt=""></Image> */}
       {/* <CSSTransition classNames="title" timeout={1000}> */}
-      <div className='z-10 h-20'>
+      <div className="z-10 h-20">
         <div className="z-10 pl-8 pr-8 text-2xl title">Sign in</div>
         <div className="z-10 pl-8 pr-8 text-sm text-md title text-userColor">
           Login using your preferred method
@@ -310,7 +320,11 @@ const ChooseYourRole = (props) => {
             Email
           </div>
         </div>
-        <Node></Node>
+        <SwitchTransition mode="out-in">
+          <CSSTransition classNames="btn" timeout={200} key={Node}>
+            <Node></Node>
+          </CSSTransition>
+        </SwitchTransition>
       </div>
     </div>
   );

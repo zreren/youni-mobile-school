@@ -69,6 +69,10 @@
   border: 1px solid #ffc1ba;
   color: #ff4241;
 }
+.pink-linergradient-bg{
+  background: linear-gradient(94.61deg, rgba(184, 122, 255, 0.3) 0.49%, rgba(184, 122, 255, 0) 103.04%);
+
+}
 .tag-blue {
   border: 1px solid #b0caff;
   color: #3665ff;

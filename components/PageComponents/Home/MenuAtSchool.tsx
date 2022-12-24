@@ -4,7 +4,7 @@ export default function MenuAtSchool() {
     const menuList = [
         {
             label:"我的GPA",
-            path:"/Profile",
+            path:"/gap",
             icon: "/assets/index/1 (1).png"
         },
         {

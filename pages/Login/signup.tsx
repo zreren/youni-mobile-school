@@ -82,7 +82,10 @@ const SelectSignUpWay = (props) => {
         </div>
         <div className="h-24 pt-8 space-x-2 text-sm text-center bg-bg">
           <span className="text-blueTitle">Already have an account? </span>
+          <Link href="./signin">
           <span className="text-[#FFD036]"> Log in</span>
+          </Link>{' '}
+          
         </div>
       </div>
       {/* <Button variant="outlined" startIcon={<WeChat />}>
