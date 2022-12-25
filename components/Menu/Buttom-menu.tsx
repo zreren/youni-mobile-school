@@ -5,9 +5,11 @@ import Add from './add.svg';
 import Icon from '../Icon';
 import { styled } from '@mui/material/styles';
 import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from "react-redux";
-import { selectAuthState, setAuthState } from "@/stores/authSlice";
-export default function LabelBottomNavigation() {
+import { useDispatch, useSelector } from 'react-redux';
+import UserAddMenu from '@/components/UserAddMenu';
+import { selectAuthState, setAuthState } from '@/stores/authSlice';
+import IconClose from "./close.svg";
+export default function LabelBottomNavigation(props) {
   const dispatch = useDispatch();
   const router = useRouter();
   const routerTable = [
@@ -29,10 +31,23 @@ export default function LabelBottomNavigation() {
     });
   }, [router]);
   const handleChange = (event: React.SyntheticEvent, newValue: any) => {
+
+
+    if (newValue === 3) {
+      setValue(newValue);
+      // props.stopScroll();
+      return
+    };
+    if(newValue === 0){
+      const oldValue = value;
+      setValue(1);
+      // router.back();
+      return
+    }
     setValue(newValue);
     router.push(routerTable[newValue]);
   };
-  const MyAction = styled(BottomNavigationAction)( 
+  const MyAction = styled(BottomNavigationAction)(
     `color: rgba(169, 176, 192, 1);
     font-size:1.25rem;
     transition-property: all;
@@ -45,22 +60,47 @@ export default function LabelBottomNavigation() {
   `,
   );
   return (
-    <BottomNavigation
-      className="fixed bottom-0 left-0 z-30 w-full text-sm transition-all"
-      value={value}
-      showLabels={true}
-      onChange={handleChange}
-    >
-      <MyAction className="transition-all " label="看看" value={1} />
-      <MyAction label="课表" value={2} />
-      <MyAction
-        className="transition ease-in-out duration-2000"
-        label=" "
-        icon={<Icon type="add"></Icon>}
-        value={3}
-      />
-      <MyAction label="课评" value={4} />
-      <MyAction label="我" value={5} />
-    </BottomNavigation>
+    <div>
+      {value === 3 ? (
+        <div>
+          <UserAddMenu></UserAddMenu>
+          <BottomNavigation
+            className="fixed bottom-0 left-0 z-30 w-full text-sm transition-all bg-transparent"
+            value={value}
+            showLabels={true}
+            onChange={handleChange}
+          >
+            <MyAction className="transition-all " label="" value={1} />
+            <MyAction label="" value={2} />
+            <MyAction
+              className="transition ease-in-out duration-2000"
+              label=" "
+              icon={<IconClose type="add"></IconClose>}
+              value={0}
+            />
+            <MyAction label="" value={4} />
+            <MyAction label="" value={5} />
+          </BottomNavigation>
+        </div>
+      ) : (
+        <BottomNavigation
+          className="fixed bottom-0 left-0 z-30 w-full text-sm transition-all"
+          value={value}
+          showLabels={true}
+          onChange={handleChange}
+        >
+          <MyAction className="transition-all " label="看看" value={1} />
+          <MyAction label="课表" value={2} />
+          <MyAction
+            className="transition ease-in-out duration-2000"
+            label=" "
+            icon={<Icon type="add"></Icon>}
+            value={3}
+          />
+          <MyAction label="课评" value={4} />
+          <MyAction label="我" value={5} />
+        </BottomNavigation>
+      )}
+    </div>
   );
 }

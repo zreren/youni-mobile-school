@@ -17,6 +17,8 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectAuthState, setAuthState } from '@/stores/authSlice';
 import { Router, useRouter } from 'next/router';
 import InputLabel from '@mui/material/InputLabel';
 
@@ -335,6 +337,10 @@ export default function SignUp(props) {
   const [role, selectRole] = useState('Student');
   const ProgressList = [SelectSignUpWay, ChooseYourRole, SelectLanguage];
   const Node = ProgressList[progress];
+  const dispatch = useDispatch();
+  React.useEffect(() => {
+    dispatch(setAuthState(false));
+  }, []);
   return (
     <div className="relative w-full h-screen overflow-hidden bg-fixed">
       <div className="absolute inset-0 z-0 w-full -top-24">

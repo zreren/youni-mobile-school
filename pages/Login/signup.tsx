@@ -19,7 +19,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Router, useRouter } from 'next/router';
 import InputLabel from '@mui/material/InputLabel';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { selectAuthState, setAuthState } from '@/stores/authSlice';
 const SignUpButton = (props) => {
   const { title, icon: Icon, label } = props;
   return (
@@ -334,6 +335,10 @@ export default function SignUp(props) {
   const [role, selectRole] = useState('Student');
   const ProgressList = [SelectSignUpWay, SelectLanguage, ChooseYourRole];
   const Node = ProgressList[progress];
+  const dispatch = useDispatch();
+  React.useEffect(() => {
+    dispatch(setAuthState(false));
+  }, []);
   return (
     <div className="relative w-full h-screen overflow-hidden bg-fixed">
       <div className="absolute inset-0 z-0 w-full -top-24">

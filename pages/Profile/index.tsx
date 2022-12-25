@@ -11,6 +11,7 @@ import Icon2Select from './2-select.svg';
 import Icon3Select from './3-select.svg';
 import Icon3 from './3.svg';
 import Icon4 from './4.svg';
+import ValidIcon from './validstu.svg';
 import MenuIcon1 from './menu/menu1.svg';
 import MenuIcon2 from './menu/menu2.svg';
 import MenuIcon3 from './menu/menu3.svg';
@@ -23,6 +24,9 @@ import SettingIcon5 from './setting/setting@2x-4.svg';
 import SettingIcon6 from './setting/setting@2x-5.svg';
 import SettingIcon7 from './setting/setting@2x-6.svg';
 import SettingIcon8 from './setting/setting@2x-7.svg';
+import SettingIcon9 from './setting/setting@2x-8.svg';
+import SettingIcon10 from './setting/setting@2x-9.svg';
+import SettingIcon11 from './setting/setting@2x-10.svg';
 import BgSVG from './bg.svg';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -44,11 +48,11 @@ const Identify = () => {
       className="relative flex items-center justify-between w-full h-16 p-4 pt-0 pb-0 youni-vip rounded-xl text-gold"
     >
       <div className="flex items-center space-x-2">
-        <Icon4></Icon4>
+        <ValidIcon className="absolute left-0"></ValidIcon>
         {/* <div>{t("profile.identify.student.certification")}</div> */}
-        <div className="text-brown">学生认证</div>
+        <div className="pl-10 font-bold text-brown">学生认证</div>
       </div>
-      <div className="text-xs text-brown">
+      <div className="flex flex-col items-center text-xs text-brown">
         <div>30秒认证在校生身份</div> <div>解锁YoUni全部功能</div>
       </div>
       <BgSVG className="absolute h-10 scale-125 w-18 -right-0"></BgSVG>
@@ -60,15 +64,15 @@ const ProfileMenu = () => {
     <div className="flex justify-between p-4 ">
       <div className="flex flex-col items-center space-y-3">
         <MenuIcon1></MenuIcon1>
-        <div className="text-xs">每日签到</div>
+        <div className="text-xs text-[#798195]">每日签到</div>
       </div>
       <div className="flex flex-col items-center space-y-3">
         <MenuIcon2></MenuIcon2>
-        <div className="text-xs">每日签到</div>
+        <div className="text-xs text-[#798195]">评论和@</div>
       </div>
       <div className="flex flex-col items-center space-y-3">
         <MenuIcon3></MenuIcon3>
-        <div className="text-xs">每日签到</div>
+        <div className="text-xs text-[#798195]">赞&收藏</div>
       </div>
     </div>
   );
@@ -78,46 +82,62 @@ const Setting = () => {
     <div className="w-full rounded-lg card bg-base-100 ">
       <div className="p-4 pl-0 pr-0 card-body ">
         <div className="grid grid-cols-4 ">
+        <Link href="/Setting/account">
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon1></SettingIcon1>
-            <Link href="/Setting/account">
-              <div className="text-xs">账号</div>
-            </Link>
+              <div className="text-xs text-[#798195]">账号</div>
           </div>
+          </Link>
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon2></SettingIcon2>
-            <Link href="/Setting/language">
-              <div className="text-xs">语言</div>
+            <Link href="/Setting/">
+              <div className="text-xs text-[#798195]">草稿箱</div>
             </Link>
           </div>
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon3></SettingIcon3>
-            <div className="text-xs">客服</div>
+            <div className="text-xs text-[#798195]">历史</div>
           </div>
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon4></SettingIcon4>
             <Link href="/Setting">
-              <div className="text-xs">设置</div>
+              <div className="text-xs text-[#798195]">功能请求</div>
             </Link>
           </div>
         </div>
         <div className="grid grid-cols-4">
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon5></SettingIcon5>
-            <div className="text-xs">草稿箱</div>
+            <div className="text-xs text-[#798195]">邀请好友</div>
           </div>
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon6></SettingIcon6>
-            <div className="text-xs">历史</div>
+            <div className="text-xs text-[#798195]">客服</div>
           </div>
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon7></SettingIcon7>
-            <div className="text-xs">邀请好友</div>
+            <div className="text-xs text-[#798195]">我的积分</div>
           </div>
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon8></SettingIcon8>
-            <div className="text-xs">功能请求</div>
+            <div className="text-xs text-[#798195]">联系方式</div>
           </div>
+        </div>
+        <div className="grid grid-cols-4">
+          <div className="flex flex-col items-center space-y-3">
+            <SettingIcon9></SettingIcon9>
+            <div className="text-xs text-[#798195]">加入有你</div>
+          </div>
+          <div className="flex flex-col items-center space-y-3">
+            <SettingIcon10></SettingIcon10>
+            <div className="text-xs text-[#798195]">社团入驻</div>
+          </div>
+          <Link href="/Setting">
+          <div className="flex flex-col items-center space-y-3">
+            <SettingIcon11></SettingIcon11>
+              <div className="text-xs text-[#798195]">系统设置</div>
+          </div>
+          </Link>
         </div>
       </div>
     </div>
@@ -125,26 +145,43 @@ const Setting = () => {
 };
 const Profile1 = () => {
   return (
-    <div className="w-full h-[calc(100vh-320px)] p-5 bg-bg">
-      <Identify></Identify>
-      <ProfileMenu></ProfileMenu>
-      <Setting></Setting>
-      <div className="text-center">
-        <Link href="/Login/signup"> 临时进入登录页面</Link>
+    <div className='h-[calc(100vh-320px)]'>
+      <div className="w-full p-5 pb-1 bg-white">
+        <Identify></Identify>
+        <ProfileMenu></ProfileMenu>
+      </div>
+      <div className='w-full h-[10px] bg-bg'></div>
+      <div className='w-full bg-white'>
+        <Setting></Setting>
+        <div className="mt-2 text-center text-[#798195]">
+          <Link href="/Login/signup"> 临时进入登录页面</Link>
+        </div>
       </div>
     </div>
   );
 };
 const Profile2 = () => {
   return (
-    <div className='h-full'>
+    <div className="h-full ">
+      <div className="w-full px-2">
+        <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
+          <div className="w-full text-center text-[#A9B0C0]">贴文</div>
+          <div className="w-full text-center text-[#A9B0C0]">文集</div>
+        </div>
+      </div>
       <Waterfall></Waterfall>
     </div>
   );
 };
 const Profile3 = () => {
   return (
-    <div>
+    <div className="w-full">
+      <div className="w-full px-2">
+        <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
+          <div className="w-full text-center text-[#A9B0C0]">贴文</div>
+          <div className="w-full text-center text-[#A9B0C0]">文集</div>
+        </div>
+      </div>
       <Waterfall></Waterfall>
     </div>
   );
@@ -156,15 +193,15 @@ function index(props) {
   const [menuVal, setMenu] = useState(0);
   const headerList = [
     {
-      icon: menuVal === 0?<Icon1Select></Icon1Select>:<Icon1></Icon1>,
+      icon: menuVal === 0 ? <Icon1Select></Icon1Select> : <Icon1></Icon1>,
       menu: <Profile1></Profile1>,
     },
     {
-      icon:  menuVal === 1?<Icon2Select></Icon2Select>:<Icon2></Icon2>,
+      icon: menuVal === 1 ? <Icon2Select></Icon2Select> : <Icon2></Icon2>,
       menu: <Profile2></Profile2>,
     },
     {
-      icon: menuVal === 2?<Icon3Select></Icon3Select>:<Icon3></Icon3>,
+      icon: menuVal === 2 ? <Icon3Select></Icon3Select> : <Icon3></Icon3>,
       menu: <Profile3></Profile3>,
     },
   ];
@@ -179,7 +216,7 @@ function index(props) {
           }}
         ></HeaderMenu>
       </div>
-      <div className='overflow-scroll'>{headerList[menuVal].menu}</div>
+      <div className="overflow-scroll">{headerList[menuVal].menu}</div>
     </div>
   );
 }

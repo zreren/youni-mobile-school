@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectAuthState, setAuthState } from '@/stores/authSlice';
 import Waterfall from '@/components/Layout/Waterfall';
 import PostCategory from '@/components/Menu/post-category';
+
 const RedCountyList = (props) => {
   const { arg } = props;
   const [select, setSelect] = useState('Canada');
@@ -236,40 +237,42 @@ function SchoolPage(props) {
     dispatch(setAuthState(true));
   }, []);
   return (
-    <div className="w-screen h-screen pb-36">
-      <RedCountyList
-        setVisible={setIsSelect}
-        visible={isSelect}
-        setSelectSchool={setSelectSchool}
-      ></RedCountyList>
-      <SchoolList
-        setVisible={setSelectSchool}
-        visible={schoolSelect && !isSelect}
-      ></SchoolList>
-      {/* <SchoolList
-        setVisible={setIsSelect}
-        visible={isSelect}
-      ></SchoolList> */}
-      <HeaderLayout
-        selectSchool={() => {
-          setIsSelect(true);
-        }}
-        school={props.post.school}
-      ></HeaderLayout>
-      <MenuAtSchool></MenuAtSchool>
-      <div className="w-full pl-5 pr-5">
-        <Image
-          src={ad}
-          width="100%"
-          height="20rem"
-          layout="responsive"
-          alt=""
-          objectFit="contain"
-        ></Image>
-      </div>
-      <PostCategory headerMenuList={headerMenuList}></PostCategory>
-      <Waterfall></Waterfall>
+    <div className="w-screen h-screen mb-20 pb-36">
+    <RedCountyList
+      setVisible={setIsSelect}
+      visible={isSelect}
+      setSelectSchool={setSelectSchool}
+    ></RedCountyList>
+    <SchoolList
+      setVisible={setSelectSchool}
+      visible={schoolSelect && !isSelect}
+    ></SchoolList>
+    {/* <SchoolList
+      setVisible={setIsSelect}
+      visible={isSelect}
+    ></SchoolList> */}
+    <HeaderLayout
+      selectSchool={() => {
+        setIsSelect(true);
+      }}
+      school={props.post.school}
+    ></HeaderLayout>
+    <MenuAtSchool></MenuAtSchool>
+    <div className="w-full pl-5 pr-5">
+      <Image
+        src={ad}
+        width="100%"
+        height="20rem"
+        layout="responsive"
+        alt=""
+        objectFit="contain"
+      ></Image>
     </div>
+    <PostCategory headerMenuList={headerMenuList}></PostCategory>
+    <div className='mb-10'>
+    <Waterfall></Waterfall>
+    </div>
+  </div>
   );
 }
 

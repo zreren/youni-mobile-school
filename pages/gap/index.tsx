@@ -17,9 +17,7 @@ export default function index() {
       <div className="relative h-[260px] w-full gap-bg pt-4 bg-gradient-to-l to-[#EAE6FF] from-[#ECF5FF] ">
         <div className="absolute p-4 bg-white rounded-full left-8 rotate-220">
           {/* @ts-ignore */}
-          <div
-            className="radial-progress text-primary" style={{ '--value': 70 }}
-          >
+          <div className="radial-progress text-primary" style={{ '--value': 70 }}>
             <div className="-rotate-220">
               <div className='flex flex-col items-center justify-center'>
                 {' '}

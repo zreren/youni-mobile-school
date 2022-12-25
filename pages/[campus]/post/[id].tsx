@@ -28,7 +28,7 @@ export default function index() {
   //   )
   // }
   return (
-    <div>
+    <div className='mb-10'>
       <UserHeader></UserHeader>
       <div className='min-h-[380px]'>
       <Swiper

@@ -5,16 +5,20 @@ import CommonLayout from '@/components/Layout/CommonLayout';
 import NessIcon from '@/components/PageComponents/Course/addEvaluation/ness.svg';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import TextField from '@mui/material/TextField';
 import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import IOSSwitch from './components/ios';
+// import { DatePicker } from 'ppfish-mobile/es/components/index.js';
+
+// import { View, Text, Picker } from '@tarojs/components';
+// import { AtList, AtListItem } from 'taro-ui'
 const CCourseTime = (props) => {
   return (
-    <div className="w-full rounded-md bg-bg text-center text-blueTitle">
+    <div className="w-full text-center rounded-md bg-bg text-blueTitle">
       {props.title}
     </div>
   );
@@ -27,7 +31,7 @@ const CCourseColor = (props) => {
         return (
           <div
             style={{ background: item }}
-            className="rounded-full w-6 h-6 "
+            className="w-6 h-6 rounded-full "
           ></div>
         );
       })}
@@ -37,16 +41,16 @@ const CCourseColor = (props) => {
 const CCourseInput = (props) => {
   const { title, isNess } = props;
   return (
-    <div className="rounded-full bg-white w-full ">
-      <label className="input-group h-12  w-full flex justify-between  ">
-        <span className="bg-white  font-medium text-blueTitle text-sm">
+    <div className="w-full bg-white rounded-full ">
+      <label className="flex justify-between w-full h-12 input-group ">
+        <span className="text-sm font-medium bg-white text-blueTitle">
           {isNess === true ? <NessIcon className="mr-1"></NessIcon> : null}
           {title}
         </span>
         <input
           type="text"
           placeholder="info@site.com"
-          className="input placeholder-gray-300 font-medium	text-gray-500 text-sm hover:outline-none	border-none text-right"
+          className="text-sm font-medium text-right text-gray-500 placeholder-gray-300 border-none input hover:outline-none"
         />
       </label>
     </div>
@@ -60,27 +64,25 @@ const AddDaySchedule = (props) => {
   return (
     <div className="w-full space-y-4">
       <CCourseInput title="课程名称" isNess></CCourseInput>
-      <div className="rounded-lg w-full h-12  bg-white p-4">
-        <div className="flex justify-between items-center h-full  space-x-4">
+      <div className="w-full h-12 p-4 bg-white rounded-lg">
+        <div className="flex items-center justify-between h-full space-x-4">
           <div className="flex items-center">
             <NessIcon className="mr-1"></NessIcon>
             <div>日期</div>
           </div>
           <div>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                value={props.value}
-                onChange={(newValue) => {
-                  props.setValue(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
+            {/* <DatePicker
+              mode="date"
+              title="选择日期"
+              extra="请选择日期"
+              value={value}
+              onChange={(date) => setValue(date)}
+            ></DatePicker> */}
           </div>
         </div>
       </div>
-      <div className="rounded-lg w-full h-12  bg-white p-4">
-        <div className="flex justify-between items-center h-full  space-x-4">
+      <div className="w-full h-12 p-4 bg-white rounded-lg">
+        <div className="flex items-center justify-between h-full space-x-4">
           <div className="flex items-center">
             <div>日期</div>
           </div>
@@ -98,8 +100,8 @@ const AddDaySchedule = (props) => {
           </div>
         </div>
       </div>
-      <div className="rounded-lg w-full h-12  bg-white p-4">
-        <div className="flex justify-between items-center h-full  space-x-4">
+      <div className="w-full h-12 p-4 bg-white rounded-lg">
+        <div className="flex items-center justify-between h-full space-x-4">
           <div>颜色</div>
           <CCourseColor></CCourseColor>
         </div>
@@ -111,15 +113,15 @@ const AddCourse = () => {
   return (
     <div className="w-full space-y-4">
       <CCourseInput title="课程名称" isNess></CCourseInput>
-      <div className=" bg-white w-full pr-2 pl-2">
-        <label className=" w-full h-24">
-          <div className="w-full  p-4">
+      <div className="w-full pl-2 pr-2 bg-white ">
+        <label className="w-full h-24 ">
+          <div className="w-full p-4">
             {' '}
-            <span className="bg-white  font-medium text-blueTitle text-sm">
+            <span className="text-sm font-medium bg-white text-blueTitle">
               日程名称
             </span>
           </div>
-          <div className="w-full flex pr-1 pl-1 pb-4 space-x-2">
+          <div className="flex w-full pb-4 pl-1 pr-1 space-x-2">
             <CCourseTime title="周一"></CCourseTime>
             <CCourseTime title="周一"></CCourseTime>
             <CCourseTime title="周一"></CCourseTime>
