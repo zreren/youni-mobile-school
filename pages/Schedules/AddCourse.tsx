@@ -150,7 +150,7 @@ const AddDaySchedule = (props) => {
       </div>
       <div className='flex justify-center mx-10 space-x-4'>
         <div className='flex items-center justify-center w-full text-[#FFD036] font-semibold   bg-[#FFFCF3] h-10 rounded-lg'>关闭</div>
-        <div className='flex items-center text-[#8C6008] font-semibold justify-center w-full bg-[#FFD036] h-10 rounded-lg'>添加课程</div>
+        <div className='flex items-center text-[#8C6008] font-semibold justify-center w-full bg-[#FFD036] h-10 rounded-lg'>添加日程</div>
       </div>
     </div>
   );

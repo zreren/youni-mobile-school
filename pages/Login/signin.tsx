@@ -323,7 +323,7 @@ const ChooseYourRole = (props) => {
           </div>
         </div>
         <SwitchTransition mode="out-in">
-          <CSSTransition classNames="btn" timeout={200} key={Node}>
+          <CSSTransition classNames="btn" timeout={200} key={label}>
             <Node></Node>
           </CSSTransition>
         </SwitchTransition>
