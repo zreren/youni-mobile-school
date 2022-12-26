@@ -111,7 +111,7 @@ export default function index() {
         return (
           <div className='flex justify-start w-full mt-2 space-x-3'>
             <div>
-              <div className='bg-gray-500 rounded-full w-9 h-9'></div>
+              <div className='bg-gray-500 rounded-full w-9 h-9 animate-pulse'></div>
             </div>
             <div>
               <div className='font-medium text-userColor'>测试用户1</div>

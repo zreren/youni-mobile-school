@@ -1,12 +1,30 @@
 import React from 'react';
 import PostCategory from '@/components/Menu/add-post-category';
 import Header from '@/components/Header';
-import Form from '@/components/Form/Form';
+import YouniForm from '@/components/Form/Form';
 import CateGoryIcon from './categoryIcon.svg';
 import RightIcon from '@/public/assets/right.svg';
 import { Uploader } from 'react-vant';
-import AddUploaderIcon from "./addUploaderIcon.svg";
+import AddUploaderIcon from './addUploaderIcon.svg';
+import { DatetimePicker, Field } from 'react-vant';
+import { Input, Form, Cell } from 'react-vant';
+import { Button, Picker, Space } from 'react-vant';
+import Org from './assets/actives/org.svg';
+import { Switch } from 'react-vant';
+import StartTime from "./assets/actives/startTime.svg";
+import EndTime from "./assets/actives/endTime.svg";
+import DraftIcon from "./draft.svg";
 export default function addPost() {
+  const Footer =()=>{
+    return (
+      <div className='w-full bg-white h-[60px] space-x-4 flex justify-between fixed -bottom-1 px-5 py-2'>
+        <div className='flex flex-col items-center  w-[40px]'>
+          <DraftIcon></DraftIcon>
+          <div className='text-[10px] text-[#798195] whitespace-nowrap'>存草稿</div></div>
+        <div className='bg-[#FFD036] text-white rounded-full w-full h-10 flex justify-center items-center'>发布</div>
+      </div>
+    )
+  }
   const headerMenuList = [
     {
       label: '关注',
@@ -44,8 +62,82 @@ export default function addPost() {
       url: 'https://img.yzcdn.cn/vant/sand.jpg', // 其他文件
     },
   ];
+  const dynamicForm = [
+    {
+      type: 'input',
+      label: '主办方',
+      value: 0,
+      dataIndex: 'title',
+      Icon: <Org></Org>,
+    },
+    {
+      type: 'time',
+      label: '开始时间',
+      value: new Date(),
+      Icon:<StartTime></StartTime>,
+      dataIndex: 'startTime',
+    },
+    {
+      type: 'time',
+      label: '结束时间',
+      value: new Date(),
+      dataIndex: 'endTime',
+      Icon:<EndTime></EndTime>,
+    },
+    {
+      type: 'location',
+      label: '地点',
+      value: new Date(),
+      dataIndex: 'location',
+      Icon:<EndTime></EndTime>,
+    },
+    {
+      type: 'prices',
+      label: '价格',
+      value: new Date(),
+      dataIndex: 'endTime',
+      Icon:<EndTime></EndTime>,
+    },
+    {
+      type: 'input',
+      label: '报名链接',
+      value: new Date(),
+      dataIndex: 'endTime',
+      Icon:<EndTime></EndTime>,
+    },
+    {
+      type: 'input',
+      label: '联系方式',
+      value: new Date(),
+      dataIndex: 'endTime',
+      Icon:<EndTime></EndTime>,
+    },
+    {
+      type: 'Switch',
+      label: '地图',
+      dataIndex: 'map',
+      Icon:<EndTime></EndTime>,
+    },
+  ];
+  const [title, setTitle] = React.useState('');
+  const [form] = Form.useForm();
+
+  const customComponents = {
+    input: <Input placeholder="请输入"></Input>,
+    time: (
+      <DatetimePicker popup type="datetime">
+        {(val: Date) => (val ? val.toDateString() : '请选择日期')}
+      </DatetimePicker>
+    ),
+    location:<div className='flex flex-col justify-end'>
+      <Input placeholder="请输入"></Input>
+      <Input placeholder="请输入"></Input>
+    </div>,
+    prices: <div></div>,
+    Switch: <Switch activeColor="#ee0a24" inactiveColor="#dcdee0" />
+  };
   return (
-    <div>
+    <div className='mb-14'>
       <Header className="shadow-none"></Header>
       <div className="items-start justify-between p-5 py-0 pt-6">
         <div className="flex justify-between">
@@ -65,7 +157,7 @@ export default function addPost() {
         ></PostCategory>
       </div>
       <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
-      <div className='px-5 py-3'>
+      <div className="px-5 py-3">
         <Uploader
           accept="*"
           uploadIcon={<AddUploaderIcon></AddUploaderIcon>}
@@ -73,6 +165,67 @@ export default function addPost() {
           onChange={(v) => console.log(v)}
         />
       </div>
+      <div className="px-5 post-title">
+        <Input
+          placeholder="填写标题获得更多流量～"
+          value={title}
+          onChange={setTitle}
+          clearable
+          clearTrigger="always"
+          className="text-2xl font-bold"
+        />
+      </div>
+      <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
+      <div className="px-5 mt-4">
+        <Input.TextArea
+          placeholder="添加正文"
+          autoSize={{ minHeight: 180, maxHeight: 180 }}
+        />
+      </div>
+      <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
+      <div className="px-5 mt-4 post-form">
+        <Form
+          form={form}
+          onFinish={(v) => {console.log(v)}}
+        >
+          {dynamicForm.map((item) => {
+            const Node = customComponents[item.type];
+            const Label = () => {
+              return (
+                <div className="flex items-center space-x-4">
+                  {item.Icon ? item.Icon : null}
+                  <div>{item.label}</div>
+                </div>
+              );
+            };
+
+            return (
+              // <div className="flex justify-between">
+              //   <div>
+              //     <div></div>
+              //     <div>{item.label}</div>
+              //   </div>
+              //   <div className="youni-form">{customComponents[item.type]}</div>
+              // </div>
+              <Form.Item
+                name={item.dataIndex}
+                label={<Label></Label>}
+                valuePropName='checked'
+                onClick={
+                  item.type === 'time'
+                    ? (_, action) => {
+                      action.current?.open()
+                    }
+                    : null
+                }
+              >
+                {customComponents[item.type]}
+              </Form.Item>
+            );
+          })}
+        </Form>
+      </div>
+        <Footer></Footer>
     </div>
   );
 }

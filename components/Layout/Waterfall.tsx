@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './index.module.css';
 import Display from '../PlayGround/display';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import Post from './post';
 import Display1 from '../PlayGround/display2';
 const dataList = [
   {
@@ -85,15 +87,45 @@ const dataList = [
     img: 'https://fakeimg.pl/250x180/',
   },
 ];
-export default function Waterfall() {
+const PostDetail = (props) => {
+  return (
+    <SwipeableDrawer
+      anchor="right"
+      open={props.visible}
+      onClose={() => {
+        props.setVisible(false);
+      }}
+      onOpen={() => {
+        props.setVisible(true);
+      }}
+      className="h-screen"
+    >
+      <div className="w-screen h-screen">
+        <Post></Post>
+      </div>
+    </SwipeableDrawer>
+  );
+};
+export default function Waterfall(props) {
+  const [postDetailShow, setPostDetailShow] = useState(false);
   return (
     <div className="w-full h-full mx-0">
+      <PostDetail
+        setVisible={setPostDetailShow}
+        visible={postDetailShow}
+      ></PostDetail>
       <ul className="w-full p-1">
         {dataList.map((item: any) => {
           return (
             <li key={item.id} className={styles.item}>
-              <Display  data={item}></Display>
-             </li>
+              <Display
+                show={() => {
+                  setPostDetailShow(true)
+                }}
+                // onClick={() => {setPostDetailShow(true)}}
+                data={item}
+              ></Display>
+            </li>
           );
         })}
 

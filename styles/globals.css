@@ -161,16 +161,16 @@
   color: #37455c;
 }
 
-.rv-input__control {
+.youni-form .rv-input__control {
   text-align: right !important;
 }
 
-.rv-selector__item {
+.youni-form .rv-selector__item {
   width: 100% !important;
   font-size: 0.75rem;
   --rv-selector-checked-color: #ffc400 !important;
 }
-.rv-selector{
+.youni-form .rv-selector{
   display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
@@ -193,4 +193,19 @@
   background-color: transparent !important;
   border-radius: 12px !important;
   border: 0.5px solid #F3F4F6 !important;
+}
+
+.post-title .rv-input__control{
+  font-size: 16px !important;
+}
+.post-form .rv-input__control{
+  text-align: right;
+}
+.post-form .rv-field__control-wrapper {
+  display: flex !important;
+  justify-content: flex-end !important;
+}
+
+.post-form .rv-cell__value rv-field__value{
+  justify-content: flex-end !important;
 }

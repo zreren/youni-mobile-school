@@ -21,7 +21,7 @@ export default function Display(props) {
     <div className="w-full pl-0.5 pr-0.5">
       <div
         onClick={() => {
-          router.push(`./post/${data.id}`);
+           props.show();
         }}
       >
         <img src={data.img} className="w-full rounded-xl" />

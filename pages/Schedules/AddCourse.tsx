@@ -65,7 +65,7 @@ const AddDaySchedule = (props) => {
   const [value, setValue] = useState(new Date());
   const [time, setTime] = useState('12:00');
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-4 youni-form">
       <CCourseInput title="课程名称" isNess></CCourseInput>
       <div className="w-full h-12 p-4 bg-white rounded-lg">
         <div className="flex items-center justify-between h-full space-x-4">
@@ -73,7 +73,7 @@ const AddDaySchedule = (props) => {
             <NessIcon className="mr-1"></NessIcon>
             <div>日期</div>
           </div>
-          <div>
+          <div className='youni-form'>
             <DatetimePicker
               popup={{
                 round: true,

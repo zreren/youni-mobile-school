@@ -13,6 +13,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectAuthState, setAuthState } from '@/stores/authSlice';
 import Waterfall from '@/components/Layout/Waterfall';
 import PostCategory from '@/components/Menu/post-category';
+import Post from './post/post';
+const PostDetail = (props) => {
+  return (
+    <SwipeableDrawer
+      anchor="right"
+      open={props.visible}
+      onClose={() => {
+        props.setVisible(false);
+      }}
+      onOpen={() => {
+        props.setVisible(true);
+      }}
+      className="h-screen"
+    >
+     <div className='w-screen h-screen'>
+     <Post></Post>
+     </div>
+    </SwipeableDrawer>
+  );
+};
 
 const RedCountyList = (props) => {
   const { arg } = props;
@@ -209,6 +229,7 @@ function SchoolPage(props) {
   console.log(props, 'SchoolPage');
   const [isSelect, setIsSelect] = useState(false);
   const [schoolSelect, setSelectSchool] = useState(false);
+  const [postDetailShow,setPostDetailShow] = useState(false)
   const dispatch = useDispatch();
   const headerMenuList = [
     {
@@ -238,43 +259,47 @@ function SchoolPage(props) {
   }, []);
   return (
     <div className="w-screen h-screen mb-20 pb-36">
-    <RedCountyList
-      setVisible={setIsSelect}
-      visible={isSelect}
-      setSelectSchool={setSelectSchool}
-    ></RedCountyList>
-    <SchoolList
-      setVisible={setSelectSchool}
-      visible={schoolSelect && !isSelect}
-    ></SchoolList>
-    {/* <SchoolList
+      <PostDetail
+       setVisible={setPostDetailShow}
+       visible={postDetailShow}
+      ></PostDetail>
+      <RedCountyList
+        setVisible={setIsSelect}
+        visible={isSelect}
+        setSelectSchool={setSelectSchool}
+      ></RedCountyList>
+      <SchoolList
+        setVisible={setSelectSchool}
+        visible={schoolSelect && !isSelect}
+      ></SchoolList>
+      {/* <SchoolList
       setVisible={setIsSelect}
       visible={isSelect}
     ></SchoolList> */}
-    <HeaderLayout
-      selectSchool={() => {
-        setIsSelect(true);
-      }}
-      school={props.post.school}
-    ></HeaderLayout>
-    <MenuAtSchool></MenuAtSchool>
-    <div className="w-full pl-5 pr-5">
-      <Image
-        src={ad}
-        width="100%"
-        height="20rem"
-        layout="responsive"
-        alt=""
-        objectFit="contain"
-      ></Image>
+      <HeaderLayout
+        selectSchool={() => {
+          setIsSelect(true);
+        }}
+        school={props.post.school}
+      ></HeaderLayout>
+      <MenuAtSchool></MenuAtSchool>
+      <div className="w-full pl-5 pr-5">
+        <Image
+          src={ad}
+          width="100%"
+          height="20rem"
+          layout="responsive"
+          alt=""
+          objectFit="contain"
+        ></Image>
+      </div>
+      <div className="p-5">
+        <PostCategory headerMenuList={headerMenuList}></PostCategory>
+      </div>
+      <div className="mb-10">
+        <Waterfall show={()=>{setPostDetailShow(true)}} onClick={()=>{}}></Waterfall>
+      </div>
     </div>
-    <div className='p-5'>
-    <PostCategory headerMenuList={headerMenuList}></PostCategory>
-    </div>
-    <div className='mb-10'>
-    <Waterfall></Waterfall>
-    </div>
-  </div>
   );
 }
 
