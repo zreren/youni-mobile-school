@@ -268,7 +268,9 @@ function SchoolPage(props) {
         objectFit="contain"
       ></Image>
     </div>
+    <div className='p-5'>
     <PostCategory headerMenuList={headerMenuList}></PostCategory>
+    </div>
     <div className='mb-10'>
     <Waterfall></Waterfall>
     </div>

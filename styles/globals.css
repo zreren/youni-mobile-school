@@ -176,3 +176,21 @@
   flex-wrap: nowrap;
   width: 100%;
 }
+
+.rv-image__img{
+  border-radius: 12px;
+}
+.rv-uploader__preview{
+  border-radius: 12px;
+  overflow: hidden;
+}
+.rv-uploader__preview-delete{
+  right: 1px !important;
+  top: 0px !important;
+  background: transparent !important;
+}
+.rv-uploader__upload{
+  background-color: transparent !important;
+  border-radius: 12px !important;
+  border: 0.5px solid #F3F4F6 !important;
+}

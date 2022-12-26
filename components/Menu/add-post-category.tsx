@@ -85,6 +85,7 @@ const StyledTab = styled((props: StyledTabProps) => (
   textTransform: 'none',
   backgroundColor: '#fff',
   width: 52,
+  border:"1px solid #DCDDE1",
   height: "28px",
   className: 'w-1/5 h-4 min-w-0 fill-yellow-500',
   minWidth: 0,
@@ -137,8 +138,9 @@ export default function CustomizedTabs(props) {
             headerMenuList.map((item,index)=>{
                 return (
                     <div onClick={()=>{handleChange(index)}} 
-                    className={classnames('h-[28px]  text-sm min-w-[56px] w-14 flex justify-center  items-center rounded',
-                    {"bg-[#FFD036] text-[#8C6008] font-semibold" : value === index,"text-[#A9B0C0]":value !== index})}>{item.label}</div>
+                    className={classnames('h-[28px]  text-sm min-w-[56px] w-14 flex justify-center  items-center rounded-full',
+                    {"bg-[#FFD036] text-[#8C6008] " : value === index,
+                    "text-[#A9B0C0] border-[#DCDDE1] border ":value !== index})}>{item.label}</div>
                 )
             })
         }

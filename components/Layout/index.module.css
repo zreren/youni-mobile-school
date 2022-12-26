@@ -3,6 +3,8 @@
 }
 .item{
  width: 50%;
+ min-width: 50%;
+ max-width: 50%;
 }
 .item:nth-child(n){
  float: left;
