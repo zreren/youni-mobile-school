@@ -21,6 +21,7 @@ const withTM = require('next-transpile-modules')([
   '@fullcalendar/interaction',
   '@fullcalendar/react',
   '@fullcalendar/timegrid',
+  'react-vant',
 ]);
 
 module.exports = withPlugins([

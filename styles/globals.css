@@ -157,3 +157,12 @@
 
   color: #37455c;
 }
+
+
+.rv-input__control{
+  text-align: right !important;
+}
+
+.rv-selector__item{
+  --rv-selector-checked-color :#FFC400  !important
+}

@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import '../styles/calendar.css';
+// import '../styles/picker.less'
 import '@fullcalendar/common/main.css';
 import '@fullcalendar/daygrid/main.css';
 import '@fullcalendar/timegrid/main.css';
@@ -34,7 +35,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     console.log(router.pathname);
       if (routerTable.indexOf(router.pathname) > -1) {
         dispatch(setAuthState(true));
-      }
+      };
   }, [router.pathname]);
   return (
     <div className='overflow-hidden'>
