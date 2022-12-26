@@ -169,7 +169,7 @@ const AddCourse = () => {
             <NessIcon className="mr-1"></NessIcon>上课日期
             </span>
           </div>
-          <div className="flex w-full pb-4 pl-4 pr-4 space-x-2">
+          <div className="flex w-full pb-4 pl-4 pr-4 ">
             <Selector
               options={[
                 {
@@ -295,7 +295,7 @@ export default function AddSchedule() {
   ];
   const [menu, setMenu] = useState(id);
   return (
-    <CommonLayout className="p-0">
+    <CommonLayout className="p-0 mb-10">
       <Header title="添加"></Header>
       <HeaderMenu
         id={id}

@@ -38,8 +38,8 @@
   background: linear-gradient(180deg, #ff760f 0%, #ffa139 100%);
   z-index: -100;
 }
-.youni-vip{
-  background: linear-gradient(0deg, #FEE277 0%, #FED74C 100%);
+.youni-vip {
+  background: linear-gradient(0deg, #fee277 0%, #fed74c 100%);
 }
 .yellow-gradient {
   background: linear-gradient(63.15deg, #ffc400 18.1%, #fee278 99.27%);
@@ -53,25 +53,28 @@
   background: linear-gradient(41.99deg, #813fff 7.11%, #9c77ff 90.46%);
   color: white;
 }
-.pink-gradient{
-  background: linear-gradient(41.99deg, #FF5086 7.11%, #FF6CA0 90.46%);
+.pink-gradient {
+  background: linear-gradient(41.99deg, #ff5086 7.11%, #ff6ca0 90.46%);
   color: white;
 }
-.carpool-gradient{
-  background: linear-gradient(41.99deg, #FE8800 7.11%, #FFB62F 90.46%);
+.carpool-gradient {
+  background: linear-gradient(41.99deg, #fe8800 7.11%, #ffb62f 90.46%);
   color: white;
 }
-.green-gradient{
+.green-gradient {
   color: white;
-  background: linear-gradient(34.99deg, #58BB2E 12.35%, #88D44F 100%);
+  background: linear-gradient(34.99deg, #58bb2e 12.35%, #88d44f 100%);
 }
 .tag-red {
   border: 1px solid #ffc1ba;
   color: #ff4241;
 }
-.pink-linergradient-bg{
-  background: linear-gradient(94.61deg, rgba(184, 122, 255, 0.3) 0.49%, rgba(184, 122, 255, 0) 103.04%);
-
+.pink-linergradient-bg {
+  background: linear-gradient(
+    94.61deg,
+    rgba(184, 122, 255, 0.3) 0.49%,
+    rgba(184, 122, 255, 0) 103.04%
+  );
 }
 .tag-blue {
   border: 1px solid #b0caff;
@@ -158,11 +161,18 @@
   color: #37455c;
 }
 
-
-.rv-input__control{
+.rv-input__control {
   text-align: right !important;
 }
 
-.rv-selector__item{
-  --rv-selector-checked-color :#FFC400  !important
+.rv-selector__item {
+  width: 100% !important;
+  font-size: 0.75rem;
+  --rv-selector-checked-color: #ffc400 !important;
+}
+.rv-selector{
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  width: 100%;
 }
