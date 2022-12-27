@@ -6,6 +6,8 @@ import DisLike from '../disLike.svg';
 import Comments from '../Comments.svg';
 import Discussion from '../discussion.svg';
 import Union from "../Union.svg";
+import PostDiscussionInput from '@/components/Input/PostDiscussionInput';
+import Header from '@/components/Header';
 export default function userComment() {
   const comments = [
     {
@@ -188,6 +190,7 @@ export default function userComment() {
   }
   return (
     <div className="bg-white p-4 rounded-lg  mb-4">
+      <Header></Header>
       <div className="flex items-center mb-4">
         <div className="avatar placeholder">
           <div className="bg-neutral-focus text-neutral-content rounded-full w-14">
@@ -202,9 +205,10 @@ export default function userComment() {
         </div>
       </div>
       <div>
-        <div className="w-full rounded-t-xl org-gradient2 relative h-8">
+        <div className="w-full   rounded-t-xl org-gradient2 relative h-8">
           <Super className="absolute right-1 bottom-0 z-10"></Super>
           <Union className="absolute right-0 bottom-0"></Union>
+          <div className='pl-4 pt-2 course-evaluation'>课程评价</div>
         </div>
         <div className='bg-gradient-to-b from-yellow-50  p-4'>
           <div
@@ -212,11 +216,11 @@ export default function userComment() {
           >
             <div>
               <div className="flex space-x-2 mb-1 mt-1">
-                <div className="text-gray-200">课程名称:</div>
+                <div className="text-gray-300">课程名称:</div>
                 <div className="text-blueTitle">ADMS 1000</div>
               </div>
               <div className="flex space-x-2 mb-1 mt-1">
-                <div className="text-gray-200">最终成绩:</div>
+                <div className="text-gray-300">最终成绩:</div>
                 <div className="text-blueTitle">B+</div>
               </div>
             </div>
@@ -268,7 +272,8 @@ export default function userComment() {
         </div>
       </div> */}
       <div className="h-1 m-0 divider opacity-30"></div>
-      <div>
+      <div className='space-y-8 mt-4'>
+        <PostDiscussionInput></PostDiscussionInput>
         <Discussion></Discussion>
       </div>
     </div>

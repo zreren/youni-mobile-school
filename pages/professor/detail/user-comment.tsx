@@ -13,7 +13,7 @@ export default function userComment() {
       onClick={() => {
         router.push('./comment/1');
       }}
-      className="bg-white p-4 rounded-lg  mb-4"
+      className="bg-white p-4 youni-boxShadow rounded-lg  mb-4"
     >
       <div className="flex items-center mb-4">
         <div className="avatar placeholder">

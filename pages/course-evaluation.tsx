@@ -12,6 +12,7 @@ import Introduce from '@/components/PageComponents/Course/Introduce';
 import FilterIcon from '../public/filter.svg';
 import CDataGrip from '@/components/CDataGrip';
 import Waterfall from '@/components/Layout/Waterfall';
+import UserComment from '@/components/user-comment';
 // import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function courseEvaluation() {
@@ -88,6 +89,8 @@ export default function courseEvaluation() {
         <Title title="课程点评" customClick={() => {}}>
           <FilterIcon></FilterIcon>
         </Title>
+        <UserComment></UserComment>
+        <UserComment></UserComment>
       </div>
     );
   };
@@ -119,7 +122,7 @@ export default function courseEvaluation() {
     },
   ];
   return (
-    <div className="w-screen h-screen bg-bg">
+    <div className="w-screen min-h-screen bg-bg">
       <Header title="课程评价"></Header>
       <HeaderMenu
         headerMenuList={headerMenuList}

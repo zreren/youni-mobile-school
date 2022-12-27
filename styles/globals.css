@@ -38,6 +38,9 @@
   background: linear-gradient(180deg, #ff760f 0%, #ffa139 100%);
   z-index: -100;
 }
+.org-gradient2 {
+  background: linear-gradient(180deg, #ff760f 0%, #ffa139 100%);
+}
 .youni-vip {
   background: linear-gradient(0deg, #fee277 0%, #fed74c 100%);
 }
@@ -64,6 +67,20 @@
 .green-gradient {
   color: white;
   background: linear-gradient(34.99deg, #58bb2e 12.35%, #88d44f 100%);
+}
+
+.course-evaluation {
+  font-family: 'Alimama ShuHeiTi';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 16px;
+  /* identical to box height, or 100% */
+  background: linear-gradient(178.47deg, #ffffff 58.61%, #ffe7ce 105.38%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
 }
 .tag-red {
   border: 1px solid #ffc1ba;
@@ -170,35 +187,35 @@
   font-size: 0.75rem;
   --rv-selector-checked-color: #ffc400 !important;
 }
-.youni-form .rv-selector{
+.youni-form .rv-selector {
   display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
   width: 100%;
 }
 
-.rv-image__img{
+.rv-image__img {
   border-radius: 12px;
 }
-.rv-uploader__preview{
+.rv-uploader__preview {
   border-radius: 12px;
   overflow: hidden;
 }
-.rv-uploader__preview-delete{
+.rv-uploader__preview-delete {
   right: 1px !important;
   top: 0px !important;
   background: transparent !important;
 }
-.rv-uploader__upload{
+.rv-uploader__upload {
   background-color: transparent !important;
   border-radius: 12px !important;
-  border: 0.5px solid #F3F4F6 !important;
+  border: 0.5px solid #f3f4f6 !important;
 }
 
-.post-title .rv-input__control{
+.post-title .rv-input__control {
   font-size: 16px !important;
 }
-.post-form .rv-input__control{
+.post-form .rv-input__control {
   text-align: right;
 }
 .post-form .rv-field__control-wrapper {
@@ -206,6 +223,15 @@
   justify-content: flex-end !important;
 }
 
-.post-form .rv-cell__value rv-field__value{
+.post-form .rv-cell__value rv-field__value {
   justify-content: flex-end !important;
+}
+
+.youni-boxShadow {
+  box-shadow: 0px 0px 12px 2px rgba(27, 36, 52, 0.04);
+}
+
+
+.bg-PostGroup{
+  background: linear-gradient(180deg, #FBFBFD 0%, #F8FAFB 100%);
 }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Header from '@/components/Header';
+import classnames from 'classnames';
 import HeaderMenu from '@/components/Menu/Header-menu';
 import Link from 'next/link';
 import ProfileHeader from '@/components/PageComponents/Profile/ProfileHeader';
@@ -31,12 +32,36 @@ import BgSVG from './bg.svg';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { withTranslation } from 'next-i18next';
+import Image from 'next/image';
 import Waterfall from '@/components/Layout/Waterfall';
-
-// const routerHook = (path:string) =>{
-//   const router = useRouter();
-//   router.push(path)
-// }
+import PostGroupIcon1 from "./post-group/icon1.svg";
+import PostGroupIcon2 from "./post-group/icon2.svg";
+import PostGroupIcon3 from "./post-group/icon3.svg";
+const PostGroup = () => {
+  return (
+    <div className="w-full px-5 py-4  rounded-lg border border-[#D9E7FF] bg-PostGroup">
+      <div className='flex justify-between'>
+        {' '}
+        <div className="flex items-center space-x-2">
+          <div className='text-blueTitle text-sm font-semibold'>测试文集1 </div>
+          <div className='text-[10px] rounded-sm px-2 text-white bg-[#52C41A] flex justify-center items-center'>公开</div>
+        </div>
+        <div className='rounded-full text-[#A9B0C0] flex justify-center items-center border w-14 bg-white border-[#F3F4F6]'>编辑</div>
+      </div>
+      <div className='flex space-x-2'>
+        <div className='flex items-center'><PostGroupIcon1></PostGroupIcon1><div className='text-[#798195] text-xs'>24</div></div>
+        <div className='flex items-center'><PostGroupIcon2></PostGroupIcon2><div className='text-[#798195] text-xs'>24</div></div>
+        <div className='flex items-center'><PostGroupIcon3></PostGroupIcon3><div className='text-[#798195] text-xs'>24</div></div>
+      </div>
+      <div className='mt-4 flex justify-between '>
+        <Image width={64} height={64} src="/text.png" className='rounded-xl'></Image>
+        <Image width={64} height={64} src="/text.png" className='rounded-xl'></Image>
+        <Image width={64} height={64} src="/text.png" className='rounded-xl'></Image>
+        <Image width={64} height={64} src="/text.png" className='rounded-xl'></Image>
+      </div>
+    </div>
+  );
+};
 const Identify = () => {
   const router = useRouter();
   const { t } = useTranslation('translations');
@@ -82,11 +107,11 @@ const Setting = () => {
     <div className="w-full rounded-lg card bg-base-100 ">
       <div className="p-4 pl-0 pr-0 card-body ">
         <div className="grid grid-cols-4 ">
-        <Link href="/Setting/account">
-          <div className="flex flex-col items-center space-y-3">
-            <SettingIcon1></SettingIcon1>
+          <Link href="/Setting/account">
+            <div className="flex flex-col items-center space-y-3">
+              <SettingIcon1></SettingIcon1>
               <div className="text-xs text-[#798195]">账号</div>
-          </div>
+            </div>
           </Link>
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon2></SettingIcon2>
@@ -133,10 +158,10 @@ const Setting = () => {
             <div className="text-xs text-[#798195]">社团入驻</div>
           </div>
           <Link href="/Setting">
-          <div className="flex flex-col items-center space-y-3">
-            <SettingIcon11></SettingIcon11>
+            <div className="flex flex-col items-center space-y-3">
+              <SettingIcon11></SettingIcon11>
               <div className="text-xs text-[#798195]">系统设置</div>
-          </div>
+            </div>
           </Link>
         </div>
       </div>
@@ -145,13 +170,13 @@ const Setting = () => {
 };
 const Profile1 = () => {
   return (
-    <div className='h-[calc(100vh-320px)]'>
+    <div className="h-[calc(100vh-320px)]">
       <div className="w-full p-5 pb-1 bg-white">
         <Identify></Identify>
         <ProfileMenu></ProfileMenu>
       </div>
-      <div className='w-full h-[10px] bg-bg'></div>
-      <div className='w-full bg-white'>
+      <div className="w-full h-[10px] bg-bg"></div>
+      <div className="w-full bg-white">
         <Setting></Setting>
         <div className="mt-2 text-center text-[#798195]">
           <Link href="/Login/signup"> 临时进入登录页面</Link>
@@ -161,12 +186,31 @@ const Profile1 = () => {
   );
 };
 const Profile2 = () => {
+  const [menu, setMenu] = useState(0);
   return (
     <div className="h-full ">
       <div className="w-full px-2">
         <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
-          <div className="w-full text-center text-[#A9B0C0]">贴文</div>
-          <div className="w-full text-center text-[#A9B0C0]">文集</div>
+          <div
+            onClick={() => {
+              setMenu(0);
+            }}
+            className={classnames('w-full text-center text-[#A9B0C0]', {
+              'bg-slate-50 text-[#FFD036]': menu === 0,
+            })}
+          >
+            贴文
+          </div>
+          <div
+            onClick={() => {
+              setMenu(1);
+            }}
+            className={classnames('w-full text-center text-[#A9B0C0]', {
+              'bg-slate-50 text-[#FFD036]': menu === 1,
+            })}
+          >
+            文集
+          </div>
         </div>
       </div>
       <Waterfall></Waterfall>
@@ -174,15 +218,40 @@ const Profile2 = () => {
   );
 };
 const Profile3 = () => {
+  const [menu, setMenu] = useState(0);
   return (
     <div className="w-full">
       <div className="w-full px-2">
         <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
-          <div className="w-full text-center text-[#A9B0C0]">贴文</div>
-          <div className="w-full text-center text-[#A9B0C0]">文集</div>
+          <div
+            onClick={() => {
+              setMenu(0);
+            }}
+            className={classnames('w-full text-center text-[#A9B0C0]', {
+              'bg-slate-50 text-[#FFD036]': menu === 0,
+            })}
+          >
+            贴文
+          </div>
+          <div
+            onClick={() => {
+              setMenu(1);
+            }}
+            className={classnames('w-full text-center text-[#A9B0C0]', {
+              'bg-slate-50 text-[#FFD036]': menu === 1,
+            })}
+          >
+            文集
+          </div>
         </div>
       </div>
-      <Waterfall></Waterfall>
+      {menu === 0 ? (
+        <div className="px-[10px]">
+          <PostGroup></PostGroup>
+        </div>
+      ) : (
+        <Waterfall></Waterfall>
+      )}
     </div>
   );
 };

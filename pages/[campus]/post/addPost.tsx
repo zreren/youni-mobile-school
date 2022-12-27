@@ -21,7 +21,7 @@ export default function addPost() {
         <div className='flex flex-col items-center  w-[40px]'>
           <DraftIcon></DraftIcon>
           <div className='text-[10px] text-[#798195] whitespace-nowrap'>存草稿</div></div>
-        <div className='bg-[#FFD036] text-white rounded-full w-full h-10 flex justify-center items-center'>发布</div>
+        <div className='bg-[#FFD036] cursor-pointer  text-white rounded-full w-full h-10 flex justify-center items-center'>发布</div>
       </div>
     )
   }
@@ -62,6 +62,8 @@ export default function addPost() {
       url: 'https://img.yzcdn.cn/vant/sand.jpg', // 其他文件
     },
   ];
+
+  /** 活动的动态表单 */
   const dynamicForm = [
     {
       type: 'input',
@@ -95,21 +97,21 @@ export default function addPost() {
       type: 'prices',
       label: '价格',
       value: new Date(),
-      dataIndex: 'endTime',
+      dataIndex: 'prices',
       Icon:<EndTime></EndTime>,
     },
     {
       type: 'input',
       label: '报名链接',
       value: new Date(),
-      dataIndex: 'endTime',
+      dataIndex: 'link',
       Icon:<EndTime></EndTime>,
     },
     {
       type: 'input',
       label: '联系方式',
       value: new Date(),
-      dataIndex: 'endTime',
+      dataIndex: 'contact',
       Icon:<EndTime></EndTime>,
     },
     {
@@ -134,7 +136,7 @@ export default function addPost() {
       <Input placeholder="请输入"></Input>
     </div>,
     prices: <div></div>,
-    Switch: <Switch activeColor="#ee0a24" inactiveColor="#dcdee0" />
+    Switch: <Switch activeColor="#FFD036" size={20} inactiveColor="#dcdee0" />
   };
   return (
     <div className='mb-14'>

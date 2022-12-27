@@ -139,15 +139,14 @@ const ChooseYourRole = (props) => {
     return (
       <div className="h-screen space-y-4">
         <div className="flex items-center w-full">
-          <input type="text" placeholder="Type here" className="w-full input" />
-          <div>{'>'}</div>
+          <input type="text" placeholder="School email address" className="w-full input" />
+          {/* <div>{'>'}</div> */}
         </div>
         <div className="w-full">
-          <input type="text" placeholder="Type here" className="w-full input" />
+          <input type="password" placeholder="Password" className="w-full input" />
         </div>
-        <div className="mb-10 text-xs text-gray-300">
-          By continuing, you agree to YoUni’s Term of Service and confirm that
-          you have read our Privacy Policy.
+        <div className="mb-10 pl-4 text-xs text-gray-300">
+        Forgot Password?
         </div>
         <button className="w-full bg-gray-400 border-0 rounded-full btn">
           Log in
