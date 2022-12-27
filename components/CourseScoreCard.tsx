@@ -4,11 +4,11 @@ import CCircleRanking from './Rating/CCircleRanking';
 interface ICourseScoreCard {
   data: {
     score: number;
-    ename: string;
-    cname: string;
-    code: string;
-    desc: string;
-    evaluation:any;
+    ename?: string;
+    cname?: string;
+    code?: string;
+    desc?: string;
+    evaluation?:any;
   };
 }
 export default function CourseScoreCard(props: ICourseScoreCard) {
