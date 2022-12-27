@@ -3,7 +3,7 @@ import StarIcon from './star.svg';
 import DiscussionIcon from './DiscussionIcon.svg';
 export default function FooterDiscussionInput() {
   return (
-    <div className="fixed  z-30 bottom-0 flex   items-center w-full p-5 bg-white h-[60px]">
+    <div className="sticky  z-30 bottom-0 flex   items-center w-full p-5 bg-white h-[60px]">
       <div className='absolute flex  items-center font-medium left-7 text-sm text-[#798195]'>
         <DiscussionIcon></DiscussionIcon>
         23</div>

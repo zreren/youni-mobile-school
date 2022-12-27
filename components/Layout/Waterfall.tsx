@@ -22,7 +22,7 @@ const dataList = [
     title: '出闲置AirPods耳机二代占位占位占位',
     user: 'User name',
     like: 86181,
-    img: 'https://fakeimg.pl/250x180/',
+    img: 'https://fakeimg.pl/250x280/',
   },
   {
     id: 2,
@@ -33,7 +33,7 @@ const dataList = [
     oldPrice: '348CAD',
     user: 'User name',
     like: 86182,
-    img: 'https://fakeimg.pl/250x180/',
+    img: 'https://fakeimg.pl/250x240/',
   },
   {
     id: 3,
@@ -44,7 +44,7 @@ const dataList = [
     oldPrice: '348CAD',
     user: 'User name',
     like: 86182,
-    img: 'https://fakeimg.pl/250x180/',
+    img: 'https://fakeimg.pl/250x220/',
   },
   {
     id: 3,
@@ -84,7 +84,7 @@ const dataList = [
     oldPrice: '348CAD',
     user: 'User name',
     like: 86182,
-    img: 'https://fakeimg.pl/250x180/',
+    img: 'https://fakeimg.pl/350x180/',
   },
 ];
 const PostDetail = (props) => {

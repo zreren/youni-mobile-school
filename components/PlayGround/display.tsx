@@ -2,6 +2,7 @@ import React from 'react';
 import Like from './Like.svg';
 import classnames from 'classnames';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 export default function Display(props) {
   const { data } = props;
   const router = useRouter();
@@ -11,20 +12,41 @@ export default function Display(props) {
     转租: 'purple-gradient',
     活动: 'pink-gradient',
     进群: 'green-gradient',
-    Carpool: "carpool-gradient"
+    Carpool: 'carpool-gradient',
   };
   const textColorMap = {
     red: 'tag-red',
     blue: 'tag-blue',
   };
+  const [imageSize, setSmageSize] = React.useState({
+    width: 1,
+    height: 1
+   });
+
   return (
     <div className="w-full pl-0.5 pr-0.5">
       <div
         onClick={() => {
-           props.show();
+          props.show();
         }}
+        style={{ position: "relative", width: "100%"}}
       >
-        <img src={data.img} className="w-full rounded-xl" />
+        <Image
+          layout="responsive"
+          objectFit="cover"
+          blurDataURL={data.img}
+          placeholder="blur"
+          src={data.img}
+          width={imageSize.width}
+          height={imageSize.height}
+          onLoadingComplete={target => {
+            setSmageSize({
+              width: target.naturalWidth,
+              height: target.naturalHeight
+            });
+           }}
+          className="rounded-xl"
+        />
       </div>
       <div className="mt-2">
         <div

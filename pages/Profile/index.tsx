@@ -213,7 +213,13 @@ const Profile2 = () => {
           </div>
         </div>
       </div>
-      <Waterfall></Waterfall>
+      {menu === 0 ? (
+        <div className="px-[10px]">
+          <PostGroup></PostGroup>
+        </div>
+      ) : (
+        <Waterfall></Waterfall>
+      )}
     </div>
   );
 };
