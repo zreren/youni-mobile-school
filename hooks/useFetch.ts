@@ -2,12 +2,15 @@ import axios from 'axios';
 import useSWR from 'swr';
 import config from '../public/config.json';
 
-const API = Object.freeze({
+export const API = Object.freeze({
     BASE_URL: config.api.baseUrl,
     STUDENT: {
       PATH: '/student',
       COURSES: '/courses',
       GRADES: '/grades',
+    },
+    SUBJECT:{
+      QUERY: '/subject/list',
     },
     COURSE: {
       PATH: '/course',
@@ -34,12 +37,15 @@ const API = Object.freeze({
     }
 })
   
-function useFetch(path, method, body) {
+function useFetch(path, method, body?) {
     const { data, error } = useSWR(`${API.BASE_URL}${path}`, url => {
       return axios({
         method,
         url,
         data: body,
+        headers:{
+          "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2NzIxMTExNzF9.bicnKWVEOJ_OfOsLXRb0dmjMowQxzdmC_oUiTwZ20Qg",
+        }
       })
         .then(response => response.data)
     })

@@ -4,6 +4,11 @@ import CCircleRanking from './Rating/CCircleRanking';
 interface ICourseScoreCard {
   data: {
     score: number;
+    ename: string;
+    cname: string;
+    code: string;
+    desc: string;
+    evaluation:any;
   };
 }
 export default function CourseScoreCard(props: ICourseScoreCard) {
@@ -14,14 +19,15 @@ export default function CourseScoreCard(props: ICourseScoreCard) {
       router.push('/course-evaluation')
     }} className="flex p-6 items-align bg-white justify-between rounded-xl">
       <div className="h-1/1 flex flex-col content-between  ">
-        <div className="text-xl ">ECON 1000</div>
+        <div className="text-xl ">{props.data.ename} {props.data.code}</div>
         <div className="text-gray-400 text-sm flex-grow">
-          Introduction to Microeconomics
+          {/* Introduction to Microeconomics */}
+          {props.data.desc}
         </div>
         <div className="flex text-gray-300 w-full justify-between">
           <div className="space-x-1 text-xs">
             <span>评价数</span>
-            <span>{14}</span>
+            <span>{props.data.evaluation.count}</span>
           </div>
           <div className="space-x-1 text-xs">
             <span>内容</span>
@@ -38,7 +44,7 @@ export default function CourseScoreCard(props: ICourseScoreCard) {
         </div>
       </div>
       <div className='h-full'>
-      <CCircleRanking score={score}></CCircleRanking>
+      <CCircleRanking score={props.data.evaluation.contentRating}></CCircleRanking>
       </div>
     </div>
   );

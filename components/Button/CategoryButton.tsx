@@ -2,7 +2,7 @@ import React from 'react';
 import classnames from 'classnames';
 import styles from './index.module.css';
 export default function CategoryButton(props) {
-  const { color } = props;
+  const { color,data } = props;
   return (
     <div
       className={classnames(
@@ -12,8 +12,8 @@ export default function CategoryButton(props) {
       )}
     >
       <div>
-        <div className="text-base font-semibold text-PingFang">ADMS</div>
-        <div className="text-xs font-normal text-opacity-80">行政管理</div>
+        <div className="text-base font-semibold text-PingFang">{data?.ename}</div>
+        <div className="text-xs font-normal text-opacity-80">{data?.ename}</div>
       </div>
       <div className="pr-2">
         <svg

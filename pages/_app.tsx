@@ -17,6 +17,9 @@ import classnames from "classnames";
 import { appWithTranslation } from 'next-i18next';
 import UserAddMenu from '@/components/UserAddMenu';
 import nexti18nConfig from '../i18n';
+// import {API} from "@/hooks/useFetch";
+import '../cons';
+
 function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useDispatch();
   const authState = useSelector(selectAuthState);

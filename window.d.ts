@@ -1,1 +1,3 @@
-// declare module '@bedrock-layout/masonry-grid'
+
+
+declare const Cons: any;
