@@ -22,6 +22,8 @@ const withTM = require('next-transpile-modules')([
   '@fullcalendar/react',
   '@fullcalendar/timegrid',
   'react-vant',
+  'antd-mobile',
+  '@bedrock-layout/masonry-grid'
 ]);
 
 module.exports = withPlugins([
@@ -29,7 +31,7 @@ module.exports = withPlugins([
   withSvgr,
   {
     images: {
-      domains: ['fakeimg.pl', 'goflash.pincman.com'],
+      domains: ['fakeimg.pl', 'goflash.pincman.com',"source.unsplash.com"],
     },
   },
 ]);

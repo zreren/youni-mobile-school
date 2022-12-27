@@ -235,3 +235,10 @@
 .bg-PostGroup{
   background: linear-gradient(180deg, #FBFBFD 0%, #F8FAFB 100%);
 }
+
+/* .waterFall{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 5px;
+  grid-template-rows: masonry !important;
+} */

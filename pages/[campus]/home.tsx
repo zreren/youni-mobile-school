@@ -258,7 +258,7 @@ function SchoolPage(props) {
     dispatch(setAuthState(true));
   }, []);
   return (
-    <div className="w-screen h-screen mb-20 pb-36">
+    <div className="w-screen min-h-screen mb-20 pb-36">
       <PostDetail
        setVisible={setPostDetailShow}
        visible={postDetailShow}

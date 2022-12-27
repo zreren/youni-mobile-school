@@ -3,7 +3,16 @@ import styles from './index.module.css';
 import Display from '../PlayGround/display';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Post from './post';
+import { InfiniteScroll, List } from 'antd-mobile';
 import Display1 from '../PlayGround/display2';
+// import { MasonryGrid } from '@bedrock-layout/masonry-grid';
+// import Layout from 'react-masonry-list'
+import dynamic from 'next/dynamic';
+
+const Layout = dynamic(() => import('react-masonry-list'), {
+  ssr: false,
+});
+
 const dataList = [
   {
     id: 0,
@@ -14,7 +23,7 @@ const dataList = [
     oldPrice: '348CAD',
     user: 'User name',
     like: 8618,
-    img: 'https://fakeimg.pl/250x150/',
+    img: 'https://source.unsplash.com/random/?food',
   },
   {
     id: 1,
@@ -22,7 +31,7 @@ const dataList = [
     title: '出闲置AirPods耳机二代占位占位占位',
     user: 'User name',
     like: 86181,
-    img: 'https://fakeimg.pl/250x280/',
+    img: 'https://source.unsplash.com/random/?love',
   },
   {
     id: 2,
@@ -33,7 +42,7 @@ const dataList = [
     oldPrice: '348CAD',
     user: 'User name',
     like: 86182,
-    img: 'https://fakeimg.pl/250x240/',
+    img: 'https://source.unsplash.com/random/?computer',
   },
   {
     id: 3,
@@ -44,7 +53,7 @@ const dataList = [
     oldPrice: '348CAD',
     user: 'User name',
     like: 86182,
-    img: 'https://fakeimg.pl/250x220/',
+    img: 'https://source.unsplash.com/random/?coffee',
   },
   {
     id: 3,
@@ -55,7 +64,7 @@ const dataList = [
     oldPrice: '348CAD',
     user: 'User name',
     like: 86182,
-    img: 'https://fakeimg.pl/250x180/',
+    img: 'https://source.unsplash.com/random/?school',
   },
   {
     id: 3,
@@ -73,7 +82,7 @@ const dataList = [
       },
       { name: 'tag2', color: 'blue' },
     ],
-    img: 'https://fakeimg.pl/250x180/',
+    img: 'https://source.unsplash.com/random/?city',
   },
   {
     id: 3,
@@ -84,7 +93,7 @@ const dataList = [
     oldPrice: '348CAD',
     user: 'User name',
     like: 86182,
-    img: 'https://fakeimg.pl/350x180/',
+    img: 'https://source.unsplash.com/random/',
   },
 ];
 const PostDetail = (props) => {
@@ -107,32 +116,40 @@ const PostDetail = (props) => {
   );
 };
 export default function Waterfall(props) {
+  const [data, setData] = useState<any[]>(dataList);
   const [postDetailShow, setPostDetailShow] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  async function loadMore() {
+    const append = dataList;
+    setData((val) => [...val, ...append]);
+    setHasMore(append.length > 0);
+  }
   return (
     <div className="w-full h-full mx-0">
       <PostDetail
         setVisible={setPostDetailShow}
         visible={postDetailShow}
       ></PostDetail>
-      <ul className="w-full p-1">
-        {dataList.map((item: any) => {
-          return (
-            <li key={item.id} className={styles.item}>
-              <Display
-                show={() => {
-                  setPostDetailShow(true)
-                }}
-                // onClick={() => {setPostDetailShow(true)}}
-                data={item}
-              ></Display>
-            </li>
-          );
-        })}
-
-        {/* <li className={styles.item}><Display1></Display1></li>
-        <li className={styles.item}><Display></Display></li>
-        <li className={styles.item}><Display></Display></li> */}
-      </ul>
+        <Layout
+          minWidth={100}
+          colCount={2}
+          className="mx-2"
+          items={data?.map((item: any) => {
+            return (
+              // <li key={item.id} className={styles.item}>
+              <div key={item.id}>
+                <Display
+                  show={() => {
+                    setPostDetailShow(true);
+                  }}
+                  // onClick={() => {setPostDetailShow(true)}}
+                  data={item}
+                ></Display>
+              </div>
+            );
+          })}
+        ></Layout>
+      <InfiniteScroll loadMore={loadMore} hasMore={hasMore} />
     </div>
   );
 }

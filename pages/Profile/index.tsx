@@ -195,7 +195,7 @@ const Profile2 = () => {
             onClick={() => {
               setMenu(0);
             }}
-            className={classnames('w-full text-center text-[#A9B0C0]', {
+            className={classnames('w-full  flex justify-center items-center text-center text-[#A9B0C0]', {
               'bg-slate-50 text-[#FFD036]': menu === 0,
             })}
           >
@@ -205,7 +205,7 @@ const Profile2 = () => {
             onClick={() => {
               setMenu(1);
             }}
-            className={classnames('w-full text-center text-[#A9B0C0]', {
+            className={classnames('w-full  flex justify-center items-center text-center text-[#A9B0C0]', {
               'bg-slate-50 text-[#FFD036]': menu === 1,
             })}
           >
@@ -233,7 +233,7 @@ const Profile3 = () => {
             onClick={() => {
               setMenu(0);
             }}
-            className={classnames('w-full text-center text-[#A9B0C0]', {
+            className={classnames('w-full flex justify-center items-center text-center text-[#A9B0C0]', {
               'bg-slate-50 text-[#FFD036]': menu === 0,
             })}
           >
@@ -243,7 +243,7 @@ const Profile3 = () => {
             onClick={() => {
               setMenu(1);
             }}
-            className={classnames('w-full text-center text-[#A9B0C0]', {
+            className={classnames('w-full  flex justify-center items-center text-center text-[#A9B0C0]', {
               'bg-slate-50 text-[#FFD036]': menu === 1,
             })}
           >
@@ -281,7 +281,7 @@ function index(props) {
     },
   ];
   return (
-    <div className="w-screen h-screen">
+    <div className="w-screen min-h-screen">
       <ProfileHeader></ProfileHeader>
       <div className="w-full overflow-hidden rounded-full ">
         <HeaderMenu
