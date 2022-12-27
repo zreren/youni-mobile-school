@@ -172,6 +172,7 @@ export default function Waterfall(props) {
         })}
       </Masonry> */}
       <div>
+      {/* @ts-ignore */}
       <Masonry columnCount={2} columnGutter={2}  columnWidth={150} items={data} render={Display} />
       </div>
       <InfiniteScroll loadMore={loadMore} hasMore={hasMore} />
