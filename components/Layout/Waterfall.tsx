@@ -119,7 +119,16 @@ export default function Waterfall(props) {
   const [data, setData] = useState<any[]>(dataList);
   const [postDetailShow, setPostDetailShow] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const dataChildren = data?.map((item: any) => {
+
+  const CardWithClick = React.useCallback(
+    props => <Display 
+       {...props} 
+       handleClick={() => setPostDetailShow(true)}
+    />, 
+    []
+  )
+  
+    const dataChildren = data?.map((item: any) => {
     return (
       // <li key={item.id} className={styles.item}>
       <div key={item.id}>
@@ -173,7 +182,7 @@ export default function Waterfall(props) {
       </Masonry> */}
       <div>
       {/* @ts-ignore */}
-      <Masonry columnCount={2} columnGutter={2}  columnWidth={150} items={data} render={Display} />
+      <Masonry  columnCount={2} columnGutter={2}  columnWidth={150} items={data} render={CardWithClick}  />
       </div>
       <InfiniteScroll loadMore={loadMore} hasMore={hasMore} />
     </div>

@@ -27,7 +27,7 @@ export default function Display(props) {
     <div className="w-full pl-0.5 pr-0.5">
       <div
         onClick={() => {
-          props.show();
+          props.handleClick();
         }}
         style={{ position: "relative", width: "100%"}}
       >
