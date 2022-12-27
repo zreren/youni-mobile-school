@@ -23,7 +23,7 @@ const withTM = require('next-transpile-modules')([
   '@fullcalendar/timegrid',
   'react-vant',
   'antd-mobile',
-  '@bedrock-layout/masonry-grid'
+  "masonic",
 ]);
 
 module.exports = withPlugins([
@@ -32,6 +32,9 @@ module.exports = withPlugins([
   {
     images: {
       domains: ['fakeimg.pl', 'goflash.pincman.com',"source.unsplash.com"],
+    },
+    compiler: {
+      styledComponents: true,
     },
   },
 ]);

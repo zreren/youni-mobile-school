@@ -5,13 +5,13 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Post from './post';
 import { InfiniteScroll, List } from 'antd-mobile';
 import Display1 from '../PlayGround/display2';
-// import { MasonryGrid } from '@bedrock-layout/masonry-grid';
-// import Layout from 'react-masonry-list'
 import dynamic from 'next/dynamic';
+import MasonryLayout from 'react-fast-masonry';
+// import { Masonry } from "masonic";
 
-const Layout = dynamic(() => import('react-masonry-list'), {
-  ssr: false,
-});
+const  Masonry = dynamic(() => import  ('masonic').then(module=>module.Masonry), { ssr: false })
+
+
 
 const dataList = [
   {
@@ -119,36 +119,61 @@ export default function Waterfall(props) {
   const [data, setData] = useState<any[]>(dataList);
   const [postDetailShow, setPostDetailShow] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const dataChildren = data?.map((item: any) => {
+    return (
+      // <li key={item.id} className={styles.item}>
+      <div key={item.id}>
+        <Display
+          show={() => {
+            setPostDetailShow(true);
+          }}
+          // onClick={() => {setPostDetailShow(true)}}
+          data={item}
+        ></Display>
+      </div>
+    );
+  });
   async function loadMore() {
     const append = dataList;
     setData((val) => [...val, ...append]);
     setHasMore(append.length > 0);
   }
+  const masonryOptions = {
+    transitionDuration: 0,
+  };
+
+  const imagesLoadedOptions = { background: '.my-bg-image-el' };
   return (
     <div className="w-full h-full mx-0">
       <PostDetail
         setVisible={setPostDetailShow}
         visible={postDetailShow}
       ></PostDetail>
-        <Layout
+      {/* <Layout
           minWidth={100}
           colCount={2}
           className="mx-2"
-          items={data?.map((item: any) => {
-            return (
-              // <li key={item.id} className={styles.item}>
-              <div key={item.id}>
-                <Display
-                  show={() => {
-                    setPostDetailShow(true);
-                  }}
-                  // onClick={() => {setPostDetailShow(true)}}
-                  data={item}
-                ></Display>
-              </div>
-            );
-          })}
-        ></Layout>
+          items={dataChildren}
+        ></Layout> */}
+      {/* <Masonry cols={2} margin={10} transitionDuration={'0.5s'}>
+        {data?.map((item: any) => {
+          return (
+            // <li key={item.id} className={styles.item}>
+            <div key={item.id}>
+              <Display
+                show={() => {
+                  setPostDetailShow(true);
+                }}
+                // onClick={() => {setPostDetailShow(true)}}
+                data={item}
+              ></Display>
+            </div>
+          );
+        })}
+      </Masonry> */}
+      <div>
+      <Masonry columnCount={2} columnGutter={2}  columnWidth={150} items={data} render={Display} />
+      </div>
       <InfiniteScroll loadMore={loadMore} hasMore={hasMore} />
     </div>
   );

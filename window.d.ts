@@ -1,1 +1,1 @@
-declare module '@bedrock-layout/masonry-grid'
+// declare module '@bedrock-layout/masonry-grid'
