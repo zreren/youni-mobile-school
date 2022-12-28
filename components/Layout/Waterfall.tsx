@@ -49,6 +49,13 @@ const dataList = [
     type: '活动',
     title: 'CUA2023春节联晚会',
     price: '200',
+    tag: [
+      {
+        name: '未开始',
+        color: 'red',
+      },
+      { name: '校园活动', color: 'blue' },
+    ],
     unit: 'CAD',
     oldPrice: '348CAD',
     user: 'User name',
@@ -88,6 +95,17 @@ const dataList = [
     id: 3,
     type: '转租',
     title: '出闲置AirPods耳机二代占位占位占位1111',
+    price: '200',
+    unit: 'CAD',
+    oldPrice: '348CAD',
+    user: 'User name',
+    like: 86182,
+    img: 'https://source.unsplash.com/random/',
+  },
+  {
+    id: 3,
+    type: '推广',
+    title: '',
     price: '200',
     unit: 'CAD',
     oldPrice: '348CAD',
@@ -158,30 +176,8 @@ export default function Waterfall(props) {
         setVisible={setPostDetailShow}
         visible={postDetailShow}
       ></PostDetail>
-      {/* <Layout
-          minWidth={100}
-          colCount={2}
-          className="mx-2"
-          items={dataChildren}
-        ></Layout> */}
-      {/* <Masonry cols={2} margin={10} transitionDuration={'0.5s'}>
-        {data?.map((item: any) => {
-          return (
-            // <li key={item.id} className={styles.item}>
-            <div key={item.id}>
-              <Display
-                show={() => {
-                  setPostDetailShow(true);
-                }}
-                // onClick={() => {setPostDetailShow(true)}}
-                data={item}
-              ></Display>
-            </div>
-          );
-        })}
-      </Masonry> */}
-      <div>
-      {/* @ts-ignore */}
+      <div className='mx-2'>
+        {/* @ts-ignore */}
       <Masonry  columnCount={2} columnGutter={2}  columnWidth={150} items={data} render={CardWithClick}  />
       </div>
       <InfiniteScroll loadMore={loadMore} hasMore={hasMore} />

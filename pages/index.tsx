@@ -31,7 +31,7 @@ const Home: NextPage = () => {
       <Header title="临时展示页面">
         <CButton size="normal">添加</CButton>
       </Header>
-      <CDataGrip></CDataGrip>
+      {/* <CDataGrip></CDataGrip> */}
       <a className="link" href="./course-evaluation">
        课程评价
       </a>
@@ -55,22 +55,22 @@ const Home: NextPage = () => {
         <CRating score={4.1}></CRating>
         <CRating score={undefined}></CRating>
       </div>
-      {avatarList.map((item) => {
+      {/* {avatarList.map((item) => {
         return <ProfessorCard data={item}></ProfessorCard>;
-      })}
+      })} */}
       <div className="p-5">
         <CProgress data={{ id: 1, item: 'text', percent: '3' }}></CProgress>
       </div>
       <div>
-        <CCircleRanking score={4.1}></CCircleRanking>
+        {/* <CCircleRanking score={4.1}></CCircleRanking>
         <CCircleRanking score={3.1}></CCircleRanking>
         <CCircleRanking score={2.1}></CCircleRanking>
         <CCircleRanking score={1.1}></CCircleRanking>
         <div className="mb-10"></div>
-        <CourseScoreCard data={{ score: 3.1 }}></CourseScoreCard>
+        <CourseScoreCard data={{ score: 3.1 }}></CourseScoreCard> */}
       </div>
       <div>
-        <CButtonNoLine></CButtonNoLine>
+        {/* <CButtonNoLine></CButtonNoLine> */}
       </div>
       {/* <Calendar></Calendar> */}
     </div>

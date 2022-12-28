@@ -4,14 +4,13 @@
     "dev": "next dev -p 3005",
     "build": "next build",
     "start": "next start",
-    "test": "jest"
+    "test": "jest",
+    "lint": "next lint"
   },
   "dependencies": {
     "@babel/preset-react": "^7.18.6",
     "@bedrock-layout/masonry-grid": "^4.1.0",
     "@date-io/dayjs": "^2.16.0",
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
     "@fullcalendar/common": "^5.11.3",
     "@fullcalendar/daygrid": "^5.11.3",
     "@fullcalendar/interaction": "^5.11.3",
@@ -42,10 +41,7 @@
     "react-fast-masonry": "^0.7.1",
     "react-hook-form": "^7.39.3",
     "react-i18next": "^12.1.1",
-    "react-masonry-component": "^6.3.0",
-    "react-masonry-list": "^1.0.2",
     "react-redux": "^8.0.5",
-    "react-simple-masonry": "^1.0.6",
     "react-transition-group": "^4.4.5",
     "react-vant": "^3.1.1",
     "sass": "^1.57.1",
