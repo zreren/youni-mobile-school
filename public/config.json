@@ -1,5 +1,5 @@
 {
     "api": {
-      "baseUrl": "http://47.100.68.42:5001/api"
+      "baseUrl": "/api"
     }
 }
