@@ -3,7 +3,7 @@ import Like from './Like.svg';
 import classnames from 'classnames';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import TimeIcon from "./time.svg";
+import TimeIcon from "./Time.svg";
 export default function Display(props) {
   const { data } = props;
   const router = useRouter();
