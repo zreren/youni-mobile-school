@@ -13,10 +13,14 @@ import Link from 'next/link';
 import SaveToLibButton from '@/components/Button/SaveToLibButton';
 import CDataGrip from '@/components/CDataGrip';
 import { useDispatch, useSelector } from "react-redux";
+import useLocalStorage from '@/hooks/useStore';
 import { selectAuthState, setAuthState } from "@/stores/authSlice";
+import { useRouter } from 'next/router';
 const Home: NextPage = () => {
   const dispatch = useDispatch();
   dispatch(setAuthState(true))
+  const [school,setSchool] = useLocalStorage("school","York")
+  const router = useRouter()
   enum TSize {
     normal,
     full,
@@ -26,6 +30,11 @@ const Home: NextPage = () => {
     { avatar: '', name: 'Test Prof 2', score: 3.1 },
     { avatar: '', name: 'Test Prof 3', score: 4.1 },
   ];
+  React.useEffect(()=>{
+    console.log(school)
+    setSchool("York")
+    router.push(`/${school}/home`)
+  },[])
   return (
     <div className="flex flex-col p-4 space-y-8 bg-gray-50">
       <Header title="临时展示页面">

@@ -17,7 +17,7 @@ export default function LabelBottomNavigation(props) {
     '/York/home',
     '/Schedules/Schedules',
     '/Course/evaluation',
-    '/Course/course',
+    '/York/Course/course',
     '/Profile',
   ];
   const [value, setValue] = React.useState(1);

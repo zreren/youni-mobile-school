@@ -195,21 +195,21 @@ export default function Display(props) {
         className=""
       />
       {data.type === '活动' ?
-      <div className='bg-[#F7F8F9] text-[#798195]  space-x-2 bottom-0 h-16 w-[100%] z-30 px-2 flex justify-center items-center'>
+      <div className='bg-[#F7F8F9] text-[#798195] bottom-0 h-16 w-[100%] z-30 px-2 flex justify-center items-center'>
         <div> <TimeIcon></TimeIcon></div>
         <div>
-          <div className='text-xs'>2023年1月13日 16:58 开始</div>
-          <div className='text-xs'>2023年1月13日 16:58 开始</div>
+          <div className='text-xs whitespace-nowrap scale-90'>2023年1月13日 16:58 开始</div>
+          <div className='text-xs whitespace-nowrap scale-90'>2023年1月13日 16:58 开始</div>
         </div>
       </div>
       :null}
       {data.type === 'Carpool' ?
-      <div className='bg-[#F7F8F9] text-[#798195]  space-x-2 bottom-0 h-16 w-[100%] z-30 px-2 flex justify-center items-center'>
+      <div className='bg-[#F7F8F9] text-[#798195]   bottom-0 h-16 w-[100%] z-30  flex justify-center items-center'>
          <div>
          <TimeIcon></TimeIcon>
          </div>
         <div>
-          <div className='text-xs  whitespace-nowrap'>2022年11月26日 16:58 出发</div>
+          <div className='text-xs scale-90 whitespace-nowrap'>2022年11月26日 16:58 出发</div>
         </div>
       </div>
       :null}

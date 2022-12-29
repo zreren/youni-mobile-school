@@ -62,7 +62,7 @@ const UserData = () => {
     </div>
   );
 };
-export default function ProfileHeader() {
+export default function ProfileHeader(props) {
   return (
     <div className="w-full h-auto pt-10 pb-8 bg-gradient-to-tr from-red-50 via-yellow-50 to-red-100">
       <div className="flex h-20 p-4">
@@ -73,7 +73,7 @@ export default function ProfileHeader() {
         </div>
         <div className="flex items-center justify-between w-full h-full ml-5">
           <div className="flex flex-col justify-between w-full h-full pt-2">
-            <div className="text-lg font-500">测试用户</div>
+            <div className="text-lg font-500">{props.data?.username?props.data?.username:"测试用户"}</div>
             <div className="text-xs text-gray-300 font-400">
               约克大学 (加拿大)
             </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Header from '@/components/Header';
 import classnames from 'classnames';
@@ -37,6 +37,9 @@ import Waterfall from '@/components/Layout/Waterfall';
 import PostGroupIcon1 from "./post-group/icon1.svg";
 import PostGroupIcon2 from "./post-group/icon2.svg";
 import PostGroupIcon3 from "./post-group/icon3.svg";
+import useUser from '@/hooks/useUser';
+import useLocalStorage from '@/hooks/useStore';
+
 const PostGroup = () => {
   return (
     <div className="w-full px-5 py-4  rounded-lg border border-[#D9E7FF] bg-PostGroup">
@@ -168,101 +171,109 @@ const Setting = () => {
     </div>
   );
 };
-const Profile1 = () => {
-  return (
-    <div className="h-[calc(100vh-320px)]">
-      <div className="w-full p-5 pb-1 bg-white">
-        <Identify></Identify>
-        <ProfileMenu></ProfileMenu>
-      </div>
-      <div className="w-full h-[10px] bg-bg"></div>
-      <div className="w-full bg-white">
-        <Setting></Setting>
-        <div className="mt-2 text-center text-[#798195]">
-          <Link href="/Login/signup"> 临时进入登录页面</Link>
-        </div>
-      </div>
-    </div>
-  );
-};
-const Profile2 = () => {
-  const [menu, setMenu] = useState(0);
-  return (
-    <div className="h-full ">
-      <div className="w-full px-2">
-        <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
-          <div
-            onClick={() => {
-              setMenu(0);
-            }}
-            className={classnames('w-full  flex justify-center items-center text-center text-[#A9B0C0]', {
-              'bg-slate-50 text-[#FFD036]': menu === 0,
-            })}
-          >
-            贴文
-          </div>
-          <div
-            onClick={() => {
-              setMenu(1);
-            }}
-            className={classnames('w-full  flex justify-center items-center text-center text-[#A9B0C0]', {
-              'bg-slate-50 text-[#FFD036]': menu === 1,
-            })}
-          >
-            文集
-          </div>
-        </div>
-      </div>
-      {menu === 0 ? (
-        <div className="px-[10px]">
-          <PostGroup></PostGroup>
-        </div>
-      ) : (
-        <Waterfall></Waterfall>
-      )}
-    </div>
-  );
-};
-const Profile3 = () => {
-  const [menu, setMenu] = useState(0);
-  return (
-    <div className="w-full">
-      <div className="w-full px-2">
-        <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
-          <div
-            onClick={() => {
-              setMenu(0);
-            }}
-            className={classnames('w-full flex justify-center items-center text-center text-[#A9B0C0]', {
-              'bg-slate-50 text-[#FFD036]': menu === 0,
-            })}
-          >
-            贴文
-          </div>
-          <div
-            onClick={() => {
-              setMenu(1);
-            }}
-            className={classnames('w-full  flex justify-center items-center text-center text-[#A9B0C0]', {
-              'bg-slate-50 text-[#FFD036]': menu === 1,
-            })}
-          >
-            文集
-          </div>
-        </div>
-      </div>
-      {menu === 0 ? (
-        <div className="px-[10px]">
-          <PostGroup></PostGroup>
-        </div>
-      ) : (
-        <Waterfall></Waterfall>
-      )}
-    </div>
-  );
-};
+
+
 function index(props) {
+  const Profile1 = () => {
+    return (
+      <div className="h-[calc(100vh-320px)]">
+        <div className="w-full p-5 pb-1 bg-white">
+          <Identify></Identify>
+          <ProfileMenu></ProfileMenu>
+        </div>
+        <div className="w-full h-[10px] bg-bg"></div>
+        <div className="w-full bg-white">
+          <Setting></Setting>
+          <div className="mt-2 text-center text-[#798195]">
+            <Link href="/Login/signup"> 临时进入登录页面</Link>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  const Profile2 = () => {
+    const [menu, setMenu] = useState(0);
+    return (
+      <div className="h-full ">
+        <div className="w-full px-2">
+          <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
+            <div
+              onClick={() => {
+                setMenu(0);
+              }}
+              className={classnames('w-full  flex justify-center items-center text-center text-[#A9B0C0]', {
+                'bg-slate-50 text-[#FFD036]': menu === 0,
+              })}
+            >
+              贴文
+            </div>
+            <div
+              onClick={() => {
+                setMenu(1);
+              }}
+              className={classnames('w-full  flex justify-center items-center text-center text-[#A9B0C0]', {
+                'bg-slate-50 text-[#FFD036]': menu === 1,
+              })}
+            >
+              文集
+            </div>
+          </div>
+        </div>
+        {menu === 0 ? (
+          <div className="px-[10px]">
+            <PostGroup></PostGroup>
+          </div>
+        ) : (
+          <Waterfall></Waterfall>
+        )}
+      </div>
+    );
+  };
+
+  const Profile3 = () => {
+    const [menu, setMenu] = useState(0);
+    return (
+      <div className="w-full">
+        <div className="w-full px-2">
+          <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
+            <div
+              onClick={() => {
+                setMenu(0);
+              }}
+              className={classnames('w-full flex justify-center items-center text-center text-[#A9B0C0]', {
+                'bg-slate-50 text-[#FFD036]': menu === 0,
+              })}
+            >
+              贴文
+            </div>
+            <div
+              onClick={() => {
+                setMenu(1);
+              }}
+              className={classnames('w-full  flex justify-center items-center text-center text-[#A9B0C0]', {
+                'bg-slate-50 text-[#FFD036]': menu === 1,
+              })}
+            >
+              文集
+            </div>
+          </div>
+        </div>
+        {menu === 0 ? (
+          <div className="px-[10px]">
+            <PostGroup></PostGroup>
+          </div>
+        ) : (
+          <Waterfall></Waterfall>
+        )}
+      </div>
+    );
+  };
   console.log(props, 'porps');
+  const { user } = useUser();
+  const [school,setSchool] = useLocalStorage("school","York")
+  useEffect(()=>{
+    setSchool("Dick")
+  },[])
   const { i18n } = useTranslation('common');
   console.log(i18n, 'i18n');
   const [menuVal, setMenu] = useState(0);
@@ -280,9 +291,10 @@ function index(props) {
       menu: <Profile3></Profile3>,
     },
   ];
+
   return (
     <div className="w-screen min-h-screen">
-      <ProfileHeader></ProfileHeader>
+      <ProfileHeader data={user}></ProfileHeader>
       <div className="w-full overflow-hidden rounded-full ">
         <HeaderMenu
           headerMenuList={headerList}

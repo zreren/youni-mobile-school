@@ -14,9 +14,14 @@ interface ICourseScoreCard {
 export default function CourseScoreCard(props: ICourseScoreCard) {
   const { score } = props.data;
   const router = useRouter()
+  const slug = router.query;
+  console.log(slug,"slug")
   return (
     <div onClick={()=>{
-      router.push('/course-evaluation')
+      console.log(router.basePath)
+      setTimeout(()=>{
+        router.push({pathname:'/[campus]/course-evaluation',query:{campus:router.query.campus}})
+      },1000)
     }} className="flex p-6 items-align bg-white justify-between rounded-xl">
       <div className="h-1/1 flex flex-col content-between  ">
         <div className="text-xl ">{props.data.ename} {props.data.code}</div>

@@ -36,7 +36,7 @@ export default function course() {
           }
           
         </div>
-        <button onClick={() => { router.push('./AllSubject') }} className='btn hover:bg-white border-none btn-sm w-full bg-white text-gray-400'>查看全部</button>
+        <button onClick={() => { router.push({pathname:'/[campus]/Course/AllSubject',query:{campus:"York"}}) }} className='btn hover:bg-white border-none btn-sm w-full bg-white text-gray-400'>查看全部</button>
       </div>
       <Title title="热门课程">
         <CButtonNoLine></CButtonNoLine>

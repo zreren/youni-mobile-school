@@ -13,9 +13,13 @@ import FilterIcon from '@/public/filter.svg';
 import CDataGrip from '@/components/CDataGrip';
 import Waterfall from '@/components/Layout/Waterfall';
 import UserComment from '@/components/user-comment';
+import UseFetch from '@/hooks/useFetch';
+import useFetch from '@/hooks/useFetch';
 // import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function courseEvaluation() {
+  const { data, error } = useFetch(`${Cons.API.COURSE.List}?campusId=1&courseId=1`,"get");
+
   const Pending = () => {
     return (
       <div className="w-2/3 mx-auto mt-10 alert alert-info">

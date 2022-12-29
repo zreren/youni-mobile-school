@@ -29,7 +29,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     '/School/',
     '/Schedules/Schedules',
     '/Course/evaluation',
-    '/Course/course',
+    '/York/Course/course',
     '/Profile',
   ];
   const { i18n } = useTranslation();

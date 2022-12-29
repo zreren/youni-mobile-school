@@ -4,11 +4,17 @@ import CommonLayout from '@/components/Layout/CommonLayout';
 import Form from '@/components/Form/Form';
 import IOSSwitch from '@/components/Input/ios';
 import RightIcon from '@/public/assets/right.svg';
+import useUser from '@/hooks/useUser';
+import { useTranslation } from 'next-i18next';
+
 export default function account() {
+  const { user } = useUser();
+  const { i18n } = useTranslation();
+
   const InputSelect = (props) => {
     return (
       <div className="flex items-center text-gray-400">
-        <div>未设置</div>
+        <div>{props.label?props.label:i18n.t("get.authentication")}</div>
         <RightIcon></RightIcon>
       </div>
     );
@@ -17,7 +23,7 @@ export default function account() {
     {
       title: '账号',
       intro: '',
-      action: <InputSelect></InputSelect>,
+      action: <InputSelect label={user?.username}></InputSelect>,
     },
     {
       title: 'YoUni ID',
@@ -62,11 +68,11 @@ export default function account() {
       <Header title="编辑资料"></Header>
       <div className="flex flex-col items-center justify-center w-full">
         <div className="avatar">
-          <div className="w-24 rounded-full">
-            <img src="https://placeimg.com/192/192/people" />
+          <div className="w-24 rounded-full overflow-hidden">
+            <img src={`${Cons.BASEURL}${user?.avatar}`} />
           </div>
         </div>
-        <div className='mt-4 text-xs text-gray-500'>修改头像</div>
+        <div className="mt-4 text-xs text-gray-500">修改头像</div>
       </div>
       <Form header="关于我" List={List1}></Form>
       <Form header="教育认证" List={List2}></Form>

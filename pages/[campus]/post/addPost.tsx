@@ -21,7 +21,7 @@ export default function addPost() {
         <div className='flex flex-col items-center  w-[40px]'>
           <DraftIcon></DraftIcon>
           <div className='text-[10px] text-[#798195] whitespace-nowrap'>存草稿</div></div>
-        <div className='bg-[#FFD036] cursor-pointer  text-white rounded-full w-full h-10 flex justify-center items-center'>发布</div>
+        <div onClick={form.submit} className='bg-[#FFD036] cursor-pointer  text-white rounded-full w-full h-10 flex justify-center items-center'>发布</div>
       </div>
     )
   }
@@ -75,7 +75,6 @@ export default function addPost() {
     {
       type: 'time',
       label: '开始时间',
-      value: new Date(),
       Icon:<StartTime></StartTime>,
       dataIndex: 'startTime',
     },

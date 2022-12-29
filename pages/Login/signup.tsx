@@ -21,6 +21,9 @@ import { Router, useRouter } from 'next/router';
 import InputLabel from '@mui/material/InputLabel';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAuthState, setAuthState } from '@/stores/authSlice';
+import prefixSorted from "./phone";
+
+
 const SignUpButton = (props) => {
   const { title, icon: Icon, label } = props;
   return (
@@ -48,6 +51,8 @@ const SelectSignUpWay = (props) => {
           <Image
             className="absolute z-0 w-10 h-10 opacity-80"
             src={backgroundImage2}
+            quality={100}
+            blurDataURL={"/assets/1.png"}
             alt="Picture of the author"
           />
         </div>
@@ -161,7 +166,7 @@ const ChooseYourRole = (props) => {
     );
   };
   const PhoneLabel = () => {
-    const [age, setAge] = React.useState('10');
+    const [age, setAge] = React.useState('86');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [school, setSchool] = useState('University of York1');
     const handleChange = (event: SelectChangeEvent) => {
@@ -169,37 +174,37 @@ const ChooseYourRole = (props) => {
     };
     return (
       <div className="h-screen space-y-4">
-        <div className="flex items-center w-full">
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            className="w-full"
-            value={school}
-            sx={{
-              boxShadow: 'none',
-              '.MuiOutlinedInput-notchedOutline': { border: 0 },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                border: 0,
-                'border-width': 0,
-                'border-color': 'transparent',
-              },
-            }}
-            label="select school"
-            onChange={(e) => {
-              setSchool(e.target.value);
-            }}
-          >
-            <MenuItem value={'University of York1'}>
-              University of York
-            </MenuItem>
-            <MenuItem value={'University of York2'}>
-              University of York
-            </MenuItem>
-            <MenuItem value={'University of York3'}>
-              University of York
-            </MenuItem>
-          </Select>
-        </div>
+        {/*<div className="flex items-center w-full">*/}
+        {/*  <Select*/}
+        {/*    labelId="demo-simple-select-label"*/}
+        {/*    id="demo-simple-select"*/}
+        {/*    className="w-full"*/}
+        {/*    value={school}*/}
+        {/*    sx={{*/}
+        {/*      boxShadow: 'none',*/}
+        {/*      '.MuiOutlinedInput-notchedOutline': { border: 0 },*/}
+        {/*      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {*/}
+        {/*        border: 0,*/}
+        {/*        'border-width': 0,*/}
+        {/*        'border-color': 'transparent',*/}
+        {/*      },*/}
+        {/*    }}*/}
+        {/*    label="select school"*/}
+        {/*    onChange={(e) => {*/}
+        {/*      setSchool(e.target.value);*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    <MenuItem value={'University of York1'}>*/}
+        {/*      University of York*/}
+        {/*    </MenuItem>*/}
+        {/*    <MenuItem value={'University of York2'}>*/}
+        {/*      University of York*/}
+        {/*    </MenuItem>*/}
+        {/*    <MenuItem value={'University of York3'}>*/}
+        {/*      University of York*/}
+        {/*    </MenuItem>*/}
+        {/*  </Select>*/}
+        {/*</div>*/}
         <div className="w-full">
           <label className="flex items-center input-group">
             <Select
@@ -219,9 +224,9 @@ const ChooseYourRole = (props) => {
               label="Age"
               onChange={handleChange}
             >
-              <MenuItem value={10}>+86</MenuItem>
-              <MenuItem value={20}>+11</MenuItem>
-              <MenuItem value={30}>+22</MenuItem>
+                {prefixSorted.map((item)=>{
+                    return (<MenuItem value={item.prefix}>+{item.prefix}</MenuItem>)
+                })}
             </Select>
             <input
               type="text"
@@ -274,7 +279,7 @@ const ChooseYourRole = (props) => {
       {/* </CSSTransition> */}
       <div className="z-10 flex w-full p-8 space-x-4">
         <div
-          className="flex flex-col items-center w-full space-y-4"
+          className="flex  flex-col items-center w-full space-y-4"
           onClick={() => {
             props.selectRole('Student');
           }}
@@ -302,27 +307,29 @@ const ChooseYourRole = (props) => {
       </div>
       <div className="w-full h-22"></div>
       <div className="z-30 h-full p-4 space-y-10 bg-white border-t border-yellow-300 rounded-t-3xl">
-        <div className="flex items-center justify-around h-10 rounded-xl bg-bg">
+        <div className="flex  items-center justify-around h-10 rounded-xl bg-bg">
           <div
             onClick={() => {
               setLabel(0);
             }}
-            className={classnames('w-2/5 text-center', {
-              'bg-white text-yellow-300 rounded-lg': label === 0,
+            className={classnames('w-full font-medium  mx-2 text-center', {
+              'bg-white  text-yellow-300 rounded-lg': label === 0,
+                "text-[#798195]" : label !== 0
             })}
           >
             Phone
           </div>
-          <div
-            onClick={() => {
-              setLabel(1);
-            }}
-            className={classnames('w-2/5 text-center', {
-              'bg-white text-yellow-300 rounded-lg': label === 1,
-            })}
-          >
-            School Email
-          </div>
+            {props.role === "Student"? <div
+                onClick={() => {
+                    setLabel(1);
+                }}
+                className={classnames('w-full font-medium    mx-2 text-center', {
+                    'bg-white text-yellow-300 rounded-lg': label === 1,
+                    "text-[#798195]" : label !== 1
+                })}
+            >
+                School Email
+            </div>: null }
         </div>
         <Node></Node>
       </div>
