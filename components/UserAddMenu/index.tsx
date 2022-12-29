@@ -6,6 +6,7 @@ import Icon3 from './3.svg';
 import Icon4 from './4.svg';
 import Icon5 from './5.svg';
 import Subtract from './Subtract.svg';
+
 export default function index() {
   return (
     <div className="fixed top-0 z-30 w-screen h-screen backdrop-filter backdrop-blur-2xl">

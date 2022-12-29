@@ -21,7 +21,7 @@ import { Router, useRouter } from 'next/router';
 import InputLabel from '@mui/material/InputLabel';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAuthState, setAuthState } from '@/stores/authSlice';
-import prefixSorted from "./phone";
+import prefixSorted from "../../libs/phone";
 
 
 const SignUpButton = (props) => {
@@ -91,7 +91,7 @@ const SelectSignUpWay = (props) => {
           <Link href="./signin">
           <span className="text-[#FFD036]"> Log in</span>
           </Link>{' '}
-          
+
         </div>
       </div>
       {/* <Button variant="outlined" startIcon={<WeChat />}>

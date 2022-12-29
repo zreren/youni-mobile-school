@@ -24,7 +24,7 @@ import InputLabel from '@mui/material/InputLabel';
 import useFetch from '@/hooks/useFetch';
 import axios from 'axios';
 import useSWR from 'swr';
-import prefixSorted from "./phone";
+import prefixSorted from "../../libs/phone";
 import useLocalStorage from '@/hooks/useStore';
 
 
@@ -43,7 +43,7 @@ export default function SignIn(props) {
       })
     setMyItem(result.data.token)
   }
- 
+
   const route = useRouter();
 
   const SignUpButton = (props) => {
@@ -389,7 +389,7 @@ export default function SignIn(props) {
     dispatch(setAuthState(false));
   }, []);
 
-  
+
   return (
     <div className="relative w-full h-screen overflow-hidden bg-fixed">
       <div className="absolute inset-0 z-0 w-full -top-24">

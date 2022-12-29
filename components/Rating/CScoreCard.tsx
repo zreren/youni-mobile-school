@@ -1,9 +1,10 @@
 import React from 'react';
 import classnames from 'classnames';
 import styles from './index.module.css';
+
 export default function CScoreCard(props) {
   const { color, type } = props;
-  const colorStyle = [`${styles['light-' + color]}`];
+  const colorStyle = [`${styles[`light-${color}`]}`];
   const classNames = classnames(
     'w-full bg-blue-500 bg-opacity-50 rounded-lg h-20 flex flex-col items-center justify-center',
     colorStyle,

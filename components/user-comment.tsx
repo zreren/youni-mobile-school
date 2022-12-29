@@ -1,17 +1,18 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import CScoreCard from '@/components/Rating/CScoreCard';
 import Super from './surper.svg';
 import Like from './Like.svg';
 import DisLike from './disLike.svg';
 import Comments from './Comments.svg';
 import Discussion from './discussion.svg';
-import { useRouter } from 'next/router';
+
 export default function userComment() {
   const router = useRouter();
   return (
     <div
       onClick={() => {
-        router.push('./comment/1');
+        void router.push('./comment/1');
       }}
       className="bg-white p-4 rounded-lg  mb-4"
     >

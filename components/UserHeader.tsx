@@ -1,15 +1,16 @@
 import { useRouter } from 'next/router';
-import React from 'react'
+import React from 'react';
 
 export default function UserHeader(props) {
-    const { children, title , className,returnClick} = props;
-    const router = useRouter();
-    return (
-      <div className="flex items-center p-2">
-        <div className="avatar placeholder">
+  const { children, title, className, returnClick } = props;
+  const router = useRouter();
+  return (
+    <div className="flex items-center p-2">
+      <div className="avatar placeholder">
         <div
           onClick={() => {
-            returnClick?returnClick():router.back();
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            returnClick ? returnClick() : router.back();
           }}
           className="mr-4"
         >
@@ -28,16 +29,18 @@ export default function UserHeader(props) {
             />
           </svg>
         </div>
-          <div className="w-8 rounded-full bg-neutral-focus text-neutral-content">
-            <img src="https://placeimg.com/192/192/people" />
-          </div>
-        </div>
-        <div>
-          <div className="ml-4 text-sm font-medium max-w-8 text-blueTitle">
-            测试用户
-          </div>
-          <div className="ml-4 text-xs text-gray-200">2022届 · B.Com Accounting</div>
+        <div className="w-8 rounded-full bg-neutral-focus text-neutral-content">
+          <img src="https://placeimg.com/192/192/people" />
         </div>
       </div>
-    )
+      <div>
+        <div className="ml-4 text-sm font-medium max-w-8 text-blueTitle">
+          测试用户
+        </div>
+        <div className="ml-4 text-xs text-gray-200">
+          2022届 · B.Com Accounting
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -139,13 +139,13 @@ export default function Waterfall(props) {
   const [hasMore, setHasMore] = useState(true);
 
   const CardWithClick = React.useCallback(
-    props => <Display 
-       {...props} 
+    props => <Display
+       {...props}
        handleClick={() => setPostDetailShow(true)}
-    />, 
+    />,
     []
   )
-  
+
     const dataChildren = data?.map((item: any) => {
     return (
       // <li key={item.id} className={styles.item}>
@@ -160,7 +160,7 @@ export default function Waterfall(props) {
       </div>
     );
   });
-  async function loadMore() {
+   function loadMore() {
     const append = dataList;
     setData((val) => [...val, ...append]);
     setHasMore(append.length > 0);

@@ -10,23 +10,20 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: 'tsconfig.json',
-    tsconfigRootDir : __dirname, 
+    tsconfigRootDir : __dirname,
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint', 'prettier', 'import', 'unused-imports'],
+  plugins: ['@typescript-eslint', 'import', 'unused-imports'],
   extends: [
     // airbnb规范
-    'airbnb-base',
-    // 兼容typescript的airbnb规范
-    'airbnb-typescript/base',
     // typescript的eslint插件
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     // 支持jest
     // 使用prettier格式化代码
-    'prettier',
+    // 'prettier',
     // 整合typescript-eslint与prettier
-    'plugin:prettier/recommended',
+    // 'plugin:prettier/recommended',
   ],
   root: true,
   env: {
@@ -39,5 +36,11 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-unsafe-call':'off',
+    '@typescript-eslint/no-unsafe-assignment':'off',
+    '@typescript-eslint/no-unsafe-argument' : 'off',
+    '@typescript-eslint/no-unsafe-member-access' :'off',
+    '@typescript-eslint/restrict-template-expressions' : 'off'
+    '@typescript-eslint/no-floating-promises' : 'off',
   },
 };
