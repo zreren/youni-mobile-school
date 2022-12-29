@@ -13,7 +13,7 @@ module.exports = {
     tsconfigRootDir : __dirname, 
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint', 'jest', 'prettier', 'import', 'unused-imports'],
+  plugins: ['@typescript-eslint', 'prettier', 'import', 'unused-imports'],
   extends: [
     // airbnb规范
     'airbnb-base',
@@ -22,9 +22,7 @@ module.exports = {
     // typescript的eslint插件
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
-
     // 支持jest
-    'plugin:jest/recommended',
     // 使用prettier格式化代码
     'prettier',
     // 整合typescript-eslint与prettier
