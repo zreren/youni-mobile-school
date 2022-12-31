@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './index.module.css';
+// import styles from './index.module.css';
 import Display from '../PlayGround/display';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Post from './post';

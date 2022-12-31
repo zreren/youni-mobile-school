@@ -15,9 +15,13 @@ globalAny.Cons = {
         COURSE: {
           PATH: '/course',
           STUDENTS: '/students',
+          DETAIL:"/course/detail",
           GRADES: '/grades',
           HOT:"/course/hot",
-          List:"/evaluation/list"
+          List:"/course/list"
+        },
+        EVALUATION: {
+          LIST:"/evaluation/list"
         },
         PROFESSOR:{
             QUERY: '/professor/list',

@@ -10,6 +10,7 @@ import './index.module.css';
 import Icon from './Icon';
 import { createRef, useEffect, useRef, useState } from 'react';
 function Calendar(props) {
+  console.log(props.courseData,"courseData")
   const [setting,setSetting] = useState(props.setting);
   const viewMap = {
     'day':'timeGridWeek',
@@ -87,77 +88,47 @@ function Calendar(props) {
               </div>
             );
           }}
-          events={[
-            {
-              id: 'a',
-              title: 'ADMS 2000',
-              content: '111',
-              start: '2022-11-07T10:30:00',
-              end: '2022-11-07T13:00:00',
-              extendedProps: {
-                department: 'HNE 038',
-                online: true,
-                section: 'S',
-              },
-              description: 'Lecture',
-              type: 0,
-            },
-            {
-              id: 'b',
-              title: 'ADMS 2000',
-              content: '111',
-              start: '2022-11-08T13:30:00',
-              end: '2022-11-08T16:00:00',
-              extendedProps: {
-                department: 'HNE 038',
-                online: false,
-                section: 'S',
-              },
-              description: 'Lecture',
-              type: 0,
-            },
-          ]}
-          eventContent={(arg: any) => (
-            
-              setting.view==="day"?<div onClick={()=>{
+          events={props.courseData}
+          eventContent={(arg: any) =>{
+            console.log(arg,"course arg")
+            return (
+              setting.view==="day"?<div  onClick={()=>{
                 props.clickEvent(arg)
-              }} className="flex flex-col justify-center h-full w-full items-center">
+              }} className="flex flex-col overflow-hidden justify-center h-full w-full items-center">
               <div className="font-bold	 scale-75 text-xs text-center  whitespace-nowrap">
                 {arg.event.title}
               </div>
-              <div className="font-light leading-none	 scale-90">
-                Section {arg.event.extendedProps.section}
+              <div className="font-light leading-none	 scale-90 truncate">
+                Section {arg.event.extendedProps.section.name}
               </div>
-              <div className="font-light leading-none	 scale-90	  ">
-                {arg.event.extendedProps.department}
+              <div className="font-light text-ellipsis	truncate whitespace-nowrap leading-none	 scale-90	  ">
+                {arg.event.extendedProps.classroom}
               </div>
               <div className="font-light leading-none	 scale-90	  ">
                 {arg.event.extendedProps.online ? '线上课程' : '线下课程'}
               </div>
             </div>:
-            <div className="flex flex-col justify-center h-full w-full items-center">
+            <div className="flex overflow-hidden flex-col justify-center h-full w-full items-center">
             <div className="font-bold	 scale-50 text-xs text-center  whitespace-nowrap">
               {arg.event.title}
             </div>
             <div className="font-bold 	text-center text-xs leading-none whitespace-nowrap scale-50">
-              Section {arg.event.extendedProps.section}
+              Section {arg.event.extendedProps.section.name}
             </div>
-            <div className="font-bold leading-none	whitespace-nowrap text-xs scale-50	  ">
-              {arg.event.extendedProps.department}
+            <div className="font-bold leading-none truncate	whitespace-nowrap text-xs scale-50	  ">
+              {arg.event.extendedProps.classroom}
             </div>
             <div className="font-light leading-none	 scale-90	  ">
               {arg.event.extendedProps.online ? '线上' : '线下'}
             </div>
           </div>
-
-            
-            
           )}
+          }
           eventBackgroundColor="#EBE5FE"
           eventTextColor="#A972F0"
           eventBorderColor="#A972F0"
           editable={true}
-          initialEvents={[{ title: 'nice event', start: new Date() }]}
+          // initialEvents={props.courseData}
           eventTimeFormat={{
             hour: '2-digit',
             minute: '2-digit',

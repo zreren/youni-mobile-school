@@ -15,11 +15,22 @@ import Waterfall from '@/components/Layout/Waterfall';
 import UserComment from '@/components/user-comment';
 import UseFetch from '@/hooks/useFetch';
 import useFetch from '@/hooks/useFetch';
+import prefixSorted from '../../libs/phone';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 // import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function courseEvaluation() {
-  const { data, error } = useFetch(`${Cons.API.COURSE.List}?campusId=1&courseId=1`,"get");
-
+  const { data: courseEvaluation, error } = useFetch(
+    `${Cons.API.COURSE.DETAIL}?id=1`,
+    'get',
+  );
+  const [orderState,setOrderState] = React.useState();
+  const handleChangeOrder =  (event: SelectChangeEvent) => {
+    console.log(event.target.value,"event.target.value")
+    setOrderState(event.target.value as string);
+  };
+  console.log(courseEvaluation, 'courseEvaluation');
   const Pending = () => {
     return (
       <div className="w-2/3 mx-auto mt-10 alert alert-info">
@@ -42,21 +53,48 @@ export default function courseEvaluation() {
       </div>
     );
   };
-  const evaluation = () => {
+  function CustomIconWrapper(props) {
+    return <FilterIcon {...props} style={{ transform: 'rotate(0deg)' }} />;
+  }
+  const Evaluation = (props) => {
+    console.log(props, 'Evaluation props');
     return (
       <CommonLayout>
         <Search></Search>
         <Title title="热门教授"></Title>
         <HotProfessorCar professorList={professorRankList}></HotProfessorCar>
         <Title title="教授列表" customClick={() => {}}>
-          <FilterIcon></FilterIcon>
+          {/* <FilterIcon></FilterIcon> */}
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={orderState}
+            defaultValue={"default"}
+            IconComponent={CustomIconWrapper}
+            sx={{
+              boxShadow: 'none',
+              '.MuiOutlinedInput-notchedOutline': { border: 0 },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                transform: "none",
+                border: 0,
+                'border-width': 0,
+                'border-color': 'transparent',
+              },
+            }}
+            onChange={handleChangeOrder}
+            disableUnderline
+          >
+            <MenuItem value="default">默认排序</MenuItem>
+            <MenuItem value="positive">评分正序</MenuItem>
+            <MenuItem value="nagative">评分倒序</MenuItem>
+          </Select>
         </Title>
         <div className="space-y-4">
-          {professorList.map((item) => {
+          {props?.map((item,index) => {
             return (
               <ProfessorCard
                 data={item}
-                key={item.id}
+                key={index}
                 onClick={() => {
                   router.push(`/professor/detail/${item.id}`);
                 }}
@@ -85,29 +123,71 @@ export default function courseEvaluation() {
       score: 1.7,
     },
   ];
-  const CourseEva = () => {
+  const CourseEva = (props) => {
+    const {data:commentData} = useFetch(`${Cons.API.EVALUATION.LIST}?courseId=1&campusId=1`,"get")
+    if (!props) {
+      props = {
+        rating: {
+          professorRating: 1,
+          homeworkRating: 1,
+          contentRating: 1.2,
+          examRating: 1.2,
+        },
+      };
+    }
+    let { rating } = props;
     return (
-      <div className='p-4'>
+      <div className="p-4">
         <Title title="数据概览"></Title>
-        <CDataGrip></CDataGrip>
+        <CDataGrip data={rating}></CDataGrip>
         <Title title="课程点评" customClick={() => {}}>
-          <FilterIcon></FilterIcon>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={orderState}
+            defaultValue={"default"}
+            IconComponent={CustomIconWrapper}
+            sx={{
+              boxShadow: 'none',
+              '.MuiOutlinedInput-notchedOutline': { border: 0 },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                transform: "none",
+                border: 0,
+                'border-width': 0,
+                'border-color': 'transparent',
+              },
+            }}
+            onChange={handleChangeOrder}
+            disableUnderline
+          >
+            <MenuItem value="default">默认排序</MenuItem>
+            <MenuItem value="positive">评分正序</MenuItem>
+            <MenuItem value="nagative">评分倒序</MenuItem>
+          </Select>
         </Title>
         <UserComment></UserComment>
         <UserComment></UserComment>
       </div>
     );
   };
-  const GroupChat = ()=>{
+  const GroupChat = () => {
     return (
       <div>
         <Waterfall></Waterfall>
       </div>
-    )
-  }
-  const menuList = [Introduce, evaluation, CourseEva, GroupChat, Pending];
+    );
+  };
+  const {data:evaluationData} = useFetch(`${Cons.API.PROFESSOR.QUERY}?campusId=1`,'get')
+
+  const menuList = [
+    Introduce(courseEvaluation?.data),
+    Evaluation(evaluationData?.data),
+    CourseEva(courseEvaluation?.data),
+    GroupChat,
+    Pending,
+  ];
   const router = useRouter();
-  const [menu, setMenu] = React.useState(Introduce);
+  const [menu, setMenu] = React.useState(Introduce(courseEvaluation?.data));
   const headerMenuList = [
     {
       label: '简介',
@@ -125,6 +205,7 @@ export default function courseEvaluation() {
       label: '资料库',
     },
   ];
+
   return (
     <div className="w-screen min-h-screen bg-bg">
       <Header title="课程评价"></Header>

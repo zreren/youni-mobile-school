@@ -15,6 +15,7 @@ import IOSSwitch from './components/ios';
 import { DatetimePicker, Field } from 'react-vant';
 import { Form, Selector } from 'react-vant';
 // import { Button } from 'ppfish-mobile/es/components/index.js';
+import Autocomplete from '@mui/material/Autocomplete';
 
 // import { View, Text, Picker } from '@tarojs/components';
 // import { AtList, AtListItem } from 'taro-ui'
@@ -40,19 +41,63 @@ const CCourseColor = (props) => {
     </div>
   );
 };
+const top100Films = [
+  { title: 'Professor 1', year: 1994 },
+  { title: 'Professor 2', year: 1994 },
+  { title: 'Professor 3', year: 1994 },
+  { title: 'Professor 3', year: 1994 },
+  { title: 'Professor 3', year: 1994 },
+  { title: 'Professor 3', year: 1994 },
+  { title: 'Professor 3', year: 1994 },
+]
 const CCourseInput = (props) => {
   const { title, isNess } = props;
   return (
-    <div className="w-full bg-white rounded-full ">
+    <div className="w-full bg-white rounded-sm text-right ">
       <label className="flex justify-between w-full h-12 input-group ">
         <span className="text-sm font-medium bg-white text-blueTitle">
           {isNess === true ? <NessIcon className="mr-1"></NessIcon> : null}
           {title}
         </span>
-        <input
-          type="text"
-          placeholder="info@site.com"
-          className="text-sm font-medium text-right text-gray-500 placeholder-gray-300 border-none input hover:outline-none"
+        {/* <input */}
+        {/*   type="text" */}
+        {/*   placeholder="info@site.com" */}
+        {/*   className="text-sm font-medium text-right text-gray-500 placeholder-gray-300 border-none input hover:outline-none" */}
+        {/* /> */}
+        <Autocomplete
+          id="free-solo-demo"
+          freeSolo
+          sx={{
+            display: 'inline-block',
+            width: 200,
+            border:"none",
+            borderRadius:"none",
+            padding:0,
+            outline: 'none',
+            boxShadow: 'none',
+          }}
+          options={top100Films.map((option) => option.title)}
+          renderInput={(params) => <TextField
+            sx={{ '& label.Mui-focused': {
+                color: 'transparent',
+                border: 0,
+                'border-width': 0,
+                'border-color': 'transparent',
+                outline: 'none',
+              },
+              textAlign:"right",
+              outline: 'none',
+              input: {textAlign: "right"},
+              "& fieldset": { border: 'none' },
+              "& legend": {
+                display: "none"
+              }
+            }}
+            {...params}  InputProps={{
+            ...params.InputProps,
+            disableUnderline:true,
+            endAdornment: null
+          }}   />}
         />
       </label>
     </div>
@@ -169,7 +214,7 @@ const AddCourse = () => {
             <NessIcon className="mr-1"></NessIcon>上课日期
             </span>
           </div>
-          <div className="flex w-full pb-4 pl-4 pr-4 ">
+          <div className="flex youni-form w-full pb-4 pl-4 pr-4 ">
             <Selector
               options={[
                 {
@@ -223,7 +268,7 @@ const AddCourse = () => {
         </label>
       </div>
       <div className="w-full h-12 p-4 bg-white rounded-lg">
-        <div className="flex items-center justify-between h-full space-x-4">
+        <div className="flex youni-form items-center justify-between h-full space-x-4">
           <div className="flex items-center">
           <NessIcon className="mr-1"></NessIcon>
             <div>时间</div>

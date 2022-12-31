@@ -6,10 +6,11 @@ import Logo from './assets/logo.png';
 import Button from '@mui/material/Button';
 import WeChat from './assets/wechat.svg';
 import CommonLayout from '@/components/Layout/CommonLayout';
+// @ts-ignore
 import Youni from './assets/youni.svg';
 import Wechat from './assets/wechatlogin.svg';
 import Google from './assets/google.svg';
-import Stroke from './assets/stroke.svg';
+import Stroke from "./assets/stroke.svg";
 import classnames from 'classnames';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
 import MenuItem from '@mui/material/MenuItem';
@@ -31,9 +32,10 @@ import useLocalStorage from '@/hooks/useStore';
 
 export default function SignIn(props) {
   const [myItem, setMyItem] = useLocalStorage('token', null);
+  const route = useRouter();
 
   const login = async (way:string,form:any) =>{
-      const result = await  axios({
+      const { data } = await  axios({
         method:"post",
         url:`http://47.100.68.42:5001/api/student/password_login`,
         data: {
@@ -41,10 +43,12 @@ export default function SignIn(props) {
           password:form.password
         },
       })
-    setMyItem(result.data.token)
+    if(data.code === 200){
+      setMyItem(data.data.token)
+      route.push("/Profile")
+    }
   }
 
-  const route = useRouter();
 
   const SignUpButton = (props) => {
     const { title, icon: Icon, label } = props;

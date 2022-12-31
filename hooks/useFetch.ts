@@ -1,6 +1,7 @@
 import axios from 'axios';
 import useSWR from 'swr';
 import config from '../public/config.json';
+import useLocalStorage from '@/hooks/useStore';
 
 export const API = Object.freeze({
     BASE_URL: config.api.baseUrl,
@@ -36,20 +37,22 @@ export const API = Object.freeze({
         DELETE:'/comment/delete',
     }
 })
-  
+
 function useFetch(path, method, body?) {
-    const { data, error } = useSWR(`${API.BASE_URL}${path}`, url => {
+  const [token, setToken] = useLocalStorage('token', null);
+
+  const { data, error } = useSWR(`${API.BASE_URL}${path}`, url => {
       return axios({
         method,
         url,
         data: body,
         headers:{
-          "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2NzIxMTExNzF9.bicnKWVEOJ_OfOsLXRb0dmjMowQxzdmC_oUiTwZ20Qg",
+          "Authorization":token,
         }
       })
         .then(response => response.data)
     })
-  
+
     return { data, error }
 }
 

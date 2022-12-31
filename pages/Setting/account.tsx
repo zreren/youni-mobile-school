@@ -2,13 +2,15 @@ import React from 'react';
 import Header from '@/components/Header';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Form from '@/components/Form/Form';
+import useUser from '@/hooks/useUser';
 import IOSSwitch from '@/components/Input/ios';
 import RightIcon from '@/public/assets/right.svg';
 export default function account() {
+  const { user } = useUser();
   const InputSelect = (props) => {
     return (
       <div className="flex items-center text-gray-400">
-        <div>未设置</div>
+        <div>{props?.label?props?.label:"未设置"}</div>
         <RightIcon></RightIcon>
       </div>
     );
@@ -17,12 +19,12 @@ export default function account() {
     {
       title: '账号',
       intro: '',
-      action: <InputSelect></InputSelect>,
+      action: <InputSelect ></InputSelect>,
     },
     {
       title: 'Email',
       intro: '',
-      action: <RightIcon></RightIcon>,
+      action: <InputSelect label={user?.email}></InputSelect>,
     },
     {
       title: '密码',

@@ -185,6 +185,7 @@
 .youni-form .rv-selector__item {
   width: 100% !important;
   font-size: 0.75rem;
+  border: none;
   --rv-selector-checked-color: #ffc400 !important;
 }
 .youni-form .rv-selector {

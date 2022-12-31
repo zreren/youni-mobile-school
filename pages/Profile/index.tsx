@@ -89,8 +89,8 @@ const Identify = () => {
 };
 const ProfileMenu = () => {
   return (
-    <div className="flex justify-between p-4 ">
-      <div className="flex flex-col items-center space-y-3">
+    <div className="flex justify-between p-4  relative">
+      <div className="flex flex-col items-center  space-y-3">
         <MenuIcon1></MenuIcon1>
         <div className="text-xs text-[#798195]">每日签到</div>
       </div>
@@ -177,7 +177,7 @@ function index(props) {
   const Profile1 = () => {
     return (
       <div className="h-[calc(100vh-320px)]">
-        <div className="w-full p-5 pb-1 bg-white">
+        <div className="w-full p-5 pb-1 bg-white sticky ">
           <Identify></Identify>
           <ProfileMenu></ProfileMenu>
         </div>
@@ -269,10 +269,14 @@ function index(props) {
     );
   };
   console.log(props, 'porps');
-  const { user } = useUser();
+  const { user,loggedOut } = useUser();
+  const router = useRouter();
   const [school,setSchool] = useLocalStorage("school","York")
   useEffect(()=>{
-    setSchool("Dick")
+    if(loggedOut){
+      // router.push("/Login/signin")
+    }
+    // setSchool("Dick")
   },[])
   const { i18n } = useTranslation('common');
   console.log(i18n, 'i18n');

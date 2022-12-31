@@ -20,6 +20,9 @@ import Icon5 from './components/timeIcon/5.svg';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import IOSSwitch from './components/ios';
 import RightIcon from '@/components/PageComponents/Profile/right.svg';
+import useFetch from '../../hooks/useFetch';
+import {getCourses,addFullStartDate} from "@/libs/schedule";
+
 
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
@@ -133,8 +136,11 @@ const SetSchedule = (props) => {
   );
 };
 const CourseDetailCard = (props) => {
-  const { arg } = props;
-  if (!arg) return null;
+  const { event } = props;
+  if(!event)return
+  const {title,extendedProps} = event;
+  console.log(props,"CourseDetailCard")
+  // if (!arg) return null;
   return (
     <div className="">
       {/* <div className='w-4 h-1 bg-gray-400 rounded-xs '></div> */}
@@ -158,12 +164,13 @@ const CourseDetailCard = (props) => {
               <div className="flex items-center">
                 {' '}
                 <div className="w-1 h-4 mr-2 text-lg font-medium bg-purple-600 rounded-full"></div>
-                <div>{arg.event.title}</div>
+                <div>{title}</div>
               </div>
               <div className="mt-2 text-xs font-normal">
                 {' '}
-                Section {arg.event.extendedProps.section}
-                {arg.event.extendedProps.online ? '线上课程' : '线下课程'}
+                Section {extendedProps?.section?.name}
+                {' '}
+                {extendedProps?.online ? '线上课程' : '线下课程'}
               </div>
             </div>
             <div className="flex flex-col ">
@@ -197,49 +204,49 @@ const CourseDetailCard = (props) => {
               <div className="flex items-center">
                 <TimeIconActive></TimeIconActive>
                 <div className="ml-3 text-sm text-gray-400">周二</div>
-                <div className="ml-10 text-sm text-gray-400 ">7:30 - 9:30</div>
+                <div className="ml-10 text-sm text-gray-400 ">{extendedProps.time}</div>
               </div>
             </div>
             <div className="flex items-center">
               <Location></Location>
               <div className="ml-3 text-sm text-gray-400">地点</div>
-              <div className="ml-10 text-sm text-gray-400 ">HNE 038</div>
+              <div className="ml-10 text-sm text-gray-400 ">{extendedProps.classroom}</div>
             </div>
           </div>
-          <div className="flex justify-between">
-            <div className="flex flex-col items-center">
-              <div className="flex flex-col avatar placeholder">
-                <div className="bg-gray-300 rounded-full text-neutral-content w-14">
-                  <span className="text-3xl"></span>
-                </div>
-              </div>
-              <div className="text-xs">课程评价</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="flex flex-col avatar placeholder">
-                <div className="bg-gray-300 rounded-full text-neutral-content w-14">
-                  <span className="text-3xl"></span>
-                </div>
-              </div>
-              <div className="text-xs">课程评价</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="flex flex-col avatar placeholder">
-                <div className="bg-gray-300 rounded-full text-neutral-content w-14">
-                  <span className="text-3xl"></span>
-                </div>
-              </div>
-              <div className="text-xs">课程评价</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="flex flex-col avatar placeholder">
-                <div className="bg-gray-300 rounded-full text-neutral-content w-14">
-                  <span className="text-3xl"></span>
-                </div>
-              </div>
-              <div className="text-xs">课程评价</div>
-            </div>
-          </div>
+          {/* <div className="flex justify-between"> */}
+          {/*   <div className="flex flex-col items-center"> */}
+          {/*     <div className="flex flex-col avatar placeholder"> */}
+          {/*       <div className="bg-gray-300 rounded-full text-neutral-content w-14"> */}
+          {/*         <span className="text-3xl"></span> */}
+          {/*       </div> */}
+          {/*     </div> */}
+          {/*     <div className="text-xs">课程评价</div> */}
+          {/*   </div> */}
+          {/*   <div className="flex flex-col items-center"> */}
+          {/*     <div className="flex flex-col avatar placeholder"> */}
+          {/*       <div className="bg-gray-300 rounded-full text-neutral-content w-14"> */}
+          {/*         <span className="text-3xl"></span> */}
+          {/*       </div> */}
+          {/*     </div> */}
+          {/*     <div className="text-xs">课程评价</div> */}
+          {/*   </div> */}
+          {/*   <div className="flex flex-col items-center"> */}
+          {/*     <div className="flex flex-col avatar placeholder"> */}
+          {/*       <div className="bg-gray-300 rounded-full text-neutral-content w-14"> */}
+          {/*         <span className="text-3xl"></span> */}
+          {/*       </div> */}
+          {/*     </div> */}
+          {/*     <div className="text-xs">课程评价</div> */}
+          {/*   </div> */}
+          {/*   <div className="flex flex-col items-center"> */}
+          {/*     <div className="flex flex-col avatar placeholder"> */}
+          {/*       <div className="bg-gray-300 rounded-full text-neutral-content w-14"> */}
+          {/*         <span className="text-3xl"></span> */}
+          {/*       </div> */}
+          {/*     </div> */}
+          {/*     <div className="text-xs">课程评价</div> */}
+          {/*   </div> */}
+          {/* </div> */}
         </div>
       </SwipeableDrawer>
     </div>
@@ -250,7 +257,27 @@ export default function Schedules() {
   const [visible, setVisible] = useState(false);
   const [scheduleVisible, setScheduleVisible] = useState(false);
   const [addCourse, setAddCourse] = useState(false);
-  const [arg, setArg] = useState();
+  const { data, error } = useFetch(`${Cons.API.CURRICULUM.QUERY}?campusId=1`,"get");
+  // const currentDate = new Date();
+  // currentDate.setDate(currentDate.getDate()+7)
+  let courseData;
+  function getPastWeekDates(): [Date, Date] {
+    const today = new Date();
+    const startDate = new Date();
+    const dayOfWeek = startDate.getDay();
+    startDate.setDate(today.getDate() - dayOfWeek);
+    const endDate = new Date();
+    endDate.setDate(today.getDate() - dayOfWeek  + 6);
+    return [startDate, endDate];
+  }
+  const weekDate = getPastWeekDates()
+  if(data?.data){
+    courseData = getCourses(data.data, new Date(Date.parse("2022-08-31T16:00:00.000Z")) ,new Date(Date.parse("2023-12-30T16:00:00.000Z")))
+    const all = addFullStartDate(courseData,weekDate)
+    console.log(all,"courseData")
+  }
+  const [arg, setArg] = useState(
+  );
   const [setting, setSetting] = useState({
     view: 'day',
   });
@@ -326,12 +353,14 @@ export default function Schedules() {
       <CourseDetailCard
         visible={visible}
         setVisible={setVisible}
-        arg={arg}
+        {...arg}
       ></CourseDetailCard>
       <Calendar
         setting={setting}
+        courseData={courseData}
         clickEvent={(arg) => {
-          setArg(arg);
+          console.log(arg,"Calendar clcik")
+          setArg({...arg});
           setVisible(true);
         }}
       ></Calendar>

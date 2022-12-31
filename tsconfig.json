@@ -9,6 +9,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
+    "experimentalDecorators" : true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -24,10 +25,12 @@
       ]
     }
   },
+  "files": ["custom.d.ts"],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-//    "**/*.tsx"
+    "custom.d.ts",
+    "**/*.tsx"
   ],
   "exclude": [
     "node_modules",
