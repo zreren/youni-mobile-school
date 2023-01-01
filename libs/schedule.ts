@@ -120,15 +120,29 @@ function getOtherColor(color: string): string {
     const b = parseInt(color.substring(5, 7), 16);
 
     // 然后将每个数字取反
-    const rPrime = r / 1.39;
-    const gPrime = g / 2;
-    const bPrime = b / 1.0583333333;
+    const rPrime = r
+      // / 1.39;
+    const gPrime = g
+      // / 2;
+    const bPrime = b
+      // / 1.0583333333;
 
     // 最后将数字转换回十六进制颜色值
     return `rgb(${rPrime},${gPrime},${bPrime})`;
 
 }
+function adjustTransparency(rgb: string, alpha: number): string {
+    // 解析输入的 RGBA 值
+    const match = rgb.match(/rgb\((\d+),(\d+),(\d+)\)/);
+    if (!match) {
+        return `rgba(${169},${114},${240},${alpha})`;
+    }
 
+    const [, r, g, b, a] = match.map(Number);
+
+    // 返回新的 RGBA 值
+    return `rgba(${r},${g},${b},${alpha})`;
+}
 function addFullStartDate(array: any[], pastWeekDates: [Date, Date]) {
     for (const item of array) {
         const startTimeRange = item.time;
@@ -136,7 +150,6 @@ function addFullStartDate(array: any[], pastWeekDates: [Date, Date]) {
         const startTime = startTimeRange.split("-")[0];
         console.log(startTime.split(".")[0],"startTime")
         const endTime = startTimeRange.split("-")[1];
-
         const startDate = new Date(pastWeekDates[0]);
         startDate.setDate(startDate.getDate() + dayOfWeek );
         startDate.setHours(startTime.split(".")[0],startTime.split(".")[1]);
@@ -156,8 +169,13 @@ function addFullStartDate(array: any[], pastWeekDates: [Date, Date]) {
         item.end = convertISODateString(endDate.toString());
         item.description= 'Lecture';
         item.type = 0;
-        item.borderColor = getOtherColor(item.color)
-        item.textColor = getOtherColor(item.color)
+        item.borderColor = adjustTransparency(getOtherColor(item.color), 1);
+        item.textColor = adjustTransparency(getOtherColor(item.color), 1);
+        item.backgroundColor = adjustTransparency(getOtherColor(item.color), 0.1);
+        // item.color = adjustTransparency(getOtherColor(item.color), 0.1);
+        // item.borderColor = getOtherColor(item.color)
+        // item.textColor = getOtherColor(item.color)
+        console.log(item.color,"color",item.borderColor,"borderColor",item.textColor,"textColor")
         // delete item.color
     }
 }

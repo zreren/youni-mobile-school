@@ -48,7 +48,7 @@ export default function courseEvaluation() {
               d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             ></path>
           </svg>
-          <span>等待高保真</span>
+          <span>敬请期待</span>
         </div>
       </div>
     );
@@ -187,7 +187,7 @@ export default function courseEvaluation() {
     Pending,
   ];
   const router = useRouter();
-  const [menu, setMenu] = React.useState(Introduce(courseEvaluation?.data));
+  const [menu, setMenu] = React.useState(menuList[0]);
   const headerMenuList = [
     {
       label: '简介',
@@ -208,7 +208,7 @@ export default function courseEvaluation() {
 
   return (
     <div className="w-screen min-h-screen bg-bg">
-      <Header title="课程评价"></Header>
+      <Header title={`${courseEvaluation?.data.ename} ${courseEvaluation?.data.code}`}></Header>
       <HeaderMenu
         headerMenuList={headerMenuList}
         switchMenu={(val) => {

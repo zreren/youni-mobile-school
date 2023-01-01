@@ -19,6 +19,7 @@ import Icon12 from '@/public/assets/setting/2-12.svg';
 import Icon13 from '@/public/assets/setting/2-13.svg';
 
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 const Icon =new Array(3).map((item,index) => require("@/public/assets/setting/" + index + 1 + ".svg"));
 const IconRender = (props) =>{
     const IconGetter= Icon[props]
@@ -33,12 +34,14 @@ const InputSelect = (props) => {
   );
 };
 export default function index() {
+  const router = useRouter();
   const List1 = [
     {
       Icon: Icon1,
       title: 'Manage account',
       intro: '',
-      action: <InputSelect></InputSelect>,
+      action: <RightIcon></RightIcon>,
+      event:() => {router.push('/Setting/account')}
     },
     {
       Icon: Icon2,
@@ -58,7 +61,10 @@ export default function index() {
       Icon: Icon12,
       title: 'Language',
       intro: '',
-      action: <InputSelect></InputSelect>,
+      event:()=>{
+        router.push('/Setting/language')
+      },
+      action: <RightIcon></RightIcon>,
     },
     {
       Icon: Icon13,
@@ -98,7 +104,7 @@ export default function index() {
       Icon: Icon8,
       title: 'YoUni community guidelines',
       intro: '',
-      action: <InputSelect></InputSelect>,
+      action: <RightIcon></RightIcon>,
     },
     {
       Icon: Icon9,

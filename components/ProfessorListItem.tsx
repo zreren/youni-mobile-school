@@ -8,6 +8,7 @@ interface TProfessorCard  {
   };
   onClick?: React.MouseEventHandler
 }
+
 const ProfessorCard:React.FunctionComponent<TProfessorCard>=(props)=> {
   const { data } = props;
   return (

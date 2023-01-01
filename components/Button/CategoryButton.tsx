@@ -1,10 +1,16 @@
 import React from 'react';
 import classnames from 'classnames';
 import styles from './index.module.css';
+import { useRouter } from 'next/router';
 export default function CategoryButton(props) {
   const { color,data } = props;
+  const router = useRouter();
   return (
     <div
+      onClick={()=>{
+        router.push({pathname:'/[campus]/Course/List',query:{campus:"York",subjectId:data.id}})
+      }
+      }
       className={classnames(
         `text-white
      h-16 w-full rounded-lg pt-3 pl-3 flex justify-between`,

@@ -63,7 +63,7 @@ export default function LabelBottomNavigation(props) {
     <div>
       {value === 3 ? (
         <div>
-          <UserAddMenu></UserAddMenu>
+          <UserAddMenu close={()=>{setValue(0)}}></UserAddMenu>
           <BottomNavigation
             className="fixed -bottom-1 left-0 z-30 w-full text-sm transition-all bg-transparent"
             value={value}

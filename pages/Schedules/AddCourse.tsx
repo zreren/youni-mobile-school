@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import HeaderMenu from '@/components/Menu/Header-menu';
 import Header from '@/components/Header';
 import CommonLayout from '@/components/Layout/CommonLayout';
@@ -16,6 +16,7 @@ import { DatetimePicker, Field } from 'react-vant';
 import { Form, Selector } from 'react-vant';
 // import { Button } from 'ppfish-mobile/es/components/index.js';
 import Autocomplete from '@mui/material/Autocomplete';
+import axios from 'axios';
 
 // import { View, Text, Picker } from '@tarojs/components';
 // import { AtList, AtListItem } from 'taro-ui'
@@ -67,6 +68,9 @@ const CCourseInput = (props) => {
         <Autocomplete
           id="free-solo-demo"
           freeSolo
+          onChange={(event: any, newValue: string | null) => {
+            props.change(newValue);
+          }}
           sx={{
             display: 'inline-block',
             width: 200,
@@ -111,7 +115,7 @@ const AddDaySchedule = (props) => {
   const [time, setTime] = useState('12:00');
   return (
     <div className="w-full space-y-4 youni-form">
-      <CCourseInput title="课程名称" isNess></CCourseInput>
+      <CCourseInput title="课程名称" isNess ></CCourseInput>
       <div className="w-full h-12 p-4 bg-white rounded-lg">
         <div className="flex items-center justify-between h-full space-x-4">
           <div className="flex items-center">
@@ -200,131 +204,180 @@ const AddDaySchedule = (props) => {
     </div>
   );
 };
-const AddCourse = () => {
-  const [time, setTime] = useState('12:00');
-
-  return (
-    <div className="w-full space-y-4">
-      <CCourseInput title="课程名称" isNess></CCourseInput>
-      <div className="w-full pl-2 pr-2 bg-white ">
-        <label className="w-full h-24 ">
-          <div className="w-full p-3">
-            {' '}
-            <span className="flex items-center text-sm font-medium bg-white text-blueTitle">
-            <NessIcon className="mr-1"></NessIcon>上课日期
-            </span>
-          </div>
-          <div className="flex youni-form w-full pb-4 pl-4 pr-4 ">
-            <Selector
-              options={[
-                {
-                  label: '周一',
-                  value: '1',
-                },
-                {
-                  label: '周二',
-                  value: '2',
-                },
-                {
-                  label: '周三',
-                  value: '3',
-                },
-                {
-                  label: '周四',
-                  value: '4',
-                },
-                {
-                  label: '周五',
-                  value: '5',
-                },
-                {
-                  label: '周六',
-                  value: '6',
-                },
-                {
-                  label: '周日',
-                  value: '7',
-                },
-              ]}
-              style={{
-                '--rv-selector-border-radius': '4px',
-                '--rv-selector-color':'rgba(55, 69, 92, 0.04)',
-                '--rv-selector-checked-border':
-                  'solid var(--adm-color-primary) 1px',
-                '--rv-selector-padding': '4px 4px',
-                '--rv-selector-checked-text-color':"white",
-              }}
-              defaultValue={['2', '3']}
-              multiple={true}
-              showCheckMark={false}
-              onChange={(arr, extend) => console.log(arr, extend.items)}
-            />
-            {/* <CCourseTime title="周一"></CCourseTime>
-            <CCourseTime title="周一"></CCourseTime>
-            <CCourseTime title="周一"></CCourseTime>
-            <CCourseTime title="周一"></CCourseTime>
-            <CCourseTime title="周一"></CCourseTime> */}
-          </div>
-        </label>
-      </div>
-      <div className="w-full h-12 p-4 bg-white rounded-lg">
-        <div className="flex youni-form items-center justify-between h-full space-x-4">
-          <div className="flex items-center">
-          <NessIcon className="mr-1"></NessIcon>
-            <div>时间</div>
-          </div>
-          <div>
-            <DatetimePicker
-              popup={{
-                round: true,
-              }}
-              title=""
-              defaultValue="12:00"
-              type="time"
-              minHour="10"
-              maxHour="20"
-              value={time}
-              onConfirm={setTime}
-            >
-              {(val, _, actions) => {
-                return (
-                  <Field
-                    readOnly
-                    clickable
-                    label=""
-                    value={val}
-                    placeholder="请选择日期"
-                    onClick={() => actions.open()}
-                  />
-                );
-              }}
-            </DatetimePicker>
-          </div>
-        </div>
-      </div>
-      <CCourseInput title="教室" ></CCourseInput>
-      <CCourseInput title="课程形式" ></CCourseInput>
-      <CCourseInput title="Section" ></CCourseInput>
-      <CCourseInput title="教授"></CCourseInput>
-      <CCourseInput title="单双周" ></CCourseInput>
-      <div className="w-full h-12 p-4 bg-white rounded-lg">
-        <div className="flex items-center justify-between h-full space-x-4">
-          <div>颜色</div>
-          <CCourseColor></CCourseColor>
-        </div>
-      </div>
-      <div className='flex justify-center mx-10 space-x-4'>
-        <div className='flex items-center justify-center w-full text-[#FFD036] font-semibold   bg-[#FFFCF3] h-10 rounded-lg'>关闭</div>
-        <div className='flex items-center text-[#8C6008] font-semibold justify-center w-full bg-[#FFD036] h-10 rounded-lg'>添加课程</div>
-      </div>
-    </div>
-  );
-};
 
 export default function AddSchedule() {
   const router = useRouter();
   const [value, setValue] = React.useState<Dayjs | null>(null);
+
+  const AddCourse = () => {
+    const [time, setTime] = useState('12:00');
+    const [dayOfWeek, setDayOfWeek] = useState([]);
+    const [CURRICULUM, setCURRICULUM] = useState({
+      name: '',
+      color: '',
+      startTime: '',
+      period: '',
+      dayOfWeek: [],
+      classroom: '',
+    });
+    const handleChange = useCallback((val: any, name: string) => {
+      setCURRICULUM((preVal: any) => {
+        return {
+          ...preVal,
+          [name]: val
+        };
+      });
+    }, []);
+    const submitForm = async (values: any) => {
+      console.log(dayOfWeek, 'dayOfWeek');
+      console.log(values, 'values');
+      // dayOfWeek.forEach((item) => {
+      //   axios({
+      //     method:"post",
+      //     url:`${Cons.BASEURL}${Cons.CURRICULUM.CREATE}`,
+      //     data: {
+      //       "name":CURRICULUM.name,
+      //       "dayOfWeek": item.index,
+      //       "period": CURRICULUM.period,
+      //       "time": CURRICULUM.startTime,
+      //       "classroom": CURRICULUM.classroom,
+      //       "color": CURRICULUM.color,
+      //       "sectionId": 1,
+      //       "termId": 1
+      //     },
+      //   })
+      // });
+    }
+    return (
+      <div className="w-full space-y-4">
+        <CCourseInput title="课程名称" isNess change={(val)=>{handleChange(val,"name")}}></CCourseInput>
+        <div className="w-full pl-2 pr-2 bg-white ">
+          <label className="w-full h-24 ">
+            <div className="w-full p-3">
+              {' '}
+              <span className="flex items-center text-sm font-medium bg-white text-blueTitle">
+            <NessIcon className="mr-1"></NessIcon>上课日期
+            </span>
+            </div>
+            <div className="flex youni-form w-full pb-4 pl-4 pr-4 ">
+              <Selector
+                options={[
+                  {
+                    label: '周一',
+                    value: '1',
+                  },
+                  {
+                    label: '周二',
+                    value: '2',
+                  },
+                  {
+                    label: '周三',
+                    value: '3',
+                  },
+                  {
+                    label: '周四',
+                    value: '4',
+                  },
+                  {
+                    label: '周五',
+                    value: '5',
+                  },
+                  {
+                    label: '周六',
+                    value: '6',
+                  },
+                  {
+                    label: '周日',
+                    value: '0',
+                  },
+                ]}
+                style={{
+                  '--rv-selector-border-radius': '4px',
+                  '--rv-selector-color':'rgba(55, 69, 92, 0.04)',
+                  '--rv-selector-checked-border':
+                    'solid var(--adm-color-primary) 1px',
+                  '--rv-selector-padding': '4px 4px',
+                  '--rv-selector-checked-text-color':"white",
+                }}
+                value={dayOfWeek}
+                defaultValue={['2']}
+                multiple={true}
+                showCheckMark={false}
+                onChange={(arr, extend) => {
+                  setDayOfWeek(arr);
+                  console.log(arr,dayOfWeek)
+                }}
+              />
+              {/* <CCourseTime title="周一"></CCourseTime>
+            <CCourseTime title="周一"></CCourseTime>
+            <CCourseTime title="周一"></CCourseTime>
+            <CCourseTime title="周一"></CCourseTime>
+            <CCourseTime title="周一"></CCourseTime> */}
+            </div>
+          </label>
+        </div>
+        <div className="w-full h-12 p-4 bg-white rounded-lg">
+          <div className="flex youni-form items-center justify-between h-full space-x-4">
+            <div className="flex items-center">
+              <NessIcon className="mr-1"></NessIcon>
+              <div>时间</div>
+            </div>
+            <div>
+              <DatetimePicker
+                popup={{
+                  round: true,
+                }}
+                title=""
+                defaultValue="12:00"
+                type="time"
+                minHour="10"
+                maxHour="20"
+                value={time}
+                onConfirm={setTime}
+              >
+                {(val, _, actions) => {
+                  return (
+                    <Field
+                      readOnly
+                      clickable
+                      label=""
+                      value={val}
+                      placeholder="请选择日期"
+                      onClick={() => actions.open()}
+                    />
+                  );
+                }}
+              </DatetimePicker>
+            </div>
+          </div>
+        </div>
+        <CCourseInput title="教室" change={(val)=>{handleChange(val,"classroom")}}></CCourseInput>
+        <CCourseInput title="课程形式" change={(val)=>{handleChange(val,"name")}}></CCourseInput>
+        <CCourseInput title="Section" change={(val)=>{handleChange(val,"name")}}></CCourseInput>
+        <CCourseInput title="教授" change={(val)=>{handleChange(val,"name")}}></CCourseInput>
+        <CCourseInput title="单双周"change={(val)=>{handleChange(val,"name")}}></CCourseInput>
+        <div className="w-full h-12 p-4 bg-white rounded-lg">
+          <div className="flex items-center justify-between h-full space-x-4">
+            <div>颜色</div>
+            <CCourseColor></CCourseColor>
+          </div>
+        </div>
+        <div className='flex justify-center mx-10 space-x-4'>
+          <div className='flex items-center
+          justify-center w-full text-[#FFD036]
+          font-semibold   bg-[#FFFCF3] h-10 rounded-lg'>关闭</div>
+          <div onClick={()=>{submitForm(CURRICULUM)}} className='flex items-center text-[#8C6008]
+          font-semibold justify-center w-full bg-[#FFD036]
+          h-10 rounded-lg'>添加课程</div>
+        </div>
+      </div>
+    );
+  };
+
+
   const menuList = [AddCourse, AddDaySchedule];
+
+
   let id = Number(router.query.id) - 1;
   if (!id) {
     id = 0;

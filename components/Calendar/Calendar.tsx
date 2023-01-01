@@ -45,6 +45,7 @@ function Calendar(props) {
         <FullCalendar
           plugins={[timeGridPlugin,dayGridPlugin]}
           ref={calendarRef}
+          slotEventOverlap={true}
           viewDidMount={(view: any) => {
             setting.view==="week" || setting.view==="day"?
             ReactDOM.render(
@@ -124,9 +125,9 @@ function Calendar(props) {
           </div>
           )}
           }
-          eventBackgroundColor="#EBE5FE"
-          eventTextColor="#A972F0"
-          eventBorderColor="#A972F0"
+          // eventBackgroundColor="#EBE5FE"
+          // eventTextColor="#A972F0"
+          // eventBorderColor="#A972F0"
           editable={true}
           // initialEvents={props.courseData}
           eventTimeFormat={{

@@ -1,12 +1,8 @@
 {
-    "rewrites": [
-      {
-        "source": "/api/(.*)",
-        "destination": "/vercel/proxy"
-      }
-    ]
-  }
-  
-  
-
-  
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/vercel/proxy"
+    }
+  ]
+}
