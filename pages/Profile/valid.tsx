@@ -72,9 +72,9 @@ const MailValid = () => {
           />
         </label>
       </div> */}
-      {form.slice(0,4).map((item) => {
+      {form.slice(0,4).map((item,index) => {
         return (
-          <InputComponent label={item.label} ></InputComponent>
+          <InputComponent key={index} label={item.label} ></InputComponent>
         );
       })}
       <div className="relative w-full bg-white rounded-full">

@@ -22,7 +22,7 @@ export default function course() {
       <Search placeholder="搜索课程"></Search>
       <div className="space-y-2 mt-4">
         <div className="grid grid-cols-2 gap-x-2 gap-y-1">
-          {data?data.data.slice(0,6).map((item,index) => {
+          {data?data?.data?.slice(0,6)?.map((item,index) => {
             return (
               <CategoryButton data={item} key={item.id} color={randomColor[index%6]}>
               </CategoryButton>
@@ -34,7 +34,7 @@ export default function course() {
           <CategoryButton color="pink"></CategoryButton>
           <CategoryButton color="purple"></CategoryButton></>
           }
-          
+
         </div>
         <button onClick={() => { router.push({pathname:'/[campus]/Course/AllSubject',query:{campus:"York"}}) }} className='btn hover:bg-white border-none btn-sm w-full bg-white text-gray-400'>查看全部</button>
       </div>
@@ -42,12 +42,12 @@ export default function course() {
         <CButtonNoLine></CButtonNoLine>
       </Title>
       <div className='space-y-2'>
-        {hotCourseData?hotCourseData.data.map((item,index) => {
+        {hotCourseData?hotCourseData?.data?.map((item,index) => {
           return (
             <CourseScoreCard data={item}></CourseScoreCard>
           )
         }):null}
-        
+
         {/* <CourseScoreCard data={{ score: 0.8 }}></CourseScoreCard>
         <CourseScoreCard data={{ score: 0.8 }}></CourseScoreCard>
         <CourseScoreCard data={{ score: 0.8 }}></CourseScoreCard> */}

@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-// import DownIcon from './down.svg';
+import DownIcon from './down.svg';
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -135,12 +135,13 @@ export default function index() {
               <CScoreCard></CScoreCard>
             </div>
           </div>
+
         </div>
       </div>
-      <div className="px-0 bg-gray-200">
+      <div className="px-0  ">
         <Accordion className="">
           <AccordionSummary
-            // expandIcon={<DownIcon />}
+            expandIcon={<DownIcon />}
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
@@ -157,6 +158,9 @@ export default function index() {
             <CourseGap></CourseGap>
           </AccordionDetails>
         </Accordion>
+        <div className={"w-full h-12 "}>
+          <div className={"bg-[#F7F8F9] rounded-lg  mx-5 h-12 text-sm text-[#798195] flex justify-center items-center"}>添加学期</div>
+        </div>
         {/* <div className={"flex justify-between items-center mb-7 mt-5"}> */}
         {/*   <div className={"flex items-center space-x-2"}> */}
         {/*     <div className={"w-2 h-[14px] bg-[#ff7978] rounded-full "}></div> */}
