@@ -310,7 +310,8 @@ function SchoolPage(props) {
           height="20rem"
           layout="responsive"
           alt=""
-          placeholder={ad}
+          placeholder={'blur'}
+          blurDataURL={ad}
           objectFit="contain"
         ></Image>
       </div>
