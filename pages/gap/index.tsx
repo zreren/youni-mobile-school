@@ -7,7 +7,8 @@ import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import DownIcon from './down.svg';
-
+import EditIcon from './edit.svg';
+import Session from './sesion.svg';
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
@@ -95,9 +96,9 @@ export default function index() {
               <div className={"bg-[#F7F8F9] text-[#798195] text-xs px-2"}>选修</div>
             </div>
           </div>
-          <div className="flex mr-4 space-x-4">
+          <div className="flex items-center mr-4 space-x-4">
             <div className={"text-xl bg-[#F7F8F9] rounded-md px-4"}>6.0</div>
-            <div>edit</div>
+            <EditIcon></EditIcon>
           </div>
         </div>
       </div>
@@ -155,11 +156,17 @@ export default function index() {
             </div>
           </AccordionSummary>
           <AccordionDetails>
+            <div className='space-y-2'>
             <CourseGap></CourseGap>
+            <CourseGap></CourseGap>
+            </div>
           </AccordionDetails>
         </Accordion>
         <div className={"w-full h-12 "}>
-          <div className={"bg-[#F7F8F9] rounded-lg  mx-5 h-12 text-sm text-[#798195] flex justify-center items-center"}>添加学期</div>
+          <div className={"bg-[#F7F8F9] space-x-2 rounded-lg  mx-5 h-12 text-sm text-[#798195] flex justify-center items-center"}>
+            <Session></Session>
+            <div>添加学期</div>
+            </div>
         </div>
         {/* <div className={"flex justify-between items-center mb-7 mt-5"}> */}
         {/*   <div className={"flex items-center space-x-2"}> */}
