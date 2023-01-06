@@ -356,8 +356,9 @@ export default function SignIn(props) {
               onClick={() => {
                 setLabel(0);
               }}
-              className={classnames('w-2/5 h-4/5 text-[#798195] flex items-center justify-center text-center', {
+              className={classnames('w-2/5 h-4/5  flex items-center justify-center text-center', {
                 'bg-white text-[#FFD036] rounded-lg': label === 0,
+                'text-[#798195]':label !== 0
               })}
             >
               Phone
@@ -366,8 +367,9 @@ export default function SignIn(props) {
               onClick={() => {
                 setLabel(1);
               }}
-              className={classnames('w-2/5 h-4/5 text-[#798195] flex items-center justify-center text-center', {
+              className={classnames('w-2/5 h-4/5 flex items-center justify-center text-center', {
                 'bg-white text-[#FFD036] rounded-lg': label === 1,
+                'text-[#798195]':label !== 1
               })}
             >
               Email
