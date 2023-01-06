@@ -197,7 +197,8 @@ export default function SignIn(props) {
           <div className="mb-10 pl-4 text-xs text-gray-300">Forgot Password?</div>
           <button
             onClick={()=>{login("mail",form)}}
-            className={classnames("w-full bg-gray-400 border-0 rounded-full btn",{"bg-yellow-400":form.mail.length > 1 && form.password.length > 1})}
+            className={classnames("w-full bg-[#F7F8F9] text-[#A9B0C0] border-0 rounded-full btn",
+            {"bg-yellow-400 text-[#8C6008]":form.mail.length > 1 && form.password.length > 1})}
           >
             Log in
           </button>
@@ -294,7 +295,7 @@ export default function SignIn(props) {
                 : null;
             }}
             className={classnames(
-              'w-full bg-gray-400  text-[16px] font-medium border-0 rounded-full btn hover:bg-gray-300',
+              'w-full bg-[#F7F8F9] text-[#A9B0C0]  text-[16px] font-medium border-0 rounded-full btn hover:bg-gray-300',
               {
                 'bg-yellow-400 text-[#8C6008]':
                   phoneNumber.length > 5 && school.length,
@@ -355,7 +356,7 @@ export default function SignIn(props) {
               onClick={() => {
                 setLabel(0);
               }}
-              className={classnames('w-2/5 text-center', {
+              className={classnames('w-2/5 h-4/5 flex items-center justify-center text-center', {
                 'bg-white text-[#FFD036] rounded-lg': label === 0,
               })}
             >
@@ -365,7 +366,7 @@ export default function SignIn(props) {
               onClick={() => {
                 setLabel(1);
               }}
-              className={classnames('w-2/5 text-center', {
+              className={classnames('w-2/5 h-4/5 flex items-center justify-center text-center', {
                 'bg-white text-[#FFD036] rounded-lg': label === 1,
               })}
             >
