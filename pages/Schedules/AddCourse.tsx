@@ -43,13 +43,13 @@ const CCourseColor = (props) => {
   );
 };
 const top100Films = [
-  { title: 'Professor 1', year: 1994 },
-  { title: 'Professor 2', year: 1994 },
-  { title: 'Professor 3', year: 1994 },
-  { title: 'Professor 3', year: 1994 },
-  { title: 'Professor 3', year: 1994 },
-  { title: 'Professor 3', year: 1994 },
-  { title: 'Professor 3', year: 1994 },
+  { title: 'AMDS', year: 1994 },
+  { title: 'AMDS', year: 1994 },
+  { title: 'AMDS', year: 1994 },
+  { title: 'AMDS', year: 1994 },
+  { title: 'AMDS', year: 1994 },
+  { title: 'AMDS', year: 1994 },
+  { title: '后台抓取校区数据', year: 1994 },
 ]
 const CCourseInput = (props) => {
   const { title, isNess } = props;

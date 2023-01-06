@@ -15,7 +15,7 @@ export default function index(props) {
       onClick={() => {
         props.close();
       }}
-      className="fixed top-0 z-30 w-screen h-screen backdrop-filter backdrop-blur-2xl"
+      className="fixed bottom-0 z-30 w-screen h-screen backdrop-filter backdrop-blur-2xl"
     >
       <div
         onClick={() => {
