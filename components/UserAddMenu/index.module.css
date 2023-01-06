@@ -152,7 +152,9 @@
     -webkit-transition-delay: 0.24s, 0.48s;
     transition-delay: 0.24s, 0.48s;
 }
-
+.element {
+    pointer-events: all;
+}
 .element:nth-child(1){
     position: absolute;
     bottom: 50px;

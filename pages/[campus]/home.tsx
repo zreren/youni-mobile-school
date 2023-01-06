@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectAuthState, setAuthState } from '@/stores/authSlice';
 import Waterfall from '@/components/Layout/Waterfall';
 import PostCategory from '@/components/Menu/post-category';
+import { PullRefresh } from 'react-vant';
+
 import Post from './post/post';
 const PostDetail = (props) => {
   return (
@@ -27,9 +29,9 @@ const PostDetail = (props) => {
       }}
       className="h-screen"
     >
-     <div className='w-screen h-screen'>
-     <Post></Post>
-     </div>
+      <div className="w-screen h-screen">
+        <Post></Post>
+      </div>
     </SwipeableDrawer>
   );
 };
@@ -229,7 +231,7 @@ function SchoolPage(props) {
   console.log(props, 'SchoolPage');
   const [isSelect, setIsSelect] = useState(false);
   const [schoolSelect, setSelectSchool] = useState(false);
-  const [postDetailShow,setPostDetailShow] = useState(false)
+  const [postDetailShow, setPostDetailShow] = useState(false);
   const dispatch = useDispatch();
   const headerMenuList = [
     {
@@ -254,14 +256,28 @@ function SchoolPage(props) {
       label: '转租',
     },
   ];
+  const [reRender,setreRender] = useState(1)
+  const onRefresh = (showToast) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        if (showToast) {
+          // Toast.info('刷新成功')
+        }
+        // setreRender(reRender+1)
+        // setCount(count + 1)
+        resolve(true);
+      }, 1000);
+    });
+  };
   React.useEffect(() => {
     dispatch(setAuthState(true));
   }, []);
   return (
     <div className="w-screen min-h-screen mb-20 pb-36">
+
       <PostDetail
-       setVisible={setPostDetailShow}
-       visible={postDetailShow}
+        setVisible={setPostDetailShow}
+        visible={postDetailShow}
       ></PostDetail>
       <RedCountyList
         setVisible={setIsSelect}
@@ -276,6 +292,10 @@ function SchoolPage(props) {
       setVisible={setIsSelect}
       visible={isSelect}
     ></SchoolList> */}
+      <PullRefresh
+        onRefresh={() => onRefresh(true)}
+        onRefreshEnd={() => console.log('onRefreshEnd')}
+      >
       <HeaderLayout
         selectSchool={() => {
           setIsSelect(true);
@@ -290,8 +310,7 @@ function SchoolPage(props) {
           height="20rem"
           layout="responsive"
           alt=""
-          placeholder='blur'
-          blurDataURL={ad}
+          placeholder={ad}
           objectFit="contain"
         ></Image>
       </div>
@@ -299,8 +318,16 @@ function SchoolPage(props) {
         <PostCategory headerMenuList={headerMenuList}></PostCategory>
       </div>
       <div className="mb-10">
-        <Waterfall show={()=>{setPostDetailShow(true)}} onClick={()=>{}}></Waterfall>
+          <Waterfall
+          key={reRender}
+          show={() => {
+            setPostDetailShow(true);
+          }}
+          onClick={() => {}}
+        ></Waterfall>
+        
       </div>
+      </PullRefresh>
     </div>
   );
 }

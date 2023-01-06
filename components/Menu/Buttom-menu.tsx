@@ -30,17 +30,24 @@ export default function LabelBottomNavigation(props) {
       }
     });
   }, [router]);
+  let body = document.body;
+  const overflowState =  body.style.overflow;
   const handleChange = (event: React.SyntheticEvent, newValue: any) => {
 
 
     if (newValue === 3) {
       setValue(newValue);
+      // let body = document.body;
+      body.style.overflow = 'hidden';
+      // body.style.height = "100vh"
       // props.stopScroll();
       return
     };
     if(newValue === 0){
       const oldValue = value;
       setValue(1);
+      body.style.overflow = 'scroll';
+      // body.style.height = "auto"
       // router.back();
       return
     }

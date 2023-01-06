@@ -10,12 +10,22 @@ import { useRouter } from 'next/router';
 
 export default function index(props) {
   const router = useRouter();
+  let body = document.body;
+  body.style.overflow = 'hidden';
   return (
     <div
       onClick={() => {
         props.close();
       }}
-      className="fixed bottom-0 z-30 w-screen h-screen backdrop-filter backdrop-blur-2xl"
+      onTouchMove={(e)=>{
+        e.stopPropagation();
+        e.preventDefault();
+      }}
+      onTouchStart={(e)=>{
+        e.stopPropagation();
+        e.preventDefault();
+      }}
+      className="fixed bottom-0 z-30  w-screen h-screen backdrop-filter backdrop-blur-2xl"
     >
       <div
         onClick={() => {
