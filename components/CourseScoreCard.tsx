@@ -30,22 +30,22 @@ export default function CourseScoreCard(props: ICourseScoreCard) {
           {/* Introduction to Microeconomics */}
           {props.data.desc}
         </div>
-        <div className="flex text-gray-300 w-full justify-between">
+        <div className="flex text-gray-300 w-full justify-between space-x-1">
           <div className="space-x-1 text-xs">
             <span>评价数</span>
-            <span>{props.data.extraInfo?.count}</span>
+            <span>{props.data.extraInfo?.evaluationCount?props.data.extraInfo?.evaluationCount:0}</span>
           </div>
           <div className="space-x-1 text-xs">
             <span>内容</span>
-            <span>{3.8}</span>
+            <span>{props.data.extraInfo?.contentRating?props.data.extraInfo?.contentRating:0}</span>
           </div>
           <div className="space-x-1 text-xs">
             <span>作业</span>
-            <span>{4.2}</span>
+            <span>{props.data.extraInfo?.homeworkRating?props.data.extraInfo?.homeworkRating:0}</span>
           </div>
           <div className="space-x-1 text-xs">
             <span>考试</span>
-            <span>{2.7}</span>
+            <span>{props.data.extraInfo?.examRating?props.data.extraInfo?.examRating:0}</span>
           </div>
         </div>
       </div>

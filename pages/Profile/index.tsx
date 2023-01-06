@@ -176,8 +176,8 @@ const Setting = () => {
 function index(props) {
   const Profile1 = () => {
     return (
-      <div className="h-[calc(100vh-320px)]">
-        <div className="w-full p-5 pb-1 bg-white sticky ">
+      <div className="h-[calc(100vh-320px)] relative">
+        <div className="w-full p-5 pb-1 bg-white ">
           <Identify></Identify>
           <ProfileMenu></ProfileMenu>
         </div>
@@ -307,7 +307,7 @@ function index(props) {
           }}
         ></HeaderMenu>
       </div>
-      <div className="overflow-scroll">{headerList[menuVal].menu}</div>
+      <div className="overflow-scroll relative">{headerList[menuVal].menu}</div>
     </div>
   );
 }

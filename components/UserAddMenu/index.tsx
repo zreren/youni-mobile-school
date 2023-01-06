@@ -11,7 +11,6 @@ import { useRouter } from 'next/router';
 export default function index(props) {
   const router = useRouter();
   let body = document.body;
-  body.style.overflow = 'hidden';
   return (
     <div
       onClick={() => {
@@ -29,6 +28,7 @@ export default function index(props) {
     >
       <div
         onClick={() => {
+          body.style.overflow = 'scroll';
           router.push({
             pathname: '/Schedules/AddCourse',
             query: { id: 1 },
@@ -40,6 +40,7 @@ export default function index(props) {
       </div>
       <div
         onClick={() => {
+          body.style.overflow = 'scroll';
           router.push({
             pathname: '/Schedules/AddCourse',
             query: { id: 2 },
@@ -52,6 +53,7 @@ export default function index(props) {
       <div
         className={styles.element}
         onClick={() => {
+          body.style.overflow = 'scroll';
           router.push({
             pathname: '/[campus]/Course/evaluation',
             query: { campus: 'York' },
@@ -62,6 +64,7 @@ export default function index(props) {
       </div>
       <div
         onClick={() => {
+          body.style.overflow = 'scroll';
           router.push({
             pathname: '/[campus]/post/addPost',
             query: { campus: 'York' },
@@ -73,6 +76,7 @@ export default function index(props) {
       </div>
       <div
         onClick={() => {
+          body.style.overflow = 'scroll';
           router.push({
             pathname: '/[campus]/post/addPost',
             query: { campus: 'York' },

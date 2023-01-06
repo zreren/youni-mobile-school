@@ -52,7 +52,9 @@ export default function LabelBottomNavigation(props) {
       return
     }
     setValue(newValue);
+    body.style.overflow = 'scroll';
     router.push(routerTable[newValue]);
+
   };
   const MyAction = styled(BottomNavigationAction)(
     `color: rgba(169, 176, 192, 1);
