@@ -2,6 +2,7 @@ import React from 'react';
 import RightIcon from './right.svg';
 import Subtract from './Subtract.svg';
 import Button from './Button.svg';
+import Image from 'next/image';
 import Link from 'next/link';
 const UserData = () => {
   return (
@@ -68,7 +69,8 @@ export default function ProfileHeader(props) {
       <div className="flex h-20 p-4">
         <div className="avatar placeholder">
           <div className="w-20 h-20 bg-white rounded-full text-neutral-content">
-            {props.data?.avatar? <img src={`${Cons.BASEURL}${props.data?.avatar}`} />
+            {props.data?.avatar? <Image placeholder='blur' blurDataURL={`${Cons.BASEURL}${props.data?.avatar}`}
+             width={'80px'} height={'80px'}  src={`${Cons.BASEURL}${props.data?.avatar}`} />
               :<span className="text-3xl">K</span>
             }
           </div>
