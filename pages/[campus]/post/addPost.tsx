@@ -25,6 +25,8 @@ export default function addPost() {
       </div>
     )
   }
+
+
   const headerMenuList = [
     {
       label: '关注',
@@ -48,6 +50,7 @@ export default function addPost() {
       label: '转租',
     },
   ];
+  
   const item = {
     title: '选择分类',
     intro: '',

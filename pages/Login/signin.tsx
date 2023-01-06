@@ -27,7 +27,7 @@ import axios from 'axios';
 import useSWR from 'swr';
 import prefixSorted from "../../libs/phone";
 import useLocalStorage from '@/hooks/useStore';
-
+import instance from '@/libs/request';
 
 
 export default function SignIn(props) {
@@ -35,20 +35,17 @@ export default function SignIn(props) {
   const route = useRouter();
 
   const login = async (way:string,form:any) =>{
-      const { data } = await  axios({
-        method:"post",
-        url:`http://47.100.68.42:5001/api/student/password_login`,
-        data: {
+      const { data } = await instance.post(
+        `/api/student/password_login` ,{
           account:form.mail,
           password:form.password
         },
-      })
+      )
     if(data.code === 200){
       setMyItem(data.data.token)
       route.push("/Profile")
     }
   }
-
 
   const SignUpButton = (props) => {
     const { title, icon: Icon, label } = props;

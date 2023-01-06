@@ -9,6 +9,7 @@ interface ICourseScoreCard {
     code?: string;
     desc?: string;
     evaluation?:any;
+    extraInfo?:any;
   };
 }
 export default function CourseScoreCard(props: ICourseScoreCard) {
@@ -32,7 +33,7 @@ export default function CourseScoreCard(props: ICourseScoreCard) {
         <div className="flex text-gray-300 w-full justify-between">
           <div className="space-x-1 text-xs">
             <span>评价数</span>
-            <span>{props.data.evaluation.count}</span>
+            <span>{props.data.extraInfo?.count}</span>
           </div>
           <div className="space-x-1 text-xs">
             <span>内容</span>
@@ -49,7 +50,7 @@ export default function CourseScoreCard(props: ICourseScoreCard) {
         </div>
       </div>
       <div className='h-full'>
-      <CCircleRanking score={props.data.evaluation.contentRating}></CCircleRanking>
+      <CCircleRanking score={props.data.extraInfo?.overallRatting}></CCircleRanking>
       </div>
     </div>
   );

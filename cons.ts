@@ -2,7 +2,7 @@
 const globalAny: any = global;
 
 globalAny.Cons = {
-  BASEURL: 'http://47.100.68.42:5001',
+  BASEURL: 'https://youni-admin.kuizuo.cn',
   API: {
     STUDENT: {
       PATH: '/student',

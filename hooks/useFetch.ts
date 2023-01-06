@@ -63,6 +63,8 @@ function useFetch(path, method, body?) {
           return response.data;
         })
         .catch((error) => {
+          router.push('/Login/signin');
+
           // console.log(error, 'error SWR');
         });
     },
