@@ -14,6 +14,7 @@ import { selectAuthState, setAuthState } from '@/stores/authSlice';
 import Waterfall from '@/components/Layout/Waterfall';
 import PostCategory from '@/components/Menu/post-category';
 import { PullRefresh } from 'react-vant';
+import { Skeleton } from 'react-vant';
 
 import Post from './post/post';
 const PostDetail = (props) => {
@@ -256,7 +257,7 @@ function SchoolPage(props) {
       label: '转租',
     },
   ];
-  const [reRender,setreRender] = useState(1)
+  const [reRender, setreRender] = useState(1);
   const onRefresh = (showToast) => {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -269,12 +270,16 @@ function SchoolPage(props) {
       }, 1000);
     });
   };
+  const [loading, setLoading] = useState(true);
+  const [imageSize, setSmageSize] = React.useState({
+    width: '1000%',
+    height: '0rem'
+   });
   React.useEffect(() => {
     dispatch(setAuthState(true));
   }, []);
   return (
     <div className="w-screen min-h-screen mb-20 pb-36">
-
       <PostDetail
         setVisible={setPostDetailShow}
         visible={postDetailShow}
@@ -296,38 +301,45 @@ function SchoolPage(props) {
         onRefresh={() => onRefresh(true)}
         onRefreshEnd={() => console.log('onRefreshEnd')}
       >
-      <HeaderLayout
-        selectSchool={() => {
-          setIsSelect(true);
-        }}
-        school={props.post.school}
-      ></HeaderLayout>
-      <MenuAtSchool></MenuAtSchool>
-      <div className="w-full pl-5 pr-5">
-        <Image
-          src={ad}
-          width="100%"
-          height="20rem"
-          layout="responsive"
-          alt=""
-          placeholder={'blur'}
-          blurDataURL={ad}
-          objectFit="contain"
-        ></Image>
-      </div>
-      <div className="p-5">
-        <PostCategory headerMenuList={headerMenuList}></PostCategory>
-      </div>
-      <div className="mb-10">
-          <Waterfall
-          key={reRender}
-          show={() => {
-            setPostDetailShow(true);
+        <HeaderLayout
+          selectSchool={() => {
+            setIsSelect(true);
           }}
-          onClick={() => {}}
-        ></Waterfall>
-        
-      </div>
+          school={props.post.school}
+        ></HeaderLayout>
+        <MenuAtSchool></MenuAtSchool>
+        <div className="w-full pl-5 pr-5">
+          <Skeleton loading={loading} row={1} rowHeight={60}>
+            {' '}
+          </Skeleton>
+          <Image
+              src={ad}
+              width="100%"
+              height={imageSize.height}
+              layout="responsive"
+              alt=""
+              onLoadingComplete={target => {
+                setSmageSize({
+                  width:'100%',
+                  height: "20rem"
+                });
+                setLoading(false);
+              }}
+              objectFit="contain"
+            ></Image>
+        </div>
+        <div className="p-5">
+          <PostCategory headerMenuList={headerMenuList}></PostCategory>
+        </div>
+        <div className="mb-10">
+          <Waterfall
+            key={reRender}
+            show={() => {
+              setPostDetailShow(true);
+            }}
+            onClick={() => {}}
+          ></Waterfall>
+        </div>
       </PullRefresh>
     </div>
   );
