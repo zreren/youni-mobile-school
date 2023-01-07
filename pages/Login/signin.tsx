@@ -41,6 +41,7 @@ export default function SignIn(props) {
           password:form.password
         },
       )
+    console.log(data,"data")
     if(data.code === 200){
       setMyItem(data.data.token)
       route.push("/Profile")

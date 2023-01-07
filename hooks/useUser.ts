@@ -12,7 +12,7 @@ export default function useUser() {
   const [token, setToken] = useLocalStorage('token', null);
   const router = useRouter()
   if(token){
-    const { data, error } = useFetch('/account/info', 'get')
+    const { data, error } = useFetch('/profile', 'get')
     const loading = !data?.data && !error;
     const loggedOut = error && error.status === 403;
     return {

@@ -14,6 +14,9 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import ConfirmIcon from './confirm.svg';
 import GarbageIcon from './garbage.svg';
+import { SwitchTransition, CSSTransition } from 'react-transition-group';
+
+import useFetch from '../../hooks/useFetch';
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
@@ -40,6 +43,8 @@ const CScoreCard = () => {
 
 export default function index() {
   const router = useRouter();
+  const { data, error } = useFetch('/grade/list', 'get');
+  console.log(data);
   // const addGrad
   const Header = (props) => {
     const { children, title, className, returnClick } = props;
@@ -78,9 +83,9 @@ export default function index() {
       </>
     );
   };
-  const AddCourseGap = () => {
+  const AddCourseGap = (props) => {
     return (
-      <div className="relative">
+      <div className="relative" onClick={props.onClick}>
         <div className="bg-[#FFA8A7] rounded-full w-3 h-16"></div>
         <div className="w-full  gap-card-shadow absolute top-0  justify-center items-center bg-white left-2 mr-4  h-16 z-30 flex">
           <div className="flex rounded-full px-6 py-1  items-center space-x-2 bg-[#F7F8F9]">
@@ -108,10 +113,10 @@ export default function index() {
     { title: 'AMDS', year: 1994 },
     { title: '后台抓取校区数据', year: 1994 },
   ];
-  const InputField = ()=>{
+  const InputField = () => {
     return (
       <TextField
-      placeholder='...'
+        placeholder="..."
         sx={{
           '& label.Mui-focused': {
             color: 'transparent',
@@ -138,8 +143,8 @@ export default function index() {
             width: 40,
             padding: 0,
             fontSize: 14,
-            '&::placeholder' :{
-                color: '#FFEB87',
+            '&::placeholder': {
+              color: '#FFEB87',
               opacity: 1,
             },
             '& .MuiAutocomplete-inputRoot.MuiAutocomplete-input': {
@@ -156,8 +161,8 @@ export default function index() {
           endAdornment: null,
         }}
       />
-    )
-  }
+    );
+  };
   const AutoInput = (props) => {
     return (
       <Autocomplete
@@ -190,7 +195,7 @@ export default function index() {
         options={top100Films.map((option) => option.title)}
         renderInput={(params) => (
           <TextField
-          placeholder='请输入'
+            placeholder="请输入"
             sx={{
               '& label.Mui-focused': {
                 color: 'transparent',
@@ -217,8 +222,8 @@ export default function index() {
                 width: 40,
                 padding: 0,
                 fontSize: 14,
-                '&::placeholder' :{
-                    color: '#FFEB87',
+                '&::placeholder': {
+                  color: '#FFEB87',
                   opacity: 1,
                 },
                 '& .MuiAutocomplete-inputRoot.MuiAutocomplete-input': {
@@ -241,13 +246,15 @@ export default function index() {
       ></Autocomplete>
     );
   };
-  const CourseGap = () => {
-    const [editMethod, setMethod] = React.useState(false);
+  const CourseGap = (props) => {
+    const {edit} = props;
+
+    const [editMethod, setMethod] = React.useState(edit?edit:false);
     const submitChange = () => {
       setMethod(false);
     };
     return (
-      <div className="relative">
+      <div className={classnames("relative",props.className?props.className:null)}>
         <div className="bg-[#FF7978] rounded-full w-3 h-16"></div>
         <div className="w-full gap-card-shadow absolute top-0   items-center bg-white left-2 mr-4  h-16 z-30 flex justify-between">
           <div className={'mx-4'}>
@@ -264,15 +271,15 @@ export default function index() {
               </div>
               <div>
                 <div className="text-[10px] text-[#DCDDE1]">学分</div>
-                <div className={'text-sm'}>{
-                  editMethod ? (<InputField></InputField>):(<div>3</div>)
-                }</div>
+                <div className={'text-sm'}>
+                  {editMethod ? <InputField></InputField> : <div>3</div>}
+                </div>
               </div>
               <div>
                 <div className="text-[10px] text-[#DCDDE1]">成绩</div>
-                <div className={'text-sm'}>{
-                  editMethod ? (<InputField></InputField>):(<div>3</div>)
-                }</div>
+                <div className={'text-sm'}>
+                  {editMethod ? <InputField></InputField> : <div>3</div>}
+                </div>
               </div>
             </div>
             <div className="text-xs flex">
@@ -300,6 +307,73 @@ export default function index() {
       </div>
     );
   };
+  const GapGroup = (props)=>{
+    const {item,index} = props;
+    console.log(props,"props")
+    const [newCourse, setNewCourse] = React.useState(false);
+      console.log(item, 'item');
+      const addCourse = () => {
+        setNewCourse(true);
+      };
+    return (
+      // return (
+        <Accordion
+          key={index}
+          defaultExpanded={index === data?.data.length - 1}
+        >
+          <AccordionSummary
+            expandIcon={<DownIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+            className="flex items-center"
+          >
+            <div className={'flex h-7 justify-between w-full items-center'}>
+              <div className={'flex items-center space-x-2'}>
+                <div
+                  className={
+                    'w-1 h-[18px] leading-[18px] bg-[#ff7978] rounded-full '
+                  }
+                ></div>
+                <div className={'text-blueTitle text-sm text-medium'}>
+                  {/* 2021-2022 秋季 */}
+                  {item.term.year}-{item.term.year + 1}
+                  {item.term.name}
+                </div>
+                <div
+                  className={
+                    'text-white flex items-center justify-center h-[18px] bg-[#FF7978] text-xs px-2 rounded-sm'
+                  }
+                >
+                  6.67
+                </div>
+              </div>
+              <div className="bg-[#F7F8F9] rounded-[4px] flex items-center mr-2 h-[22px] leading-[18px] text-[#A9B0C0] text-[10px] w-18 space-x-2 px-2  justify-center">
+                <DeleteIcon></DeleteIcon>
+                <div>删除学期</div>
+              </div>
+            </div>
+          </AccordionSummary>
+          <AccordionDetails>
+            <div className="space-y-2">
+              {item.gradeList.map((item, index) => {
+                return <CourseGap></CourseGap>;
+              })}
+              <CSSTransition in={newCourse} classNames="alert" timeout={200} key={index} >
+              <CourseGap className={classnames({'hidden opacity-0':newCourse===false,
+               'opacity-1 block':newCourse===true})} edit={true}></CourseGap>
+              </CSSTransition>
+              <AddCourseGap
+                onClick={() => {
+                  addCourse();
+                }}
+              ></AddCourseGap>
+              <TotalGap></TotalGap>
+            </div>
+          </AccordionDetails>
+        </Accordion>
+      // );
+    )
+  }
   return (
     <div>
       <div className="relative h-[280px] w-full gap-bg pt-4  bg-gradient-to-l to-[#EAE6FF] from-[#ECF5FF] ">
@@ -344,46 +418,12 @@ export default function index() {
         </div>
       </div>
       <div className="px-0  ">
-        <Accordion defaultExpanded={true}>
-          <AccordionSummary
-            expandIcon={<DownIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-            className="flex items-center"
-          >
-            <div className={'flex h-7 justify-between w-full items-center'}>
-              <div className={'flex items-center space-x-2'}>
-                <div
-                  className={
-                    'w-1 h-[18px] leading-[18px] bg-[#ff7978] rounded-full '
-                  }
-                ></div>
-                <div className={'text-blueTitle text-sm text-medium'}>
-                  2021-2022 秋季
-                </div>
-                <div
-                  className={
-                    'text-white flex items-center justify-center h-[18px] bg-[#FF7978] text-xs px-2 rounded-sm'
-                  }
-                >
-                  6.67
-                </div>
-              </div>
-              <div className="bg-[#F7F8F9] rounded-[4px] flex items-center mr-2 h-[22px] leading-[18px] text-[#A9B0C0] text-[10px] w-18 space-x-2 px-2  justify-center">
-                <DeleteIcon></DeleteIcon>
-                <div>删除学期</div>
-              </div>
-            </div>
-          </AccordionSummary>
-          <AccordionDetails>
-            <div className="space-y-2">
-              <CourseGap></CourseGap>
-              <CourseGap></CourseGap>
-              <AddCourseGap></AddCourseGap>
-              <TotalGap></TotalGap>
-            </div>
-          </AccordionDetails>
-        </Accordion>
+        {data?.data.map((item, index) => {
+          return (
+            <GapGroup item={item} index={index}></GapGroup>
+          )
+        })}
+
         <div className={'w-full h-12 '}>
           <div
             className={
