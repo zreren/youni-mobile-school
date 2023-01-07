@@ -10,6 +10,10 @@ import DownIcon from './down.svg';
 import EditIcon from './edit.svg';
 import Session from './sesion.svg';
 import DeleteIcon from './delete.svg';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import ConfirmIcon from './confirm.svg';
+import GarbageIcon from './garbage.svg';
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
@@ -36,6 +40,7 @@ const CScoreCard = () => {
 
 export default function index() {
   const router = useRouter();
+  // const addGrad
   const Header = (props) => {
     const { children, title, className, returnClick } = props;
     return (
@@ -78,23 +83,169 @@ export default function index() {
       <div className="relative">
         <div className="bg-[#FFA8A7] rounded-full w-3 h-16"></div>
         <div className="w-full  gap-card-shadow absolute top-0  justify-center items-center bg-white left-2 mr-4  h-16 z-30 flex">
-          <div className='flex rounded-full px-6 py-1  items-center space-x-2 bg-[#F7F8F9]'>
+          <div className="flex rounded-full px-6 py-1  items-center space-x-2 bg-[#F7F8F9]">
             <Session></Session>
-            <div className='text-[#798195] font-medium'>添加课程</div>
+            <div className="text-[#798195] font-medium">添加课程</div>
           </div>
         </div>
       </div>
     );
   };
-  const TotalGap = ()=>{
+  const TotalGap = () => {
     return (
-      <div className='flex justify-between items-center bg-white border border-[#F7F8F9] p-2 '>
-        <div className='text-[#A9B0C0] text-xs'>学期总GPA</div>
-        <div className='text-[#37455C] text-sm'>6.67</div>
+      <div className="flex justify-between items-center bg-white border border-[#F7F8F9] p-2 ">
+        <div className="text-[#A9B0C0] text-xs">学期总GPA</div>
+        <div className="text-[#37455C] text-sm">6.67</div>
       </div>
+    );
+  };
+  const top100Films = [
+    { title: 'AMDS', year: 1994 },
+    { title: 'AMDS', year: 1994 },
+    { title: 'AMDS', year: 1994 },
+    { title: 'AMDS', year: 1994 },
+    { title: 'AMDS', year: 1994 },
+    { title: 'AMDS', year: 1994 },
+    { title: '后台抓取校区数据', year: 1994 },
+  ];
+  const InputField = ()=>{
+    return (
+      <TextField
+      placeholder='...'
+        sx={{
+          '& label.Mui-focused': {
+            color: 'transparent',
+            border: 0,
+            'border-width': 0,
+            'border-color': 'transparent',
+            outline: 'none',
+          },
+          fontSize: 12,
+          height: 20,
+          width: 40,
+          padding: 0,
+          textAlign: 'left',
+          outline: 'none',
+          '& .MuiAutocomplete-input': {
+            padding: 0,
+          },
+          '& .MuiAutocomplete-inputRoot.MuiAutocomplete-input': {
+            padding: 0,
+          },
+          input: {
+            textAlign: 'left',
+            height: 20,
+            width: 40,
+            padding: 0,
+            fontSize: 14,
+            '&::placeholder' :{
+                color: '#FFEB87',
+              opacity: 1,
+            },
+            '& .MuiAutocomplete-inputRoot.MuiAutocomplete-input': {
+              padding: 0,
+            },
+          },
+          '& fieldset': { border: 'none' },
+          '& legend': {
+            display: 'none',
+          },
+        }}
+        InputProps={{
+          disableUnderline: true,
+          endAdornment: null,
+        }}
+      />
     )
   }
+  const AutoInput = (props) => {
+    return (
+      <Autocomplete
+        id="free-solo-demo"
+        freeSolo
+        onChange={(event: any, newValue: string | null) => {
+          props.change(newValue);
+        }}
+        placeholder="请输入"
+        sx={{
+          display: 'block',
+          height: 20,
+          border: 'none',
+          borderRadius: 'none',
+          padding: 0,
+          outline: 'none',
+          boxShadow: 'none',
+          '& .MuiAutocomplete-inputRoot': {
+            padding: 0,
+            width: 40,
+            height: 20,
+          },
+          '.MuiAutocomplete-input': {
+            padding: '0 !important',
+          },
+          '& .MuiAutocomplete-inputRoot.MuiAutocomplete-input': {
+            padding: 0,
+          },
+        }}
+        options={top100Films.map((option) => option.title)}
+        renderInput={(params) => (
+          <TextField
+          placeholder='请输入'
+            sx={{
+              '& label.Mui-focused': {
+                color: 'transparent',
+                border: 0,
+                'border-width': 0,
+                'border-color': 'transparent',
+                outline: 'none',
+              },
+              fontSize: 12,
+              height: 20,
+              width: 40,
+              padding: 0,
+              textAlign: 'left',
+              outline: 'none',
+              '& .MuiAutocomplete-input': {
+                padding: 0,
+              },
+              '& .MuiAutocomplete-inputRoot.MuiAutocomplete-input': {
+                padding: 0,
+              },
+              input: {
+                textAlign: 'left',
+                height: 20,
+                width: 40,
+                padding: 0,
+                fontSize: 14,
+                '&::placeholder' :{
+                    color: '#FFEB87',
+                  opacity: 1,
+                },
+                '& .MuiAutocomplete-inputRoot.MuiAutocomplete-input': {
+                  padding: 0,
+                },
+              },
+              '& fieldset': { border: 'none' },
+              '& legend': {
+                display: 'none',
+              },
+            }}
+            {...params}
+            InputProps={{
+              ...params.InputProps,
+              disableUnderline: true,
+              endAdornment: null,
+            }}
+          />
+        )}
+      ></Autocomplete>
+    );
+  };
   const CourseGap = () => {
+    const [editMethod, setMethod] = React.useState(false);
+    const submitChange = () => {
+      setMethod(false);
+    };
     return (
       <div className="relative">
         <div className="bg-[#FF7978] rounded-full w-3 h-16"></div>
@@ -103,15 +254,25 @@ export default function index() {
             <div className="flex items-center space-x-4">
               <div>
                 <div className="text-[10px] text-[#DCDDE1]">课程</div>
-                <div className={'text-[14px]'}>ADMS1000</div>
+                <div className={'text-[14px]'}>
+                  {editMethod ? (
+                    <AutoInput></AutoInput>
+                  ) : (
+                    <div className={'text-sm'}>AMDS</div>
+                  )}
+                </div>
               </div>
               <div>
                 <div className="text-[10px] text-[#DCDDE1]">学分</div>
-                <div className={'text-sm'}>3.0</div>
+                <div className={'text-sm'}>{
+                  editMethod ? (<InputField></InputField>):(<div>3</div>)
+                }</div>
               </div>
               <div>
                 <div className="text-[10px] text-[#DCDDE1]">成绩</div>
-                <div className={'text-sm'}>A+</div>
+                <div className={'text-sm'}>{
+                  editMethod ? (<InputField></InputField>):(<div>3</div>)
+                }</div>
               </div>
             </div>
             <div className="text-xs flex">
@@ -120,10 +281,21 @@ export default function index() {
               </div>
             </div>
           </div>
-          <div className="flex items-center mr-4 space-x-4">
-            <div className={'text-xl bg-[#F7F8F9] rounded-md px-4'}>6.0</div>
-            <EditIcon></EditIcon>
-          </div>
+          {editMethod ? (
+            <div className="flex items-center mr-4 space-x-4">
+              <GarbageIcon></GarbageIcon>
+              <ConfirmIcon onClick={submitChange}></ConfirmIcon>
+            </div>
+          ) : (
+            <div className="flex items-center mr-4 space-x-4">
+              <div className={'text-xl bg-[#F7F8F9] rounded-md px-4'}>6.0</div>
+              <EditIcon
+                onClick={() => {
+                  setMethod(true);
+                }}
+              ></EditIcon>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -177,23 +349,27 @@ export default function index() {
             expandIcon={<DownIcon />}
             aria-controls="panel1a-content"
             id="panel1a-header"
-            className='flex items-center'
+            className="flex items-center"
           >
             <div className={'flex h-7 justify-between w-full items-center'}>
               <div className={'flex items-center space-x-2'}>
                 <div
-                  className={'w-1 h-[18px] leading-[18px] bg-[#ff7978] rounded-full '}
+                  className={
+                    'w-1 h-[18px] leading-[18px] bg-[#ff7978] rounded-full '
+                  }
                 ></div>
                 <div className={'text-blueTitle text-sm text-medium'}>
                   2021-2022 秋季
                 </div>
                 <div
-                  className={'text-white h-[18px] bg-[#FF7978] text-xs px-2 rounded-sm'}
+                  className={
+                    'text-white flex items-center justify-center h-[18px] bg-[#FF7978] text-xs px-2 rounded-sm'
+                  }
                 >
                   6.67
                 </div>
               </div>
-              <div className='bg-[#F7F8F9] rounded-[4px] flex items-center mr-2 h-[22px] leading-[18px] text-[#A9B0C0] text-[10px] w-18 space-x-2 px-2  justify-center'>
+              <div className="bg-[#F7F8F9] rounded-[4px] flex items-center mr-2 h-[22px] leading-[18px] text-[#A9B0C0] text-[10px] w-18 space-x-2 px-2  justify-center">
                 <DeleteIcon></DeleteIcon>
                 <div>删除学期</div>
               </div>
