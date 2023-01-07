@@ -9,6 +9,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import DownIcon from './down.svg';
 import EditIcon from './edit.svg';
 import Session from './sesion.svg';
+import DeleteIcon from './delete.svg';
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
@@ -76,8 +77,8 @@ export default function index() {
     return (
       <div className="relative">
         <div className="bg-[#FFA8A7] rounded-full w-3 h-16"></div>
-        <div className="w-full gap-card-shadow absolute top-0  justify-center items-center bg-white left-2 mr-4  h-16 z-30 flex">
-          <div className='flex items-center space-x-2'>
+        <div className="w-full  gap-card-shadow absolute top-0  justify-center items-center bg-white left-2 mr-4  h-16 z-30 flex">
+          <div className='flex rounded-full px-6 py-1  items-center space-x-2 bg-[#F7F8F9]'>
             <Session></Session>
             <div className='text-[#798195] font-medium'>添加课程</div>
           </div>
@@ -176,22 +177,26 @@ export default function index() {
             expandIcon={<DownIcon />}
             aria-controls="panel1a-content"
             id="panel1a-header"
+            className='flex items-center'
           >
-            <div className={'flex justify-between items-center mb-2 mt-5'}>
+            <div className={'flex h-7 justify-between w-full items-center'}>
               <div className={'flex items-center space-x-2'}>
                 <div
-                  className={'w-1 h-[16px] bg-[#ff7978] rounded-full '}
+                  className={'w-1 h-[18px] leading-[18px] bg-[#ff7978] rounded-full '}
                 ></div>
                 <div className={'text-blueTitle text-sm text-medium'}>
                   2021-2022 秋季
                 </div>
                 <div
-                  className={'text-white bg-[#FF7978] text-xs px-2 rounded-sm'}
+                  className={'text-white h-[18px] bg-[#FF7978] text-xs px-2 rounded-sm'}
                 >
                   6.67
                 </div>
               </div>
-              <div></div>
+              <div className='bg-[#F7F8F9] rounded-[4px] flex items-center mr-2 h-[22px] leading-[18px] text-[#A9B0C0] text-[10px] w-18 space-x-2 px-2  justify-center'>
+                <DeleteIcon></DeleteIcon>
+                <div>删除学期</div>
+              </div>
             </div>
           </AccordionSummary>
           <AccordionDetails>
