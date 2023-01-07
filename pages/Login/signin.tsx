@@ -43,8 +43,10 @@ export default function SignIn(props) {
       )
     console.log(data,"data")
     if(data.code === 200){
-      setMyItem(data.data.token)
-      route.push("/Profile")
+      if(data.data.token){
+        setMyItem(data.data.token)
+        route.push("/Profile")
+      }
     }
   }
 
