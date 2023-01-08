@@ -5,6 +5,7 @@ interface TProfessorCard  {
     avatar: string;
     name: string;
     score: number;
+    rating:number;
   };
   onClick?: React.MouseEventHandler
 }
@@ -21,7 +22,7 @@ const ProfessorCard:React.FunctionComponent<TProfessorCard>=(props)=> {
         </div>
         <div className="text-xl font-light text-gray-500">{data.name}</div>
       </div>
-      <CRating score={data.score}></CRating>
+      <CRating score={data.rating}></CRating>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import React from 'react';
+import useLocalStorage from '../hooks/useStore';
 import CCircleRanking from './Rating/CCircleRanking';
 interface ICourseScoreCard {
   data: {
@@ -13,7 +14,9 @@ interface ICourseScoreCard {
   };
 }
 export default function CourseScoreCard(props: ICourseScoreCard) {
-  const { score } = props.data;
+  const { score,id } = props.data;
+  const [school,setSchool ] = useLocalStorage('school','')
+  // console.log(props,'CourseScoreCardprops')
   const router = useRouter()
   const slug = router.query;
   console.log(slug,"slug")
@@ -21,7 +24,7 @@ export default function CourseScoreCard(props: ICourseScoreCard) {
     <div onClick={()=>{
       console.log(router.basePath)
       setTimeout(()=>{
-        router.push({pathname:'/[campus]/course-evaluation',query:{campus:router.query.campus}})
+        router.push({pathname:'/[campus]/Course/[id]',query:{id:id,campus:school}})
       },1000)
     }} className="flex p-6 items-align bg-white justify-between rounded-xl">
       <div className="h-1/1 flex flex-col content-between  ">

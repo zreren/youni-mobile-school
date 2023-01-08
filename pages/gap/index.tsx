@@ -84,9 +84,10 @@ export default function index() {
     );
   };
   const AddCourseGap = (props) => {
+    const {color} = props;
     return (
       <div className="relative" onClick={props.onClick}>
-        <div className="bg-[#FFA8A7] rounded-full w-3 h-16"></div>
+        <div className={`bg-[${color}] rounded-full w-3 h-16`}></div>
         <div className="w-full  gap-card-shadow absolute top-0  justify-center items-center bg-white left-2 mr-4  h-16 z-30 flex">
           <div className="flex rounded-full px-6 py-1  items-center space-x-2 bg-[#F7F8F9]">
             <Session></Session>
@@ -247,7 +248,7 @@ export default function index() {
     );
   };
   const CourseGap = (props) => {
-    const {edit} = props;
+    const {edit,color} = props;
 
     const [editMethod, setMethod] = React.useState(edit?edit:false);
     const submitChange = () => {
@@ -255,7 +256,7 @@ export default function index() {
     };
     return (
       <div className={classnames("relative",props.className?props.className:null)}>
-        <div className="bg-[#FF7978] rounded-full w-3 h-16"></div>
+        <div className={`bg-[${color}] rounded-full w-3 h-16`}></div>
         <div className="w-full gap-card-shadow absolute top-0   items-center bg-white left-2 mr-4  h-16 z-30 flex justify-between">
           <div className={'mx-4'}>
             <div className="flex items-center space-x-4">
@@ -309,12 +310,19 @@ export default function index() {
   };
   const GapGroup = (props)=>{
     const {item,index} = props;
+    const colorMap = [
+      '#FF7978',
+      '#FFB87C','#FED64B','#E2DAFF'
+    ]
+    const color = colorMap[index % 4];
+    console.log(`bg-[${color}]`,"`bg-[${color}]`")
     console.log(props,"props")
     const [newCourse, setNewCourse] = React.useState(false);
       console.log(item, 'item');
       const addCourse = () => {
         setNewCourse(true);
       };
+
     return (
       // return (
         <Accordion
@@ -330,9 +338,9 @@ export default function index() {
             <div className={'flex h-7 justify-between w-full items-center'}>
               <div className={'flex items-center space-x-2'}>
                 <div
-                  className={
-                    'w-1 h-[18px] leading-[18px] bg-[#ff7978] rounded-full '
-                  }
+                  className={classnames(`w-1 h-[18px]  leading-[18px]  rounded-full `,
+                  `bg-[${color}]`
+                )}
                 ></div>
                 <div className={'text-blueTitle text-sm text-medium'}>
                   {/* 2021-2022 秋季 */}
@@ -341,7 +349,7 @@ export default function index() {
                 </div>
                 <div
                   className={
-                    'text-white flex items-center justify-center h-[18px] bg-[#FF7978] text-xs px-2 rounded-sm'
+                    `text-white flex items-center justify-center h-[18px] bg-[${color}] text-xs px-2 rounded-sm`
                   }
                 >
                   6.67
@@ -356,13 +364,14 @@ export default function index() {
           <AccordionDetails>
             <div className="space-y-2">
               {item.gradeList.map((item, index) => {
-                return <CourseGap></CourseGap>;
+                return <CourseGap color={color}></CourseGap>;
               })}
               <CSSTransition in={newCourse} classNames="alert" timeout={200} key={index} >
-              <CourseGap className={classnames({'hidden opacity-0':newCourse===false,
+              <CourseGap color={color} className={classnames({'hidden opacity-0':newCourse===false,
                'opacity-1 block':newCourse===true})} edit={true}></CourseGap>
               </CSSTransition>
               <AddCourseGap
+              color={color}
                 onClick={() => {
                   addCourse();
                 }}
@@ -395,6 +404,11 @@ export default function index() {
             </div>
           </div>
         </div>
+        <div className='bg-[#FFB35C] hidden'></div>
+        <div className='bg-[#FFB87C] hidden'></div>
+        <div className='bg-[#FED64B] hidden'></div>
+        <div className='bg-[#E2DAFF] hidden'></div>
+
         <div className="w-full pt-10 pl-5 pr-5 ">
           <div className="rounded-t-lg pink-linergradient-bg h-14 flex space-x-2 justify-end items-center">
             <div
@@ -420,7 +434,7 @@ export default function index() {
       <div className="px-0  ">
         {data?.data.map((item, index) => {
           return (
-            <GapGroup item={item} index={index}></GapGroup>
+            <GapGroup  item={item} index={index}></GapGroup>
           )
         })}
 

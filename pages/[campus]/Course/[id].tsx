@@ -6,21 +6,24 @@ import HeaderMenu from '@/components/Menu/Header-menu';
 import Search from '@/components/Input/Search';
 import Title from '@/components/Title/Title';
 import { professorList } from '@/mock/data';
-import HotProfessorCar from './professor/components/hot-professor-car';
+import HotProfessorCar from '../professor/components/hot-professor-car';
 import { useRouter } from 'next/router';
 import Introduce from '@/components/PageComponents/Course/Introduce';
 import FilterIcon from '@/public/filter.svg';
 import CDataGrip from '@/components/CDataGrip';
 import Waterfall from '@/components/Layout/Waterfall';
 import UserComment from '@/components/user-comment';
-import UseFetch from '@/hooks/useFetch';
+// import UseFetch from '@/hooks/useFetch';
 import useFetch from '@/hooks/useFetch';
-import prefixSorted from '../../libs/phone';
+import prefixSorted from '../../../libs/phone';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 // import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function courseEvaluation() {
+  const router = useRouter();
+  const CourseId = router.query.id;
+  // const router =useRouter();
   const { data: courseEvaluation, error } = useFetch(
     `${Cons.API.COURSE.DETAIL}?id=1`,
     'get',
@@ -125,7 +128,7 @@ export default function courseEvaluation() {
     },
   ];
   const CourseEva = (props) => {
-    const {data:commentData} = useFetch(`${Cons.API.EVALUATION.LIST}?courseId=1&campusId=1`,"get")
+    const {data:commentData} = useFetch(`${Cons.API.EVALUATION.LIST}?courseId=${CourseId}&campusId=1`,"get")
     if (!props) {
       props = {
         rating: {
@@ -178,7 +181,7 @@ export default function courseEvaluation() {
       </div>
     );
   };
-  const {data:evaluationData} = useFetch(`${Cons.API.PROFESSOR.QUERY}?id=1`,'get')
+  const {data:evaluationData} = useFetch(`${Cons.API.PROFESSOR.QUERY}?id=${CourseId}`,'get')
   const MyIntroduce = React.useMemo(()=>{
     return courseEvaluation?.data
   },[courseEvaluation])
@@ -194,7 +197,6 @@ export default function courseEvaluation() {
       setMenu(menuList[0])
     }
   },[courseEvaluation])
-  const router = useRouter();
   const [menu, setMenu] = React.useState(menuList[-1]);
   // if(courseEvaluation?.data){
   //   setMenu(menuList[0])

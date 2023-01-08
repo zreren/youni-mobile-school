@@ -24,7 +24,7 @@ globalAny.Cons = {
       LIST: '/evaluation/list',
     },
     PROFESSOR: {
-      QUERY: '/professor/list',
+      QUERY: '/course/professor',
       DETAIL: '/professor/detail',
       EVALUATION: '/professor/evaluation',
     },
