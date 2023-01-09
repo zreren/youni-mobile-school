@@ -47,7 +47,7 @@ function useFetch(path, method, body?) {
     code: number;
     message: string;
   }
-  const { data, error, isLoading } = useSWR(`${API.BASE_URL}${path}`, (url) => {
+  const { data, error } = useSWR(`${API.BASE_URL}${path}`, (url) => {
     return axios({
       method,
       url,
@@ -74,7 +74,7 @@ function useFetch(path, method, body?) {
       router.push('/Login/signin');
     }
   }
-  return { data, error ,isLoading};
+  return { data, error ,};
 }
 
 export default useFetch;
