@@ -15,6 +15,7 @@ import TextField from '@mui/material/TextField';
 import ConfirmIcon from './confirm.svg';
 import GarbageIcon from './garbage.svg';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
+import { Flex, Loading } from 'react-vant';
 
 import useFetch from '../../hooks/useFetch';
 const Accordion = styled((props: AccordionProps) => (
@@ -84,7 +85,7 @@ export default function index() {
     );
   };
   const AddCourseGap = (props) => {
-    const {color} = props;
+    const { color } = props;
     return (
       <div className="relative" onClick={props.onClick}>
         <div className={`bg-[${color}] rounded-full w-3 h-16`}></div>
@@ -248,14 +249,19 @@ export default function index() {
     );
   };
   const CourseGap = (props) => {
-    const {edit,color} = props;
+    const { edit, color } = props;
 
-    const [editMethod, setMethod] = React.useState(edit?edit:false);
+    const [editMethod, setMethod] = React.useState(edit ? edit : false);
     const submitChange = () => {
       setMethod(false);
     };
     return (
-      <div className={classnames("relative",props.className?props.className:null)}>
+      <div
+        className={classnames(
+          'relative',
+          props.className ? props.className : null,
+        )}
+      >
         <div className={`bg-[${color}] rounded-full w-3 h-16`}></div>
         <div className="w-full gap-card-shadow absolute top-0   items-center bg-white left-2 mr-4  h-16 z-30 flex justify-between">
           <div className={'mx-4'}>
@@ -308,81 +314,88 @@ export default function index() {
       </div>
     );
   };
-  const GapGroup = (props)=>{
-    const {item,index} = props;
-    const colorMap = [
-      '#FF7978',
-      '#FFB87C','#FED64B','#E2DAFF'
-    ]
+  const GapGroup = (props) => {
+    const { item, index } = props;
+    const colorMap = ['#FF7978', '#FFB87C', '#FED64B', '#E2DAFF'];
     const color = colorMap[index % 4];
-    console.log(`bg-[${color}]`,"`bg-[${color}]`")
-    console.log(props,"props")
+    console.log(`bg-[${color}]`, '`bg-[${color}]`');
+    console.log(props, 'props');
     const [newCourse, setNewCourse] = React.useState(false);
-      console.log(item, 'item');
-      const addCourse = () => {
-        setNewCourse(true);
-      };
+    console.log(item, 'item');
+    const addCourse = () => {
+      setNewCourse(true);
+    };
 
     return (
       // return (
-        <Accordion
-          key={index}
-          defaultExpanded={index === data?.data.length - 1}
+      <Accordion key={index} defaultExpanded={index === data?.data.length - 1}>
+        <AccordionSummary
+          expandIcon={<DownIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+          className="flex items-center"
         >
-          <AccordionSummary
-            expandIcon={<DownIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-            className="flex items-center"
-          >
-            <div className={'flex h-7 justify-between w-full items-center'}>
-              <div className={'flex items-center space-x-2'}>
-                <div
-                  className={classnames(`w-1 h-[18px]  leading-[18px]  rounded-full `,
-                  `bg-[${color}]`
+          <div className={'flex h-7 justify-between w-full items-center'}>
+            <div className={'flex items-center space-x-2'}>
+              <div
+                className={classnames(
+                  `w-1 h-[18px]  leading-[18px]  rounded-full `,
+                  `bg-[${color}]`,
                 )}
-                ></div>
-                <div className={'text-blueTitle text-sm text-medium'}>
-                  {/* 2021-2022 秋季 */}
-                  {item.term.year}-{item.term.year + 1}
-                  {item.term.name}
-                </div>
-                <div
-                  className={
-                    `text-white flex items-center justify-center h-[18px] bg-[${color}] text-xs px-2 rounded-sm`
-                  }
-                >
-                  6.67
-                </div>
+              ></div>
+              <div className={'text-blueTitle text-sm text-medium'}>
+                {/* 2021-2022 秋季 */}
+                {item.term.year}-{item.term.year + 1}
+                {item.term.name}
               </div>
-              <div className="bg-[#F7F8F9] rounded-[4px] flex items-center mr-2 h-[22px] leading-[18px] text-[#A9B0C0] text-[10px] w-18 space-x-2 px-2  justify-center">
-                <DeleteIcon></DeleteIcon>
-                <div>删除学期</div>
+              <div
+                className={`text-white flex items-center justify-center h-[18px] bg-[${color}] text-xs px-2 rounded-sm`}
+              >
+                6.67
               </div>
             </div>
-          </AccordionSummary>
-          <AccordionDetails>
-            <div className="space-y-2">
-              {item.gradeList.map((item, index) => {
-                return <CourseGap color={color}></CourseGap>;
-              })}
-              <CSSTransition in={newCourse} classNames="alert" timeout={200} key={index} >
-              <CourseGap color={color} className={classnames({'hidden opacity-0':newCourse===false,
-               'opacity-1 block':newCourse===true})} edit={true}></CourseGap>
-              </CSSTransition>
-              <AddCourseGap
+            <div className="bg-[#F7F8F9] rounded-[4px] flex items-center mr-2 h-[22px] leading-[18px] text-[#A9B0C0] text-[10px] w-18 space-x-2 px-2  justify-center">
+              <DeleteIcon></DeleteIcon>
+              <div>删除学期</div>
+            </div>
+          </div>
+        </AccordionSummary>
+        <AccordionDetails>
+          <div className="space-y-2">
+            {item.gradeList.map((item, index) => {
+              return <CourseGap color={color}></CourseGap>;
+            })}
+            <CSSTransition
+              in={newCourse}
+              classNames="alert"
+              timeout={200}
+              key={index}
+            >
+              <CourseGap
+                color={color}
+                className={classnames({
+                  'hidden opacity-0': newCourse === false,
+                  'opacity-1 block': newCourse === true,
+                })}
+                edit={true}
+              ></CourseGap>
+            </CSSTransition>
+            <AddCourseGap
               color={color}
-                onClick={() => {
-                  addCourse();
-                }}
-              ></AddCourseGap>
-              <TotalGap></TotalGap>
-            </div>
-          </AccordionDetails>
-        </Accordion>
+              onClick={() => {
+                addCourse();
+              }}
+            ></AddCourseGap>
+            <TotalGap></TotalGap>
+          </div>
+        </AccordionDetails>
+      </Accordion>
       // );
-    )
-  }
+    );
+  };
+  // if(!data){
+  //   return <Loading color="#FED64B" />
+  // }
   return (
     <div>
       <div className="relative h-[280px] w-full gap-bg pt-4  bg-gradient-to-l to-[#EAE6FF] from-[#ECF5FF] ">
@@ -404,10 +417,10 @@ export default function index() {
             </div>
           </div>
         </div>
-        <div className='bg-[#FFB35C] hidden'></div>
-        <div className='bg-[#FFB87C] hidden'></div>
-        <div className='bg-[#FED64B] hidden'></div>
-        <div className='bg-[#E2DAFF] hidden'></div>
+        <div className="bg-[#FFB35C] hidden"></div>
+        <div className="bg-[#FFB87C] hidden"></div>
+        <div className="bg-[#FED64B] hidden"></div>
+        <div className="bg-[#E2DAFF] hidden"></div>
 
         <div className="w-full pt-10 pl-5 pr-5 ">
           <div className="rounded-t-lg pink-linergradient-bg h-14 flex space-x-2 justify-end items-center">
@@ -431,32 +444,36 @@ export default function index() {
           </div>
         </div>
       </div>
-      <div className="px-0  ">
-        {data?.data.map((item, index) => {
-          return (
-            <GapGroup  item={item} index={index}></GapGroup>
-          )
-        })}
-
-        <div className={'w-full h-12 '}>
-          <div
-            className={
-              'bg-[#F7F8F9] space-x-2 rounded-lg  mx-5 h-12 text-sm text-[#798195] flex justify-center items-center'
-            }
-          >
-            <Session></Session>
-            <div>添加学期</div>
-          </div>
+      {!data ? (
+        <div className='w-full flex justify-center items-center'>
+          <Loading color="#FED64B" />
         </div>
-        {/* <div className={"flex justify-between items-center mb-7 mt-5"}> */}
-        {/*   <div className={"flex items-center space-x-2"}> */}
-        {/*     <div className={"w-2 h-[14px] bg-[#ff7978] rounded-full "}></div> */}
-        {/*     <div className={"text-blueTitle text-sm text-medium"}>2021-2022 秋季</div> */}
-        {/*     <div className={"text-white bg-[#FF7978] text-xs px-2 rounded-sm"}>6.67</div> */}
-        {/*   </div> */}
-        {/*   <div></div> */}
-        {/* </div> */}
-      </div>
+      ) : (
+        <div className="px-0  ">
+          {data?.data.map((item, index) => {
+            return <GapGroup item={item} index={index}></GapGroup>;
+          })}
+
+          <div className={'w-full h-12 '}>
+            <div
+              className={
+                'bg-[#F7F8F9] space-x-2 rounded-lg  mx-5 h-12 text-sm text-[#798195] flex justify-center items-center'
+              }
+            >
+              <Session></Session>
+              <div>添加学期</div>
+            </div>
+          </div>
+          {/* <div className={"flex justify-between items-center mb-7 mt-5"}> */}
+          {/*   <div className={"flex items-center space-x-2"}> */}
+          {/*     <div className={"w-2 h-[14px] bg-[#ff7978] rounded-full "}></div> */}
+          {/*     <div className={"text-blueTitle text-sm text-medium"}>2021-2022 秋季</div> */}
+          {/*     <div className={"text-white bg-[#FF7978] text-xs px-2 rounded-sm"}>6.67</div> */}
+          {/*   </div> */}
+          {/*   <div></div> */}
+          {/* </div> */}
+        </div>
+      )}
     </div>
   );
 }

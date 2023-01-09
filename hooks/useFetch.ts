@@ -41,43 +41,40 @@ export const API = Object.freeze({
 
 function useFetch(path, method, body?) {
   const [token, setToken] = useLocalStorage('token', null);
-  const router = useRouter()
+  const router = useRouter();
   interface IData {
     data: unknown;
     code: number;
     message: string;
   }
-  const { data, error } = useSWR(
-    `${API.BASE_URL}${path}`,
-    (url) => {
-      return axios({
-        method,
-        url,
-        data: body,
-        headers: {
-          Authorization: token,
-        },
+  const { data, error, isLoading } = useSWR(`${API.BASE_URL}${path}`, (url) => {
+    return axios({
+      method,
+      url,
+      data: body,
+      headers: {
+        Authorization: token,
+      },
+    })
+      .then((response) => {
+        // console.log(response, 'response');
+        return response.data;
       })
-        .then((response) => {
-          // console.log(response, 'response');
-          return response.data;
-        })
-        .catch((error) => {
-          router.push('/Login/signin');
-          // console.log(error, 'error SWR');
-        });
-    },
-  );
+      .catch((error) => {
+        router.push('/Login/signin');
+        // console.log(error, 'error SWR');
+      });
+  });
   // @ts-ignore
   console.log(data, 'code');
   if (data?.code === 1102 || data?.code === 1101) {
-    if(!token){
+    if (!token) {
       // router.push('/Login/signin');
       // setToken();
       router.push('/Login/signin');
     }
   }
-  return { data, error };
+  return { data, error ,isLoading};
 }
 
 export default useFetch;
