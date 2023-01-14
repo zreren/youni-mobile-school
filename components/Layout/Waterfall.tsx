@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import styles from './index.module.css';
 import Display from '../PlayGround/display';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
@@ -9,14 +9,15 @@ import dynamic from 'next/dynamic';
 import MasonryLayout from 'react-fast-masonry';
 // import { Masonry } from "masonic";
 
-const  Masonry = dynamic(() => import  ('masonic').then(module=>module.Masonry), { ssr: false })
-
-
+const Masonry = dynamic(
+  () => import('masonic').then((module) => module.Masonry),
+  { ssr: false },
+);
 
 const dataList = [
   {
     id: 0,
-    type: '闲置',
+    type: 'idle',
     title: '出闲置AirPods耳机二代占位占位占位',
     price: '200',
     unit: 'CAD',
@@ -134,33 +135,39 @@ const PostDetail = (props) => {
   );
 };
 export default function Waterfall(props) {
-  const [data, setData] = useState<any[]>(dataList);
+  const { postData } = props;
+  console.log(postData, 'postData in waterfull');
+  const [data, setData] = useState<any[]>();
   const [postDetailShow, setPostDetailShow] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  useEffect(() => {
+    if (postData) {
+      setData(postData);
+    }
+  }, [postData]);
 
   const CardWithClick = React.useCallback(
-    props => <Display
-       {...props}
-       handleClick={() => setPostDetailShow(true)}
-    />,
-    []
-  )
+    (props) => (
+      <Display {...props} handleClick={() => setPostDetailShow(true)} />
+    ),
+    [],
+  );
 
-    const dataChildren = data?.map((item: any) => {
-    return (
-      // <li key={item.id} className={styles.item}>
-      <div key={item.id}>
-        <Display
-          show={() => {
-            setPostDetailShow(true);
-          }}
-          // onClick={() => {setPostDetailShow(true)}}
-          data={item}
-        ></Display>
-      </div>
-    );
-  });
-   function loadMore() {
+  //   const dataChildren = data?.map((item: any) => {
+  //   return (
+  //     // <li key={item.id} className={styles.item}>
+  //     <div key={item.id}>
+  //       <Display
+  //         show={() => {
+  //           setPostDetailShow(true);
+  //         }}
+  //         // onClick={() => {setPostDetailShow(true)}}
+  //         data={item}
+  //       ></Display>
+  //     </div>
+  //   );
+  // });
+  function loadMore() {
     const append = dataList;
     setData((val) => [...val, ...append]);
     setHasMore(append.length > 0);
@@ -176,11 +183,18 @@ export default function Waterfall(props) {
         setVisible={setPostDetailShow}
         visible={postDetailShow}
       ></PostDetail>
-      <div className='mx-2'>
+      <div className="mx-2">
         {/* @ts-ignore */}
-      <Masonry  columnCount={2} columnGutter={2}  columnWidth={150} items={data} render={CardWithClick}  />
+        {data?.length > 0 ?<Masonry
+          columnCount={2}
+          columnGutter={2}
+          columnWidth={150}
+          items={data}
+          render={CardWithClick}
+        />:null}
+        
       </div>
-      <InfiniteScroll loadMore={loadMore} hasMore={hasMore} />
+      {/* <InfiniteScroll loadMore={loadMore} hasMore={hasMore} /> */}
     </div>
   );
 }

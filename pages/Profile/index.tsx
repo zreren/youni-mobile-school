@@ -40,6 +40,7 @@ import PostGroupIcon3 from './post-group/icon3.svg';
 import useUser from '@/hooks/useUser';
 import useLocalStorage from '@/hooks/useStore';
 import { Sticky } from 'react-vant';
+import { Picker, Toast } from 'react-vant';
 
 const PostGroup = () => {
   return (
@@ -317,12 +318,12 @@ function index(props) {
       </div>
     );
   };
-  console.log(props, 'porps');
   const { user, loggedOut } = useUser();
   const router = useRouter();
   const [school, setSchool] = useLocalStorage('school', 'York');
   useEffect(() => {
     if (loggedOut) {
+      setMenu(4);
       // router.push("/Login/signin")
     }
     // setSchool("Dick")
@@ -345,20 +346,56 @@ function index(props) {
     },
   ];
   const container = React.useRef<any>(null);
+  const EmptyData = () => {
+    const columns = [
+      { text: '帮你定位最好的教授', value: '0' },
+      { text: '一键导入大学课表', value: '1' },
+      { text: '便捷计算自己的GPA', value: '2' },
+    ];
 
+    return (
+      <div className="w-full h-[400px] mt-10 p-5">
+        <div className="relative">
+          {' '}
+          <Picker
+            placeholder=""
+            defaultValue={'1'}
+            showToolbar={false}
+            columns={columns}
+            className="h-[220px]"
+            onCancel={() => Toast.info('点击取消按钮')}
+            swipeDuration={10}
+            onConfirm={() => Toast.info('点击确认按钮')}
+          />
+        </div>
+        <button
+        onClick={()=>{
+          router.push('/Login/signin')
+        }}
+          className={classnames(
+            'w-full text-[#8C6008]  bg-yellow-400 border-0 rounded-full btn hover:bg-yellow-400',
+          )}
+        >
+          登录或注册
+        </button>
+      </div>
+    );
+  };
   return (
     <div className="w-screen min-h-screen">
       <ProfileHeader data={user}></ProfileHeader>
       <div className="w-full overflow-hidden rounded-full ">
-        <HeaderMenu
-          headerMenuList={headerList}
-          switchMenu={(val) => {
-            setMenu(val);
-          }}
-        ></HeaderMenu>
+        {menuVal !== 4 ? (
+          <HeaderMenu
+            headerMenuList={headerList}
+            switchMenu={(val) => {
+              setMenu(val);
+            }}
+          ></HeaderMenu>
+        ) : null}
       </div>
       <div className="relative overflow-scroll ">
-        {headerList[menuVal].menu}
+        {menuVal !== 4 ? headerList[menuVal].menu : <EmptyData></EmptyData>}
       </div>
     </div>
   );

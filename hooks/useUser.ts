@@ -19,17 +19,13 @@ export default function useUser() {
     console.log(data,'fetch user data')
     console.log(loggedOut,"loggedOut")
     if(loggedOut){
-      router.push("/Login/signin")
+      // router.push("/Login/signin")
     }
     return {
       loading,
       loggedOut,
       user: data?data.data:null,
     };
-  }else{
-    useEffect(()=>{
-      router.push("/Login/signin")
-    },[])
   }
   return  {
     loading:false,

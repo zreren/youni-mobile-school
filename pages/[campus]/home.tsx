@@ -17,6 +17,7 @@ import { PullRefresh } from 'react-vant';
 import { Skeleton } from 'react-vant';
 
 import Post from './post/post';
+import useFetch from '../../hooks/useFetch';
 const PostDetail = (props) => {
   return (
     <SwipeableDrawer
@@ -275,9 +276,12 @@ function SchoolPage(props) {
     width: '1000%',
     height: '0rem'
    });
+  const {data:postData} = useFetch(`/post/query`,"get")
+  console.log(postData,"postData")
   React.useEffect(() => {
     dispatch(setAuthState(true));
   }, []);
+  
   return (
     <div className="w-screen min-h-screen mb-20 pb-36">
       <PostDetail
@@ -334,6 +338,7 @@ function SchoolPage(props) {
         <div className="mb-10">
           <Waterfall
             key={reRender}
+            postData={postData?.data}
             show={() => {
               setPostDetailShow(true);
             }}

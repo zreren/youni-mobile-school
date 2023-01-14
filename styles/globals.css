@@ -6,8 +6,8 @@
   font-family: 'pingFang';
   src: url('../public/PingFang-medium.ttf');
 } */
-.gap-card-shadow{
-  border: 1px solid #F3F4F6;
+.gap-card-shadow {
+  border: 1px solid #f3f4f6;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
   box-shadow: 0px 0px 12px 2px rgba(27, 36, 52, 0.02);
@@ -237,9 +237,8 @@
   box-shadow: 0px 0px 12px 2px rgba(27, 36, 52, 0.04);
 }
 
-
-.bg-PostGroup{
-  background: linear-gradient(180deg, #FBFBFD 0%, #F8FAFB 100%);
+.bg-PostGroup {
+  background: linear-gradient(180deg, #fbfbfd 0%, #f8fafb 100%);
 }
 
 /* .waterFall{
@@ -271,26 +270,76 @@
 } */
 .rv-overlay {
   /* background-color: white !important; */
-  --rv-overlay-background-color: rgba(255,255,255,0.1) !important;
+  --rv-overlay-background-color: rgba(255, 255, 255, 0.1) !important;
   height: calc(100vh - 48px) !important;
   backdrop-filter: blur(10px) !important;
   /* back */
   /* --tw-backdrop-blur: blur(40px); */
   /* backdrop-filter: 10px;
    */
-   /* @apply backdrop-blur-xl backdrop-opacity-50 text-9xl; */
-   /* @apply ; */
-   /* @apply backdrop-filter; */
+  /* @apply backdrop-blur-xl backdrop-opacity-50 text-9xl; */
+  /* @apply ; */
+  /* @apply backdrop-filter; */
   /* backdrop-opacity: 0.5; */
 }
-.rv-dialog__cancel .rv-button__text{
-  color: #A9B0C0 !important;
+.rv-dialog__cancel .rv-button__text {
+  color: #a9b0c0 !important;
 }
-.rv-dialog__confirm .rv-button__text{
-  color: #FFD036 !important;
+.rv-dialog__confirm .rv-button__text {
+  color: #ffd036 !important;
 }
-.rv-dialog__header{
-  color:#37455C;
+.rv-dialog__header {
+  color: #37455c;
   font-size: 18px;
   font-weight: 500;
+}
+.rv-picker-column__item--selected div {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 16px;
+  /* identical to box height, or 100% */
+  text-align: center;
+  letter-spacing: 0.04em;
+  background: white !important;
+  /* 主要颜色 */
+  color: #37455c !important;
+  -webkit-background-clip: none !important;
+  /* -webkit-text-fill-color: transparent; */
+  background-clip: none !important;
+  -webkit-text-fill-color: #37455c !important;
+  transition: color 2s ease;
+  -webkit-transition: color 2s ease-out;
+  -moz-transition: color 2s ease-out;
+  -o-transition: color 2s ease-out;
+  transition: background-color 2s ease;
+  -webkit-transition: background-color 2s ease-out;
+  -moz-transition: background-color 2s ease-out;
+  -o-transition: background-color 2s ease-out;
+}
+
+.rv-picker-column__item div {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 16px;
+  /* identical to box height, or 100% */
+  text-align: center;
+  transition: color 2s ease;
+  -webkit-transition: color 2s ease-out;
+  -moz-transition: color 2s ease-out;
+  -o-transition: color 2s ease-out;
+  transition: background-color 2s ease;
+  -webkit-transition: background-color 2s ease-out;
+  -moz-transition: background-color 2s ease-out;
+  -o-transition: background-color 2s ease-out;
+  letter-spacing: 0.04em;
+  background: linear-gradient(0deg, #a9b0c0 0%, rgba(169, 176, 192, 0) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
 }

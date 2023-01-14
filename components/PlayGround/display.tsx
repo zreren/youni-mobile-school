@@ -7,15 +7,18 @@ import TimeIcon from './Time.svg';
 import { Skeleton } from 'react-vant';
 import { width } from '@mui/system';
 export default function Display(props) {
+  // if(!props.data) return;
+
   const { data } = props;
+  console.log(data,"Displayprops")
   const router = useRouter();
   const colorMap = {
-    闲置: 'yellow-gradient',
-    新闻: 'blue-gradient',
-    转租: 'purple-gradient',
-    活动: 'pink-gradient',
-    进群: 'green-gradient',
-    Carpool: 'carpool-gradient',
+    idle: 'yellow-gradient',
+    news: 'blue-gradient',
+    sublet: 'purple-gradient',
+    activity: 'pink-gradient',
+    group: 'green-gradient',
+    carpool: 'carpool-gradient',
   };
   interface imageSize {
     width: string | number;
@@ -145,18 +148,18 @@ export default function Display(props) {
     );
   };
   const componentsMap = {
-    闲置: <Normal />,
-    新闻: <Normal />,
-    转租: <Normal />,
-    活动: <Normal />,
-    进群: <Normal />,
-    Carpool: <Normal />,
-    推广: <Ad />,
+    idle: <Normal />,
+    news: <Normal />,
+    sublet: <Normal />,
+    activity: <Normal />,
+    group: <Normal />,
+    carpool: <Normal />,
+    // 推广: <Ad />,
   };
-  const textColorMap = {
-    red: 'tag-red',
-    blue: 'tag-blue',
-  };
+  const textColorMap = [
+    'tag-red',
+    'tag-blue',
+  ];
   const [loading, setLoading] = React.useState(true);
 
   if (data.type === '推广') {
@@ -227,9 +230,9 @@ export default function Display(props) {
           <Image
             layout="responsive"
             objectFit="cover"
-            blurDataURL={data.img}
+            blurDataURL={`https://youni-admin.kuizuo.cn/img${data?.preview[0]}`}
             placeholder="blur"
-            src={data.img}
+            src={`https://youni-admin.kuizuo.cn/img${data?.preview[0]}`}
             width={imageSize.width}
             height={imageSize.height}
             onLoadingComplete={(target) => {
@@ -241,7 +244,7 @@ export default function Display(props) {
             }}
             className=""
           />
-          {data.type === '活动' ? (
+          {data.type === 'activity' ? (
             <div className="bg-[#F7F8F9] text-[#798195] bottom-0 h-16 w-[100%] z-30 px-2 flex justify-center items-center">
               <div>
                 {' '}
@@ -249,22 +252,22 @@ export default function Display(props) {
               </div>
               <div>
                 <div className="text-xs whitespace-nowrap scale-90">
-                  2023年1月13日 16:58 开始
+                  {data.form.startTime}
                 </div>
                 <div className="text-xs whitespace-nowrap scale-90">
-                  2023年1月13日 16:58 开始
+                {data.form.endTime}
                 </div>
               </div>
             </div>
           ) : null}
-          {data.type === 'Carpool' ? (
+          {data.type === 'carpool' ? (
             <div className="bg-[#F7F8F9] text-[#798195]   bottom-0 h-16 w-[100%] z-30  flex justify-center items-center">
               <div>
                 <TimeIcon></TimeIcon>
               </div>
               <div>
                 <div className="text-xs scale-90 whitespace-nowrap">
-                  2022年11月26日 16:58 出发
+                  {data.form.startTime}
                 </div>
               </div>
             </div>
@@ -281,26 +284,26 @@ export default function Display(props) {
           </div>
           <span className="text-sm text-blueTitle">{data.title}</span>
         </div>
-        {data.price ? (
+        {data.form.price ? (
           <div className="flex items-end mt-2 space-x-1 text-sm">
-            <div className="text-price"> {data.price}</div>
-            <div className="text-xs text-price">{data.unit}</div>
-            <div className="text-xs text-priceGray dele">{data.oldPrice}</div>
+            <div className="text-price"> {data.form.price}</div>
+            <div className="text-xs text-price">{data.form.unit}</div>
+            <div className="text-xs text-priceGray dele">{data.form.oldPrice}</div>
           </div>
         ) : (
           <div className="flex items-end mt-2 space-x-1 text-sm"></div>
         )}
-        {data.tag ? (
+        {data.topic ? (
           <div className="flex items-end mt-2 space-x-1 text-sm">
-            {data.tag.map((item) => {
+            {data.topic.map((item,index) => {
               return (
                 <div
                   className={classnames(
                     'border rounded-sm  border-price text-px10 p-0.25',
-                    textColorMap[item.color],
+                    textColorMap[index%2],
                   )}
                 >
-                  {item.name}{' '}
+                  {item}{' '}
                 </div>
               );
             })}
