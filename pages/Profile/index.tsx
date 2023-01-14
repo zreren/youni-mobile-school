@@ -321,16 +321,9 @@ function index(props) {
   const { user, loggedOut } = useUser();
   const router = useRouter();
   const [school, setSchool] = useLocalStorage('school', 'York');
-  useEffect(() => {
-    if (loggedOut) {
-      setMenu(4);
-      // router.push("/Login/signin")
-    }
-    // setSchool("Dick")
-  }, [loggedOut]);
   const { i18n } = useTranslation('common');
   console.log(i18n, 'i18n');
-  const [menuVal, setMenu] = useState(1);
+  const [menuVal, setMenu] = useState(0);
   const headerList = [
     {
       icon: menuVal === 0 ? <Icon1Select></Icon1Select> : <Icon1></Icon1>,
@@ -345,6 +338,11 @@ function index(props) {
       menu: <Profile3></Profile3>,
     },
   ];
+  useEffect(() => {
+    if (loggedOut) {
+      setMenu(4);
+    }
+  }, [loggedOut]);
   const container = React.useRef<any>(null);
   const EmptyData = () => {
     const columns = [
@@ -354,7 +352,7 @@ function index(props) {
     ];
 
     return (
-      <div className="w-full h-[400px] mt-10 p-5">
+      <div className="w-full h-[400px]  p-5">
         <div className="relative">
           {' '}
           <Picker

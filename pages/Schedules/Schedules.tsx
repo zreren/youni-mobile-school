@@ -17,6 +17,7 @@ import Icon2 from './components/timeIcon/2.svg';
 import Icon3 from './components/timeIcon/3.svg';
 import Icon4 from './components/timeIcon/4.svg';
 import Icon5 from './components/timeIcon/5.svg';
+import Polygon from './polygon.svg';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import IOSSwitch from './components/ios';
 import RightIcon from '@/components/PageComponents/Profile/right.svg';
@@ -26,6 +27,8 @@ import axios from 'axios';
 import useLocalStorage from '../../hooks/useStore';
 import { Cell, Dialog } from 'react-vant';
 import { useRouter } from 'next/router';
+import BgSVG from './bg.svg';
+import ArrowRight from './arrow-right.svg';
 
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
@@ -353,7 +356,7 @@ export default function Schedules() {
   const [scheduleVisible, setScheduleVisible] = useState(false);
   const [addCourse, setAddCourse] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
-
+  const [yearMethod, setYearMethod] = useState(false);
   const { data, error } = useFetch(
     `${Cons.API.CURRICULUM.QUERY}?campusId=1`,
     'get',
@@ -380,11 +383,11 @@ export default function Schedules() {
     const all = addFullStartDate(courseData, weekDate);
     console.log(all, 'courseData');
   }
-  const router = useRouter()
+  const router = useRouter();
   React.useEffect(() => {
-    if(!data) return
-    if(!data?.data) {
-            setDialogVisible(true);
+    if (!data) return;
+    if (!data?.data) {
+      setDialogVisible(true);
     }
     // if (!data?.data) {
     //   setDialogVisible(true);
@@ -395,6 +398,82 @@ export default function Schedules() {
   const [setting, setSetting] = useState({
     view: 'day',
   });
+  const Dayliy = (props) => {
+    const { title } = props;
+    return (
+      <div className="flex p-4 card-shadow items-center my-4 justify-between bg-white w-full h-20 rounded-lg">
+        <div>
+          <div className="flex items-center pb-2 space-x-2">
+            <div className="text-xs text-[#FAAD14] h-5 rounded whitespace-nowrap bg-[#FFFAE6] px-[6px] py-1">
+            日程
+            </div>
+            <div className="text-[#37455C] text-sm font-semibold">
+              {title ||
+                '日程日程日程'}
+            </div>
+          </div>
+          <div className="text-[#A9B0C0] text-xs ">2022年9月7日</div>
+        </div>
+        <ArrowRight></ArrowRight>
+      </div>
+    );
+  }
+  const YearCard = (props) => {
+    const { title } = props;
+    return (
+      <div className="flex p-4 card-shadow items-center my-4 justify-between bg-white w-full h-20 rounded-lg">
+        <div>
+          <div className="flex items-center pb-2 space-x-2">
+            <div className="text-xs font-medium text-[#13C2C2] h-5 rounded whitespace-nowrap bg-[#E6FFFB] px-[6px] py-1">
+              校历
+            </div>
+            <div className="text-[#37455C] text-sm font-semibold">
+              {title ||
+                'Last date to announce components of final grades (TERM F)'}
+            </div>
+          </div>
+          <div className="text-[#A9B0C0] text-xs ">2022年9月7日</div>
+        </div>
+        <ArrowRight></ArrowRight>
+      </div>
+    );
+  };
+  const Identify = () => {
+    const router = useRouter();
+    // const { t } = useTranslation('translations');
+    return (
+      <div
+        onClick={() => {
+          router.push('./Profile/valid');
+        }}
+        className="relative flex items-center justify-between w-full h-16 p-4 pt-0 pb-0 bg-[#FF7978] rounded text-gold"
+      >
+        <div className="flex items-center  ">
+          <Polygon className="absolute top-0 left-0 h-20"></Polygon>
+          {/* <ValidIcon className="absolute left-0"></ValidIcon> */}
+          {/* <div>{t("profile.identify.student.certification")}</div> */}
+          <div className="pl-1 font-bold text-white">九月</div>
+        </div>
+        {/* <div className="flex flex-col items-center text-xs text-brown">
+          <div>30秒认证在校生身份</div> <div>解锁YoUni全部功能</div>
+        </div> */}
+        <BgSVG className="absolute h-12 scale-125  w-18 right-2"></BgSVG>
+      </div>
+    );
+  };
+  const Month = () => {
+    return (
+      <div className="w-full min-h-screen p-5">
+        <Identify></Identify>
+        <YearCard title="Classes start"></YearCard>
+        <YearCard></YearCard>
+        <YearCard></YearCard>
+        <Dayliy></Dayliy>
+        <Identify></Identify>
+        <YearCard title="Classes start"></YearCard>
+      </div>
+    );
+  };
   return (
     <div className="space-y-1 bg-bg">
       <Dialog
@@ -406,8 +485,9 @@ export default function Schedules() {
         onConfirm={() => {
           router.push('/Login/signin');
         }}
-        onCancel={() => 
-          {  router.push('/Login/signup');}}
+        onCancel={() => {
+          router.push('/Login/signup');
+        }}
         className="shadow-xl  backdrop-opacity-50  backdrop-filter backdrop-blur-2xl"
       >
         <div className="text-[#798195] text-sm p-8">
@@ -425,9 +505,12 @@ export default function Schedules() {
             onClick={() => {
               setSetting({ ...setting, view: 'day' });
             }}
-            className={classnames('"btn  p-1 text-sm    rounded-sm', {
-              'text-yellow-300 bg-gray-50': setting.view === 'day',
-            })}
+            className={classnames(
+              '"btn  p-1 text-sm  text-gray-400  rounded-sm',
+              {
+                'text-yellow-300 bg-gray-50': setting.view === 'day',
+              },
+            )}
           >
             近五天
           </button>
@@ -452,9 +535,11 @@ export default function Schedules() {
             今日
           </button>
           <button
-            onClick={() => {}}
+            onClick={() => {
+              setSetting({ ...setting, view: 'year' });
+            }}
             className={classnames('text-sm  rounded-sm text-gray-400', {
-              'text-yellow-300 bg-gray-50': setting.view === 'month',
+              'text-yellow-300 bg-gray-50': setting.view === 'year',
             })}
           >
             校历
@@ -487,15 +572,19 @@ export default function Schedules() {
         setVisible={setVisible}
         {...arg}
       ></CourseDetailCard>
-      <Calendar
-        setting={setting}
-        courseData={courseData}
-        clickEvent={(arg) => {
-          setArg({ ...arg });
-          console.log(arg, 'Calendar clcik');
-          setVisible(true);
-        }}
-      ></Calendar>
+      {setting.view === 'year' ? (
+        <Month></Month>
+      ) : (
+        <Calendar
+          setting={setting}
+          courseData={courseData}
+          clickEvent={(arg) => {
+            setArg({ ...arg });
+            console.log(arg, 'Calendar clcik');
+            setVisible(true);
+          }}
+        ></Calendar>
+      )}
     </div>
   );
 }

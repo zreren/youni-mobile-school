@@ -85,19 +85,19 @@ export default function ProfileHeader(props) {
               {data?.student.campus.name?data?.student.campus.name:""}
             </div>
             <div className="text-[10px] text-[#798195] font-400">
-             { `YoID:` + data?.student.id?data?.student.id:"昵称"}
+             {  + data?.student.userId?`YoID:${data?.student.userId}`:""}
             </div>
             <div className="flex flex-shrink space-x-2 text-xs rounded-full font-500">
               {data?.student?(
-               <div>
-                 <div className="flex items-center p-1 space-x-1 bg-white rounded-full">
+               <>
+                 <div className="flex items-center p-1 space-x-1 bg-white rounded-full px-2">
                 <Subtract></Subtract>
-                <div className="text-xs text-blueTitle font-medium">学生认证</div>
+                <div className="text-xs text-blueTitle font-medium ">学生认证</div>
               </div>
               <div className="flex items-center p-1 pl-2 pr-2 space-x-1 bg-white rounded-full">
-                <div className='font-medium'>用户</div>
+                <div className='font-medium px-1'>用户</div>
               </div>
-                </div>
+                </>
               ):null}
               
             </div>

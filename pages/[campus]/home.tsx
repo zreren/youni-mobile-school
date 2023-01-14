@@ -237,12 +237,6 @@ function SchoolPage(props) {
   const dispatch = useDispatch();
   const headerMenuList = [
     {
-      label: '关注',
-    },
-    {
-      label: '推荐',
-    },
-    {
       label: '闲置',
     },
     {
@@ -256,6 +250,12 @@ function SchoolPage(props) {
     },
     {
       label: '转租',
+    },
+    {
+      label: '关注',
+    },
+    {
+      label: '推荐',
     },
   ];
   const [reRender, setreRender] = useState(1);

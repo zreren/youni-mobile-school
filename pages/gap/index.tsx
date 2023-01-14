@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 // import Header from '@/components/Header';
 import classnames from 'classnames';
 import { useRouter } from 'next/router';
@@ -18,6 +18,8 @@ import { SwitchTransition, CSSTransition } from 'react-transition-group';
 import { Flex, Loading } from 'react-vant';
 import useRequest from '@/libs/request';
 import useFetch from '../../hooks/useFetch';
+import { Cell, Dialog } from 'react-vant'
+
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
@@ -254,7 +256,6 @@ export default function index() {
   };
   const CourseGap = (props) => {
     const { edit, color ,data } = props;
-
     const [editMethod, setMethod] = React.useState(edit ? edit : false);
     const submitChange = () => {
       setMethod(false);
@@ -400,6 +401,21 @@ export default function index() {
   // if(!data){
   //   return <Loading color="#FED64B" />
   // }
+ useEffect(()=>{
+  // console.log(data,"useEffectdata");
+  if(data?.code === 1102 || data?.code === 1101){
+    Dialog.confirm({
+      title: '登录',
+      message: '登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！',
+    }).then((res)=>{
+      router.push("/Login/signin");
+      console.log(res,"登录YoUni");
+    }).catch((err)=>{
+      router.push("/Login/signup");
+      console.log(err,"登录YoUni");
+    })
+  }
+ },[data])
   return (
     <div>
       <div className="relative h-[280px] w-full gap-bg pt-4  bg-gradient-to-l to-[#EAE6FF] from-[#ECF5FF] ">
@@ -448,8 +464,8 @@ export default function index() {
           </div>
         </div>
       </div>
-      {!data ? (
-        <div className='w-full flex justify-center items-center'>
+      {!data?.data ? (
+        <div className='w-full flex justify-center items-center mt-10'>
           <Loading color="#FED64B" />
         </div>
       ) : (

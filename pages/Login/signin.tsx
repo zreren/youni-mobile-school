@@ -201,7 +201,7 @@ export default function SignIn(props) {
           <button
             onClick={()=>{login("mail",form)}}
             className={classnames("w-full bg-[#F7F8F9] text-[#A9B0C0] border-0 rounded-full btn",
-            {"bg-yellow-400 text-[#8C6008]":form.mail.length > 1 && form.password.length > 1})}
+            {"bg-yellow-400 hover:bg-yellow-400 text-[#8C6008]":form.mail.length > 1 && form.password.length > 1})}
           >
             Log in
           </button>
