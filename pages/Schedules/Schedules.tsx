@@ -382,9 +382,14 @@ export default function Schedules() {
   }
   const router = useRouter()
   React.useEffect(() => {
-    if (!data) {
-      setDialogVisible(true);
+    if(!data) return
+    if(!data?.data) {
+            setDialogVisible(true);
     }
+    // if (!data?.data) {
+    //   setDialogVisible(true);
+    // }
+    console.log(data, 'data');
   }, [data]);
   const [arg, setArg] = useState();
   const [setting, setSetting] = useState({
@@ -399,10 +404,10 @@ export default function Schedules() {
         confirmButtonText="登录"
         cancelButtonText="注册"
         onConfirm={() => {
-          router.push('/Login/signup');
+          router.push('/Login/signin');
         }}
         onCancel={() => 
-          {  router.push('/Login/signin');}}
+          {  router.push('/Login/signup');}}
         className="shadow-xl  backdrop-opacity-50  backdrop-filter backdrop-blur-2xl"
       >
         <div className="text-[#798195] text-sm p-8">
