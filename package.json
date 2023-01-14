@@ -42,6 +42,7 @@
     "react-i18next": "^12.1.1",
     "react-redux": "^8.0.5",
     "react-transition-group": "^4.4.5",
+    "react-use": "^17.4.0",
     "react-vant": "^3.1.1",
     "sass": "^1.57.1",
     "swiper": "^8.4.5",

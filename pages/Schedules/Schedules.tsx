@@ -403,7 +403,7 @@ export default function Schedules() {
         }}
         onCancel={() => 
           {  router.push('/Login/signin');}}
-        className="shadow-xl h-[screen - 48px] backdrop-opacity-50  backdrop-filter backdrop-blur-2xl"
+        className="shadow-xl  backdrop-opacity-50  backdrop-filter backdrop-blur-2xl"
       >
         <div className="text-[#798195] text-sm p-8">
           登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！

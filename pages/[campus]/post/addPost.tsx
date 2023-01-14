@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState,useRef } from 'react';
 import PostCategory from '@/components/Menu/add-post-category';
 import Header from '@/components/Header';
 import YouniForm from '@/components/Form/Form';
@@ -10,22 +10,38 @@ import { DatetimePicker, Field } from 'react-vant';
 import { Input, Form, Cell } from 'react-vant';
 import { Button, Picker, Space } from 'react-vant';
 import Org from './assets/actives/org.svg';
+import { useWindowSize } from 'react-use';
+import dynamic from 'next/dynamic';
 import { Switch } from 'react-vant';
-import StartTime from "./assets/actives/startTime.svg";
-import EndTime from "./assets/actives/endTime.svg";
-import DraftIcon from "./draft.svg";
+import StartTime from './assets/actives/startTime.svg';
+import EndTime from './assets/actives/endTime.svg';
+import DraftIcon from './draft.svg';
+import NoteIcon1 from './note1.svg';
+import NoteIcon2 from './note2.svg';
+import NoteIcon3 from './note3.svg';
+// const useWindowSize = dynamic(() => import('react-use').then(mod=>mod.useWindowSize), {
+//   ssr: false,
+// });
+// const
 export default function addPost() {
-  const Footer =()=>{
+  const Footer = () => {
     return (
-      <div className='w-full bg-white h-[60px] space-x-4 flex justify-between fixed -bottom-1 px-5 py-2'>
-        <div className='flex flex-col items-center  w-[40px]'>
+      <div className="w-full bg-white h-[60px] space-x-4 flex justify-between fixed -bottom-1 px-5 py-2">
+        <div className="flex flex-col items-center  w-[40px]">
           <DraftIcon></DraftIcon>
-          <div className='text-[10px] text-[#798195] whitespace-nowrap'>存草稿</div></div>
-        <div onClick={form.submit} className='bg-[#FFD036] cursor-pointer  text-white rounded-full w-full h-10 flex justify-center items-center'>发布</div>
+          <div className="text-[10px] text-[#798195] whitespace-nowrap">
+            存草稿
+          </div>
+        </div>
+        <div
+          onClick={form.submit}
+          className="bg-[#FFD036] cursor-pointer  text-white rounded-full w-full h-10 flex justify-center items-center"
+        >
+          发布
+        </div>
       </div>
-    )
-  }
-
+    );
+  };
 
   const headerMenuList = [
     {
@@ -50,7 +66,7 @@ export default function addPost() {
       label: '转租',
     },
   ];
-  
+
   const item = {
     title: '选择分类',
     intro: '',
@@ -78,7 +94,7 @@ export default function addPost() {
     {
       type: 'time',
       label: '开始时间',
-      Icon:<StartTime></StartTime>,
+      Icon: <StartTime></StartTime>,
       dataIndex: 'startTime',
     },
     {
@@ -86,41 +102,41 @@ export default function addPost() {
       label: '结束时间',
       value: new Date(),
       dataIndex: 'endTime',
-      Icon:<EndTime></EndTime>,
+      Icon: <EndTime></EndTime>,
     },
     {
       type: 'location',
       label: '地点',
       value: new Date(),
       dataIndex: 'location',
-      Icon:<EndTime></EndTime>,
+      Icon: <EndTime></EndTime>,
     },
     {
       type: 'prices',
       label: '价格',
       value: new Date(),
       dataIndex: 'prices',
-      Icon:<EndTime></EndTime>,
+      Icon: <EndTime></EndTime>,
     },
     {
       type: 'input',
       label: '报名链接',
       value: new Date(),
       dataIndex: 'link',
-      Icon:<EndTime></EndTime>,
+      Icon: <EndTime></EndTime>,
     },
     {
       type: 'input',
       label: '联系方式',
       value: new Date(),
       dataIndex: 'contact',
-      Icon:<EndTime></EndTime>,
+      Icon: <EndTime></EndTime>,
     },
     {
       type: 'Switch',
       label: '地图',
       dataIndex: 'map',
-      Icon:<EndTime></EndTime>,
+      Icon: <EndTime></EndTime>,
     },
   ];
   const [title, setTitle] = React.useState('');
@@ -133,16 +149,119 @@ export default function addPost() {
         {(val: Date) => (val ? val.toDateString() : '请选择日期')}
       </DatetimePicker>
     ),
-    location:<div className='flex flex-col justify-end'>
-      <Input placeholder="请输入"></Input>
-      <Input placeholder="请输入"></Input>
-    </div>,
+    location: (
+      <div className="flex flex-col justify-end">
+        <Input placeholder="请输入"></Input>
+        <Input placeholder="请输入"></Input>
+      </div>
+    ),
     prices: <div></div>,
-    Switch: <Switch activeColor="#FFD036" size={20} inactiveColor="#dcdee0" />
+    Switch: <Switch activeColor="#FFD036" size={20} inactiveColor="#dcdee0" />,
   };
+  // const judgeDeviceType = function () {
+  //   var ua = window.navigator.userAgent.toLocaleLowerCase();
+  //   var isIOS = /iphone|ipad|ipod/.test(ua);
+  //   var isAndroid = /android/.test(ua);
+
+  //   return {
+  //     isIOS: isIOS,
+  //     isAndroid: isAndroid
+  //   }
+  // }()
+  // if (judgeDeviceType.isAndroid) {
+  //   var originHeight = document.documentElement.clientHeight || document.body.clientHeight;
+  //   window.addEventListener('resize', function () {
+  //     var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
+  //     if (originHeight < resizeHeight) {
+  //       console.log('Android 键盘收起啦！')
+  //       // Android 键盘收起后操作
+  //     } else {
+  //       console.log('Android 键盘弹起啦！');
+  //       // Android 键盘弹起后操作
+  //     }
+
+  //     originHeight = resizeHeight;
+  //   }, false)
+  // }
+  const Keyboard = () => {
+    return (
+      <div className="bg-[#F9FAFB] text-[#798195] w-screen h-12  z-30 fixed bottom-0 flex justify-around items-center">
+        <div
+          className="flex items-center space-x-1"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          <NoteIcon1></NoteIcon1>
+          <div>地点</div>
+        </div>
+        <div className="flex items-center space-x-1">
+          {' '}
+          <NoteIcon1></NoteIcon1>
+          <div>快捷模版</div>
+        </div>
+        <div className="flex items-center space-x-1">
+          <NoteIcon1></NoteIcon1>
+          <div>其他人</div>
+        </div>
+      </div>
+    );
+  };
+  const { width, height } = useWindowSize();
+  const [KeyboardShow, setKeyboardShow] = useState(false);
+  type Callback<T> = (prev: T | undefined) => void;
+  type Config = {
+    immediate: boolean;
+  };
+
+  function useWatch<T>(
+    dep: T,
+    callback: Callback<T>,
+    config: Config = { immediate: false },
+  ) {
+    const { immediate } = config;
+
+    const prev = useRef<T>();
+    const inited = useRef(false);
+    const stop = useRef(false);
+
+    useEffect(() => {
+      const execute = () => callback(prev.current);
+
+      if (!stop.current) {
+        if (!inited.current) {
+          inited.current = true;
+          if (immediate) {
+            execute();
+          }
+        } else {
+          execute();
+        }
+        prev.current = dep;
+      }
+    }, [dep]);
+
+    return () => {
+      stop.current = true;
+    };
+  }
+  useWatch(height,(pre)=>{
+    if(pre && pre < height){
+      setKeyboardShow(true)
+    }else{
+      setKeyboardShow(false)
+    }
+  });
   return (
-    <div className='mb-14'>
+    <div className="mb-14">
+      {KeyboardShow ? <Keyboard></Keyboard> : null}
+      {/* <Keyboard></Keyboard> */}
       <Header className="shadow-none"></Header>
+      {/* <div>
+        <div>width: {width}</div>
+        <div>height: {height}</div>
+      </div> */}
       <div className="items-start justify-between p-5 py-0 pt-6">
         <div className="flex justify-between">
           <div className="flex items-center space-x-2">
@@ -190,7 +309,9 @@ export default function addPost() {
       <div className="px-5 mt-4 post-form">
         <Form
           form={form}
-          onFinish={(v) => {console.log(v)}}
+          onFinish={(v) => {
+            console.log(v);
+          }}
         >
           {dynamicForm.map((item) => {
             const Node = customComponents[item.type];
@@ -214,12 +335,12 @@ export default function addPost() {
               <Form.Item
                 name={item.dataIndex}
                 label={<Label></Label>}
-                valuePropName='checked'
+                valuePropName="checked"
                 onClick={
                   item.type === 'time'
                     ? (_, action) => {
-                      action.current?.open()
-                    }
+                        action.current?.open();
+                      }
                     : null
                 }
               >
@@ -229,7 +350,7 @@ export default function addPost() {
           })}
         </Form>
       </div>
-        <Footer></Footer>
+      <Footer></Footer>
     </div>
   );
 }
