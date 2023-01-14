@@ -16,7 +16,7 @@ import ConfirmIcon from './confirm.svg';
 import GarbageIcon from './garbage.svg';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
 import { Flex, Loading } from 'react-vant';
-
+import useRequest from '@/libs/request';
 import useFetch from '../../hooks/useFetch';
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -45,6 +45,10 @@ const CScoreCard = () => {
 export default function index() {
   const router = useRouter();
   const { data, error } = useFetch('/grade/list', 'get');
+  const deleteGapItem = async(id:number | string):Promise<any>=>{
+    useRequest().post('/api/grade/delete', { id })
+  }
+  if(error) return
   console.log(data);
   // const addGrad
   const Header = (props) => {
@@ -249,7 +253,7 @@ export default function index() {
     );
   };
   const CourseGap = (props) => {
-    const { edit, color } = props;
+    const { edit, color ,data } = props;
 
     const [editMethod, setMethod] = React.useState(edit ? edit : false);
     const submitChange = () => {
@@ -272,20 +276,20 @@ export default function index() {
                   {editMethod ? (
                     <AutoInput></AutoInput>
                   ) : (
-                    <div className={'text-sm'}>AMDS</div>
+                    <div className={'text-sm'}>{data.course.ename}</div>
                   )}
                 </div>
               </div>
               <div>
                 <div className="text-[10px] text-[#DCDDE1]">学分</div>
                 <div className={'text-sm'}>
-                  {editMethod ? <InputField></InputField> : <div>3</div>}
+                  {editMethod ? <InputField></InputField> : <div>{data.credit}</div>}
                 </div>
               </div>
               <div>
                 <div className="text-[10px] text-[#DCDDE1]">成绩</div>
                 <div className={'text-sm'}>
-                  {editMethod ? <InputField></InputField> : <div>3</div>}
+                  {editMethod ? <InputField></InputField> : <div>{data.score}</div>}
                 </div>
               </div>
             </div>
@@ -297,12 +301,12 @@ export default function index() {
           </div>
           {editMethod ? (
             <div className="flex items-center mr-4 space-x-4">
-              <GarbageIcon></GarbageIcon>
+              <GarbageIcon onClick={()=>{deleteGapItem(data.id)}}></GarbageIcon>
               <ConfirmIcon onClick={submitChange}></ConfirmIcon>
             </div>
           ) : (
             <div className="flex items-center mr-4 space-x-4">
-              <div className={'text-xl bg-[#F7F8F9] rounded-md px-4'}>6.0</div>
+              <div className={'text-xl bg-[#F7F8F9] rounded-md px-4'}>{data.gpa}</div>
               <EditIcon
                 onClick={() => {
                   setMethod(true);
@@ -351,7 +355,7 @@ export default function index() {
               <div
                 className={`text-white flex items-center justify-center h-[18px] bg-[${color}] text-xs px-2 rounded-sm`}
               >
-                6.67
+                {item.term?.totalGpa}
               </div>
             </div>
             <div className="bg-[#F7F8F9] rounded-[4px] flex items-center mr-2 h-[22px] leading-[18px] text-[#A9B0C0] text-[10px] w-18 space-x-2 px-2  justify-center">
@@ -363,7 +367,7 @@ export default function index() {
         <AccordionDetails>
           <div className="space-y-2">
             {item.gradeList.map((item, index) => {
-              return <CourseGap color={color}></CourseGap>;
+              return <CourseGap data={item} color={color}></CourseGap>;
             })}
             <CSSTransition
               in={newCourse}
@@ -450,7 +454,7 @@ export default function index() {
         </div>
       ) : (
         <div className="px-0  ">
-          {data?.data.map((item, index) => {
+          {data?.data?.map((item, index) => {
             return <GapGroup item={item} index={index}></GapGroup>;
           })}
 

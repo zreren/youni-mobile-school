@@ -27,7 +27,7 @@ import axios from 'axios';
 import useSWR from 'swr';
 import prefixSorted from "../../libs/phone";
 import useLocalStorage from '@/hooks/useStore';
-import instance from '@/libs/request';
+import useRequest from '@/libs/request';
 
 
 export default function SignIn(props) {
@@ -35,7 +35,7 @@ export default function SignIn(props) {
   const route = useRouter();
 
   const login = async (way:string,form:any) =>{
-      const { data } = await instance.post(
+      const { data } = await useRequest.post(
         `/api/student/password_login` ,{
           account:form.mail,
           password:form.password

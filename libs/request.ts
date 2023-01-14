@@ -1,10 +1,18 @@
 import axios from 'axios';
 import useLocalStorage from '@/hooks/useStore';
-// const [token, setToken] = useLocalStorage('token','');
+
+// const token = localStorage.getItem('token')
+const [token, setToken] = useLocalStorage('token', null);
 const instance = axios.create({
   baseURL: Cons.BASEURL,
   timeout: 1000,
-  // headers: {'Authorization': token},
+  headers:{
+    "authorization":token
+  }
 });
-global.request = instance;
 export default instance;
+// global.request = instance;
+// export default function useRequest() {
+ 
+//   return instance;
+// };
