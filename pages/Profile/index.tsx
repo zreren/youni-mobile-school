@@ -34,33 +34,67 @@ import { useTranslation } from 'next-i18next';
 import { withTranslation } from 'next-i18next';
 import Image from 'next/image';
 import Waterfall from '@/components/Layout/Waterfall';
-import PostGroupIcon1 from "./post-group/icon1.svg";
-import PostGroupIcon2 from "./post-group/icon2.svg";
-import PostGroupIcon3 from "./post-group/icon3.svg";
+import PostGroupIcon1 from './post-group/icon1.svg';
+import PostGroupIcon2 from './post-group/icon2.svg';
+import PostGroupIcon3 from './post-group/icon3.svg';
 import useUser from '@/hooks/useUser';
 import useLocalStorage from '@/hooks/useStore';
+import { Sticky } from 'react-vant';
 
 const PostGroup = () => {
   return (
     <div className="w-full px-5 py-4  rounded-lg border border-[#D9E7FF] bg-PostGroup">
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         {' '}
         <div className="flex items-center space-x-2">
-          <div className='text-blueTitle text-sm font-semibold'>测试文集1 </div>
-          <div className='text-[10px] rounded-sm px-2 text-white bg-[#52C41A] flex justify-center items-center'>公开</div>
+          <div className="text-blueTitle text-sm font-semibold">测试文集1 </div>
+          <div className="text-[10px] rounded-sm px-2 text-white bg-[#52C41A] flex justify-center items-center">
+            公开
+          </div>
         </div>
-        <div className='rounded-full text-[#A9B0C0] flex justify-center items-center border w-14 bg-white border-[#F3F4F6]'>编辑</div>
+        <div className="rounded-full text-[#A9B0C0] flex justify-center items-center border w-14 bg-white border-[#F3F4F6]">
+          编辑
+        </div>
       </div>
-      <div className='flex space-x-2'>
-        <div className='flex items-center'><PostGroupIcon1></PostGroupIcon1><div className='text-[#798195] text-xs'>24</div></div>
-        <div className='flex items-center'><PostGroupIcon2></PostGroupIcon2><div className='text-[#798195] text-xs'>24</div></div>
-        <div className='flex items-center'><PostGroupIcon3></PostGroupIcon3><div className='text-[#798195] text-xs'>24</div></div>
+      <div className="flex space-x-2">
+        <div className="flex items-center">
+          <PostGroupIcon1></PostGroupIcon1>
+          <div className="text-[#798195] text-xs">24</div>
+        </div>
+        <div className="flex items-center">
+          <PostGroupIcon2></PostGroupIcon2>
+          <div className="text-[#798195] text-xs">24</div>
+        </div>
+        <div className="flex items-center">
+          <PostGroupIcon3></PostGroupIcon3>
+          <div className="text-[#798195] text-xs">24</div>
+        </div>
       </div>
-      <div className='mt-4 flex justify-between '>
-        <Image width={64} height={64} src="/text.png" className='rounded-xl'></Image>
-        <Image width={64} height={64} src="/text.png" className='rounded-xl'></Image>
-        <Image width={64} height={64} src="/text.png" className='rounded-xl'></Image>
-        <Image width={64} height={64} src="/text.png" className='rounded-xl'></Image>
+      <div className="mt-4 flex justify-between ">
+        <Image
+          width={64}
+          height={64}
+          src="/text.png"
+          className="rounded-xl"
+        ></Image>
+        <Image
+          width={64}
+          height={64}
+          src="/text.png"
+          className="rounded-xl"
+        ></Image>
+        <Image
+          width={64}
+          height={64}
+          src="/text.png"
+          className="rounded-xl"
+        ></Image>
+        <Image
+          width={64}
+          height={64}
+          src="/text.png"
+          className="rounded-xl"
+        ></Image>
       </div>
     </div>
   );
@@ -172,16 +206,20 @@ const Setting = () => {
   );
 };
 
-
 function index(props) {
   const Profile1 = () => {
     return (
       <div className="h-[calc(100vh-320px)] relative">
         <div className="w-full p-5 pb-1 bg-white ">
           <Identify></Identify>
-          <ProfileMenu></ProfileMenu>
         </div>
-        <div className="w-full h-[10px] bg-bg"></div>
+        <Sticky offsetTop={280}>
+          <div className="w-full p-5 pb-1 bg-white ">
+            <ProfileMenu></ProfileMenu>
+          </div>
+          <div className="w-full h-[10px] bg-bg"></div>
+
+        </Sticky>
         <div className="w-full bg-white">
           <Setting></Setting>
           <div className="mt-2 text-center text-[#798195]">
@@ -201,9 +239,12 @@ function index(props) {
               onClick={() => {
                 setMenu(0);
               }}
-              className={classnames('w-full  flex justify-center items-center text-center text-[#A9B0C0]', {
-                'bg-slate-50 text-[#FFD036]': menu === 0,
-              })}
+              className={classnames(
+                'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
+                {
+                  'bg-slate-50 text-[#FFD036]': menu === 0,
+                },
+              )}
             >
               贴文
             </div>
@@ -211,9 +252,12 @@ function index(props) {
               onClick={() => {
                 setMenu(1);
               }}
-              className={classnames('w-full  flex justify-center items-center text-center text-[#A9B0C0]', {
-                'bg-slate-50 text-[#FFD036]': menu === 1,
-              })}
+              className={classnames(
+                'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
+                {
+                  'bg-slate-50 text-[#FFD036]': menu === 1,
+                },
+              )}
             >
               文集
             </div>
@@ -240,9 +284,12 @@ function index(props) {
               onClick={() => {
                 setMenu(0);
               }}
-              className={classnames('w-full flex justify-center items-center text-center text-[#A9B0C0]', {
-                'bg-slate-50 text-[#FFD036]': menu === 0,
-              })}
+              className={classnames(
+                'w-full flex justify-center items-center text-center text-[#A9B0C0]',
+                {
+                  'bg-slate-50 text-[#FFD036]': menu === 0,
+                },
+              )}
             >
               贴文
             </div>
@@ -250,9 +297,12 @@ function index(props) {
               onClick={() => {
                 setMenu(1);
               }}
-              className={classnames('w-full  flex justify-center items-center text-center text-[#A9B0C0]', {
-                'bg-slate-50 text-[#FFD036]': menu === 1,
-              })}
+              className={classnames(
+                'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
+                {
+                  'bg-slate-50 text-[#FFD036]': menu === 1,
+                },
+              )}
             >
               文集
             </div>
@@ -269,15 +319,15 @@ function index(props) {
     );
   };
   console.log(props, 'porps');
-  const { user,loggedOut } = useUser();
+  const { user, loggedOut } = useUser();
   const router = useRouter();
-  const [school,setSchool] = useLocalStorage("school","York")
-  useEffect(()=>{
-    if(loggedOut){
+  const [school, setSchool] = useLocalStorage('school', 'York');
+  useEffect(() => {
+    if (loggedOut) {
       // router.push("/Login/signin")
     }
     // setSchool("Dick")
-  },[])
+  }, []);
   const { i18n } = useTranslation('common');
   console.log(i18n, 'i18n');
   const [menuVal, setMenu] = useState(0);
@@ -295,6 +345,7 @@ function index(props) {
       menu: <Profile3></Profile3>,
     },
   ];
+  const container = React.useRef<any>(null);
 
   return (
     <div className="w-screen min-h-screen">
@@ -307,7 +358,9 @@ function index(props) {
           }}
         ></HeaderMenu>
       </div>
-      <div className="overflow-scroll relative">{headerList[menuVal].menu}</div>
+      <div className="relative overflow-scroll ">
+        {headerList[menuVal].menu}
+      </div>
     </div>
   );
 }

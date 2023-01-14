@@ -14,7 +14,8 @@ export default function useUser() {
   if(token){
     const { data, error } = useFetch('/profile', 'get')
     const loading = !data?.data && !error;
-    const loggedOut = error || data?.code === 1102 || !data?.data;
+    // const loggedOut = error || data?.code === 1102 || !data?.data;
+    const loggedOut = false;
     console.log(data,'fetch user data')
     console.log(loggedOut,"loggedOut")
     if(loggedOut){
