@@ -266,6 +266,31 @@
   transform: scale(0.9);
   transition: opacity 300ms, transform 300ms;
 }
-.demo-sticky--wrapper {
+/* .demo-sticky--wrapper {
   height: 120px;
+} */
+.rv-overlay {
+  /* background-color: white !important; */
+  --rv-overlay-background-color: rgba(255,255,255,0.1) !important;
+  height: calc(100vh - 48px) !important;
+  backdrop-filter: blur(10px) !important;
+  /* back */
+  /* --tw-backdrop-blur: blur(40px); */
+  /* backdrop-filter: 10px;
+   */
+   /* @apply backdrop-blur-xl backdrop-opacity-50 text-9xl; */
+   /* @apply ; */
+   /* @apply backdrop-filter; */
+  /* backdrop-opacity: 0.5; */
+}
+.rv-dialog__cancel .rv-button__text{
+  color: #A9B0C0 !important;
+}
+.rv-dialog__confirm .rv-button__text{
+  color: #FFD036 !important;
+}
+.rv-dialog__header{
+  color:#37455C;
+  font-size: 18px;
+  font-weight: 500;
 }

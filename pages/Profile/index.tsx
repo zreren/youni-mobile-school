@@ -218,7 +218,6 @@ function index(props) {
             <ProfileMenu></ProfileMenu>
           </div>
           <div className="w-full h-[10px] bg-bg"></div>
-
         </Sticky>
         <div className="w-full bg-white">
           <Setting></Setting>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Calendar from '@/components/Calendar/Calendar';
 import Header from '@/components/Header';
 import CButton from '@/components/Button/CButton';
@@ -24,6 +24,8 @@ import useFetch from '../../hooks/useFetch';
 import { getCourses, addFullStartDate } from '@/libs/schedule';
 import axios from 'axios';
 import useLocalStorage from '../../hooks/useStore';
+import { Cell, Dialog } from 'react-vant';
+import { useRouter } from 'next/router';
 
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
@@ -59,9 +61,12 @@ const SetSchedule = (props) => {
             onClick={() => {
               setMenu(0);
             }}
-            className={classnames('w-full  flex justify-center items-center text-center text-[#A9B0C0]', {
-              'bg-slate-50 text-[#FFD036]': menu === 0,
-            })}
+            className={classnames(
+              'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
+              {
+                'bg-slate-50 text-[#FFD036]': menu === 0,
+              },
+            )}
           >
             五天
           </div>
@@ -69,9 +74,12 @@ const SetSchedule = (props) => {
             onClick={() => {
               setMenu(1);
             }}
-            className={classnames('w-full  flex justify-center items-center text-center text-[#A9B0C0]', {
-              'bg-slate-50 text-[#FFD036]': menu === 1,
-            })}
+            className={classnames(
+              'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
+              {
+                'bg-slate-50 text-[#FFD036]': menu === 1,
+              },
+            )}
           >
             周
           </div>
@@ -79,9 +87,12 @@ const SetSchedule = (props) => {
             onClick={() => {
               setMenu(2);
             }}
-            className={classnames('w-full  flex justify-center items-center text-center text-[#A9B0C0]', {
-              'bg-slate-50 text-[#FFD036]': menu === 2,
-            })}
+            className={classnames(
+              'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
+              {
+                'bg-slate-50 text-[#FFD036]': menu === 2,
+              },
+            )}
           >
             日
           </div>
@@ -89,16 +100,19 @@ const SetSchedule = (props) => {
             onClick={() => {
               setMenu(3);
             }}
-            className={classnames('w-full  flex justify-center items-center text-center text-[#A9B0C0]', {
-              'bg-slate-50 text-[#FFD036]': menu === 3,
-            })}
+            className={classnames(
+              'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
+              {
+                'bg-slate-50 text-[#FFD036]': menu === 3,
+              },
+            )}
           >
             校历
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
   return (
     <SwipeableDrawer
       anchor="bottom"
@@ -126,7 +140,10 @@ const SetSchedule = (props) => {
         </div>
         <div className="w-full p-2 mt-2">
           <CCourseInput Icon={Icon1} title="打开时显示">
-           <div className={"w-1/2"}> <Menu></Menu></div>
+            <div className={'w-1/2'}>
+              {' '}
+              <Menu></Menu>
+            </div>
           </CCourseInput>
           <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
           <CCourseInput title="课表视图显示日程" Icon={Icon2}>
@@ -335,6 +352,8 @@ export default function Schedules() {
   const [visible, setVisible] = useState(false);
   const [scheduleVisible, setScheduleVisible] = useState(false);
   const [addCourse, setAddCourse] = useState(false);
+  const [dialogVisible, setDialogVisible] = useState(false);
+
   const { data, error } = useFetch(
     `${Cons.API.CURRICULUM.QUERY}?campusId=1`,
     'get',
@@ -361,12 +380,36 @@ export default function Schedules() {
     const all = addFullStartDate(courseData, weekDate);
     console.log(all, 'courseData');
   }
+  const router = useRouter()
+  React.useEffect(() => {
+    if (!data) {
+      setDialogVisible(true);
+    }
+  }, [data]);
   const [arg, setArg] = useState();
   const [setting, setSetting] = useState({
     view: 'day',
   });
   return (
     <div className="space-y-1 bg-bg">
+      <Dialog
+        visible={dialogVisible}
+        title="登录"
+        showCancelButton
+        confirmButtonText="登录"
+        cancelButtonText="注册"
+        onConfirm={() => {
+          router.push('/Login/signup');
+        }}
+        onCancel={() => 
+          {  router.push('/Login/signin');}}
+        className="shadow-xl h-[screen - 48px] backdrop-opacity-50  backdrop-filter backdrop-blur-2xl"
+      >
+        <div className="text-[#798195] text-sm p-8">
+          登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！
+        </div>
+      </Dialog>
+
       <div className="pl-5 text-left f-11 ">
         <div className="text-base font-bold text-blueTitle">第 7 周</div>
         <div className="text-xs text-gray-400">10月10日 - 10月16日</div>

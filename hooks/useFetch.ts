@@ -68,11 +68,11 @@ function useFetch(path, method, body?) {
   // @ts-ignore
   console.log(data, 'code');
   if (data?.code === 1102 || data?.code === 1101) {
-    if (!token) {
-      // router.push('/Login/signin');
-      // setToken();
-      router.push('/Login/signin');
-    }
+    // if (!token) {
+    //   // router.push('/Login/signin');
+    //   // setToken();
+    //   router.push('/Login/signin');
+    // }
   }
   return { data, error ,};
 }
