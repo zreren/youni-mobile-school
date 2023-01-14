@@ -327,10 +327,10 @@ function index(props) {
       // router.push("/Login/signin")
     }
     // setSchool("Dick")
-  }, []);
+  }, [loggedOut]);
   const { i18n } = useTranslation('common');
   console.log(i18n, 'i18n');
-  const [menuVal, setMenu] = useState(0);
+  const [menuVal, setMenu] = useState(1);
   const headerList = [
     {
       icon: menuVal === 0 ? <Icon1Select></Icon1Select> : <Icon1></Icon1>,
