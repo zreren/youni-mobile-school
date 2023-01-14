@@ -124,6 +124,7 @@ export default function CustomizedTabs(props) {
   const [value, setValue] = React.useState(id);
   const { headerMenuList, className } = props;
   const handleChange = (newValue: number) => {
+    props.changeType(headerMenuList[newValue].value);
     setValue(newValue);
     // props.switchMenu(newValue);
   };

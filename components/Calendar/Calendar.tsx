@@ -99,24 +99,24 @@ function Calendar(props) {
               <div className="font-bold	 scale-75 text-xs text-center  whitespace-nowrap">
                 {arg.event.title}
               </div>
-              <div className="font-light leading-none	 scale-90 truncate">
+              <div className="font-light leading-none	text-10  truncate">
                 Section {arg.event.extendedProps.section.name}
               </div>
               <div className="font-light text-ellipsis	truncate whitespace-nowrap leading-none	 scale-90	  ">
                 {arg.event.extendedProps.classroom}
               </div>
-              <div className="font-light leading-none	 scale-90	  ">
+              <div className="font-light leading-none	text-10	  ">
                 {arg.event.extendedProps.online ? '线上课程' : '线下课程'}
               </div>
             </div>:
             <div className="flex overflow-hidden flex-col justify-center h-full w-full items-center">
-            <div className="font-bold	 scale-50 text-xs text-center  whitespace-nowrap">
+            <div className="font-bold scale-[0.7]		text-10   text-center  whitespace-nowrap">
               {arg.event.title}
             </div>
-            <div className="font-bold 	text-center text-xs leading-none whitespace-nowrap scale-50">
+            <div className="font-bold 	text-center scale-[0.7]		text-10 leading-none whitespace-nowrap	 ">
               Section {arg.event.extendedProps.section.name}
             </div>
-            <div className="font-bold leading-none truncate	whitespace-nowrap text-xs scale-50	  ">
+            <div className="font-bold leading-none truncate	whitespace-nowrap scale-[0.7]		text-10 ">
               {arg.event.extendedProps.classroom}
             </div>
             <div className="font-light leading-none	 scale-90	  ">

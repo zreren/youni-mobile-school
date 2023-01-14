@@ -314,11 +314,11 @@ export default function Display(props) {
         <div className="flex items-center justify-between mt-2 mb-2">
           <div className="flex items-center space-x-1">
             <div className="bg-gray-500 rounded-full w-px18 h-px18"></div>
-            <div className="ext-xs text-priceGray">{data.user}</div>
+            <div className="ext-xs text-priceGray">{data.student.nickName}</div>
           </div>
           <div className="flex items-center text-xs text-priceGray">
-            <Like></Like>
-            <div>{data.like}</div>
+            <Like className="fill-slate-500"></Like>
+            <div>{data.interactInfo.likeCount}</div>
           </div>
         </div>
       </div>

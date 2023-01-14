@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import HeaderLayout from '@/components/PageComponents/Home/HeaderLayout';
 import MenuAtSchool from '@/components/PageComponents/Home/MenuAtSchool';
 import ad from './components/ad.png';
@@ -234,22 +234,28 @@ function SchoolPage(props) {
   const [isSelect, setIsSelect] = useState(false);
   const [schoolSelect, setSelectSchool] = useState(false);
   const [postDetailShow, setPostDetailShow] = useState(false);
+  // const [postData, setPostData] = useState({});
   const dispatch = useDispatch();
   const headerMenuList = [
     {
       label: '闲置',
+      value: 'idle',
     },
     {
       label: '活动',
+      value: 'activity',
     },
     {
       label: '新闻',
+      value: 'news',
     },
+    // {
+    //   label: '转租',
+    //   value: 're',
+    // },
     {
-      label: '转租',
-    },
-    {
-      label: '转租',
+      label: '拼车',
+      value: 'carpool',
     },
     {
       label: '关注',
@@ -274,14 +280,19 @@ function SchoolPage(props) {
   const [loading, setLoading] = useState(true);
   const [imageSize, setSmageSize] = React.useState({
     width: '1000%',
-    height: '0rem'
-   });
-  const {data:postData} = useFetch(`/post/query`,"get")
-  console.log(postData,"postData")
+    height: '0rem',
+  });
+  const [category, setCategory] = useState('idle');
+  // useEffect(() => {
+   const {data:postData} = useFetch(`/post/home_list?type=${category}`, 'get')
+  //   setpostData(data?.data);
+  // }, [category]);
+  // console.log(postData, 'postData');
+
   React.useEffect(() => {
     dispatch(setAuthState(true));
   }, []);
-  
+
   return (
     <div className="w-screen min-h-screen mb-20 pb-36">
       <PostDetail
@@ -297,10 +308,6 @@ function SchoolPage(props) {
         setVisible={setSelectSchool}
         visible={schoolSelect && !isSelect}
       ></SchoolList>
-      {/* <SchoolList
-      setVisible={setIsSelect}
-      visible={isSelect}
-    ></SchoolList> */}
       <PullRefresh
         onRefresh={() => onRefresh(true)}
         onRefreshEnd={() => console.log('onRefreshEnd')}
@@ -313,37 +320,44 @@ function SchoolPage(props) {
         ></HeaderLayout>
         <MenuAtSchool></MenuAtSchool>
         <div className="w-full pl-5 pr-5">
-          <Skeleton loading={loading} row={1}  rowHeight={60}>
+          <Skeleton loading={loading} row={1} rowHeight={60}>
             {' '}
           </Skeleton>
           <Image
-              src={ad}
-              width="100%"
-              height={imageSize.height}
-              layout="responsive"
-              alt=""
-              onLoadingComplete={target => {
-                setSmageSize({
-                  width:'100%',
-                  height: "20rem"
-                });
-                setLoading(false);
-              }}
-              objectFit="contain"
-            ></Image>
+            src={ad}
+            width="100%"
+            height={imageSize.height}
+            layout="responsive"
+            alt=""
+            onLoadingComplete={(target) => {
+              setSmageSize({
+                width: '100%',
+                height: '20rem',
+              });
+              setLoading(false);
+            }}
+            objectFit="contain"
+          ></Image>
         </div>
         <div className="p-5">
-          <PostCategory headerMenuList={headerMenuList}></PostCategory>
+          <PostCategory
+            changeType={(e) => {
+              setCategory(e);
+            }}
+            headerMenuList={headerMenuList}
+          ></PostCategory>
         </div>
         <div className="mb-10">
-          <Waterfall
-            key={reRender}
-            postData={postData?.data}
-            show={() => {
-              setPostDetailShow(true);
-            }}
-            onClick={() => {}}
-          ></Waterfall>
+          {postData?.data? (
+             <Waterfall
+             key={reRender}
+             postData={postData?.data}
+             show={() => {
+               setPostDetailShow(true);
+             }}
+             onClick={() => {}}
+           ></Waterfall>
+          ):null}
         </div>
       </PullRefresh>
     </div>

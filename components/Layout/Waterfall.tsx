@@ -8,6 +8,7 @@ import Display1 from '../PlayGround/display2';
 import dynamic from 'next/dynamic';
 import MasonryLayout from 'react-fast-masonry';
 // import { Masonry } from "masonic";
+import { Flex, Loading } from 'react-vant';
 
 const Masonry = dynamic(
   () => import('masonic').then((module) => module.Masonry),
@@ -137,12 +138,16 @@ const PostDetail = (props) => {
 export default function Waterfall(props) {
   const { postData } = props;
   console.log(postData, 'postData in waterfull');
-  const [data, setData] = useState<any[]>();
+  const [data, setData] = useState<any[]>(postData);
   const [postDetailShow, setPostDetailShow] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [reRender, setReRender] = useState(true);
   useEffect(() => {
-    if (postData) {
+    // setReRender(false);
+    setData([])
+    if (postData?.length>=1) {
       setData(postData);
+      // setReRender(true);
     }
   }, [postData]);
 
@@ -169,8 +174,8 @@ export default function Waterfall(props) {
   // });
   function loadMore() {
     const append = dataList;
-    setData((val) => [...val, ...append]);
-    setHasMore(append.length > 0);
+    // setData((val) => [...val, ...append]);
+    // setHasMore(append.length > 0);
   }
   const masonryOptions = {
     transitionDuration: 0,
@@ -184,15 +189,19 @@ export default function Waterfall(props) {
         visible={postDetailShow}
       ></PostDetail>
       <div className="mx-2">
-        {/* @ts-ignore */}
-        {data?.length > 0 ?<Masonry
-          columnCount={2}
-          columnGutter={2}
-          columnWidth={150}
-          items={data}
-          render={CardWithClick}
-        />:null}
-        
+        {data?.length >= 0 && reRender ? (
+          <Masonry
+            columnCount={2}
+            columnGutter={2}
+            columnWidth={150}
+            items={data}
+            render={CardWithClick}
+          />
+        ) : (
+          <div className='w-full flex justify-center items-center mt-10'>
+          <Loading color="#FED64B" />
+        </div>
+        )}
       </div>
       {/* <InfiniteScroll loadMore={loadMore} hasMore={hasMore} /> */}
     </div>
