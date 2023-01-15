@@ -289,7 +289,7 @@ export default function SignUp(props) {
         <div className="z-10 pl-8 pr-8 mb-20 text-md">
           Create a profile to unlock full functions.
         </div>
-        <div>
+        <div className=''>
           <div className="absolute z-0 w-full top-32">
             <Image
               className="absolute z-0 w-10 h-10 opacity-80"
@@ -301,8 +301,9 @@ export default function SignUp(props) {
           </div>
         </div>
         <div className="w-full h-44"></div>
-        <div
-          className="z-20 h-screen pt-4 pl-8 pr-8 space-y-4 bg-white-mask"
+       <div className='absolute bottom-0'>
+       <div
+          className="z-20 h-[300px]  pt-4 pl-8 pr-8 space-y-4 bg-white-mask"
           onClick={() => {
             props.setProgress(1);
           }}
@@ -317,7 +318,7 @@ export default function SignUp(props) {
             label="Continue with WeChat/Weixin"
           ></SignUpButton>
         </div>
-        <div className="absolute bottom-0 z-30 w-full">
+        <div className=" bottom-0 z-30 w-full">
           <div className="w-full h-full p-10 pt-2 pb-2 text-xs text-center text-gray-300 bg-white">
             By continuing, you agree to our{' '}
             <Link href="">
@@ -337,6 +338,7 @@ export default function SignUp(props) {
   
           </div>
         </div>
+       </div>
         {/* <Button variant="outlined" startIcon={<WeChat />}>
       Delete
     </Button> */}

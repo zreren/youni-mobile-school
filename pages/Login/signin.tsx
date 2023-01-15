@@ -370,8 +370,9 @@ export default function SignIn(props) {
           </div>
         </div>
         <div className="w-full h-44"></div>
+        <div className='absolute bottom-0'>
         <div
-          className="z-20 h-screen pt-4 pl-8 pr-8 space-y-4 bg-white-mask"
+          className="z-20 h-[300px] pt-4 pl-8 pr-8 space-y-4 bg-white-mask"
           onClick={() => {
             props.setProgress(1);
           }}
@@ -389,7 +390,7 @@ export default function SignIn(props) {
             label="Continue with WeChat/Weixin"
           ></SignUpButton>
         </div>
-        <div className="absolute bottom-0 z-30 w-full">
+        <div className="bottom-0 z-30 w-full">
           <div className="w-full h-full p-10 pt-2 pb-2 text-xs text-center text-gray-300 bg-white">
             By continuing, you agree to our{' '}
             <Link href="">
@@ -409,6 +410,7 @@ export default function SignIn(props) {
               <span className="text-[#FFD036]"> Sign up</span>
             </span>{' '}
           </div>
+        </div>
         </div>
         {/* <Button variant="outlined" startIcon={<WeChat />}>
       Delete
