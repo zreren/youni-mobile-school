@@ -41,6 +41,8 @@ import useUser from '@/hooks/useUser';
 import useLocalStorage from '@/hooks/useStore';
 import { Sticky } from 'react-vant';
 import { Picker, Toast } from 'react-vant';
+import { setOpenLogin } from '@/stores/authSlice';
+import { useDispatch } from 'react-redux';
 
 const PostGroup = () => {
   return (
@@ -222,9 +224,9 @@ function index(props) {
         </Sticky>
         <div className="w-full bg-white">
           <Setting></Setting>
-          <div className="mt-2 text-center text-[#798195]">
+          {/* <div className="mt-2 text-center text-[#798195]">
             <Link href="/Login/signup"> 临时进入登录页面</Link>
-          </div>
+          </div> */}
         </div>
       </div>
     );
@@ -341,6 +343,8 @@ function index(props) {
   useEffect(() => {
     if (loggedOut) {
       setMenu(4);
+    }else{
+      setMenu(0);
     }
   }, [loggedOut]);
   const container = React.useRef<any>(null);
@@ -368,7 +372,7 @@ function index(props) {
         </div>
         <button
         onClick={()=>{
-          router.push('/Login/signin')
+          dispatch(setOpenLogin('login'))
         }}
           className={classnames(
             'w-full text-[#8C6008]  bg-yellow-400 border-0 rounded-full btn hover:bg-yellow-400',
@@ -379,6 +383,8 @@ function index(props) {
       </div>
     );
   };
+  const dispatch = useDispatch()
+
   return (
     <div className="w-screen min-h-screen">
       <ProfileHeader data={user}></ProfileHeader>

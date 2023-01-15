@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Header from '@/components/Header';
 import CategoryButton from '@/components/Button/CategoryButton';
@@ -8,10 +8,17 @@ import CButtonNoLine from '@/components/Button/CButtonNoLine';
 import CourseScoreCard from '@/components/CourseScoreCard';
 import { useRouter } from 'next/router';
 import useFetch from '@/hooks/useFetch';
+import useRequest from '@/libs/request';
+
 export default function course() {
   const router = useRouter()
+  const subjectId = router.query.subjectId
+  console.log(subjectId,"subjectId")
+  const [hotCourseData,setHotCourseData] =  useState(null)
   const { data, error } = useFetch(`${Cons.API.SUBJECT.QUERY}?campusId=1`,"get");
-  const { data:hotCourseData, error: hotCourseDataError} = useFetch(`${Cons.API.COURSE.HOT}?campusId=1`,"get");
+  useEffect(()=>{
+   useRequest().post(`/api/subject/course`,{id:subjectId})
+  },[router.query.subjectId])  
 
   console.log(data,"data")
   const randomColor = ['red', 'blue', 'yellow', 'green', 'pink', 'purple']

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Header from '@/components/Header';
 import ProfessorInfoCard from '@/components/ProfessorInfoCard';
@@ -8,22 +8,63 @@ import CButton from '@/components/Button/CButton';
 import CButton2 from '@/components/Button/CButton2';
 import { professorList } from '@/mock/data';
 import UserComment from './user-comment';
+import { useRouter } from 'next/router';
+import useFetch from '@/hooks/useFetch';
 export default function ProfessorDetail() {
   const [currentSelectId, setCurrentSelectId] = useState(0);
   const professorListCopy = professorList[0].course.slice();
+  const router = useRouter();
+  const Id = router.query.id;
+  const { data, error } = useFetch(`/professor/detail?id=${Id}`, 'get');
   professorListCopy.unshift({
     id: 0,
     name: '查看全部',
   });
+  interface ScoreDistribution {
+    [key: string]: number;
+  }
+  const total = useMemo(() => {
+    const totalData: ScoreDistribution = data?.data?.scoreDistribution as ScoreDistribution
+    if(!totalData) return 0;
+    return Object.values(totalData).reduce((acc: number, value: number) => acc + value, 0);
+  }, [data?.data?.scoreDistribution]);
+  const scoreDistribution = [
+    {
+      item: '非常糟糕',
+      value: data?.data.scoreDistribution[1] ,
+      percent: data?.data.scoreDistribution[1] / total,
+    },
+    {
+      item: '勉勉强强',
+      value: data?.data.scoreDistribution[2] ,
+      percent: data?.data.scoreDistribution[2] / total,
+    },
+    {
+      item: '感觉还行',
+      value: data?.data.scoreDistribution[3] ,
+      percent: data?.data.scoreDistribution[3] / total,
 
+    },
+    {
+      item: '感觉不错',
+      value: data?.data.scoreDistribution[4] ,
+      percent: data?.data.scoreDistribution[4] / total,
+
+    },
+    {
+      item: '强烈推荐',
+      value: data?.data.scoreDistribution[5] ,
+      percent: data?.data.scoreDistribution[5] / total,
+    },
+  ];
   return (
     <CommonLayout className="min-h-screen pb-14">
       <Header title="教授评价"></Header>
-      <ProfessorInfoCard></ProfessorInfoCard>
+      <ProfessorInfoCard data={data?.data}></ProfessorInfoCard>
       <Title title="分值分布"></Title>
       <div className="bg-white w-full h-auto space-y-3  p-4 flex-wrap rounded-xl">
-        {professorList[0].scoreList.map((item) => {
-          return <CProgress key={item.id} data={item}></CProgress>;
+        {scoreDistribution.map((item, index) => {
+          return <CProgress key={index} data={item}></CProgress>;
         })}
       </div>
       <Title title="教授评价"></Title>

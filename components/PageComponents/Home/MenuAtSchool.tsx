@@ -14,7 +14,7 @@ export default function MenuAtSchool() {
         },
         {
             label:"教授评价",
-            path:"/professor/professor-evaluation",
+            path:"/[campus]/professor/professor-evaluation",
             icon: "/assets/index/1 (3).png"
         },
         {

@@ -18,7 +18,7 @@ export default function CScoreCard(props) {
       return (
         <div className={classNames}>
           <div className={classnames('text-xl', textColorTable[color])}>
-            {score||4.5}
+            {score||0.0}
           </div>
           <div className={classnames('text-xs', textColorTable[color])}>
             {title || '教授综合评分'}
@@ -29,7 +29,7 @@ export default function CScoreCard(props) {
       return (
         <div className="w-24 h-14">
           <div className="w-full text-blueTitle text-lg h-1.8/3 bg-gray-200 text-center rounded-t-lg font-medium">
-            {score  ||'4.5'}
+            {score  ||'0.0'}
           </div>
           <div className="w-full text-xs  h-6 bg-gray-100 flex justify-center items-center text-gray-400">
             {title || 'default'}

@@ -9,10 +9,10 @@ export default function CProgress(Props) {
         <div className="flex items-center">
           <progress
             className="progress progress-warning  h-3 w-full"
-            value={data.percent * 20}
+            value={data.percent * 100}
             max="100"
           ></progress>
-          <div className="text-gray-400 text-sm ml-2">{data.percent}</div>
+          <div className="text-gray-400 text-sm ml-2">{data.value || 0}</div>
         </div>
       </div>
     </div>

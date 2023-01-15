@@ -8,22 +8,35 @@ import '@fullcalendar/timegrid/main.css';
 import LabelBottomNavigation from '@/components/Menu/Buttom-menu';
 import type { AppProps } from 'next/app';
 import { wrapper } from '../stores/store';
-import { useEffect ,useState} from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { selectAuthState, setAuthState } from '../stores/authSlice';
+import {
+  selectAuthState,
+  setAuthState,
+  selectOpen,
+  setOpenLogin,
+} from '../stores/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
-import classnames from "classnames";
+import classnames from 'classnames';
+// import classnames  from 'classnames'
 import { appWithTranslation } from 'next-i18next';
 import UserAddMenu from '@/components/UserAddMenu';
 import nexti18nConfig from '../i18n';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import SignIn from './Login/signin';
+import SignUp from './Login/signup';
+import { SwitchTransition, CSSTransition } from 'react-transition-group';
 // import {API} from "@/hooks/useFetch";
 import '../cons';
-
+import { styled } from '@mui/material/styles';
+import { grey } from '@mui/material/colors';
+import Box from '@mui/material/Box';
 function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useDispatch();
   const authState = useSelector(selectAuthState);
-  const [stopScroll,setStopScroll] = useState(false);
+  const openLogin = useSelector(selectOpen);
+  const [stopScroll, setStopScroll] = useState(false);
   const router = useRouter();
   const routerTable = [
     '/School/',
@@ -33,19 +46,61 @@ function MyApp({ Component, pageProps }: AppProps) {
     '/Profile',
   ];
   const { i18n } = useTranslation();
-  console.log(i18n)
+  console.log(i18n);
   useEffect(() => {
     console.log(router.pathname);
-      if (routerTable.indexOf(router.pathname) > -1) {
-        dispatch(setAuthState(true));
-      };
+    if (routerTable.indexOf(router.pathname) > -1) {
+      dispatch(setAuthState(true));
+    }
   }, [router.pathname]);
+  const Puller = styled(Box)(({ theme }) => ({
+    width: 33,
+    height: 4,
+    backgroundColor: theme.palette.mode === 'light' ? grey[300] : grey[900],
+    borderRadius: 3,
+    position: 'absolute',
+    top: 8,
+    left: 'calc(50% - 15px)',
+  }));
+  const LoginModel = () => {
+    return (
+      <SwipeableDrawer
+        className="topIndex"
+        onClose={() => {
+          dispatch(setOpenLogin('close'));
+          dispatch(setAuthState(true));
+        }}
+        open={openLogin!=='close'}
+        anchor="bottom"
+      >
+        <div className="h-[96vh] z-30">
+          <Puller></Puller>
+          {openLogin === 'login' ? <SignIn></SignIn> : null}
+          {openLogin === 'register' ? <SignUp></SignUp> : null}
+          {/* <SignIn></SignIn> */}
+        </div>
+      </SwipeableDrawer>
+    );
+  };
   return (
-    <div className='overflow-hidden'>
-      {authState ? <LabelBottomNavigation  /> : null}
+    <div className="overflow-hidden">
+      <SwitchTransition mode="out-in">
+        <CSSTransition
+          in={openLogin !== 'close'}
+          classNames="LoginModel"
+          timeout={60}
+          key={openLogin}
+        >
+          <div className={classnames({ 'hidden': openLogin !== 'close' })}>
+            <LoginModel />
+          </div>
+        </CSSTransition>
+      </SwitchTransition>
+      {/* <LoginModel></LoginModel> */}
+      {authState ? <LabelBottomNavigation /> : null}
       <Component {...pageProps} />
     </div>
   );
 }
 
-export default wrapper.withRedux(appWithTranslation(MyApp,nexti18nConfig));
+export default wrapper.withRedux(appWithTranslation(MyApp, nexti18nConfig));

@@ -230,9 +230,9 @@ export default function Display(props) {
           <Image
             layout="responsive"
             objectFit="cover"
-            blurDataURL={`https://youni-admin.kuizuo.cn/img${data?.preview[0]}`}
+            blurDataURL={`https://youni-admin.kuizuo.cn${data?.preview[0]}`}
             placeholder="blur"
-            src={`https://youni-admin.kuizuo.cn/img${data?.preview[0]}`}
+            src={`https://youni-admin.kuizuo.cn${data?.preview[0]}`}
             width={imageSize.width}
             height={imageSize.height}
             onLoadingComplete={(target) => {

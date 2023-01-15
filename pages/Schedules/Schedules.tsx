@@ -29,6 +29,8 @@ import { Cell, Dialog } from 'react-vant';
 import { useRouter } from 'next/router';
 import BgSVG from './bg.svg';
 import ArrowRight from './arrow-right.svg';
+import { setOpenLogin } from '../../stores/authSlice';
+import { useDispatch } from 'react-redux';
 
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
@@ -65,7 +67,7 @@ const SetSchedule = (props) => {
               setMenu(0);
             }}
             className={classnames(
-              'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
+              'w-full  flex justify-center whitespace-nowrap items-center text-center text-[#A9B0C0]',
               {
                 'bg-slate-50 text-[#FFD036]': menu === 0,
               },
@@ -104,7 +106,7 @@ const SetSchedule = (props) => {
               setMenu(3);
             }}
             className={classnames(
-              'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
+              'w-full  flex justify-center whitespace-nowrap items-center text-center text-[#A9B0C0]',
               {
                 'bg-slate-50 text-[#FFD036]': menu === 3,
               },
@@ -143,7 +145,7 @@ const SetSchedule = (props) => {
         </div>
         <div className="w-full p-2 mt-2">
           <CCourseInput Icon={Icon1} title="打开时显示">
-            <div className={'w-1/2'}>
+            <div className={'w-[55%]'}>
               {' '}
               <Menu></Menu>
             </div>
@@ -352,6 +354,7 @@ const CourseDetailCard = (props) => {
 };
 
 export default function Schedules() {
+  const dispatch = useDispatch()
   const [visible, setVisible] = useState(false);
   const [scheduleVisible, setScheduleVisible] = useState(false);
   const [addCourse, setAddCourse] = useState(false);
@@ -388,6 +391,10 @@ export default function Schedules() {
     if (!data) return;
     if (!data?.data) {
       setDialogVisible(true);
+    }
+    if(data?.data){
+      setDialogVisible(false);
+
     }
     // if (!data?.data) {
     //   setDialogVisible(true);
@@ -483,10 +490,12 @@ export default function Schedules() {
         confirmButtonText="登录"
         cancelButtonText="注册"
         onConfirm={() => {
-          router.push('/Login/signin');
+          dispatch(setOpenLogin('login'))
+          // setDialogVisible(false)
         }}
         onCancel={() => {
-          router.push('/Login/signup');
+          dispatch(setOpenLogin('register'))
+          // setDialogVisible(false)
         }}
         className="shadow-xl  backdrop-opacity-50  backdrop-filter backdrop-blur-2xl"
       >

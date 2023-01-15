@@ -22,7 +22,9 @@ import InputLabel from '@mui/material/InputLabel';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAuthState, setAuthState } from '@/stores/authSlice';
 import prefixSorted from "../../libs/phone";
-
+import { setOpenLogin } from '../../stores/authSlice';
+// import { useDispatch } from 'react-redux';
+import SignIn from './signin';
 
 const SignUpButton = (props) => {
   const { title, icon: Icon, label } = props;
@@ -38,68 +40,7 @@ const SignUpButton = (props) => {
     </div>
   );
 };
-const SelectSignUpWay = (props) => {
-  return (
-    <div className="z-10 flex flex-col w-full mt-11">
-      {/* <Image src={Logo} alt=""></Image> */}
-      <div className="z-10 pl-8 pr-8 text-2xl">Sign up for YoUni</div>
-      <div className="z-10 pl-8 pr-8 mb-20 text-md">
-        Create a profile to unlock full functions.
-      </div>
-      <div>
-        <div className="absolute z-0 w-full top-32">
-          <Image
-            className="absolute z-0 w-10 h-10 opacity-80"
-            src={backgroundImage2}
-            quality={100}
-            blurDataURL={"/assets/1.png"}
-            alt="Picture of the author"
-          />
-        </div>
-      </div>
-      <div className="w-full h-44"></div>
-      <div
-        className="z-20 h-screen pt-4 pl-8 pr-8 space-y-4 bg-white-mask"
-        onClick={() => {
-          props.setProgress(1);
-        }}
-      >
-        <SignUpButton
-          icon={Youni}
-          label="Use phone or school email"
-        ></SignUpButton>
-        <SignUpButton icon={Google} label="Continue with Google"></SignUpButton>
-        <SignUpButton
-          icon={Wechat}
-          label="Continue with WeChat/Weixin"
-        ></SignUpButton>
-      </div>
-      <div className="absolute bottom-0 z-30 w-full">
-        <div className="w-full h-full p-10 pt-2 pb-2 text-xs text-center text-gray-300 bg-white">
-          By continuing, you agree to our{' '}
-          <Link href="">
-            <span className="text-[#3665FF]">Term of Service</span>
-          </Link>{' '}
-          and acknowledge that you have read our{' '}
-          <Link href="">
-            <span className="text-[#3665FF]">Privacy Policy</span>
-          </Link>{' '}
-          to learn how we collect, use and share your data.
-        </div>
-        <div className="h-24 pt-8 space-x-2 text-sm text-center bg-bg">
-          <span className="text-blueTitle">Already have an account? </span>
-          <Link href="./signin">
-          <span className="text-[#FFD036]"> Log in</span>
-          </Link>{' '}
 
-        </div>
-      </div>
-      {/* <Button variant="outlined" startIcon={<WeChat />}>
-    Delete
-  </Button> */}
-    </div>
-  );
-};
 const SelectLanguage = (props) => {
   return (
     <div className="z-10 flex flex-col w-full h-screen -appear in mt-11">
@@ -338,39 +279,106 @@ const ChooseYourRole = (props) => {
 };
 
 export default function SignUp(props) {
+  const dispatch = useDispatch();
+  const [isLogin, setIsLogin] = useState(false);
+  const SelectSignUpWay = (props) => {
+    return (
+      <div className="z-10 flex flex-col w-full mt-11">
+        {/* <Image src={Logo} alt=""></Image> */}
+        <div className="z-10 pl-8 pr-8 text-2xl">Sign up for YoUni</div>
+        <div className="z-10 pl-8 pr-8 mb-20 text-md">
+          Create a profile to unlock full functions.
+        </div>
+        <div>
+          <div className="absolute z-0 w-full top-32">
+            <Image
+              className="absolute z-0 w-10 h-10 opacity-80"
+              src={backgroundImage2}
+              quality={100}
+              blurDataURL={"/assets/1.png"}
+              alt="Picture of the author"
+            />
+          </div>
+        </div>
+        <div className="w-full h-44"></div>
+        <div
+          className="z-20 h-screen pt-4 pl-8 pr-8 space-y-4 bg-white-mask"
+          onClick={() => {
+            props.setProgress(1);
+          }}
+        >
+          <SignUpButton
+            icon={Youni}
+            label="Use phone or school email"
+          ></SignUpButton>
+          <SignUpButton icon={Google} label="Continue with Google"></SignUpButton>
+          <SignUpButton
+            icon={Wechat}
+            label="Continue with WeChat/Weixin"
+          ></SignUpButton>
+        </div>
+        <div className="absolute bottom-0 z-30 w-full">
+          <div className="w-full h-full p-10 pt-2 pb-2 text-xs text-center text-gray-300 bg-white">
+            By continuing, you agree to our{' '}
+            <Link href="">
+              <span className="text-[#3665FF]">Term of Service</span>
+            </Link>{' '}
+            and acknowledge that you have read our{' '}
+            <Link href="">
+              <span className="text-[#3665FF]">Privacy Policy</span>
+            </Link>{' '}
+            to learn how we collect, use and share your data.
+          </div>
+          <div className="h-24 pt-8 space-x-2 text-sm text-center bg-bg">
+            <span className="text-blueTitle">Already have an account? </span>
+            <span onClick={()=>{dispatch(setOpenLogin('login'))}}>
+            <span className="text-[#FFD036]"> Log in</span>
+            </span>{' '}
+  
+          </div>
+        </div>
+        {/* <Button variant="outlined" startIcon={<WeChat />}>
+      Delete
+    </Button> */}
+      </div>
+    );
+  };
   const [progress, setProgress] = useState(0);
+  // const dispatch = useDispatch();
   const [role, selectRole] = useState('Student');
   const ProgressList = [SelectSignUpWay, SelectLanguage, ChooseYourRole];
   const Node = ProgressList[progress];
-  const dispatch = useDispatch();
+
   React.useEffect(() => {
     dispatch(setAuthState(false));
   }, []);
+
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-fixed">
-      <div className="absolute inset-0 z-0 w-full -top-24">
-        <Image
-          className="z-0 h-full"
-          layout="fill"
-          src={backgroundImage1}
-          alt="Picture of the author"
-        />
-      </div>
-      <div>
-        <SwitchTransition mode="out-in">
-          <CSSTransition classNames="btn" timeout={260} key={progress}>
-            {
-              <Node
-                setProgress={(val) => {
-                  setProgress(val);
-                }}
-                role={role}
-                selectRole={selectRole}
-              ></Node>
-            }
-          </CSSTransition>
-        </SwitchTransition>
-      </div>
+    <div>{isLogin?<SignIn isLogin={()=>{setIsLogin(false)}}></SignIn>:<div className="relative w-full h-screen overflow-hidden bg-fixed">
+    <div className="absolute inset-0 z-0 w-full -top-24">
+      <Image
+        className="z-0 h-full"
+        layout="fill"
+        src={backgroundImage1}
+        alt="Picture of the author"
+      />
     </div>
+    <div>
+      <SwitchTransition mode="out-in">
+        <CSSTransition classNames="btn" timeout={260} key={progress}>
+          {
+            <Node
+              setProgress={(val) => {
+                setProgress(val);
+              }}
+              role={role}
+              selectRole={selectRole}
+            ></Node>
+          }
+        </CSSTransition>
+      </SwitchTransition>
+    </div>
+  </div>}</div>
+    
   );
 }

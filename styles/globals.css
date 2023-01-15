@@ -247,7 +247,30 @@
   grid-gap: 5px;
   grid-template-rows: masonry !important;
 } */
-
+.LoginModel-enter {
+  opacity: 0;
+  transform: translate(100%, -200%);
+  transition: all 1500ms;
+  /* transform: translateY(100vh); */
+  /* height: 0; */
+  /* transform: scale(0.9); */
+}
+.LoginModel-enter-active {
+  opacity: 1;
+  /* height: 100%; */
+  transform: translate(0, 0);
+  /* transform: translateX(0); */
+  transition: all 1500ms;
+}
+.LoginModel-exit {
+  opacity: 1;
+  /* transform: translate(0, 0); */
+}
+.LoginModel-exit-active {
+  /* transition: all 500ms; */
+  opacity: 0;
+  /* transition: all 500ms; */
+}
 .alert-enter {
   opacity: 0;
   transform: scale(0.9);
@@ -360,4 +383,8 @@
   -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
   -webkit-line-clamp: 2; /** 显示的行数 **/
   overflow: hidden;  /** 隐藏超出的内容 **/
+}
+
+.topIndex{
+  z-index: 9999 !important;
 }

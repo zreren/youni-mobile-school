@@ -72,7 +72,7 @@ export default function ProfileHeader(props) {
       <div className="flex h-20 p-4">
         <div className="avatar placeholder">
           <div className="w-20 h-20 bg-white rounded-full text-neutral-content">
-            {data?.student.avatar? <Image placeholder='blur' blurDataURL={`${Cons.BASEURL}${data?.student.avatar}`}
+            {data?.student.avatar? <Image placeholder='blur' objectFit='cover' blurDataURL={`${Cons.BASEURL}${data?.student.avatar}`}
              width={'80px'} height={'80px'}  src={`${Cons.BASEURL}${data?.student.avatar}`} />
               :<span className="text-3xl">K</span>
             }
@@ -84,8 +84,9 @@ export default function ProfileHeader(props) {
             <div className="text-xs text-[#798195] font-400">
               {data?.student.campus.name?data?.student.campus.name:""}
             </div>
-            <div className="text-[10px] text-[#798195] font-400">
-             {  + data?.student.userId?`YoID:${data?.student.userId}`:""}
+            <div className="text-[10px] text-[#798195] font-400 mb-1">
+             {/* {  + data?.student.userId?`YoID:${data?.student.userId}`:""} */}
+             {'约克大学 (加拿大)'}
             </div>
             <div className="flex flex-shrink space-x-2 text-xs rounded-full font-500">
               {data?.student?(

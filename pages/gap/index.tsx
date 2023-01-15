@@ -19,6 +19,8 @@ import { Flex, Loading } from 'react-vant';
 import useRequest from '@/libs/request';
 import useFetch from '../../hooks/useFetch';
 import { Cell, Dialog } from 'react-vant'
+import { useDispatch } from 'react-redux';
+import { setOpenLogin } from '../../stores/authSlice';
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -404,6 +406,8 @@ export default function index() {
   // if(!data){
   //   return <Loading color="#FED64B" />
   // }
+  const dispatch = useDispatch()
+  
  useEffect(()=>{
   // console.log(data,"useEffectdata");
   if(data?.code === 1102 || data?.code === 1101){
@@ -411,11 +415,11 @@ export default function index() {
       title: '登录',
       message: '登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！',
     }).then((res)=>{
-      router.push("/Login/signin");
-      console.log(res,"登录YoUni");
+      dispatch(setOpenLogin('login'))
+      // router.push("/Login/signin");
+      // console.log(res,"登录YoUni");
     }).catch((err)=>{
-      router.push("/Login/signup");
-      console.log(err,"登录YoUni");
+       dispatch(setOpenLogin('register'))
     })
   }
  },[data])
@@ -465,7 +469,7 @@ export default function index() {
             </div>
           </div>
           <div className="h-24 bg-white rounded-b-lg">
-            <div className="flex justify-between p-4">
+            <div className="flex justify-between p-4 space-x-2">
               <CScoreCard label="专业GPA" score={total?.data?.totalGpa}></CScoreCard>
               <CScoreCard label="最近2年GPA" score={total?.data?.gpaAvg}></CScoreCard>
               <CScoreCard label="已完成学分数" score={total?.data?.creditSum}></CScoreCard>

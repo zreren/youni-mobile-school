@@ -1,4 +1,4 @@
-import React,{useCallback} from 'react';
+import React, { useCallback } from 'react';
 import backgroundImage1 from './assets/background2.png';
 import backgroundImage2 from './assets/1.png';
 import Image from 'next/image';
@@ -10,7 +10,7 @@ import CommonLayout from '@/components/Layout/CommonLayout';
 import Youni from './assets/youni.svg';
 import Wechat from './assets/wechatlogin.svg';
 import Google from './assets/google.svg';
-import Stroke from "./assets/stroke.svg";
+import Stroke from './assets/stroke.svg';
 import classnames from 'classnames';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
 import MenuItem from '@mui/material/MenuItem';
@@ -25,30 +25,32 @@ import InputLabel from '@mui/material/InputLabel';
 import useFetch from '@/hooks/useFetch';
 import axios from 'axios';
 import useSWR from 'swr';
-import prefixSorted from "../../libs/phone";
+import prefixSorted from '../../libs/phone';
 import useLocalStorage from '@/hooks/useStore';
 import useRequest from '@/libs/request';
-
+import { setOpenLogin } from '../../stores/authSlice';
+import SignUp from './signup';
+// import { useDispatch } from 'react-redux';
 
 export default function SignIn(props) {
   const [myItem, setMyItem] = useLocalStorage('token', null);
   const route = useRouter();
-
-  const login = async (way:string,form:any) =>{
-      const { data } = await useRequest.post(
-        `/api/student/password_login` ,{
-          account:form.mail,
-          password:form.password
-        },
-      )
-    console.log(data,"data")
-    if(data.code === 200){
-      if(data.data.token){
-        setMyItem(data.data.token)
-        route.push("/Profile", undefined, { shallow: true })
+  // const dispatch = useDispatch();
+  const login = async (way: string, form: any) => {
+    const { data } = await useRequest.post(`/api/student/password_login`, {
+      account: form.mail,
+      password: form.password,
+    });
+    console.log(data, 'data');
+    if (data.code === 200) {
+      if (data.data.token) {
+        setMyItem(data.data.token);
+        route.push('/Profile', undefined, { shallow: true });
+        route.reload();
+        dispatch(setOpenLogin('close'));
       }
     }
-  }
+  };
 
   const SignUpButton = (props) => {
     const { title, icon: Icon, label } = props;
@@ -64,65 +66,7 @@ export default function SignIn(props) {
       </div>
     );
   };
-  const SelectSignUpWay = (props) => {
-    return (
-      <div className="z-10 flex flex-col w-full mt-11">
-        {/* <Image src={Logo} alt=""></Image> */}
-        <div className="z-10 pl-8 pr-8 text-2xl">Sign in for YoUni</div>
-        <div className="z-10 pl-8 pr-8 mb-20 text-md">
-          Create a profile to unlock full functions.
-        </div>
-        <div>
-          <div className="absolute z-0 w-full top-32">
-            <Image
-              className="absolute z-0 w-10 h-10 opacity-80"
-              src={backgroundImage2}
-              alt="Picture of the author"
-            />
-          </div>
-        </div>
-        <div className="w-full h-44"></div>
-        <div
-          className="z-20 h-screen pt-4 pl-8 pr-8 space-y-4 bg-white-mask"
-          onClick={() => {
-            props.setProgress(1);
-          }}
-        >
-          <SignUpButton
-            icon={Youni}
-            label="Use phone or school email"
-          ></SignUpButton>
-          <SignUpButton icon={Google} label="Continue with Google"></SignUpButton>
-          <SignUpButton
-            icon={Wechat}
-            label="Continue with WeChat/Weixin"
-          ></SignUpButton>
-        </div>
-        <div className="absolute bottom-0 z-30 w-full">
-          <div className="w-full h-full p-10 pt-2 pb-2 text-xs text-center text-gray-300 bg-white">
-            By continuing, you agree to our{' '}
-            <Link href="">
-              <span className="text-[#3665FF]">Term of Service</span>
-            </Link>{' '}
-            and acknowledge that you have read our{' '}
-            <Link href="">
-              <span className="text-[#3665FF]">Privacy Policy</span>
-            </Link>{' '}
-            to learn how we collect, use and share your data.
-          </div>
-          <div className="h-24 pt-8 space-x-2 text-sm text-center bg-bg">
-            <span className="text-blueTitle">Don’t have an account? </span>
-            <Link href="./signup">
-              <span className="text-[#FFD036]"> Sign up</span>
-            </Link>{' '}
-          </div>
-        </div>
-        {/* <Button variant="outlined" startIcon={<WeChat />}>
-      Delete
-    </Button> */}
-      </div>
-    );
-  };
+
   const SelectLanguage = (props) => {
     return (
       <div
@@ -162,17 +106,16 @@ export default function SignIn(props) {
     );
   };
   const ChooseYourRole = (props) => {
-
     const MailLabel = () => {
       const [form, setForm] = useState({
         mail: '',
         password: '',
-      })
+      });
       const handleChange = useCallback((val: any, name: string) => {
         setForm((preVal: any) => {
           return {
             ...preVal,
-            [name]: val
+            [name]: val,
           };
         });
       }, []);
@@ -184,7 +127,9 @@ export default function SignIn(props) {
               placeholder="School email address"
               className="w-full input"
               value={form.mail}
-              onChange={(e) => {handleChange(e.target.value,"mail")}}
+              onChange={(e) => {
+                handleChange(e.target.value, 'mail');
+              }}
             />
             {/* <div>{'>'}</div> */}
           </div>
@@ -192,16 +137,27 @@ export default function SignIn(props) {
             <input
               type="password"
               value={form.password}
-              onChange={(e) => {handleChange(e.target.value,"password")}}
+              onChange={(e) => {
+                handleChange(e.target.value, 'password');
+              }}
               placeholder="Password"
               className="w-full input"
             />
           </div>
-          <div className="mb-10 pl-4 text-xs text-gray-300">Forgot Password?</div>
+          <div className="mb-10 pl-4 text-xs text-gray-300">
+            Forgot Password?
+          </div>
           <button
-            onClick={()=>{login("mail",form)}}
-            className={classnames("w-full bg-[#F7F8F9] text-[#A9B0C0] border-0 rounded-full btn",
-            {"bg-yellow-400 hover:bg-yellow-400 text-[#8C6008]":form.mail.length > 1 && form.password.length > 1})}
+            onClick={() => {
+              login('mail', form);
+            }}
+            className={classnames(
+              'w-full bg-[#F7F8F9] text-[#A9B0C0] border-0 rounded-full btn',
+              {
+                'bg-yellow-400 hover:bg-yellow-400 text-[#8C6008]':
+                  form.mail.length > 1 && form.password.length > 1,
+              },
+            )}
           >
             Log in
           </button>
@@ -267,9 +223,11 @@ export default function SignIn(props) {
                 label="Age"
                 onChange={handleChange}
               >
-                  {prefixSorted.map((item)=>{
-                      return (<MenuItem value={item.prefix}>+{item.prefix}</MenuItem>)
-                  })}
+                {prefixSorted.map((item) => {
+                  return (
+                    <MenuItem value={item.prefix}>+{item.prefix}</MenuItem>
+                  );
+                })}
               </Select>
               <input
                 type="text"
@@ -359,10 +317,13 @@ export default function SignIn(props) {
               onClick={() => {
                 setLabel(0);
               }}
-              className={classnames('w-2/5 h-4/5  flex items-center justify-center text-center', {
-                'bg-white text-[#FFD036] rounded-lg': label === 0,
-                'text-[#798195]':label !== 0
-              })}
+              className={classnames(
+                'w-2/5 h-4/5  flex items-center justify-center text-center',
+                {
+                  'bg-white text-[#FFD036] rounded-lg': label === 0,
+                  'text-[#798195]': label !== 0,
+                },
+              )}
             >
               Phone
             </div>
@@ -370,10 +331,13 @@ export default function SignIn(props) {
               onClick={() => {
                 setLabel(1);
               }}
-              className={classnames('w-2/5 h-4/5 flex items-center justify-center text-center', {
-                'bg-white text-[#FFD036] rounded-lg': label === 1,
-                'text-[#798195]':label !== 1
-              })}
+              className={classnames(
+                'w-2/5 h-4/5 flex items-center justify-center text-center',
+                {
+                  'bg-white text-[#FFD036] rounded-lg': label === 1,
+                  'text-[#798195]': label !== 1,
+                },
+              )}
             >
               Email
             </div>
@@ -387,6 +351,71 @@ export default function SignIn(props) {
       </div>
     );
   };
+  const [isLogin, setLogin] = useState(false);
+  const SelectSignUpWay = (props) => {
+    return (
+      <div className="z-10 flex flex-col w-full mt-11">
+        {/* <Image src={Logo} alt=""></Image> */}
+        <div className="z-10 pl-8 pr-8 text-2xl">Sign in for YoUni</div>
+        <div className="z-10 pl-8 pr-8 mb-20 text-md">
+          Create a profile to unlock full functions.
+        </div>
+        <div>
+          <div className="absolute z-0 w-full top-32">
+            <Image
+              className="absolute z-0 w-10 h-10 opacity-80"
+              src={backgroundImage2}
+              alt="Picture of the author"
+            />
+          </div>
+        </div>
+        <div className="w-full h-44"></div>
+        <div
+          className="z-20 h-screen pt-4 pl-8 pr-8 space-y-4 bg-white-mask"
+          onClick={() => {
+            props.setProgress(1);
+          }}
+        >
+          <SignUpButton
+            icon={Youni}
+            label="Use phone or school email"
+          ></SignUpButton>
+          <SignUpButton
+            icon={Google}
+            label="Continue with Google"
+          ></SignUpButton>
+          <SignUpButton
+            icon={Wechat}
+            label="Continue with WeChat/Weixin"
+          ></SignUpButton>
+        </div>
+        <div className="absolute bottom-0 z-30 w-full">
+          <div className="w-full h-full p-10 pt-2 pb-2 text-xs text-center text-gray-300 bg-white">
+            By continuing, you agree to our{' '}
+            <Link href="">
+              <span className="text-[#3665FF]">Term of Service</span>
+            </Link>{' '}
+            and acknowledge that you have read our{' '}
+            <Link href="">
+              <span className="text-[#3665FF]">Privacy Policy</span>
+            </Link>{' '}
+            to learn how we collect, use and share your data.
+          </div>
+          <div className="h-24 pt-8 space-x-2 text-sm text-center bg-bg">
+            <span className="text-blueTitle">Don’t have an account? </span>
+            <span
+             onClick={()=>{dispatch(setOpenLogin('register'))}}
+            >
+              <span className="text-[#FFD036]"> Sign up</span>
+            </span>{' '}
+          </div>
+        </div>
+        {/* <Button variant="outlined" startIcon={<WeChat />}>
+      Delete
+    </Button> */}
+      </div>
+    );
+  };
   const [progress, setProgress] = useState(0);
   const [role, selectRole] = useState('Student');
   const ProgressList = [SelectSignUpWay, ChooseYourRole, SelectLanguage];
@@ -396,32 +425,37 @@ export default function SignIn(props) {
     dispatch(setAuthState(false));
   }, []);
 
-
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-fixed">
-      <div className="absolute inset-0 z-0 w-full -top-24">
-        <Image
-          className="z-0 h-full"
-          layout="fill"
-          src={backgroundImage1}
-          alt="Picture of the author"
-        />
-      </div>
-      <div>
-        <SwitchTransition mode="out-in">
-          <CSSTransition classNames="btn" timeout={260} key={progress}>
-            {
-              <Node
-                setProgress={(val) => {
-                  setProgress(val);
-                }}
-                role={role}
-                selectRole={selectRole}
-              ></Node>
-            }
-          </CSSTransition>
-        </SwitchTransition>
-      </div>
+    <div>
+      {isLogin ? (
+        <SignUp isLogin={()=>{setLogin(false)}}></SignUp>
+      ) : (
+        <div className="relative w-full h-screen overflow-hidden bg-fixed">
+          <div className="absolute inset-0 z-0 w-full -top-24">
+            <Image
+              className="z-0 h-full"
+              layout="fill"
+              src={backgroundImage1}
+              alt="Picture of the author"
+            />
+          </div>
+          <div>
+            <SwitchTransition mode="out-in">
+              <CSSTransition classNames="btn" timeout={260} key={progress}>
+                {
+                  <Node
+                    setProgress={(val) => {
+                      setProgress(val);
+                    }}
+                    role={role}
+                    selectRole={selectRole}
+                  ></Node>
+                }
+              </CSSTransition>
+            </SwitchTransition>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -25,7 +25,7 @@ export default function courseEvaluation() {
   const CourseId = router.query.id;
   // const router =useRouter();
   const { data: courseEvaluation, error } = useFetch(
-    `${Cons.API.COURSE.DETAIL}?id=1`,
+    `${Cons.API.COURSE.DETAIL}?id=${CourseId}`,
     'get',
   );
   const [orderState,setOrderState] = React.useState();
@@ -222,7 +222,7 @@ export default function courseEvaluation() {
 
   return (
     <div className="w-screen min-h-screen bg-bg">
-      <Header title={`${courseEvaluation?.data.ename} ${courseEvaluation?.data.code}`}></Header>
+      <Header title={`${courseEvaluation?.data?.ename} ${courseEvaluation?.data?.code}`}></Header>
       <HeaderMenu
         headerMenuList={headerMenuList}
         switchMenu={(val) => {
