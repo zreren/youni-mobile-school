@@ -322,7 +322,7 @@ function SchoolPage(props) {
         ></HeaderLayout>
         <MenuAtSchool></MenuAtSchool>
         <div className="w-full pl-5 pr-5">
-          <Skeleton loading={loading} row={1} rowHeight={60}>
+          <Skeleton loading={loading} row={1} rowWidth={"100%"} rowHeight={70}>
             {' '}
           </Skeleton>
           <Image

@@ -84,7 +84,6 @@ export default function index() {
             <Image
               height={500}
               width={'100%'}
-
               objectFit="cover"
               // sizes="100%"
               src="https://fakeimg.pl/250x280"

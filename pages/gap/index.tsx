@@ -31,14 +31,15 @@ const Accordion = styled((props: AccordionProps) => (
     display: 'none',
   },
 }));
-const CScoreCard = () => {
+const CScoreCard = (props) => {
+  const {score, label} = props
   return (
     <div className="w-24 h-14">
       <div className="flex items-center justify-center w-full h-8 text-lg font-medium text-center bg-gray-200 rounded-t-lg text-blueTitle">
-        3.2
+        {String(score)?.slice(0,3)||3.2}
       </div>
-      <div className="w-full h-1.2/3 bg-gray-100 text-center text-gray-400">
-        内容评分
+      <div className="w-full text-xs h-[24px] bg-gray-100 flex justify-center items-center text-gray-400">
+        {label||'内容评分'}
       </div>
     </div>
   );
@@ -47,6 +48,8 @@ const CScoreCard = () => {
 export default function index() {
   const router = useRouter();
   const { data, error } = useFetch('/grade/list', 'get');
+  const { data:total, error:totalError } = useFetch('/grade/stat', 'get');
+
   const deleteGapItem = async(id:number | string):Promise<any>=>{
     useRequest().post('/api/grade/delete', { id })
   }
@@ -416,12 +419,14 @@ export default function index() {
     })
   }
  },[data])
+
   return (
-    <div>
+    <div className='min-h-screen'>
       <div className="relative h-[280px] w-full gap-bg pt-4  bg-gradient-to-l to-[#EAE6FF] from-[#ECF5FF] ">
         <Header className="bg-transparent fixed top-0"></Header>
         <div className="absolute p-4 bg-white rounded-full left-8 rotate-220">
           {/* @ts-ignore */}
+          {/* 70为满 */}
           <div
             className="radial-progress text-primary"
             style={{ '--value': 70 }}
@@ -429,10 +434,14 @@ export default function index() {
             <div className="-rotate-220">
               <div className="flex flex-col items-center justify-center">
                 {' '}
-                <div className="font-medium text-[21px] text-blueTitle">
-                  7.9
+                <div className="font-medium text-[21px] text-blueTitle -mt-1">
+                  {total?.data.totalGpa || 0.0}
                 </div>
-                <div className="text-xs font-medium  text-[#A9B0C0]">总GPA</div>
+                <div className="text-xs font-medium  text-[#A9B0C0] -mt-2">总GPA</div>
+                <div className="font-light text-10 text-[#A9B0C0] flex justify-between space-x-3 absolute -bottom-4">
+                 <div> 0.0</div>
+                 <div> 9.0</div>
+                </div>
               </div>
             </div>
           </div>
@@ -457,9 +466,9 @@ export default function index() {
           </div>
           <div className="h-24 bg-white rounded-b-lg">
             <div className="flex justify-between p-4">
-              <CScoreCard></CScoreCard>
-              <CScoreCard></CScoreCard>
-              <CScoreCard></CScoreCard>
+              <CScoreCard label="专业GPA" score={total?.data?.totalGpa}></CScoreCard>
+              <CScoreCard label="最近2年GPA" score={total?.data?.gpaAvg}></CScoreCard>
+              <CScoreCard label="已完成学分数" score={total?.data?.creditSum}></CScoreCard>
             </div>
           </div>
         </div>

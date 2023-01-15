@@ -422,19 +422,19 @@ export default function Schedules() {
     const { title } = props;
     return (
       <div className="flex p-4 card-shadow items-center my-4 justify-between bg-white w-full h-20 rounded-lg">
-        <div>
-          <div className="flex items-center pb-2 space-x-2">
+        <div className='space-y-2'>
+          <div className="flex items-center  space-x-2 ">
             <div className="text-xs font-medium text-[#13C2C2] h-5 rounded whitespace-nowrap bg-[#E6FFFB] px-[6px] py-1">
               校历
             </div>
-            <div className="text-[#37455C] text-sm font-semibold">
+            <div className="text-[#37455C] text-sm font-semibold overflow-wrap">
               {title ||
                 'Last date to announce components of final grades (TERM F)'}
             </div>
           </div>
           <div className="text-[#A9B0C0] text-xs ">2022年9月7日</div>
         </div>
-        <ArrowRight></ArrowRight>
+       <div> <ArrowRight></ArrowRight></div>
       </div>
     );
   };

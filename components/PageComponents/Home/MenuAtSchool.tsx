@@ -9,7 +9,7 @@ export default function MenuAtSchool() {
         },
         {
             label:"课程评价",
-            path:"/course-evaluation",
+            path:"/[campus]/Course/course",
             icon: "/assets/index/1 (2).png"
         },
         {
