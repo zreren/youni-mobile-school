@@ -45,7 +45,7 @@ export default function SignIn(props) {
     if(data.code === 200){
       if(data.data.token){
         setMyItem(data.data.token)
-        route.push("/Profile")
+        route.push("/Profile", undefined, { shallow: true })
       }
     }
   }

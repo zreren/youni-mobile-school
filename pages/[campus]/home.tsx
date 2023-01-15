@@ -288,7 +288,9 @@ function SchoolPage(props) {
   //   setpostData(data?.data);
   // }, [category]);
   // console.log(postData, 'postData');
-
+  // useEffect(() => {
+  //   setreRender(reRender + 1);
+  // },[postData])
   React.useEffect(() => {
     dispatch(setAuthState(true));
   }, []);
@@ -348,16 +350,16 @@ function SchoolPage(props) {
           ></PostCategory>
         </div>
         <div className="mb-10">
-          {postData?.data? (
+          {/* {postData?.data? ( */}
              <Waterfall
-             key={reRender}
+             key={category}
              postData={postData?.data}
              show={() => {
                setPostDetailShow(true);
              }}
              onClick={() => {}}
            ></Waterfall>
-          ):null}
+          {/* ):null} */}
         </div>
       </PullRefresh>
     </div>

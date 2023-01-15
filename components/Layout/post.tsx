@@ -73,16 +73,20 @@ export default function index() {
           className="mySwiper"
         >
           <SwiperSlide>
-            <img
-              height={500}
+            <Image
+              layout='fill'
               src="https://fakeimg.pl/250x280"
               className="w-full"
               alt=""
             />
           </SwiperSlide>
           <SwiperSlide>
-            <img
+            <Image
               height={500}
+              width={'100%'}
+
+              objectFit="cover"
+              // sizes="100%"
               src="https://fakeimg.pl/250x280"
               className="w-full"
               alt=""
