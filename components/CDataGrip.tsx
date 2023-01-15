@@ -30,13 +30,13 @@ export default function CDataGrip(props) {
     <div className="card rounded-lg w-full bg-base-100 ">
       <div className="card-body p-4">
         <div className="flex space-x-2">
-          <Card label="课程综合评分" score={data.overallRatting} color="origin"></Card>
-          <Card label="平均成绩" score={`${data.courseAverage.score}% ${data.courseAverage.level}`} color="lightOrigin"></Card>
+          <Card label="课程综合评分" score={data?.overallRatting} color="origin"></Card>
+          <Card label="平均成绩" score={`${data?.courseAverage?.score}% ${data.courseAverage?.level}`} color="lightOrigin"></Card>
         </div>
         <div className="flex justify-between mt-2">
-          <CScoreCard type={2} title="内容评分" score={data.contentRating}></CScoreCard>
-          <CScoreCard type={2} title="作业评分" score={data.homeworkRating}></CScoreCard>
-          <CScoreCard type={2} title="考试评分" score={data.examRating}></CScoreCard>
+          <CScoreCard type={2} title="内容评分" score={data?.contentRating}></CScoreCard>
+          <CScoreCard type={2} title="作业评分" score={data?.homeworkRating}></CScoreCard>
+          <CScoreCard type={2} title="考试评分" score={data?.examRating}></CScoreCard>
         </div>
       </div>
     </div>
