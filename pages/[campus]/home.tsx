@@ -15,6 +15,7 @@ import Waterfall from '@/components/Layout/Waterfall';
 import PostCategory from '@/components/Menu/post-category';
 import { PullRefresh } from 'react-vant';
 import { Skeleton } from 'react-vant';
+import { Flex, Loading } from 'react-vant';
 
 import Post from './post/post';
 import useFetch from '../../hooks/useFetch';
@@ -284,7 +285,10 @@ function SchoolPage(props) {
   });
   const [category, setCategory] = useState('idle');
   // useEffect(() => {
-   const {data:postData} = useFetch(`/post/home_list?type=${category}`, 'get')
+  const { data: postData, error } = useFetch(
+    `/post/home_list?type=${category}`,
+    'get',
+  );
   //   setpostData(data?.data);
   // }, [category]);
   // console.log(postData, 'postData');
@@ -322,7 +326,7 @@ function SchoolPage(props) {
         ></HeaderLayout>
         <MenuAtSchool></MenuAtSchool>
         <div className="w-full pl-5 pr-5">
-          <Skeleton loading={loading} row={1} rowWidth={"100%"} rowHeight={70}>
+          <Skeleton loading={loading} row={1} rowWidth={'100%'} rowHeight={70}>
             {' '}
           </Skeleton>
           <Image
@@ -351,14 +355,28 @@ function SchoolPage(props) {
         </div>
         <div className="mb-10">
           {/* {postData?.data? ( */}
-             <Waterfall
-             key={category}
-             postData={postData?.data}
-             show={() => {
-               setPostDetailShow(true);
-             }}
-             onClick={() => {}}
-           ></Waterfall>
+          {postData?.data ? (
+            <Waterfall
+              key={category}
+              postData={postData?.data}
+              show={() => {
+                setPostDetailShow(true);
+              }}
+              onClick={() => {}}
+            ></Waterfall>
+          ) : null}
+          {!postData?.data && postData?.code === 1102 ? (
+            <div className="text-[#A9B0C0] flex justify-center items-center w-full">
+              暂无内容
+            </div>
+          ) : null}
+          {!postData?.data && postData?.code !== 1102 ? (
+            <div className="flex justify-center items-center w-full">
+              {' '}
+              <Loading type="spinner" color="#FED64B" />
+            </div>
+          ) : null}
+          {error ? 'error' : null}
           {/* ):null} */}
         </div>
       </PullRefresh>
