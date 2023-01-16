@@ -439,7 +439,7 @@ export default function index() {
               <div className="flex flex-col items-center justify-center">
                 {' '}
                 <div className="font-medium text-[21px] text-blueTitle -mt-1">
-                  {total?.data.totalGpa || 0.0}
+                  {total?.data?.totalGpa || 0.0}
                 </div>
                 <div className="text-xs font-medium  text-[#A9B0C0] -mt-2">总GPA</div>
                 <div className="font-light text-10 text-[#A9B0C0] flex justify-between space-x-3 absolute -bottom-4">

@@ -8,7 +8,14 @@ import Discussion from '../discussion.svg';
 import Union from "../Union.svg";
 import PostDiscussionInput from '@/components/Input/PostDiscussionInput';
 import Header from '@/components/Header';
+import useFetch from '../../../../../hooks/useFetch';
+import { useRouter } from 'next/router';
+import useLocalStorage from '../../../../../hooks/useStore';
 export default function userComment() {
+  const router = useRouter();
+  const [language, setLanguage] = useLocalStorage('language', 'en');
+  const {id} = router.query
+  const {data,error} = useFetch(`/evaluation/detail?id=${id}`,'get')
   const comments = [
     {
       id: 1,
@@ -115,32 +122,33 @@ export default function userComment() {
       </div>
     )
   }
-  const DiscussionComponent = ({ children }) => {
+  const DiscussionComponent = ({ children,data }) => {
     return (
       <div className='w-full mt-2 flex justify-start space-x-3'>
         <div>
           <div className='bg-gray-500 rounded-full w-9 h-9'></div>
         </div>
         <div>
-          <div className='font-medium'>测试用户1</div>
-          <div className="text-xs text-secondGray mt-1">2022届 · B.Com Accounting</div>
-          <div className='text-sm mt-1'>文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖 @测试用户2</div>
+          <div className='font-medium'>{data?.student.nickName}</div>
+          <div className="text-xs text-secondGray mt-1">{data?.student?.education.year} · {data?.student?.education.major}</div>
+          <div className='text-sm mt-1'>{data?.content}</div>
           <DiscussionComponentFooter></DiscussionComponentFooter>
           <div>{children}</div>
         </div>
       </div>
     )
   }
-  const Discussion = () => {
+  const Discussion = (props) => {
+    const {data} = props
     return (
       <div>
         {
-          comments.map((item) => {
+          data?.map((item) => {
             const [expand, setExpand] = useState(false);
             return (
               <div>
-                <DiscussionComponent>
-                  <div className=''>
+                <DiscussionComponent data={item}>
+                  <>
                     {expand ? item.children?.map((item) => {
                       return (
                         <div className='w-full mt-2 flex justify-start space-x-3'>
@@ -148,9 +156,9 @@ export default function userComment() {
                             <div className='bg-gray-500 rounded-full w-6 h-6'></div>
                           </div>
                           <div>
-                            <div className='font-medium'>测试用户1</div>
-                            <div className="text-xs text-secondGray mt-1">2022届 · B.Com Accounting</div>
-                            <div className='text-sm mt-1'>文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖 @测试用户2</div>
+                            <div className='font-medium'>{item.student.nickName}</div>
+                            <div className="text-xs text-secondGray mt-1">{item?.student?.education?.year || '未认证'} · {item.student?.education?.major || '未认证'}</div>
+                            <div className='text-sm mt-1'>{item.content}</div>
                             <DiscussionComponentFooter></DiscussionComponentFooter>
                           </div>
                         </div>
@@ -162,22 +170,24 @@ export default function userComment() {
                             <div className='bg-gray-500 rounded-full w-6 h-6'></div>
                           </div>
                           <div>
-                            <div className='font-medium'>测试用户1</div>
-                            <div className="text-xs text-secondGray mt-1">2022届 · B.Com Accounting</div>
-                            <div className='text-sm mt-1'>文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖文字跟帖 @测试用户2</div>
+                          <div className='font-medium'>{item.student.nickName}</div>
+                            <div className="text-xs text-secondGray mt-1">{item.student?.education?.year} · {item.student.education.major || '未认证'}</div>
+                            <div className='text-sm mt-1'>{item.content}</div>
                             <DiscussionComponentFooter></DiscussionComponentFooter>
                           </div>
                         </div>
                       )
                     })}
-                  </div>
+                  </>
                   <div className='flex space-x-3'>
                     <div>
                       <div className='w-6 h-6'></div>
                     </div>
-                    <div className='font-semibold text-primary text-xs' onClick={() => [setExpand(!expand)]}>
-                      {expand ? "收起" : "查看全部 3 条回复"}
-                    </div>
+                    {
+                      item.children.length >2 ? <div className='font-semibold text-primary text-xs' onClick={() => [setExpand(!expand)]}>
+                      {expand  ? "收起" : "查看全部 3 条回复"}
+                    </div>:null
+                    }
                   </div>
                 </DiscussionComponent>
               </div>
@@ -199,9 +209,9 @@ export default function userComment() {
         </div>
         <div>
           <div className="text-lg ml-4 font-medium max-w-8 text-blueTitle">
-            测试用户
+            {data?.data?.student?.nickName}
           </div>
-          <div className="text-gray-200 ml-4">2022届 · B.Com Accounting</div>
+          <div className="text-gray-200 ml-4">{data?.data?.student?.education?.year} · {data?.data?.student?.education?.major}</div>
         </div>
       </div>
       <div>
@@ -217,26 +227,26 @@ export default function userComment() {
             <div>
               <div className="flex space-x-2 mb-1 mt-1">
                 <div className="text-gray-300">课程名称:</div>
-                <div className="text-blueTitle">ADMS 1000</div>
+                <div className="text-blueTitle">{data?.data?.course[language]} 1000</div>
               </div>
               <div className="flex space-x-2 mb-1 mt-1">
                 <div className="text-gray-300">最终成绩:</div>
-                <div className="text-blueTitle">B+</div>
+                <div className="text-blueTitle">{data?.data?.finalGrade}</div>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div className="flex justify-between mt-4">
-        <CScoreCard type={2}></CScoreCard>
-        <CScoreCard type={2}></CScoreCard>
-        <CScoreCard type={2}></CScoreCard>
+        <CScoreCard title={"内容评分"} score={data?.data?.contentRating} type={2}></CScoreCard>
+        <CScoreCard title={"作业评分"}  score={data?.data?.homeworkRating} type={2}></CScoreCard>
+        <CScoreCard title={"考试评分"}  score={data?.data?.examRating} type={2}></CScoreCard>
       </div>
       <div>
         <div className="mt-2 mb-2">
-          这门课需要大量的练习和时间，但有可能做得好。
+          {data?.data?.content || "这门课需要大量的练习和时间，但有可能做得好。"}
         </div>
-        <div className="pb-2">
+        {/* <div className="pb-2">
           <div className="text-sm font-bold text-blueTile">课程内容</div>
           <div className="text-sm tracking-wide	 font-extralight  text-blueTile leading-normal">
             这是普通化学序列的第一部分，在第一单元中涵盖了CHM1025的大部分内容。
@@ -253,7 +263,7 @@ export default function userComment() {
           <div className="text-sm tracking-wide	 font-extralight	 text-blueTile leading-normal">
             你不需要Studyedge来做好这门课，但无论如何，你必须投入时间来学习材料并学好它。如果你有一段时间没有上过化学课（对我来说是高二），我建议你上CHM1025。我的日常工作是使用讲座幻灯片、教科书、讲座视频和/或其他在线资源来做笔记，并在亲自授课前学习材料（我是在翻转课堂部分）。我有一个单独的笔记本，在讲课时做题。对于家庭作业，我记下了我所纠结的问题，并重新做了作业，直到我全部做对。我还在每个单元的谷歌文档中记录了我可能会忘记的提示和信息。为了准备考试，我复习了我在考试中遇到的问题/章节。
           </div>
-        </div>
+        </div> */}
       </div>
       {/* <div className="flex justify-between mt-3">
         <div className="flex space-x-4 ">
@@ -274,7 +284,7 @@ export default function userComment() {
       <div className="h-1 m-0 divider opacity-30"></div>
       <div className='space-y-8 mt-4'>
         <PostDiscussionInput></PostDiscussionInput>
-        <Discussion></Discussion>
+        <Discussion data={data?.data?.comments}></Discussion>
       </div>
     </div>
   );

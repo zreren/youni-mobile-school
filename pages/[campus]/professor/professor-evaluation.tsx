@@ -25,9 +25,10 @@ export default function professorEvaluation() {
               data={item}
               key={item.id}
               onClick={() => {
+                const { campus } = router.query;
                 router.push({
                   pathname: `/[campus]/professor/detail/${item.id}`,
-                  query: { campusId: 1 },
+                  query: { campus: campus },
                 });
               }}
             ></ProfessorCard>

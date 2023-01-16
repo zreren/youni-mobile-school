@@ -346,7 +346,7 @@ function index(props) {
     }else{
       setMenu(0);
     }
-  }, [loggedOut]);
+  }, [loggedOut,user]);
   const container = React.useRef<any>(null);
   const EmptyData = () => {
     const columns = [

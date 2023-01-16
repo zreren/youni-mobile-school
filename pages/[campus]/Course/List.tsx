@@ -16,9 +16,10 @@ export default function course() {
   console.log(subjectId,"subjectId")
   const [hotCourseData,setHotCourseData] =  useState(null)
   const { data, error } = useFetch(`${Cons.API.SUBJECT.QUERY}?campusId=1`,"get");
-  useEffect(()=>{
-   useRequest().post(`/api/subject/course`,{id:subjectId})
-  },[router.query.subjectId])  
+  const { data:courseData,error:courseError } = useFetch(`/subject/course?id=${subjectId}`,"get");
+  // useEffect(()=>{
+  //  useRequest().post(`/api/subject/course`,{id:subjectId})
+  // },[router.query.subjectId])  
 
   console.log(data,"data")
   const randomColor = ['red', 'blue', 'yellow', 'green', 'pink', 'purple']
@@ -28,11 +29,11 @@ export default function course() {
       <Title title="按专业查询"></Title>
       <Search placeholder="搜索课程"></Search>
       <div className='space-y-2 mt-4'>
-        {hotCourseData?hotCourseData.data.map((item,index) => {
+        {courseData?.data?.map((item,index) => {
           return (
             <CourseScoreCard data={item}></CourseScoreCard>
           )
-        }):null}
+        })}
 
         {/* <CourseScoreCard data={{ score: 0.8 }}></CourseScoreCard>
         <CourseScoreCard data={{ score: 0.8 }}></CourseScoreCard>

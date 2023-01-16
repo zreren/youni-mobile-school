@@ -54,6 +54,7 @@ function useFetch(path, method, body?) {
       data: body,
       headers: {
         Authorization: token,
+        'Accept-Language': 'zh',
       },
     })
       .then((response) => {

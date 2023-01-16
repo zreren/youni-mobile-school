@@ -366,7 +366,7 @@ function SchoolPage(props) {
             ></Waterfall>
           ) : null}
           {!postData?.data && postData?.code === 1102 ? (
-            <div className="text-[#A9B0C0] flex justify-center items-center w-full">
+            <div className="text-[#A9B0C0] mt-10 flex justify-center items-center w-full">
               暂无内容
             </div>
           ) : null}

@@ -10,50 +10,66 @@ import { professorList } from '@/mock/data';
 import UserComment from './user-comment';
 import { useRouter } from 'next/router';
 import useFetch from '@/hooks/useFetch';
+import { Loading } from 'react-vant';
 export default function ProfessorDetail() {
-  const [currentSelectId, setCurrentSelectId] = useState(0);
-  const professorListCopy = professorList[0].course.slice();
+  const [currentSelectId, setCurrentSelectId] = useState<null|number>(0);
+  // const [CourseID, setCourseID] = useState<null|number>(null);
   const router = useRouter();
   const Id = router.query.id;
   const { data, error } = useFetch(`/professor/detail?id=${Id}`, 'get');
-  professorListCopy.unshift({
-    id: 0,
-    name: '查看全部',
-  });
+  const { data: professorDataList, error: professorError } = useFetch(
+    `/professor/course?id=${Id}`,
+    'get',
+  );
+  const {data:professorCommentList,error:professorCommentError} = useFetch(`/professor/evaluation?id=${Id}${currentSelectId !== 0?`&courseId=${currentSelectId}`:''}`,'get')
+  const professorListCopy = useMemo(() => {
+    if (!professorDataList?.data) return [{ id: 0, ename: '查看全部' }];
+    const newval = professorDataList?.data.slice()
+    return [{ id: 0, ename: '查看全部' }, ...newval];
+  }, [professorDataList]);
+  useEffect(()=>{
+    console.log(professorListCopy,"professorListCopy")
+  },[professorListCopy])
+  // professorListCopy?.unshift({
+  //   id: 0,
+  //   ename: '查看全部',
+  // });
   interface ScoreDistribution {
     [key: string]: number;
   }
   const total = useMemo(() => {
-    const totalData: ScoreDistribution = data?.data?.scoreDistribution as ScoreDistribution
-    if(!totalData) return 0;
-    return Object.values(totalData).reduce((acc: number, value: number) => acc + value, 0);
+    const totalData: ScoreDistribution = data?.data
+      ?.scoreDistribution as ScoreDistribution;
+    if (!totalData) return 0;
+    return Object.values(totalData).reduce(
+      (acc: number, value: number) => acc + value,
+      0,
+    );
   }, [data?.data?.scoreDistribution]);
   const scoreDistribution = [
     {
       item: '非常糟糕',
-      value: data?.data.scoreDistribution[1] ,
+      value: data?.data.scoreDistribution[1],
       percent: data?.data.scoreDistribution[1] / total,
     },
     {
       item: '勉勉强强',
-      value: data?.data.scoreDistribution[2] ,
+      value: data?.data.scoreDistribution[2],
       percent: data?.data.scoreDistribution[2] / total,
     },
     {
       item: '感觉还行',
-      value: data?.data.scoreDistribution[3] ,
+      value: data?.data.scoreDistribution[3],
       percent: data?.data.scoreDistribution[3] / total,
-
     },
     {
       item: '感觉不错',
-      value: data?.data.scoreDistribution[4] ,
+      value: data?.data.scoreDistribution[4],
       percent: data?.data.scoreDistribution[4] / total,
-
     },
     {
       item: '强烈推荐',
-      value: data?.data.scoreDistribution[5] ,
+      value: data?.data.scoreDistribution[5],
       percent: data?.data.scoreDistribution[5] / total,
     },
   ];
@@ -84,15 +100,19 @@ export default function ProfessorDetail() {
                   'text-blueTitle': currentSelectId !== item.id,
                 }}
               >
-                {item.name}
+                {item.ename}
               </CButton2>
             </div>
           );
         })}
       </div>
       <div className="mb-4"></div>
-      <UserComment></UserComment>
-      <UserComment></UserComment>
+      {professorCommentList?.data?professorCommentList?.data.map((item,index) => {
+        return (
+          <UserComment data={item} key={index}></UserComment>
+        )
+      }): <Loading type="spinner" color="#FED64B" />}
+      {/* <UserComment></UserComment> */}
     </CommonLayout>
   );
 }

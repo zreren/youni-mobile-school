@@ -49,9 +49,9 @@ const Cons = {
 const instance = axios.create({
   baseURL: Cons.BASEURL,
   timeout: 1000,
-  // headers:{
-  //   "authorization":token
-  // }
+  headers:{
+    "authorization":typeof window !== 'undefined'?localStorage.getItem('token').replace("\"","").replace("\"",""):null
+  }
 });
 export default instance;
 // global.request = instance;
