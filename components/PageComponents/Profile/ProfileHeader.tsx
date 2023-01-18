@@ -4,6 +4,9 @@ import Subtract from './Subtract.svg';
 import Button from './Button.svg';
 import Image from 'next/image';
 import Link from 'next/link';
+import LikeActive from './LikeActive.svg';
+import Like from './Like.svg';
+import Dislike from './dislike.svg';
 const UserData = (props) => {
   const {data} = props;
   // if(!data?.extraInfo) return 

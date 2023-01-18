@@ -109,7 +109,7 @@ export default function ProfessorDetail() {
       <div className="mb-4"></div>
       {professorCommentList?.data?professorCommentList?.data.map((item,index) => {
         return (
-          <UserComment data={item} key={index}></UserComment>
+          <UserComment  data={item} key={index}></UserComment>
         )
       }): <Loading type="spinner" color="#FED64B" />}
       {/* <UserComment></UserComment> */}

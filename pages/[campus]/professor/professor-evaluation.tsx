@@ -8,10 +8,15 @@ import Search from '@/components/Input/Search';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import useFetch from '../../../hooks/useFetch';
+import { Flex, Loading } from 'react-vant';
+
 // import CourseScoreCard from '../components/CourseScoreCard'
 export default function professorEvaluation() {
   const router = useRouter();
-  const { data:professorList, error } = useFetch(`/professor/list?campusId=${1}`,'get');
+  const { data: professorList, error } = useFetch(
+    `/professor/list?campusId=${1}`,
+    'get',
+  );
   // const { data, error } = useSWR(API_KEY.USER.get.list,fetcher);
   return (
     <CommonLayout isBottom={true}>
@@ -19,21 +24,27 @@ export default function professorEvaluation() {
       <Search placeholder="搜索教授"></Search>
       <Title title="教授列表"></Title>
       <div className="space-y-4">
-        {professorList?.data?.map((item) => {
-          return (
-            <ProfessorCard
-              data={item}
-              key={item.id}
-              onClick={() => {
-                const { campus } = router.query;
-                router.push({
-                  pathname: `/[campus]/professor/detail/${item.id}`,
-                  query: { campus: campus },
-                });
-              }}
-            ></ProfessorCard>
-          );
-        })}
+        <>
+          {professorList ? (
+            professorList?.data?.map((item) => {
+              return (
+                <ProfessorCard
+                  data={item}
+                  key={item.id}
+                  onClick={() => {
+                    const { campus } = router.query;
+                    router.push({
+                      pathname: `/[campus]/professor/detail/${item.id}`,
+                      query: { campus: campus },
+                    });
+                  }}
+                ></ProfessorCard>
+              );
+            })
+          ) : (
+            <div className='w-full flex justify-center items-center'><Loading type="spinner" color="#FED64B" /></div>
+          )}
+        </>
       </div>
     </CommonLayout>
   );

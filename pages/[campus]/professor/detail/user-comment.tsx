@@ -14,6 +14,9 @@ export default function userComment(props) {
     const { data } = await useRequest.post(`/api/evaluation/like`, {
       id: id,
     });
+    if(data){
+      props.update()
+    }
   };
   return (
     <div className="bg-white p-4 youni-boxShadow rounded-lg  mb-4">

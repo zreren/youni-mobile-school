@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Header from '@/components/Header';
 import ProfessorCard from '@/components/ProfessorListItem';
 import CommonLayout from '@/components/Layout/CommonLayout';
@@ -17,22 +17,25 @@ import UserComment from '@/components/user-comment';
 import useFetch from '@/hooks/useFetch';
 import prefixSorted from '../../../libs/phone';
 import MenuItem from '@mui/material/MenuItem';
+import { Loading } from 'react-vant';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 // import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function courseEvaluation() {
   const router = useRouter();
   const CourseId = router.query.id;
+  const CampusId = router.query.campus;
   // const router =useRouter();
   const { data: courseEvaluation, error } = useFetch(
     `${Cons.API.COURSE.DETAIL}?id=${CourseId}`,
     'get',
   );
-  const [orderState,setOrderState] = React.useState();
-  const handleChangeOrder =  (event: SelectChangeEvent) => {
-    console.log(event.target.value,"event.target.value")
+  const [orderState, setOrderState] = React.useState();
+  const handleChangeOrder = (event: SelectChangeEvent) => {
+    console.log(event.target.value, 'event.target.value');
     setOrderState(event.target.value as string);
   };
+
   console.log(courseEvaluation, 'courseEvaluation');
   // if(!courseEvaluation) return
   const Pending = () => {
@@ -73,13 +76,13 @@ export default function courseEvaluation() {
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={orderState}
-            defaultValue={"default"}
+            defaultValue={'default'}
             IconComponent={CustomIconWrapper}
             sx={{
               boxShadow: 'none',
               '.MuiOutlinedInput-notchedOutline': { border: 0 },
               '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                transform: "none",
+                transform: 'none',
                 border: 0,
                 'border-width': 0,
                 'border-color': 'transparent',
@@ -90,17 +93,21 @@ export default function courseEvaluation() {
           >
             <MenuItem value="default">默认排序</MenuItem>
             <MenuItem value="positive">评分正序</MenuItem>
-            <MenuItem value="nagative">评分倒序</MenuItem>
+            <MenuItem value="negative">评分倒序</MenuItem>
           </Select>
         </Title>
         <div className="space-y-4">
-          {props?.map((item,index) => {
+          {props?.map((item, index) => {
             return (
               <ProfessorCard
                 data={item}
                 key={index}
                 onClick={() => {
-                  router.push(`/professor/detail/${item.id}`);
+                  const campusId = router.query.campus;
+                  router.push({
+                    pathname:`/[campus]/professor/detail/${item.id}`,
+                    query: { campus: CampusId },
+                  });
                 }}
               ></ProfessorCard>
             );
@@ -127,8 +134,31 @@ export default function courseEvaluation() {
       score: 1.7,
     },
   ];
+
+
   const CourseEva = (props) => {
-    const {data:commentData} = useFetch(`${Cons.API.EVALUATION.LIST}?courseId=${CourseId}&campusId=1`,"get")
+    const [evaluationOrder, setEvaluationOrder] = React.useState();
+    const handleChangeEvaluationOrder = (event: SelectChangeEvent) => {
+      console.log(event.target.value, 'event.target.value');
+      setEvaluationOrder(event.target.value as string);
+    };
+    const { data: commentData } = useFetch(
+      `${Cons.API.EVALUATION.LIST}?courseId=${CourseId}&campusId=${1}`,
+      'get',
+    );
+    const { data: evaluationData } = useFetch(
+      `/evaluation/list?courseId=${CourseId}&campusId=${1}`,
+      'get',
+    );
+    const sortFunction = (a, b) => {
+      console.log(a,b,"sortFunction")
+      if (evaluationOrder === 'positive')
+        return b.professorRating - a.professorRating;
+      if (evaluationOrder === 'negative')
+        return a.professorRating - b.professorRating;
+      if(evaluationOrder === 'default') return 0
+      // return 0;
+    };
     if (!props) {
       props = {
         rating: {
@@ -139,6 +169,17 @@ export default function courseEvaluation() {
         },
       };
     }
+    const evaluationListMemo = useMemo(() => {
+      if(!evaluationData) return
+      const data = evaluationData.data.slice()
+      return data.sort(sortFunction);
+    }, [evaluationOrder,evaluationData?.data]);
+    useEffect(() => {
+      console.log(evaluationListMemo, 'evaluationListMemo');
+    }, [evaluationListMemo]);
+    useEffect(() => {
+      console.log(evaluationOrder, 'evaluationOrder')
+    },[evaluationOrder])
     let { rating } = props;
     return (
       <div className="p-4">
@@ -148,43 +189,51 @@ export default function courseEvaluation() {
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={orderState}
-            defaultValue={"default"}
+            value={evaluationOrder}
+            // defaultValue={'default'}
             IconComponent={CustomIconWrapper}
             sx={{
               boxShadow: 'none',
               '.MuiOutlinedInput-notchedOutline': { border: 0 },
               '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                transform: "none",
+                transform: 'none',
                 border: 0,
                 'border-width': 0,
                 'border-color': 'transparent',
               },
             }}
-            onChange={handleChangeOrder}
+            onChange={handleChangeEvaluationOrder}
             disableUnderline
           >
             <MenuItem value="default">默认排序</MenuItem>
             <MenuItem value="positive">评分正序</MenuItem>
-            <MenuItem value="nagative">评分倒序</MenuItem>
+            <MenuItem value="negative">评分倒序</MenuItem>
           </Select>
         </Title>
-        <UserComment></UserComment>
-        <UserComment></UserComment>
+        {evaluationListMemo?.map((item, index) => {
+          console.log(item,evaluationOrder, 'item');
+          return <UserComment data={item} key={item.id+evaluationOrder}></UserComment>;
+        })}
+        {/* <UserComment></UserComment> */}
       </div>
     );
   };
+  const {data:groupData,error:groupError} = useFetch(`/post/home_list?type=group`,'get')
+
   const GroupChat = () => {
     return (
-      <div>
-        <Waterfall></Waterfall>
+      <div className='mt-2'>
+        <Waterfall postData={groupData?.data}></Waterfall>
       </div>
     );
   };
-  const {data:evaluationData} = useFetch(`${Cons.API.PROFESSOR.QUERY}?id=${CourseId}`,'get')
-  const MyIntroduce = React.useMemo(()=>{
-    return courseEvaluation?.data
-  },[courseEvaluation])
+  const { data: evaluationData } = useFetch(
+    `${Cons.API.PROFESSOR.QUERY}?id=${CourseId}`,
+    'get',
+  );
+  const MyIntroduce = React.useMemo(() => {
+    return courseEvaluation?.data;
+  }, [courseEvaluation]);
   const menuList = [
     Introduce(MyIntroduce),
     Evaluation(evaluationData?.data),
@@ -192,11 +241,11 @@ export default function courseEvaluation() {
     GroupChat,
     Pending,
   ];
-  useEffect(()=>{
-    if(courseEvaluation?.data){
-      setMenu(menuList[0])
+  useEffect(() => {
+    if (courseEvaluation?.data) {
+      setMenu(menuList[0]);
     }
-  },[courseEvaluation])
+  }, [courseEvaluation]);
   const [menu, setMenu] = React.useState(menuList[-1]);
   // if(courseEvaluation?.data){
   //   setMenu(menuList[0])
@@ -222,7 +271,9 @@ export default function courseEvaluation() {
 
   return (
     <div className="w-screen min-h-screen bg-bg">
-      <Header title={`${courseEvaluation?.data?.ename} ${courseEvaluation?.data?.code}`}></Header>
+      <Header
+        title={`${courseEvaluation?.data?.ename} ${courseEvaluation?.data?.code}`}
+      ></Header>
       <HeaderMenu
         headerMenuList={headerMenuList}
         switchMenu={(val) => {

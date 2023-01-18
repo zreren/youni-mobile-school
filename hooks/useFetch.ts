@@ -47,7 +47,7 @@ function useFetch(path, method, body?) {
     code: number;
     message: string;
   }
-  const { data, error } = useSWR(`${API.BASE_URL}${path}`, (url) => {
+  const { data, error,mutate  } = useSWR(`${API.BASE_URL}${path}`, (url) => {
     return axios({
       method,
       url,
