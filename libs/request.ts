@@ -50,9 +50,21 @@ const instance = axios.create({
   baseURL: Cons.BASEURL,
   timeout: 1000,
   headers:{
-    "authorization":typeof window !== 'undefined'?localStorage.getItem('token').replace("\"","").replace("\"",""):null
+    "authorization":typeof window !== 'undefined'?localStorage.getItem('token')?.replace("\"","").replace("\"",""):null
   }
 });
+axios.interceptors.response.use(
+  response => {
+    const newToken = response.headers['new-token'];
+    if (newToken) {
+      localStorage.setItem('token',newToken);
+    }
+    return response;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
 export default instance;
 // global.request = instance;
 // export default function useRequest() {
