@@ -50,7 +50,7 @@ const instance = axios.create({
   baseURL: Cons.BASEURL,
   timeout: 1000,
   headers:{
-    "authorization":typeof window !== 'undefined'?localStorage.getItem('token')?.replace("\"","").replace("\"",""):null
+    "authorization":typeof window !== 'undefined'?localStorage.getItem('token')?.replace("\"","")?.replace("\"",""):null
   }
 });
 axios.interceptors.response.use(

@@ -3,7 +3,7 @@ const globalAny: any = global;
 
 globalAny.Cons = {
   BASEURL: 'https://youni-admin.kuizuo.cn',
-  LANGUAGE: typeof window !== 'undefined'?localStorage.getItem('language').replace("\"","").replace("\"",""):null,
+  LANGUAGE: typeof window !== 'undefined'?localStorage.getItem('language')?.replace("\"","")?.replace("\"",""):null,
   API: {
     STUDENT: {
       PATH: '/student',
