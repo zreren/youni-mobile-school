@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import HeaderMenu from '@/components/Menu/Header-menu';
 import Header from '@/components/Header';
 import CommonLayout from '@/components/Layout/CommonLayout';
@@ -16,7 +16,10 @@ import { DatetimePicker, Field } from 'react-vant';
 import { Form, Selector } from 'react-vant';
 // import { Button } from 'ppfish-mobile/es/components/index.js';
 import Autocomplete from '@mui/material/Autocomplete';
-import axios from 'axios';
+import instance from '@/libs/request';
+import classnames from 'classnames';
+import useFetch from '../../hooks/useFetch';
+// import axios from 'axios';
 
 // import { View, Text, Picker } from '@tarojs/components';
 // import { AtList, AtListItem } from 'taro-ui'
@@ -50,187 +53,280 @@ const top100Films = [
   { title: 'AMDS', year: 1994 },
   { title: 'AMDS', year: 1994 },
   { title: '后台抓取校区数据', year: 1994 },
-]
-const CCourseInput = (props) => {
-  const { title, isNess } = props;
-  return (
-    <div className="w-full bg-white rounded-sm text-right ">
-      <label className="flex justify-between w-full h-12 input-group ">
-        <span className="text-sm font-medium bg-white text-blueTitle">
-          {isNess === true ? <NessIcon className="mr-1"></NessIcon> : null}
-          {title}
-        </span>
-        {/* <input */}
-        {/*   type="text" */}
-        {/*   placeholder="info@site.com" */}
-        {/*   className="text-sm font-medium text-right text-gray-500 placeholder-gray-300 border-none input hover:outline-none" */}
-        {/* /> */}
-        <Autocomplete
-          id="free-solo-demo"
-          freeSolo
-          onChange={(event: any, newValue: string | null) => {
-            props.change(newValue);
-          }}
-          sx={{
-            display: 'inline-block',
-            width: 200,
-            border:"none",
-            borderRadius:"none",
-            padding:0,
-            outline: 'none',
-            boxShadow: 'none',
-          }}
-          options={top100Films.map((option) => option.title)}
-          renderInput={(params) => <TextField
-            sx={{ '& label.Mui-focused': {
-                color: 'transparent',
-                border: 0,
-                'border-width': 0,
-                'border-color': 'transparent',
-                outline: 'none',
-              },
-              textAlign:"right",
-              outline: 'none',
-              input: {textAlign: "right"},
-              "& fieldset": { border: 'none' },
-              "& legend": {
-                display: "none"
-              }
-            }}
-            {...params}  InputProps={{
-            ...params.InputProps,
-            disableUnderline:true,
-            endAdornment: null
-          }}   />}
-        />
-      </label>
-    </div>
-  );
-};
-const AddDaySchedule = (props) => {
-  const { register, handleSubmit } = useForm({
-    shouldUseNativeValidation: true,
-  });
-  const [value, setValue] = useState(new Date());
-  const [time, setTime] = useState('12:00');
-  return (
-    <div className="w-full space-y-4 youni-form">
-      <CCourseInput title="课程名称" isNess ></CCourseInput>
-      <div className="w-full h-12 p-4 bg-white rounded-lg">
-        <div className="flex items-center justify-between h-full space-x-4">
-          <div className="flex items-center">
-            <NessIcon className="mr-1"></NessIcon>
-            <div>日期</div>
-          </div>
-          <div className='youni-form'>
-            <DatetimePicker
-              popup={{
-                round: true,
-              }}
-              type="date"
-              title=""
-              minDate={new Date(2021, 0, 1)}
-              maxDate={new Date(2025, 10, 1)}
-              value={value}
-              onConfirm={setValue}
-            >
-              {(val, _, actions) => {
-                return (
-                  <Field
-                    readOnly
-                    clickable
-                    label=""
-                    value={val.toLocaleDateString()}
-                    placeholder="请选择日期"
-                    onClick={() => actions.open()}
-                  />
-                );
-              }}
-            </DatetimePicker>
-            {/* <DatePicker
-              mode="date"
-              title="选择日期"
-              extra="请选择日期"
-              value={value}
-              onChange={(date) => setValue(date)}
-            ></DatePicker> */}
-          </div>
-        </div>
-      </div>
-      <div className="w-full h-12 p-4 bg-white rounded-lg">
-        <div className="flex items-center justify-between h-full space-x-4">
-          <div className="flex items-center">
-            <div>时间</div>
-          </div>
-          <div>
-            <DatetimePicker
-              popup={{
-                round: true,
-              }}
-              title=""
-              defaultValue="12:00"
-              type="time"
-              minHour="10"
-              maxHour="20"
-              value={time}
-              onConfirm={setTime}
-            >
-              {(val, _, actions) => {
-                return (
-                  <Field
-                    readOnly
-                    clickable
-                    label=""
-                    value={val}
-                    placeholder="请选择日期"
-                    onClick={() => actions.open()}
-                  />
-                );
-              }}
-            </DatetimePicker>
-          </div>
-        </div>
-      </div>
-      <div className="w-full h-12 p-4 bg-white rounded-lg">
-        <div className="flex items-center justify-between h-full space-x-4">
-          <div>颜色</div>
-          <CCourseColor></CCourseColor>
-        </div>
-      </div>
-      <div className='flex justify-center mx-10 space-x-4'>
-        <div className='flex items-center justify-center w-full text-[#FFD036] font-semibold   bg-[#FFFCF3] h-10 rounded-lg'>关闭</div>
-        <div className='flex items-center text-[#8C6008] font-semibold justify-center w-full bg-[#FFD036] h-10 rounded-lg'>添加日程</div>
-      </div>
-    </div>
-  );
-};
+];
 
 export default function AddSchedule() {
   const router = useRouter();
-  const [value, setValue] = React.useState<Dayjs | null>(null);
+  const [CourseId,setCourseId] = useState()
+  const fetchData = (e)=>{
+    setCourseId(e)
+  }
+  const submitCourse = async (values: any) => {
+    await instance.post('/api/curriculum/create', values);
+  };
+  const CCourseInput = (props) => {
+    const { title, isNess, children, data,renderData } = props;
+    const selectItem = (e) => {
+      let allValuesGreaterThanZero = true;
+      if(!Object.values(data).some((value:any) => {
+        if (value.ename === e) {
+          props.change({
+            id: value.id,
+            label: value.ename,
+          });
+          return true
+          allValuesGreaterThanZero = false;
+        }
+        return false
+      })){
+        props.change({
+          courseId: null,
+          courseName: e,
+        });
+      };
 
-  const AddCourse = () => {
+      // if (!allValuesGreaterThanZero) {
+      //   // execute code
+      //   props.change({
+      //     courseId: null,
+      //     courseName: e,
+      //   });
+      // }
+      // if(!Object.values(data).every((item:any) => { item})
+      // Object.values(data).every((item:any) => {
+      //   if(item.ename === e){
+      //     props.change({
+      //       courseId:item.id,
+      //       courseName:item.ename
+      //     })
+      //   }
+      // })
+      // props.change({
+      //   courseId:null,
+      //   courseName:e
+      // })
+    };
+    return (
+      <div className="w-full bg-white rounded-sm text-right ">
+        <label className="flex justify-between w-full h-12 input-group ">
+          <span className="text-sm font-medium bg-white text-blueTitle">
+            {isNess === true ? <NessIcon className="mr-1"></NessIcon> : null}
+            {title}
+          </span>
+          {/* <input */}
+          {/*   type="text" */}
+          {/*   placeholder="info@site.com" */}
+          {/*   className="text-sm font-medium text-right text-gray-500 placeholder-gray-300 border-none input hover:outline-none" */}
+          {/* /> */}
+          {children ? (
+            children
+          ) : (
+            <Autocomplete
+              id="free-solo-demo"
+              freeSolo
+              onChange={(event: any, newValue: string | null) => {
+                console.log(event, 'event');
+                console.log(newValue, 'event');
+                selectItem(newValue);
+              }}
+              sx={{
+                display: 'inline-block',
+                width: 200,
+                border: 'none',
+                borderRadius: 'none',
+                padding: 0,
+                outline: 'none',
+                boxShadow: 'none',
+                textAlign:'right'
+              }}
+              options={renderData?renderData?.map((option) => option):[]}
+              renderInput={(params) => (
+                <TextField
+                  sx={{
+                    '& label.Mui-focused': {
+                      color: 'transparent',
+                      border: 0,
+                      'border-width': 0,
+                      'border-color': 'transparent',
+                      outline: 'none',
+                    },
+                    textAlign: 'right',
+                    outline: 'none',
+                    input: { textAlign: 'right' },
+                    '& fieldset': { border: 'none' },
+                    '& legend': {
+                      display: 'none',
+                    },
+                  }}
+                  {...params}
+                  InputProps={{
+                    ...params.InputProps,
+                    disableUnderline: true,
+                    endAdornment: null,
+                  }}
+                />
+              )}
+            />
+          )}
+        </label>
+      </div>
+    );
+  };
+  const AddDaySchedule = (props) => {
+    const { register, handleSubmit } = useForm({
+      shouldUseNativeValidation: true,
+    });
+    const [value, setValue] = useState(new Date());
     const [time, setTime] = useState('12:00');
+    return (
+      <div className="w-full space-y-4 youni-form">
+        <CCourseInput title="课程名称" isNess></CCourseInput>
+        <div className="w-full h-12 p-4 bg-white rounded-lg">
+          <div className="flex items-center justify-between h-full space-x-4">
+            <div className="flex items-center">
+              <NessIcon className="mr-1"></NessIcon>
+              <div>日期</div>
+            </div>
+            <div className="youni-form">
+              <DatetimePicker
+                popup={{
+                  round: true,
+                }}
+                type="date"
+                title=""
+                minDate={new Date(2021, 0, 1)}
+                maxDate={new Date(2025, 10, 1)}
+                value={value}
+                onConfirm={setValue}
+              >
+                {(val, _, actions) => {
+                  return (
+                    <Field
+                      readOnly
+                      clickable
+                      label=""
+                      value={val.toLocaleDateString()}
+                      placeholder="请选择日期"
+                      onClick={() => actions.open()}
+                    />
+                  );
+                }}
+              </DatetimePicker>
+              {/* <DatePicker
+                mode="date"
+                title="选择日期"
+                extra="请选择日期"
+                value={value}
+                onChange={(date) => setValue(date)}
+              ></DatePicker> */}
+            </div>
+          </div>
+        </div>
+        <div className="w-full h-12 p-4 bg-white rounded-lg">
+          <div className="flex items-center justify-between h-full space-x-4">
+            <div className="flex items-center">
+              <div>时间</div>
+            </div>
+            <div>
+              <DatetimePicker
+                popup={{
+                  round: true,
+                }}
+                title=""
+                defaultValue="12:00"
+                type="time"
+                minHour="10"
+                maxHour="20"
+                value={time}
+                onConfirm={setTime}
+              >
+                {(val, _, actions) => {
+                  return (
+                    <Field
+                      readOnly
+                      clickable
+                      label=""
+                      value={val}
+                      placeholder="请选择日期"
+                      onClick={() => actions.open()}
+                    />
+                  );
+                }}
+              </DatetimePicker>
+            </div>
+          </div>
+        </div>
+        <div className="w-full h-12 p-4 bg-white rounded-lg">
+          <div className="flex items-center justify-between h-full space-x-4">
+            <div>颜色</div>
+            <CCourseColor></CCourseColor>
+          </div>
+        </div>
+        <div className="flex justify-center mx-10 space-x-4">
+          <div className="flex items-center justify-center w-full text-[#FFD036] font-semibold   bg-[#FFFCF3] h-10 rounded-lg">
+            关闭
+          </div>
+          <div className="flex items-center text-[#8C6008] font-semibold justify-center w-full bg-[#FFD036] h-10 rounded-lg">
+            添加日程
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const AddCourse = (props) => {
     const [dayOfWeek, setDayOfWeek] = useState([]);
+    const [time, setTime] = useState('12:00');
+    const [endTime, setEndTime] = useState('12:00');
+    // useFetch('/course/query?campusId=1', 'get');
     const [CURRICULUM, setCURRICULUM] = useState({
       name: '',
       color: '',
-      startTime: '',
-      period: '',
+      time: `${time}-${endTime}`,
+      period: 0,
       dayOfWeek: [],
       classroom: '',
+      courseId: null,
+      section:''
     });
+    const {data:courseDetailData} = useFetch(`/course/detail?id=${CURRICULUM.courseId}`,'get')
+    const courseFormat = useMemo(()=>{
+      console.log(CURRICULUM.section,"CURRICULUM.section")
+      return courseDetailData?.data?.sections.filter((item)=>{
+        return item.name === CURRICULUM.section.courseName
+      })
+    },[CURRICULUM.section])
+    useEffect(()=>{
+      console.log(courseFormat,"courseFormat")
+    },[courseFormat])
+    // useEffect(()=>{
+    //   setCourseId(CURRICULUM.courseId)
+    // },[CURRICULUM.courseId])
+    const [value, setValue] = React.useState<Dayjs | null>(null);
+    const { data: courseData } = useFetch('/course/query?campusId=1', 'get');
     const handleChange = useCallback((val: any, name: string) => {
+      // if(name === 'courseId'){
+      //   setCourseId(val)
+      // }
       setCURRICULUM((preVal: any) => {
         return {
           ...preVal,
-          [name]: val
+          [name]: val,
         };
       });
+      // if(name === 'courseId'){
+      //   props.fetchData(CURRICULUM.courseId)
+      // }
     }, []);
     const submitForm = async (values: any) => {
       console.log(dayOfWeek, 'dayOfWeek');
       console.log(values, 'values');
+      dayOfWeek.forEach((item) => {
+        submitCourse({
+          ...values,
+          dayOfWeek: item,
+        });
+      });
       // dayOfWeek.forEach((item) => {
       //   axios({
       //     method:"post",
@@ -247,17 +343,29 @@ export default function AddSchedule() {
       //     },
       //   })
       // });
-    }
+    };
     return (
       <div className="w-full space-y-4">
-        <CCourseInput title="课程名称" isNess change={(val)=>{handleChange(val,"name")}}></CCourseInput>
+        <CCourseInput
+          title="课程名称"
+          isNess
+          change={(val) => {
+              handleChange(val.label, 'name');
+              handleChange(val.id, 'courseId');
+              // props.fetchData(val.id)
+              // setCourseId(val.id)
+          }}
+          renderData={courseData?.data?.map((item)=> item.ename)}
+          data={courseData?.data}
+        ></CCourseInput>
+        <div>{CourseId}</div>
         <div className="w-full pl-2 pr-2 bg-white ">
           <label className="w-full h-24 ">
             <div className="w-full p-3">
               {' '}
               <span className="flex items-center text-sm font-medium bg-white text-blueTitle">
-            <NessIcon className="mr-1"></NessIcon>上课日期
-            </span>
+                <NessIcon className="mr-1"></NessIcon>上课日期
+              </span>
             </div>
             <div className="flex youni-form w-full pb-4 pl-4 pr-4 ">
               <Selector
@@ -293,11 +401,11 @@ export default function AddSchedule() {
                 ]}
                 style={{
                   '--rv-selector-border-radius': '4px',
-                  '--rv-selector-color':'rgba(55, 69, 92, 0.04)',
+                  '--rv-selector-color': 'rgba(55, 69, 92, 0.04)',
                   '--rv-selector-checked-border':
                     'solid var(--adm-color-primary) 1px',
                   '--rv-selector-padding': '4px 4px',
-                  '--rv-selector-checked-text-color':"white",
+                  '--rv-selector-checked-text-color': 'white',
                 }}
                 value={dayOfWeek}
                 defaultValue={['2']}
@@ -305,7 +413,7 @@ export default function AddSchedule() {
                 showCheckMark={false}
                 onChange={(arr, extend) => {
                   setDayOfWeek(arr);
-                  console.log(arr,dayOfWeek)
+                  console.log(arr, dayOfWeek);
                 }}
               />
               {/* <CCourseTime title="周一"></CCourseTime>
@@ -351,32 +459,150 @@ export default function AddSchedule() {
             </div>
           </div>
         </div>
-        <CCourseInput title="教室" change={(val)=>{handleChange(val,"classroom")}}></CCourseInput>
-        <CCourseInput title="课程形式" change={(val)=>{handleChange(val,"name")}}></CCourseInput>
-        <CCourseInput title="Section" change={(val)=>{handleChange(val,"name")}}></CCourseInput>
-        <CCourseInput title="教授" change={(val)=>{handleChange(val,"name")}}></CCourseInput>
-        <CCourseInput title="单双周"change={(val)=>{handleChange(val,"name")}}></CCourseInput>
+        <div className="w-full h-12 p-4 bg-white rounded-lg">
+          <div className="flex youni-form items-center justify-between h-full space-x-4">
+            <div className="flex items-center">
+              <NessIcon className="mr-1"></NessIcon>
+              <div>时间</div>
+            </div>
+            <div>
+              <DatetimePicker
+                popup={{
+                  round: true,
+                }}
+                title=""
+                defaultValue="12:00"
+                type="time"
+                minHour="10"
+                maxHour="20"
+                value={endTime}
+                onConfirm={setEndTime}
+              >
+                {(val, _, actions) => {
+                  return (
+                    <Field
+                      readOnly
+                      clickable
+                      label=""
+                      value={val}
+                      placeholder="请选择日期"
+                      onClick={() => actions.open()}
+                    />
+                  );
+                }}
+              </DatetimePicker>
+            </div>
+          </div>
+        </div>
+        <CCourseInput
+          title="Section"
+          change={(val) => {
+            handleChange(val, 'section');
+          }}
+          data={courseDetailData?.data?.sections}
+          renderData={courseDetailData?.data?.sections?.map((item)=>item.name)}
+        ></CCourseInput>
+         <CCourseInput
+          title="课程形式"
+          change={(val) => {
+            handleChange(val, 'name');
+          }}
+        ></CCourseInput>
+        <CCourseInput
+          title="教授"
+          change={(val) => {
+            handleChange(val.title, 'name');
+            handleChange(val.id, 'courseId');
+          }}
+          data={courseDetailData?.data?.sections}
+          renderData={courseDetailData?.data?.sections?.map((item)=>item.name)}
+        ></CCourseInput>
+        <CCourseInput
+          title="教室"
+          change={(val) => {
+            handleChange(val, 'classroom');
+          }}
+        ></CCourseInput>
+        <div className="w-full h-12 p-4 bg-white rounded-lg">
+          <div className="flex items-center justify-between h-full space-x-4">
+            <div>单双周</div>
+            <div className="w-[250px] h-full flex items-center justify-end pr-1 rounded-lg">
+              <div className="border-[#DCDDE1] border  overflow-hidden  rounded-lg  h-[28px]   flex ">
+                <div
+                  onClick={() => {
+                    handleChange(0, 'period');
+                  }}
+                  className={classnames(
+                    'w-full  flex justify-center px-2 items-center text-center text-[#A9B0C0]',
+                    {
+                      'bg-slate-50 text-[#FFD036]': CURRICULUM.period === 0,
+                    },
+                  )}
+                >
+                  全部
+                </div>
+                <div
+                  onClick={() => {
+                    handleChange(1, 'period');
+                  }}
+                  className={classnames(
+                    'w-full  flex justify-center px-2 items-center text-center text-[#A9B0C0]',
+                    {
+                      'bg-slate-50 text-[#FFD036]': CURRICULUM.period === 1,
+                    },
+                  )}
+                >
+                  单周
+                </div>
+                <div
+                  onClick={() => {
+                    handleChange(2, 'period');
+                  }}
+                  className={classnames(
+                    'w-full rounded-none flex  px-2 justify-center whitespace-nowrap items-center text-center text-[#A9B0C0]',
+                    {
+                      'bg-slate-50 text-[#FFD036]': CURRICULUM.period === 2,
+                    },
+                  )}
+                >
+                  双周
+                </div>
+                <div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
             <div>颜色</div>
             <CCourseColor></CCourseColor>
           </div>
         </div>
-        <div className='flex justify-center mx-10 space-x-4'>
-          <div className='flex items-center
+        <div className="flex justify-center mx-10 space-x-4">
+          <div
+            className="flex items-center
           justify-center w-full text-[#FFD036]
-          font-semibold   bg-[#FFFCF3] h-10 rounded-lg'>关闭</div>
-          <div onClick={()=>{submitForm(CURRICULUM)}} className='flex items-center text-[#8C6008]
+          font-semibold   bg-[#FFFCF3] h-10 rounded-lg"
+          >
+            关闭
+          </div>
+          <div
+            onClick={() => {
+              submitForm(CURRICULUM);
+            }}
+            className="flex items-center text-[#8C6008]
           font-semibold justify-center w-full bg-[#FFD036]
-          h-10 rounded-lg'>添加课程</div>
+          h-10 rounded-lg"
+          >
+            添加课程
+          </div>
         </div>
       </div>
     );
   };
 
-
   const menuList = [AddCourse, AddDaySchedule];
-
 
   let id = Number(router.query.id) - 1;
   if (!id) {
@@ -404,7 +630,7 @@ export default function AddSchedule() {
       ></HeaderMenu>
       <div className="p-4">
         {menu === 0 ? (
-          <AddCourse></AddCourse>
+          <AddCourse fetchData={fetchData}></AddCourse>
         ) : (
           <AddDaySchedule value={value} setValue={setValue}></AddDaySchedule>
         )}
