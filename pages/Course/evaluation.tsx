@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Header from '@/components/Header';
 import CButton from '@/components/Button/CButton';
@@ -126,11 +126,13 @@ const ProfessorTag = () => {
   );
 };
 export default function evaluation() {
+
   return (
     <CommonLayout className="p-0 pb-14">
       <Header title="添加新评价">
         <CButton size="normal">提交</CButton>
       </Header>
+      
       <CourseInfo></CourseInfo>
       <CourseData></CourseData>
       <TextEvaluation></TextEvaluation>

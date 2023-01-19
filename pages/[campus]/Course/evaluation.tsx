@@ -6,6 +6,9 @@ import CourseInfo from '@/components/PageComponents/Course/addEvaluation/courseI
 import CourseData from '@/components/PageComponents/Course/addEvaluation/courseData';
 import CourseIcon from '@/components/PageComponents/Course/addEvaluation/course.svg';
 import NessIcon from '@/components/PageComponents/Course/addEvaluation/ness.svg';
+import { EvaluationForm } from '@/libs/context';
+import useFetch from '../../../hooks/useFetch';
+import classnames from 'classnames'
 const TextEvaluation = () => {
   return (
     <div className="bg-white pb-5 mt-4 pb-10">
@@ -67,7 +70,20 @@ const myScoreList = [
     value: 1,
   },
 ];
-const ResultAndTagEvaluation = () => {
+const ResultAndTagEvaluation = (props) => {
+    const scoreList = props.data
+    const [select,setSelect] = React.useState(0)
+    const data = React.useContext(EvaluationForm);
+    const updateData = (level)=>{
+      data.setData({
+        ...data.data,
+        'courseDataTagsEvaluation':{
+          score:level,
+        }
+    })
+  }
+    
+    // data.data
   return (
     <div className="bg-white  mt-4 ">
       <label className="input-group bg-white w-full flex justify-between h-12 pl-4 ">
@@ -85,11 +101,14 @@ const ResultAndTagEvaluation = () => {
         </span>
       </label>
       <div className="grid grid-cols-4 gap-2 p-2">
-        {myScoreList.map((item) => {
+        {scoreList?.map((item) => {
           return (
-            <div className="w-full bg-gray-100 h-14 pt-3	 text-xs font-normal text-center align-middle	">
-              <div> {item.label}</div>
-              <div>{item.value}</div>
+            <div onClick={()=>{updateData(item.level)}} 
+            className={classnames("w-full bg-gray-100 h-14 pt-3	 text-xs font-normal text-center align-middle	"
+            ,{'text-yellow-500':data.data.courseDataTagsEvaluation.score ===item.level}
+            )}>
+              <div> {`${item.interval[0]}-${item.interval[1]}`}</div>
+              <div>{item.level}</div>
             </div>
           );
         })}
@@ -107,7 +126,9 @@ const tagList = [
     value: 2,
   },
 ];
-const ProfessorTag = () => {
+const ProfessorTag = (props) => {
+  // const tagList = props.data
+  const data = React.useContext(EvaluationForm);
   return (
     <div className="bg-white ">
       <label className="input-group">
@@ -115,31 +136,70 @@ const ProfessorTag = () => {
           教授标签
         </span>
       </label>
-      <div className='w-full flex flex-wrap p-4'>{tagList.map((item) => {
-        return (
-          <div className='bg-gray-100 text-xs p-2 mr-2'>
-            {item.label}
-          </div>
-        )
-      })}</div>
+      <div className="w-full flex flex-wrap p-4">
+        {tagList.map((item) => {
+          return (
+            <div className="bg-gray-100 text-xs p-2 mr-2">{item.label}</div>
+          );
+        })}
+      </div>
     </div>
   );
 };
+
 export default function evaluation() {
+  React.useEffect(() => {
+    console.log('EvaluationForm', EvaluationForm);
+  }, [EvaluationForm]);
+  const {data:tagList} = useFetch(`/campus/gpa/list?campusId=${1}`,'get')
+  const {data:professorTagsList} = useFetch(`/campus/gpa/list?campusId=${1}`,'get')
+
+  const submitEvaluation = () => {
+    console.log('context', data);
+  };
+  const [data, setData] = React.useState({
+    courseData: {},
+    courseDataEvaluation: {
+      professorRating: 1,
+      contentRating: 1,
+      homeworkRating: 1,
+      examRating:1
+    },
+    courseTextEvaluation: {},
+    courseDataTagsEvaluation: {
+      score: 'A+',
+    },
+    professorTagsEvaluation:[]
+  });
+  // const context= React.useContext(EvaluationForm);
+
   return (
     <CommonLayout className="p-0 pb-14">
       <Header title="添加新评价">
-        <CButton size="normal">提交</CButton>
+        <CButton
+          size="normal"
+          onClick={() => {
+            submitEvaluation();
+          }}
+        >
+          提交
+        </CButton>
       </Header>
-      <CourseInfo></CourseInfo>
-      <CourseData></CourseData>
-      <TextEvaluation></TextEvaluation>
-      <ResultAndTagEvaluation></ResultAndTagEvaluation>
-      <ProfessorTag></ProfessorTag>
+      <EvaluationForm.Provider value={{data,setData}}>
+        <CourseInfo></CourseInfo>
+        <CourseData></CourseData>
+        <TextEvaluation></TextEvaluation>
+        <ResultAndTagEvaluation data={tagList?.data}></ResultAndTagEvaluation>
+        <ProfessorTag ></ProfessorTag>
+      </EvaluationForm.Provider>
       <div className="p-4">
-      <button className='btn text-white btn-primary 
+        <button
+          className="btn text-white btn-primary 
       rounded-full
-      w-full btn-sm h-10'>提交</button>
+      w-full btn-sm h-10"
+        >
+          提交
+        </button>
       </div>
       {/* <a href="/test">
      <div className="alert alert-info shadow-lg">

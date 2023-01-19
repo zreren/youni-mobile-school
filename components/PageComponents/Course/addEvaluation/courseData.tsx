@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import CourseIcon from './course.svg';
 import NessIcon from './ness.svg';
 import Score1Icon from './score/1.svg';
@@ -11,13 +11,22 @@ import Score2ActiveIcon from './score-avtive/2.svg';
 import Score3ActiveIcon from './score-avtive/3.svg';
 import Score4ActiveIcon from './score-avtive/4.svg';
 import Score5ActiveIcon from './score-avtive/5.svg';
-const getIcon = (props)=>{
-    const Node = props
-    return <Node></Node>
-}
+import { EvaluationForm } from '@/libs/context';
+const getIcon = (props) => {
+  const Node = props;
+  return <Node></Node>;
+};
 const Item = (props: any) => {
-  const { name, item, icon,iconListActive } = props;
-  const [active, setActive] = React.useState(0);
+  const { name,key, item, icon, iconListActive, updateData } = props;
+  const [active, setActive1] = React.useState(0);
+
+  const setActive = (props: any) => {
+    updateData({
+      key: key,
+      value: props,
+    });
+    setActive1(props);
+  };
   console.log(icon, 'icon');
   return (
     <div>
@@ -26,28 +35,53 @@ const Item = (props: any) => {
           <NessIcon className="mr-1"></NessIcon> {name}
         </span>
         <div className="flex justify-between w-full p-4">
-          <div className="flex flex-col items-center" onClick={()=>{setActive(1)}}>
-            <div>{getIcon(active===1?iconListActive[0]:icon[0])}</div>
+          <div
+            className="flex flex-col items-center"
+            onClick={() => {
+              setActive(1);
+            }}
+          >
+            <div>{getIcon(active === 1 ? iconListActive[0] : icon[0])}</div>
             <div className="text-xs text-gray-400">1</div>
             <div className="text-sm text-gray-400">{item[0]}</div>
           </div>
-          <div className="flex flex-col items-center" onClick={()=>{setActive(2)}}>
-            {getIcon(active===2?iconListActive[1]:icon[1])}
+          <div
+            className="flex flex-col items-center"
+            onClick={() => {
+              setActive(2);
+            }}
+          >
+            {getIcon(active === 2 ? iconListActive[1] : icon[1])}
             <div className="text-xs text-gray-400">2</div>
             <div className="text-sm text-gray-400">{item[1]}</div>
           </div>
-          <div className="flex flex-col items-center" onClick={()=>{setActive(3)}}>
-            {getIcon(active===3?iconListActive[2]:icon[2])}
+          <div
+            className="flex flex-col items-center"
+            onClick={() => {
+              setActive(3);
+            }}
+          >
+            {getIcon(active === 3 ? iconListActive[2] : icon[2])}
             <div className="text-xs text-gray-400">3</div>
             <div className="text-sm text-gray-400">{item[2]}</div>
           </div>
-          <div className="flex flex-col items-center" onClick={()=>{setActive(4)}}>
-            {getIcon(active===4?iconListActive[3]:icon[3])}
+          <div
+            className="flex flex-col items-center"
+            onClick={() => {
+              setActive(4);
+            }}
+          >
+            {getIcon(active === 4 ? iconListActive[3] : icon[3])}
             <div className="text-xs text-gray-400">4</div>
             <div className="text-sm text-gray-400">{item[3]}</div>
           </div>
-          <div className="flex flex-col items-center" onClick={()=>{setActive(5)}}>
-            {getIcon(active===5?iconListActive[4]:icon[4])}
+          <div
+            className="flex flex-col items-center"
+            onClick={() => {
+              setActive(5);
+            }}
+          >
+            {getIcon(active === 5 ? iconListActive[4] : icon[4])}
             <div className="text-xs text-gray-400">5</div>
             <div className="text-sm text-gray-400">{item[4]}</div>
           </div>
@@ -58,35 +92,56 @@ const Item = (props: any) => {
   );
 };
 const iconList = [Score1Icon, Score2Icon, Score3Icon, Score4Icon, Score5Icon];
-const iconListActive = [Score1ActiveIcon, Score2ActiveIcon, Score3ActiveIcon, Score4ActiveIcon, Score5ActiveIcon];
+const iconListActive = [
+  Score1ActiveIcon,
+  Score2ActiveIcon,
+  Score3ActiveIcon,
+  Score4ActiveIcon,
+  Score5ActiveIcon,
+];
 
 const itemList = [
   {
     name: '教授评价',
     item: ['非常糟糕', '勉勉强强', '感觉还行', '的确不错', '强烈推荐'],
     icon: iconList,
-    iconListActive:iconListActive
+    iconListActive: iconListActive,
+    dataIndex:'professorRating'
   },
   {
     name: '内容难度',
     item: ['非常糟糕', '勉勉强强', '感觉还行', '的确不错', '强烈推荐'],
     icon: iconList,
-    iconListActive:iconListActive
+    iconListActive: iconListActive,
+    dataIndex:'contentRating'
   },
   {
     name: '作业难度',
     item: ['非常糟糕', '勉勉强强', '感觉还行', '的确不错', '强烈推荐'],
     icon: iconList,
-    iconListActive:iconListActive
+    iconListActive: iconListActive,
+    dataIndex:'homeworkRating'
   },
   {
     name: '考试难度',
     item: ['非常糟糕', '勉勉强强', '感觉还行', '的确不错', '强烈推荐'],
     icon: iconList.slice().reverse(),
-    iconListActive:iconListActive.slice().reverse()
+    iconListActive: iconListActive.slice().reverse(),
+    dataIndex:'examRating'
   },
 ];
 export default function courseInfo() {
+  const data= useContext(EvaluationForm);
+
+  const [form, setForm] = React.useState({});
+  const updateData = (e) => {
+    data.setData({ ...data.data, [e.key]: e.value });
+    console.log(data, 'courseInfo');
+  };
+  useEffect(() => {
+    // data.courseDataEvaluation = form;
+    console.log(data, 'courseInfo');
+  }, [data]);
   return (
     <div className="bg-white pb-5 mt-4">
       <label className="input-group bg-white w-full flex justify-between h-12 pl-4 ">
@@ -99,7 +154,18 @@ export default function courseInfo() {
       </label>
       <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
       {itemList.map((item) => {
-        return <Item name={item.name} item={item.item} iconListActive={item.iconListActive} icon={item.icon}></Item>;
+        return (
+          <Item
+            updateData={(e) => {
+              updateData(e);
+            }}
+            name={item.name}
+            item={item.item}
+            key={item.dataIndex}
+            iconListActive={item.iconListActive}
+            icon={item.icon}
+          ></Item>
+        );
       })}
     </div>
   );

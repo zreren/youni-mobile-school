@@ -171,8 +171,8 @@ export default function courseEvaluation() {
     }
     const evaluationListMemo = useMemo(() => {
       if(!evaluationData) return
-      const data = evaluationData.data.slice()
-      return data.sort(sortFunction);
+      const data = evaluationData?.data?.slice()
+      return data?.sort(sortFunction);
     }, [evaluationOrder,evaluationData?.data]);
     useEffect(() => {
       console.log(evaluationListMemo, 'evaluationListMemo');

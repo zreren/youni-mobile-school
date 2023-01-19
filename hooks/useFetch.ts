@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import config from '../public/config.json';
 import useLocalStorage from '@/hooks/useStore';
 import { useRouter } from 'next/router';
-
+import instance from '@/libs/request';
 export const API = Object.freeze({
   BASE_URL: config.api.baseUrl,
   STUDENT: {
@@ -48,7 +48,7 @@ function useFetch(path, method, body?) {
     message: string;
   }
   const { data, error,mutate  } = useSWR(`${API.BASE_URL}${path}`, (url) => {
-    return axios({
+    return instance({
       method,
       url,
       data: body,
