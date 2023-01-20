@@ -34,7 +34,7 @@ export default function Display(props) {
       <div className="w-full pl-0.5 pr-0.5">
         <div
           onClick={() => {
-            props.handleClick();
+            props.handleClick(data.id);
           }}
           style={{ position: 'relative', width: '100%' }}
         >
@@ -167,7 +167,7 @@ export default function Display(props) {
       <div className="w-full pl-0.5 pr-0.5">
         <div
           onClick={() => {
-            props.handleClick();
+            props.handleClick(data.id);
           }}
           style={{ position: 'relative', width: '100%' }}
           className="mb-2"
@@ -211,7 +211,7 @@ export default function Display(props) {
       <div className="w-full pl-0.5 pr-0.5">
         <div
           onClick={() => {
-            props.handleClick();
+            props.handleClick(data.id);
           }}
           style={{ position: 'relative', width: '100%' }}
           className="rounded-xl overflow-hidden"

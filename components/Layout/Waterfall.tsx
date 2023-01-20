@@ -130,7 +130,7 @@ const PostDetail = (props) => {
       className="h-screen"
     >
       <div className="w-screen h-screen">
-        <Post></Post>
+        <Post id={props.id}></Post>
       </div>
     </SwipeableDrawer>
   );
@@ -139,6 +139,7 @@ export default function Waterfall(props) {
   const { postData } = props;
   console.log(postData, 'postData in waterfull');
   const [data, setData] = useState<any[]>(postData);
+  const [id,setId] = useState(0);
   const [postDetailShow, setPostDetailShow] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [reRender, setReRender] = useState(true);
@@ -153,7 +154,7 @@ export default function Waterfall(props) {
 
   const CardWithClick = React.useCallback(
     (props) => (
-      <Display {...props} handleClick={() => setPostDetailShow(true)} />
+      <Display {...props} handleClick={(e) => {setId(e);setPostDetailShow(true)}} />
     ),
     [],
   );
@@ -186,6 +187,7 @@ export default function Waterfall(props) {
     <div className="w-full h-full mx-0">
       <PostDetail
         setVisible={setPostDetailShow}
+        id={id}
         visible={postDetailShow}
       ></PostDetail>
       <div className="mx-2">

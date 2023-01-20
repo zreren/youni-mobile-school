@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import CScoreCard from '@/components/Rating/CScoreCard';
 import Super from '../surper.svg';
 import Like from '../Like.svg';
@@ -28,7 +28,7 @@ export default function userComment() {
   };
   const [language, setLanguage] = useLocalStorage('language', 'en');
   const { id } = router.query;
-  const { data, error } = useFetch(`/evaluation/detail?id=${id}`, 'get');
+  const { data, error } = useFetch(`/evaluation/detail?id=${id}&t=${new Date()}`, 'get');
   const comments = [
     {
       id: 1,
@@ -123,6 +123,18 @@ export default function userComment() {
   ];
   const DiscussionComponentFooter = (props) => {
     const { data, id } = props;
+    const [clike, setLike] = useState(data?.liked);
+    const handleLike = (e) => {
+      setLike(!e);
+      like(id);
+    };
+    const likeCount = useMemo(() => {
+      if (clike) {
+        return Number(data?.likeCount) - 1;
+      } else {
+        return Number(data?.likeCount) + 1;
+      }
+    }, [clike]);
     return (
       <div className="w-full flex justify-between mt-2 mb-2">
         <div className="flex items-center space-x-2">
@@ -132,10 +144,10 @@ export default function userComment() {
         <div
           className="flex space-x-1"
           onClick={() => {
-            like(id);
+            handleLike(clike);
           }}
         >
-          {data?.liked ? <LikeActive></LikeActive> : <Like></Like>}
+          {clike ? <LikeActive></LikeActive> : <Like></Like>}
 
           <div className="flex items-center text-xs text-[#A9B0C0]">
             {data?.likeCount || 0}

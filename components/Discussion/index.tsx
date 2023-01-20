@@ -1,99 +1,101 @@
 import React,{useState} from 'react'
+import EmptyIcon from './empty.svg';
 
-export default function index() {
-    const comments = [
-        {
-          id: 1,
-          createdAt: '2022-12-07',
-          updatedAt: '2022-12-07',
-          content: 'This is the first comment',
-          children: [
-            {
-              id: 2,
-              createdAt: '2022-12-07',
-              updatedAt: '2022-12-07',
-              content: 'This is the first reply to the first comment',
-              children: [],
-              parent: 1,
-              evaluation: {},
-              student: {},
-              deletedAt: null
-            },
-            {
-              id: 3,
-              createdAt: '2022-12-07',
-              updatedAt: '2022-12-07',
-              content: 'This is the second reply to the first comment',
-              children: [],
-              parent: 1,
-              evaluation: {},
-              student: {},
-              deletedAt: null
-            },
-            {
-              id: 4,
-              createdAt: '2022-12-07',
-              updatedAt: '2022-12-07',
-              content: 'This is the third reply to the first comment',
-              children: [],
-              parent: 1,
-              evaluation: {},
-              student: {},
-              deletedAt: null
-            }
-          ],
-          parent: null,
-          evaluation: {},
-          student: {},
-          deletedAt: null
-        },
-        {
-          id: 5,
-          createdAt: '2022-12-07',
-          updatedAt: '2022-12-07',
-          content: 'This is the second comment',
-          children: [
-            {
-              id: 6,
-              createdAt: '2022-12-07',
-              updatedAt: '2022-12-07',
-              content: 'This is the first reply to the second comment',
-              children: [],
-              parent: 5,
-              evaluation: {},
-              student: {},
-              deletedAt: null
-            },
-            {
-              id: 7,
-              createdAt: '2022-12-07',
-              updatedAt: '2022-12-07',
-              content: 'This is the second reply to the second comment',
-              children: [],
-              parent: 5,
-              evaluation: {},
-              student: {},
-              deletedAt: null
-            },
-            {
-              id: 8,
-              createdAt: '2022-12-07',
-              updatedAt: '2022-12-07',
-              content: 'This is the third reply to the second comment',
-              children: [],
-              parent: 5,
-              evaluation: {},
-              student: {},
-              deletedAt: null
-            }
-          ],
-          parent: null,
-          evaluation: {},
-          student: {},
-          deletedAt: null
-        }
-      ];
-      const DiscussionComponentFooter = () => {
+export default function index(props) {
+    // const comments = [
+    //     {
+    //       id: 1,
+    //       createdAt: '2022-12-07',
+    //       updatedAt: '2022-12-07',
+    //       content: 'This is the first comment',
+    //       children: [
+    //         {
+    //           id: 2,
+    //           createdAt: '2022-12-07',
+    //           updatedAt: '2022-12-07',
+    //           content: 'This is the first reply to the first comment',
+    //           children: [],
+    //           parent: 1,
+    //           evaluation: {},
+    //           student: {},
+    //           deletedAt: null
+    //         },
+    //         {
+    //           id: 3,
+    //           createdAt: '2022-12-07',
+    //           updatedAt: '2022-12-07',
+    //           content: 'This is the second reply to the first comment',
+    //           children: [],
+    //           parent: 1,
+    //           evaluation: {},
+    //           student: {},
+    //           deletedAt: null
+    //         },
+    //         {
+    //           id: 4,
+    //           createdAt: '2022-12-07',
+    //           updatedAt: '2022-12-07',
+    //           content: 'This is the third reply to the first comment',
+    //           children: [],
+    //           parent: 1,
+    //           evaluation: {},
+    //           student: {},
+    //           deletedAt: null
+    //         }
+    //       ],
+    //       parent: null,
+    //       evaluation: {},
+    //       student: {},
+    //       deletedAt: null
+    //     },
+    //     {
+    //       id: 5,
+    //       createdAt: '2022-12-07',
+    //       updatedAt: '2022-12-07',
+    //       content: 'This is the second comment',
+    //       children: [
+    //         {
+    //           id: 6,
+    //           createdAt: '2022-12-07',
+    //           updatedAt: '2022-12-07',
+    //           content: 'This is the first reply to the second comment',
+    //           children: [],
+    //           parent: 5,
+    //           evaluation: {},
+    //           student: {},
+    //           deletedAt: null
+    //         },
+    //         {
+    //           id: 7,
+    //           createdAt: '2022-12-07',
+    //           updatedAt: '2022-12-07',
+    //           content: 'This is the second reply to the second comment',
+    //           children: [],
+    //           parent: 5,
+    //           evaluation: {},
+    //           student: {},
+    //           deletedAt: null
+    //         },
+    //         {
+    //           id: 8,
+    //           createdAt: '2022-12-07',
+    //           updatedAt: '2022-12-07',
+    //           content: 'This is the third reply to the second comment',
+    //           children: [],
+    //           parent: 5,
+    //           evaluation: {},
+    //           student: {},
+    //           deletedAt: null
+    //         }
+    //       ],
+    //       parent: null,
+    //       evaluation: {},
+    //       student: {},
+    //       deletedAt: null
+    //     }
+    //   ];
+    const {comments} = props;
+    const DiscussionComponentFooter = () => {
         return (
           <div className='flex justify-between w-full mt-2 mb-2'>
             <div className='flex items-center space-x-2'>
@@ -123,11 +125,11 @@ export default function index() {
           </div>
         )
       }
-      const Discussion = () => {
+      const Discussion = ({comments}) => {
         return (
           <div>
             {
-              comments.map((item) => {
+              comments?.map((item) => {
                 const [expand, setExpand] = useState(false);
                 return (
                   <div>
@@ -183,9 +185,14 @@ export default function index() {
 
     return (
         <div>
-            <div className='my-4 text-sm font-semibold text-blueTitle'>评论 7</div>
+            <div className='my-4 text-sm font-semibold text-blueTitle'>评论 {comments?.length || 0}</div>
             <div className='w-full mb-3 bg-border h-px1'></div>
-            <Discussion></Discussion>
+            {comments?.length === 0?<div className='w-full h-[300px] flex flex-col justify-center items-center'>
+              <EmptyIcon></EmptyIcon>
+               <div className='mt-8'> <span className='text-[#A9B0C0]'>目前还没有评论，</span><span className='text-[#3665FF]'>点击评论</span></div>
+              </div>:<Discussion comments={comments}></Discussion>
+            }
+            
         </div>
     )
 }

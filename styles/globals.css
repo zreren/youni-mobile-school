@@ -388,3 +388,8 @@
 .topIndex{
   z-index: 9999 !important;
 }
+
+.rv-skeleton {
+  --rv-padding-md:0px !important;
+  padding: none !important;
+}
