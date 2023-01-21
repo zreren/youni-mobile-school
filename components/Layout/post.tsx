@@ -125,9 +125,9 @@ function index(props) {
             // }, 1000);
             return (
               <SwiperSlide >
-                
-                  <CImage
-                    onTouchStart={() => { props.stop() }} item={item}></CImage>
+
+                <CImage
+                  onTouchStart={() => { props.stop() }} item={item}></CImage>
 
               </SwiperSlide>
             );
@@ -172,5 +172,6 @@ function index(props) {
       <FooterDiscussionInput send={(e) => { sendComment(e) }} data={data?.data}></FooterDiscussionInput>
     </div>
   );
-}
-export default React.memo(index)
+};
+
+export default index

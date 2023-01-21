@@ -77,7 +77,7 @@ export default function ProfileHeader(props) {
           <div className="w-20 h-20 bg-white rounded-full text-neutral-content">
             {data?.student.avatar? <Image placeholder='blur' objectFit='cover' blurDataURL={`${Cons.BASEURL}${data?.student.avatar}`}
              width={'80px'} height={'80px'}  src={`${Cons.BASEURL}${data?.student.avatar}`} />
-              :<span className="text-3xl">K</span>
+              :<span className="text-3xl"></span>
             }
           </div>
         </div>

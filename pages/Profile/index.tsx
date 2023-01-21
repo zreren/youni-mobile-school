@@ -210,6 +210,7 @@ const Setting = () => {
 };
 
 function index(props) {
+  const { user, loggedOut } = useUser();
   const Profile1 = () => {
     return (
       <div className="h-[calc(100vh-320px)] relative">
@@ -272,7 +273,7 @@ function index(props) {
           </div>
         ) : (
           <Waterfall postData={data?.data.map((item) => {
-            return { ...item, student: { nickName: '11' } }
+            return { ...item, student: { nickName: user.student.nickName } }
           })}></Waterfall>
         )}
       </div>
@@ -281,6 +282,8 @@ function index(props) {
 
   const Profile3 = () => {
     const [menu, setMenu] = useState(0);
+    const { data: liked } = useFetch('/post/liked', 'get');
+    const { data: stard } = useFetch('/post/stard', 'get');
     return (
       <div className="w-full">
         <div className="w-full px-2">
@@ -318,12 +321,12 @@ function index(props) {
             <PostGroup></PostGroup>
           </div>
         ) : (
-          <Waterfall></Waterfall>
+          <Waterfall postData={Object.assign(liked?.data, stard?.data.length > 0 ? stard?.data : null)}></Waterfall>
         )}
       </div>
     );
   };
-  const { user, loggedOut } = useUser();
+  // const { user, loggedOut } = useUser();
   const router = useRouter();
   const [school, setSchool] = useLocalStorage('school', 'York');
   const { i18n } = useTranslation('common');

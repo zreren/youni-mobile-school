@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 // import styles from './index.module.css';
 import Display from '../PlayGround/display';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
@@ -137,6 +137,11 @@ export default function Waterfall(props) {
       console.log('stop swiper')
 
     }
+    const PostMemo = useMemo(() => {
+      return (
+        <Post stop={() => { stopSwiper() }} start={() => { setAnchor('right') }} id={props.id}></Post>
+      )
+    }, [id])
     return (
       <SwipeableDrawer
         anchor={anchor}
@@ -150,7 +155,8 @@ export default function Waterfall(props) {
         className="h-screen"
       >
         <div className="w-screen h-screen">
-          <Post stop={() => { stopSwiper() }} start={() => { setAnchor('right') }} id={props.id}></Post>
+          {/* <PostMemo></PostMemo> */}
+          {PostMemo}
         </div>
       </SwipeableDrawer>
     );

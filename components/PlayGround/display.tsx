@@ -7,6 +7,7 @@ import TimeIcon from './Time.svg';
 import { Skeleton } from 'react-vant';
 import Liked from './Liked.svg';
 import { width } from '@mui/system';
+import userequest from '@/libs/request'
 export default function Display(props) {
   // if(!props.data) return;
 
@@ -175,6 +176,9 @@ export default function Display(props) {
   }, [like])
   const handleLike = async (id) => {
     setLike(!like)
+    userequest.post('/api/post/like', {
+      id: id
+    })
   }
   if (data.type === '推广') {
     return (
@@ -332,7 +336,7 @@ export default function Display(props) {
           </div>
           <div className="flex items-center text-xs text-priceGray" onClick={() => { handleLike(data?.id) }}>
             {like ? <Liked></Liked> : <Like></Like>}
-            <div>{LikeCount}</div>
+            <div className={classnames({ 'text-red-400': like })}>{LikeCount}</div>
           </div>
         </div>
       </div>
