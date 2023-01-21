@@ -5,12 +5,13 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import TimeIcon from './Time.svg';
 import { Skeleton } from 'react-vant';
+import Liked from './Liked.svg';
 import { width } from '@mui/system';
 export default function Display(props) {
   // if(!props.data) return;
 
   const { data } = props;
-  console.log(data,"Displayprops")
+  console.log(data, "Displayprops")
   const router = useRouter();
   const colorMap = {
     idle: 'yellow-gradient',
@@ -107,9 +108,9 @@ export default function Display(props) {
             <div className="bg-gray-500 rounded-full w-px18 h-px18"></div>
             <div className="ext-xs text-priceGray">{data.user}</div>
           </div>
-          <div className="flex items-center text-xs text-priceGray">
-            <Like></Like>
-            <div>{data.like}</div>
+          <div className="flex items-center text-xs text-priceGray" onClick={() => { like(data?.id) }}>
+            {like ? <Liked></Liked> : <Like></Like>}
+            <div>{data.LikeCount}</div>
           </div>
         </div>
       </div>
@@ -161,7 +162,20 @@ export default function Display(props) {
     'tag-blue',
   ];
   const [loading, setLoading] = React.useState(true);
-
+  const [like, setLike] = React.useState(data?.interactInfo.liked);
+  const defaultLikeCount = data?.interactInfo.likeCount;
+  const LikeCount = React.useMemo(() => {
+    if (!defaultLikeCount && like) {
+      return Number(data?.interactInfo.likeCount) + 1
+    }
+    if (defaultLikeCount && !like) {
+      return Number(data?.interactInfo.likeCount) - 1
+    }
+    return data?.interactInfo.likeCount;
+  }, [like])
+  const handleLike = async (id) => {
+    setLike(!like)
+  }
   if (data.type === '推广') {
     return (
       <div className="w-full pl-0.5 pr-0.5">
@@ -180,7 +194,7 @@ export default function Display(props) {
             row={1}
             rowWidth={'100%'}
             rowHeight={200}
-            style={{ width: '100%' ,padding:0}}
+            style={{ width: '100%', padding: 0 }}
             round={false}
             className="rounded-xl w-full p-0 h-full"
           >
@@ -221,7 +235,7 @@ export default function Display(props) {
             row={1}
             rowWidth={'100%'}
             rowHeight={200}
-            style={{ width: '100%' ,padding:0}}
+            style={{ width: '100%', padding: 0 }}
             round={false}
             className="rounded-xl w-full p-0 h-full"
           >
@@ -255,7 +269,7 @@ export default function Display(props) {
                   {data.form.startTime}
                 </div>
                 <div className="text-xs whitespace-nowrap scale-90">
-                {data.form.endTime}
+                  {data.form.endTime}
                 </div>
               </div>
             </div>
@@ -295,12 +309,12 @@ export default function Display(props) {
         )}
         {data.topic ? (
           <div className="flex items-end mt-2 space-x-1 text-sm">
-            {data.topic.map((item,index) => {
+            {data.topic.map((item, index) => {
               return (
                 <div
                   className={classnames(
                     'border rounded-sm  border-price text-px10 p-0.25',
-                    textColorMap[index%2],
+                    textColorMap[index % 2],
                   )}
                 >
                   {item}{' '}
@@ -316,9 +330,9 @@ export default function Display(props) {
             <div className="bg-gray-500 rounded-full w-px18 h-px18"></div>
             <div className="ext-xs text-priceGray">{data.student.nickName}</div>
           </div>
-          <div className="flex items-center text-xs text-priceGray">
-            <Like className="fill-slate-500"></Like>
-            <div>{data.interactInfo.likeCount}</div>
+          <div className="flex items-center text-xs text-priceGray" onClick={() => { handleLike(data?.id) }}>
+            {like ? <Liked></Liked> : <Like></Like>}
+            <div>{LikeCount}</div>
           </div>
         </div>
       </div>

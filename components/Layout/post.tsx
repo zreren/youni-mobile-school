@@ -16,14 +16,15 @@ import useRequest from '@/libs/request';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import useFetch from '../../hooks/useFetch';
-export default function index(props) {
+import { areOptionsEqual } from '@mui/base';
+function index(props) {
   const { id } = props;
   const { data } = useFetch(`/post/detail?id=${id}`, 'get');
   // const {data:postData} = data
-  const sendComment = (e)=>{
+  const sendComment = (e) => {
     useRequest.post('/api/post/comment', {
-      id:id,
-      content:e
+      id: id,
+      content: e
     })
   }
   const Map = () => {
@@ -105,6 +106,9 @@ export default function index(props) {
           modules={[Pagination]}
           height={520}
           className="mySwiper"
+          onClick={() => { props.stop() }}
+          onTouchStart={() => { props.stop() }}
+          onTouchEnd={() => { props.start() }}
         >
           {/* <SwiperSlide>
             <Image
@@ -120,8 +124,11 @@ export default function index(props) {
             //     setLoading(false);
             // }, 1000);
             return (
-              <SwiperSlide>
-                <CImage item={item}></CImage>
+              <SwiperSlide >
+                
+                  <CImage
+                    onTouchStart={() => { props.stop() }} item={item}></CImage>
+
               </SwiperSlide>
             );
           })}
@@ -162,7 +169,8 @@ export default function index(props) {
         <PostDiscussionInput></PostDiscussionInput>
         <Discussion comments={data?.data?.comments}></Discussion>
       </div>
-      <FooterDiscussionInput send={(e)=>{sendComment(e)}} data={data?.data}></FooterDiscussionInput>
+      <FooterDiscussionInput send={(e) => { sendComment(e) }} data={data?.data}></FooterDiscussionInput>
     </div>
   );
 }
+export default React.memo(index)

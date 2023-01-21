@@ -43,7 +43,7 @@ import { Sticky } from 'react-vant';
 import { Picker, Toast } from 'react-vant';
 import { setOpenLogin } from '@/stores/authSlice';
 import { useDispatch } from 'react-redux';
-
+import useFetch from '@/hooks/useFetch';
 const PostGroup = () => {
   return (
     <div className="w-full px-5 py-4  rounded-lg border border-[#D9E7FF] bg-PostGroup">
@@ -233,6 +233,7 @@ function index(props) {
   };
   const Profile2 = () => {
     const [menu, setMenu] = useState(0);
+    const { data } = useFetch('/post/list', 'get');
     return (
       <div className="h-full ">
         <div className="w-full px-2">
@@ -270,7 +271,9 @@ function index(props) {
             <PostGroup></PostGroup>
           </div>
         ) : (
-          <Waterfall></Waterfall>
+          <Waterfall postData={data?.data.map((item) => {
+            return { ...item, student: { nickName: '11' } }
+          })}></Waterfall>
         )}
       </div>
     );
@@ -343,10 +346,10 @@ function index(props) {
   useEffect(() => {
     if (loggedOut) {
       setMenu(4);
-    }else{
+    } else {
       setMenu(0);
     }
-  }, [loggedOut,user]);
+  }, [loggedOut, user]);
   const container = React.useRef<any>(null);
   const EmptyData = () => {
     const columns = [
@@ -371,9 +374,9 @@ function index(props) {
           />
         </div>
         <button
-        onClick={()=>{
-          dispatch(setOpenLogin('login'))
-        }}
+          onClick={() => {
+            dispatch(setOpenLogin('login'))
+          }}
           className={classnames(
             'w-full text-[#8C6008]  bg-yellow-400 border-0 rounded-full btn hover:bg-yellow-400',
           )}

@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import CScoreCard from '@/components/Rating/CScoreCard';
 import Super from '../surper.svg';
-import Like from '../Like.svg';
+import Like from './Like.svg';
 import DisLike from '../disLike.svg';
 import LikeActive from './like-active.svg';
 import Comments from '../Comments.svg';
@@ -21,9 +21,9 @@ export default function userComment() {
     const data = await useRequest.post(`/api/comment/like`, {
       id: id,
     });
-    // console.log(data.message,"message")
+    console.log(data.message, "message")
     // if(data.message){
-    setReRender(!reRender);
+    // setReRender(!reRender);
     // }
   };
   const [language, setLanguage] = useLocalStorage('language', 'en');
@@ -124,16 +124,23 @@ export default function userComment() {
   const DiscussionComponentFooter = (props) => {
     const { data, id } = props;
     const [clike, setLike] = useState(data?.liked);
+    const defaultLike = data?.liked;
     const handleLike = (e) => {
       setLike(!e);
       like(id);
     };
     const likeCount = useMemo(() => {
-      if (clike) {
+      if (defaultLike && !clike) {
         return Number(data?.likeCount) - 1;
-      } else {
+      }
+      if (!defaultLike && clike) {
         return Number(data?.likeCount) + 1;
       }
+      return Number(data?.likeCount);
+      // if(defaultLike && clike){
+      //   return Number(data?.likeCount);
+      // }
+
     }, [clike]);
     return (
       <div className="w-full flex justify-between mt-2 mb-2">
@@ -142,7 +149,7 @@ export default function userComment() {
           <div className="text-xs font-semibold text-secondGray">回复</div>
         </div>
         <div
-          className="flex space-x-1"
+          className="flex space-x-1 items-center"
           onClick={() => {
             handleLike(clike);
           }}
@@ -150,7 +157,7 @@ export default function userComment() {
           {clike ? <LikeActive></LikeActive> : <Like></Like>}
 
           <div className="flex items-center text-xs text-[#A9B0C0]">
-            {data?.likeCount || 0}
+            {likeCount || 0}
           </div>
           {/* <div className="flex items-center text-xs">3</div> */}
         </div>
@@ -202,79 +209,79 @@ export default function userComment() {
                 <>
                   {expand
                     ? item?.children?.map((item) => {
-                        return (
-                          <div className="w-full mt-2 flex justify-start space-x-3">
-                            <div className="rounded-full">
-                              {item?.student?.avatar ? (
-                                <Image
-                                  placeholder="blur"
-                                  objectFit="cover"
-                                  blurDataURL={`${Cons.BASEURL}${item?.student.avatar}`}
-                                  width={'24px'}
-                                  height={'24px'}
-                                  className="rounded-full"
-                                  src={`${Cons.BASEURL}${item?.student?.avatar}`}
-                                />
-                              ) : (
-                                <span className="text-3xl">K</span>
-                              )}
-                            </div>
-                            <div className="w-full">
-                              <div className="font-medium">
-                                {item.student.nickName}
-                              </div>
-                              <div className="text-xs text-secondGray mt-1">
-                                {item?.student?.education?.year || '未认证'} ·{' '}
-                                {item.student?.education?.major || '未认证'}
-                              </div>
-                              <div className="text-sm mt-1 w-full">
-                                {item.content}
-                              </div>
-                              <DiscussionComponentFooter
-                                id={item?.id}
-                                data={item?.interactInfo}
-                              ></DiscussionComponentFooter>
-                            </div>
+                      return (
+                        <div className="w-full mt-2 flex justify-start space-x-3">
+                          <div className="rounded-full">
+                            {item?.student?.avatar ? (
+                              <Image
+                                placeholder="blur"
+                                objectFit="cover"
+                                blurDataURL={`${Cons.BASEURL}${item?.student.avatar}`}
+                                width={'24px'}
+                                height={'24px'}
+                                className="rounded-full"
+                                src={`${Cons.BASEURL}${item?.student?.avatar}`}
+                              />
+                            ) : (
+                              <span className="text-3xl">K</span>
+                            )}
                           </div>
-                        );
-                      })
+                          <div className="w-full">
+                            <div className="font-medium">
+                              {item.student.nickName}
+                            </div>
+                            <div className="text-xs text-secondGray mt-1">
+                              {item?.student?.education?.year || '未认证'} ·{' '}
+                              {item.student?.education?.major || '未认证'}
+                            </div>
+                            <div className="text-sm mt-1 w-full">
+                              {item.content}
+                            </div>
+                            <DiscussionComponentFooter
+                              id={item?.id}
+                              data={item?.interactInfo}
+                            ></DiscussionComponentFooter>
+                          </div>
+                        </div>
+                      );
+                    })
                     : item?.children?.slice(0, 2).map((item) => {
-                        return (
-                          <div className="w-full mt-2 flex justify-start space-x-3">
-                            <div className="rounded-full">
-                              {item?.student?.avatar ? (
-                                <Image
-                                  placeholder="blur"
-                                  objectFit="cover"
-                                  blurDataURL={`${Cons.BASEURL}${item?.student.avatar}`}
-                                  width={'24px'}
-                                  height={'24px'}
-                                  className="rounded-full"
-                                  src={`${Cons.BASEURL}${item?.student?.avatar}`}
-                                />
-                              ) : (
-                                <span className="text-3xl">K</span>
-                              )}
-                            </div>
-                            <div className="w-full">
-                              <div className="font-medium">
-                                {item?.student?.nickName}
-                              </div>
-                              <div className="text-xs text-secondGray mt-1">
-                                {item.student?.education?.year} ·{' '}
-                                {item?.student?.education?.major || '未认证'}
-                              </div>
-                              <div className="text-sm mt-1 w-full">
-                                {item?.content}
-                              </div>
-                              <DiscussionComponentFooter
-                                id={item?.id}
-                                data={item?.interactInfo}
-                              ></DiscussionComponentFooter>
-                            </div>
+                      return (
+                        <div className="w-full mt-2 flex justify-start space-x-3">
+                          <div className="rounded-full">
+                            {item?.student?.avatar ? (
+                              <Image
+                                placeholder="blur"
+                                objectFit="cover"
+                                blurDataURL={`${Cons.BASEURL}${item?.student.avatar}`}
+                                width={'24px'}
+                                height={'24px'}
+                                className="rounded-full"
+                                src={`${Cons.BASEURL}${item?.student?.avatar}`}
+                              />
+                            ) : (
+                              <span className="text-3xl">K</span>
+                            )}
                           </div>
-                        );
-                      })}
+                          <div className="w-full">
+                            <div className="font-medium">
+                              {item?.student?.nickName}
+                            </div>
+                            <div className="text-xs text-secondGray mt-1">
+                              {item.student?.education?.year} ·{' '}
+                              {item?.student?.education?.major || '未认证'}
+                            </div>
+                            <div className="text-sm mt-1 w-full">
+                              {item?.content}
+                            </div>
+                            <DiscussionComponentFooter
+                              id={item?.id}
+                              data={item?.interactInfo}
+                            ></DiscussionComponentFooter>
+                          </div>
+                        </div>
+                      );
+                    })}
                 </>
                 <div className="flex space-x-3">
                   <div>
