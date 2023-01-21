@@ -70,7 +70,7 @@ export default function courseEvaluation() {
         <Search></Search>
         <Title title="热门教授"></Title>
         <HotProfessorCar professorList={professorRankList}></HotProfessorCar>
-        <Title title="教授列表" customClick={() => {}}>
+        <Title title="教授列表" customClick={() => { }}>
           {/* <FilterIcon></FilterIcon> */}
           <Select
             labelId="demo-simple-select-label"
@@ -105,7 +105,7 @@ export default function courseEvaluation() {
                 onClick={() => {
                   const campusId = router.query.campus;
                   router.push({
-                    pathname:`/[campus]/professor/detail/${item.id}`,
+                    pathname: `/[campus]/professor/detail/${item.id}`,
                     query: { campus: CampusId },
                   });
                 }}
@@ -116,7 +116,6 @@ export default function courseEvaluation() {
       </CommonLayout>
     );
   };
-
   const professorRankList = [
     {
       id: 1,
@@ -135,13 +134,28 @@ export default function courseEvaluation() {
     },
   ];
 
+  const [isFilteringOut, setisFilteringOut] = React.useState(true);
+
+  // evaluationData?.data?.sort(sortFunction);
 
   const CourseEva = (props) => {
-    const [evaluationOrder, setEvaluationOrder] = React.useState();
+    type order = 'default' | 'positive' | 'negative'
+    const [evaluationOrder, setEvaluationOrder] = React.useState<order>('default');
     const handleChangeEvaluationOrder = (event: SelectChangeEvent) => {
+      setEvaluationOrder(event.target.value as order);
       console.log(event.target.value, 'event.target.value');
-      setEvaluationOrder(event.target.value as string);
+      const sortFunction = (a, b) => {
+        console.log(a, b, "sortFunction")
+        if (event.target.value === 'positive')
+          return b.professorRating - a.professorRating;
+        if (event.target.value === 'negative')
+          return a.professorRating - b.professorRating;
+        if (event.target.value === 'default') return a.id - b.id;
+        return 0;
+      };
+      evaluationData?.data?.sort(sortFunction);
     };
+
     const { data: commentData } = useFetch(
       `${Cons.API.EVALUATION.LIST}?courseId=${CourseId}&campusId=${1}`,
       'get',
@@ -150,15 +164,21 @@ export default function courseEvaluation() {
       `/evaluation/list?courseId=${CourseId}&campusId=${1}`,
       'get',
     );
-    const sortFunction = (a, b) => {
-      console.log(a,b,"sortFunction")
-      if (evaluationOrder === 'positive')
-        return b.professorRating - a.professorRating;
-      if (evaluationOrder === 'negative')
-        return a.professorRating - b.professorRating;
-      if(evaluationOrder === 'default') return 0
-      // return 0;
-    };
+    const [data, setData] = React.useState(evaluationData?.data);
+    // useEffect(() => {
+    //   if (!evaluationData?.data) return
+    //   const sortFunction = (a, b) => {
+    //     console.log(a, b, "sortFunction")
+    //     if (evaluationOrder === 'positive')
+    //       return b.professorRating - a.professorRating;
+    //     if (evaluationOrder === 'negative')
+    //       return a.professorRating - b.professorRating;
+    //     if (evaluationOrder === 'default') return 0
+    //     // return 0;
+    //   };
+    //   setData(evaluationData?.data.sort(sortFunction))
+    // }, [evaluationData, evaluationOrder])
+
     if (!props) {
       props = {
         rating: {
@@ -169,23 +189,35 @@ export default function courseEvaluation() {
         },
       };
     }
-    const evaluationListMemo = useMemo(() => {
-      if(!evaluationData) return
-      const data = evaluationData?.data?.slice()
-      return data?.sort(sortFunction);
-    }, [evaluationOrder,evaluationData?.data]);
-    useEffect(() => {
-      console.log(evaluationListMemo, 'evaluationListMemo');
-    }, [evaluationListMemo]);
-    useEffect(() => {
-      console.log(evaluationOrder, 'evaluationOrder')
-    },[evaluationOrder])
+    // const evaluationListMemo = useMemo(() => {
+    //   if (!evaluationData) return
+    //   // setisFilteringOut(true)
+    //   const data = evaluationData?.data?.slice();
+    //   setData(data?.sort(sortFunction).map((item) => {
+    //     return (
+    //       {
+    //         ...item,
+    //         sort: evaluationOrder
+    //       }
+    //     )
+    //   }));
+    // }, [evaluationOrder, evaluationData?.data]);
+    // useEffect(() => {
+    //   console.log(evaluationListMemo, 'evaluationListMemo');
+    //   setisFilteringOut(false)
+    // }, [evaluationListMemo]);
+    // useEffect(() => {
+    //   if (!evaluationData?.data) return
+    //   console.log(evaluationOrder, 'evaluationOrder')
+    //   setData(evaluationData?.data)
+    //   // setisFilteringOut(false)
+    // }, [evaluationOrder])
     let { rating } = props;
     return (
       <div className="p-4">
         <Title title="数据概览"></Title>
         <CDataGrip data={rating}></CDataGrip>
-        <Title title="课程点评" customClick={() => {}}>
+        <Title title="课程点评" customClick={() => { }}>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
@@ -210,15 +242,21 @@ export default function courseEvaluation() {
             <MenuItem value="negative">评分倒序</MenuItem>
           </Select>
         </Title>
-        {evaluationListMemo?.map((item, index) => {
-          console.log(item,evaluationOrder, 'item');
-          return <UserComment data={item} key={item.id+evaluationOrder}></UserComment>;
-        })}
+        <div>
+
+          {
+            evaluationData?.data?.map((item, index) => {
+              console.log(item, evaluationOrder, 'item');
+              return <UserComment data={item} key={item.id}></UserComment>;
+            })
+          }
+
+        </div>
         {/* <UserComment></UserComment> */}
       </div>
     );
   };
-  const {data:groupData,error:groupError} = useFetch(`/post/home_list?type=group`,'get')
+  const { data: groupData, error: groupError } = useFetch(`/post/home_list?type=group`, 'get')
 
   const GroupChat = () => {
     return (
@@ -243,10 +281,10 @@ export default function courseEvaluation() {
   ];
   useEffect(() => {
     if (courseEvaluation?.data) {
-      setMenu(menuList[0]);
+      setMenu(0);
     }
   }, [courseEvaluation]);
-  const [menu, setMenu] = React.useState(menuList[-1]);
+  const [Menu, setMenu] = React.useState(-1);
   // if(courseEvaluation?.data){
   //   setMenu(menuList[0])
   // }
@@ -277,11 +315,27 @@ export default function courseEvaluation() {
       <HeaderMenu
         headerMenuList={headerMenuList}
         switchMenu={(val) => {
-          setMenu(menuList[val]);
+          setMenu(val);
         }}
       ></HeaderMenu>
+
       {/* <div className='mt-6'></div> */}
-      {menu}
+      {/* {!Menu ? <Menu></Menu> : null} */}
+      {/* {Menu} */}{
+        Menu === 0 ? Introduce(MyIntroduce) : null
+      }
+      {
+        Menu === 1 ? Evaluation(evaluationData?.data) : null
+      }
+      {
+        Menu === 2 ? <CourseEva {...courseEvaluation?.data} /> : null
+      }
+      {
+        Menu === 3 ? GroupChat() : null
+      }
+      {
+        Menu === 4 ? Pending() : null
+      }
     </div>
   );
 }

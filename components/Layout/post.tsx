@@ -95,7 +95,7 @@ export default function index(props) {
   };
   return (
     <div className="mb-10">
-      <UserHeader></UserHeader>
+      <UserHeader data={data?.data?.student}></UserHeader>
       <div className="min-h-[380px]">
         <Swiper
           spaceBetween={30}
