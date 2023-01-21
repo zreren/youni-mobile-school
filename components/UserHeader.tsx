@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 
 export default function UserHeader(props) {
-  const { children, title, className, returnClick } = props;
+  const { children, title, className, returnClick, data } = props;
   const router = useRouter();
   return (
     <div className="flex items-center p-2">
@@ -35,10 +35,11 @@ export default function UserHeader(props) {
       </div>
       <div>
         <div className="ml-4 text-sm font-medium max-w-8 text-blueTitle">
-          测试用户
+          {data?.nickName}
         </div>
         <div className="ml-4 text-xs text-gray-200">
-          2022届 · B.Com Accounting
+          {data?.education?.year} · {data?.education?.major}
+          {/* 2022届 · B.Com Accounting */}
         </div>
       </div>
     </div>
