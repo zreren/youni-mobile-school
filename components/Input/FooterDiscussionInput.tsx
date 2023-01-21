@@ -6,6 +6,7 @@ export default function FooterDiscussionInput(props) {
   const { data } = props;
   const send = ()=>{
     props.send(comment)
+    setComment('')
   }
   return (
     <div className="sticky  z-30 bottom-0 flex   items-center w-full p-5 bg-white h-[60px]">

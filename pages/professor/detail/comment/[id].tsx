@@ -176,7 +176,7 @@ export default function userComment() {
                       <div className='w-6 h-6'></div>
                     </div>
                     <div className='font-semibold text-primary text-xs' onClick={() => [setExpand(!expand)]}>
-                      {expand ? "收起" : "查看全部 3 条回复"}
+                    {expand ? '收起' : `查看全部 ${item?.children?.length - 2} 条回复`}
                     </div>
                   </div>
                 </DiscussionComponent>

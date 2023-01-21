@@ -16,16 +16,35 @@ import useRequest from '@/libs/request';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import useFetch from '../../hooks/useFetch';
+import { Toast } from 'react-vant';
 import { areOptionsEqual } from '@mui/base';
 function index(props) {
   const { id } = props;
-  const { data } = useFetch(`/post/detail?id=${id}`, 'get');
+  const { data,mutate } = useFetch(`/post/detail?id=${id}`, 'get');
   // const {data:postData} = data
-  const sendComment = (e) => {
-    useRequest.post('/api/post/comment', {
+  const sendComment = async  (e) => {
+    const {data} = await useRequest.post('/api/post/comment', {
       id: id,
       content: e
-    })
+    });
+    if(data?.message){
+      Toast.success('评论成功')
+      mutate({},true)
+    }
+  }
+  const sendChild = async (comment,id,pid)=>{
+
+      const {data} = await useRequest.post('/api/comment/comment', {
+        pid: pid !== null ? pid : id,
+        replyId:  pid !== null ?id:null,
+        content: comment
+      });
+      if(data?.message){
+        Toast.success('评论成功')
+        mutate({},true)
+      }
+    
+   
   }
   const Map = () => {
     return (
@@ -94,6 +113,39 @@ function index(props) {
       </Skeleton>
     );
   };
+  const [commentChild, setCommentChild] = useState({
+    id:null,
+    user:null,
+    pid:null
+
+
+  });
+  const commentComment = (e)=>{
+    setCommentChild(e)
+  }
+  function FooterDiscussionInputChild(props) {
+    const [comment, setComment] = useState<string>('');
+    const { user,id,pid } = props;
+    const send = ()=>{
+      props.send(comment,id,pid)
+      setComment('')
+    }
+    return (
+      <div className="sticky  z-30 bottom-0 flex   items-center w-full p-5 bg-white h-[60px]">
+        <input
+          placeholder={`回复${user?.nickName}`}
+          value={comment}
+          className="px-1 pl-4 w-full   h-9 bg-[#F7F8F9] rounded-full"
+          onChange={(e) => {
+            setComment(e.target.value);
+          }}
+        ></input>
+         
+          <div className="text-sm text-[#798195] whitespace-nowrap" onClick={()=>{send()}}>发送</div>
+        
+      </div>
+    );
+  }
   return (
     <div className="mb-10">
       <UserHeader data={data?.data?.student}></UserHeader>
@@ -167,9 +219,12 @@ function index(props) {
       <div className="w-full h-2 bg-bg"></div>
       <div className="p-5">
         <PostDiscussionInput></PostDiscussionInput>
-        <Discussion comments={data?.data?.comments}></Discussion>
-      </div>
-      <FooterDiscussionInput send={(e) => { sendComment(e) }} data={data?.data}></FooterDiscussionInput>
+        <Discussion commentComment={(e)=>{commentComment(e)}} comments={data?.data?.comments}></Discussion>
+      </div>{
+        commentChild?.id?<FooterDiscussionInputChild send={(comment,id,pid)=>{sendChild(comment,id,pid)}}  {...commentChild}></FooterDiscussionInputChild>:
+        <FooterDiscussionInput  send={(e) => { sendComment(e) }} data={data?.data}></FooterDiscussionInput>
+      }
+      
     </div>
   );
 };

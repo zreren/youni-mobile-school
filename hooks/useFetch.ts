@@ -75,7 +75,7 @@ function useFetch(path, method, body?) {
     //   router.push('/Login/signin');
     // }
   }
-  return { data, error ,};
+  return { data, error ,mutate};
 }
 
 export default useFetch;

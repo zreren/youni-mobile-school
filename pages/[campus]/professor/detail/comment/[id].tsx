@@ -157,7 +157,7 @@ export default function userComment() {
         >
           {clike ? <LikeActive></LikeActive> : <Like></Like>}
 
-          <div className="flex items-center text-xs text-[#A9B0C0]">
+          <div className=" text-xs text-[#A9B0C0]">
             {likeCount || 0}
           </div>
           {/* <div className="flex items-center text-xs">3</div> */}
@@ -293,7 +293,7 @@ export default function userComment() {
                       className="font-semibold text-primary text-xs"
                       onClick={() => [setExpand(!expand)]}
                     >
-                      {expand ? '收起' : '查看全部 3 条回复'}
+                      {expand ? '收起' : `查看全部 ${item?.children?.length} 条回复`}
                     </div>
                   ) : null}
                 </div>
