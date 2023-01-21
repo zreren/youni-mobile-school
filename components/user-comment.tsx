@@ -1,7 +1,8 @@
-import React from 'react';
+import React,{useState,useMemo} from 'react';
 import CScoreCard from '@/components/Rating/CScoreCard';
 import Super from './surper.svg';
 import Like from './Like.svg';
+import LikeActive from './LikeActive.svg';
 import DisLike from './disLike.svg';
 import Comments from './Comments.svg';
 import Discussion from './discussion.svg';
@@ -10,14 +11,30 @@ import useRequest from '@/libs/request';
 export default function userComment(props) {
   const { data } = props;
   const router = useRouter();
-  const like = async (id) => {
+  const handleLike = async (id) => {
     const { data } = await useRequest.post(`/api/evaluation/like`, {
       id: id,
     });
     if(data){
-      props.update()
+      // props.update()
+      setLike(!clike);
     }
   };
+  const [clike, setLike] = useState(data?.interactInfo?.liked);
+  const defaultLike = data?.interactInfo?.liked;
+  // const handleLike = (e) => {
+  //   like(id);
+  // };
+  const likeCount = useMemo(() => {
+    if (defaultLike && !clike) {
+      return Number(data?.interactInfo?.likeCount) - 1;
+    }
+    if (!defaultLike && clike) {
+      return Number(data?.interactInfo?.likeCount) + 1;
+    }
+    return Number(data?.interactInfo?.likeCount);
+    // if(defaultLike && clike){
+  }, [clike]);
   return (
     <div className="bg-white p-4 youni-boxShadow rounded-lg  mb-4">
       <div
@@ -104,12 +121,12 @@ export default function userComment(props) {
             className="flex"
             onClick={(e) => {
               e.preventDefault();
-              like(data?.id);
+              handleLike(data?.id);
             }}
           >
-            <Like></Like>
+            {clike ? <LikeActive></LikeActive> : <Like></Like>}
             <div className="text-xs text-gray-300">
-              {data?.interactInfo?.likeCount}
+                {likeCount || 0}
             </div>
           </div>
           <div className="flex">

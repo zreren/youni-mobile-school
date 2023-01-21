@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 // import styles from './index.module.css';
 import Display from '../PlayGround/display';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
@@ -116,37 +116,55 @@ const dataList = [
     img: 'https://source.unsplash.com/random/',
   },
 ];
-const PostDetail = (props) => {
-  return (
-    <SwipeableDrawer
-      anchor="right"
-      open={props.visible}
-      onClose={() => {
-        props.setVisible(false);
-      }}
-      onOpen={() => {
-        props.setVisible(true);
-      }}
-      className="h-screen"
-    >
-      <div className="w-screen h-screen">
-        <Post id={props.id}></Post>
-      </div>
-    </SwipeableDrawer>
-  );
-};
+
 export default function Waterfall(props) {
   const { postData } = props;
   console.log(postData, 'postData in waterfull');
   const [data, setData] = useState<any[]>(postData);
-  const [id,setId] = useState(0);
+  const [id, setId] = useState(0);
   const [postDetailShow, setPostDetailShow] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [reRender, setReRender] = useState(true);
+  const container = React.useRef<HTMLElement | null>(null);
+
+
+  const PostDetail = (props) => {
+    const [anchor, setAnchor] = React.useState<'bottom' | 'top' | 'left' | 'right'>('right')
+    const stopSwiper = () => {
+      // container.current?.anchor = 'bottom';
+      // container.current?.style?.pointerEvents = 'none';
+      setAnchor('bottom');
+      console.log('stop swiper')
+
+    }
+    const PostMemo = useMemo(() => {
+      return (
+        <Post stop={() => { stopSwiper() }} start={() => { setAnchor('right') }} id={props.id}></Post>
+      )
+    }, [id])
+    return (
+      <SwipeableDrawer
+        anchor={anchor}
+        open={props.visible}
+        onClose={() => {
+          props.setVisible(false);
+        }}
+        onOpen={() => {
+          props.setVisible(true);
+        }}
+        className="h-screen"
+      >
+        <div className="w-screen h-screen">
+          {/* <PostMemo></PostMemo> */}
+          {PostMemo}
+        </div>
+      </SwipeableDrawer>
+    );
+  };
   useEffect(() => {
     // setReRender(false);
     setData([])
-    if (postData?.length>=1) {
+    if (postData?.length >= 1) {
       setData(postData);
       // setReRender(true);
     }
@@ -154,7 +172,7 @@ export default function Waterfall(props) {
 
   const CardWithClick = React.useCallback(
     (props) => (
-      <Display {...props} handleClick={(e) => {setId(e);setPostDetailShow(true)}} />
+      <Display {...props} handleClick={(e) => { setId(e); setPostDetailShow(true) }} />
     ),
     [],
   );
@@ -181,10 +199,9 @@ export default function Waterfall(props) {
   const masonryOptions = {
     transitionDuration: 0,
   };
-
   const imagesLoadedOptions = { background: '.my-bg-image-el' };
   return (
-    <div className="w-full h-full mx-0">
+    <div className="w-full h-full mx-0" >
       <PostDetail
         setVisible={setPostDetailShow}
         id={id}
@@ -201,8 +218,8 @@ export default function Waterfall(props) {
           />
         ) : (
           <div className='w-full flex justify-center items-center mt-10'>
-          <Loading color="#FED64B" />
-        </div>
+            <Loading color="#FED64B" />
+          </div>
         )}
       </div>
       {/* <InfiniteScroll loadMore={loadMore} hasMore={hasMore} /> */}
