@@ -123,7 +123,7 @@ export default function index() {
         <PostDiscussionInput></PostDiscussionInput>
         <Discussion></Discussion>
       </div>
-      <FooterDiscussionInput></FooterDiscussionInput>
+      {/* <FooterDiscussionInput></FooterDiscussionInput> */}
     </div>
   );
 }

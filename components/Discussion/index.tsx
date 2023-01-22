@@ -3,6 +3,7 @@ import EmptyIcon from './empty.svg';
 import Image from 'next/image';
 import LikeActive from './like-active.svg';
 import Like from './Like.svg';
+import useRequest from '@/libs/request'
 export default function index(props) {
   // const comments = [
   //     {
@@ -97,23 +98,34 @@ export default function index(props) {
   //     }
   //   ];
   const { comments ,commentComment} = props;
-
+  const  timeSince = (date: string): string => {
+    const createdDate = new Date(date);
+    const currentDate = new Date();
+    const timeDiff = currentDate.getTime() - createdDate.getTime();
+    const hours = timeDiff / (1000 * 60 * 60);
+    console.log(timeDiff / (1000 * 60 * 60),date,'time');
+    return hours > 24 ? `${Math.floor(hours/24)}天` : `${parseInt(String(hours))}小时`;
+    // return timeDiff / (1000 * 60 * 60);
+  }
   const DiscussionComponentFooter = (props) => {
-    const { data, id ,user ,isChild,parent} = props;
+    const { data, id ,user ,isChild,parent ,time} = props;
     const [clike, setLike] = useState(data?.liked);
+    const like =  (id: number) =>{
+      useRequest.post('/api/comment/like', { id: id })
+    }
     const handleLike = (e) => {
       setLike(!e);
-      // like(id);
+      like(id);
     };
-    const defaultLike = data?.interactInfo?.liked;
+    const defaultLike = data?.liked;
     const likeCount = useMemo(() => {
       if (defaultLike && !clike) {
-        return Number(data?.interactInfo?.likeCount) - 1;
+        return Number(data?.likeCount) - 1;
       }
       if (!defaultLike && clike) {
-        return Number(data?.interactInfo?.likeCount) + 1;
+        return Number(data?.likeCount) + 1;
       }
-      return Number(data?.interactInfo?.likeCount);
+      return Number(data?.likeCount);
       // if(defaultLike && clike){
     }, [clike]);
     return (
@@ -121,7 +133,7 @@ export default function index(props) {
         <div className="flex items-center space-x-2" onClick={()=>{
         commentComment({user,id,pid:parent?.id})
       }}>
-          <div className="text-xs text-lightGray">4小时前</div>
+          <div className="text-xs text-lightGray">{timeSince(time)}前</div>
           <div className="text-xs font-semibold text-secondGray">回复</div>
         </div>
         <div
@@ -171,6 +183,7 @@ export default function index(props) {
           data={data?.interactInfo}
           user={data?.student}
           parent={data?.parent}
+          time={data?.createdAt}
         ></DiscussionComponentFooter>
         <div>{children}</div>
       </div>
@@ -213,8 +226,9 @@ export default function index(props) {
                                 {item?.student?.education?.year || '未认证'} ·{' '}
                                 {item.student?.education?.major || '未认证'}
                               </div>
-                              <div className='flex items-center'>
-                              <span className="text-sm mt-1 whitespace-nowrap">{item?.reply?'回复'+item?.reply?.student?.nickName:null}</span>
+                              <div className=' items-center space-x-1'>
+                              {item?.reply?<span className='whitespace-nowrap text-sm'>回复</span>:null}
+                              <span className="text-sm mt-1 whitespace-nowrap font-medium">{item?.reply?item?.reply?.student?.nickName:null}</span>
                               <span className="text-sm mt-1 w-full">
                                {item.content}
                               </span>
@@ -225,6 +239,7 @@ export default function index(props) {
                                 data={item?.interactInfo}
                                 user={item?.student}
                                 parent={item?.parent}
+                                time={item?.createdAt}
                               ></DiscussionComponentFooter>
                             </div>
                           </div>
@@ -256,8 +271,10 @@ export default function index(props) {
                                 {item.student?.education?.year} ·{' '}
                                 {item?.student?.education?.major || '未认证'}
                               </div>
-                              <div className='flex items-center'>
-                              <span className="text-sm mt-1 whitespace-nowrap">{item?.reply?'回复'+item?.reply?.student?.nickName:null}</span>
+                              <div className=' items-center space-x-1'>
+                                {item?.reply?<span className='whitespace-nowrap text-sm'>回复</span>:null}
+                              
+                              <span className="text-sm mt-1 whitespace-nowrap font-medium">{item?.reply?item?.reply?.student?.nickName:null}</span>
                               <span className="text-sm mt-1 w-full">
                                {item.content}
                               </span>
@@ -267,6 +284,7 @@ export default function index(props) {
                                 data={item?.interactInfo}
                                 user={item?.student}
                                 parent={item?.parent}
+                                time={item?.createdAt}
                               ></DiscussionComponentFooter>
                             </div>
                           </div>

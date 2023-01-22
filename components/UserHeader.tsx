@@ -30,7 +30,7 @@ export default function UserHeader(props) {
           </svg>
         </div>
         <div className="w-8 rounded-full bg-neutral-focus text-neutral-content">
-          <img src="https://placeimg.com/192/192/people" />
+          <img src={`${Cons.BASEURL}${data?.avatar}`} />
         </div>
       </div>
       <div>

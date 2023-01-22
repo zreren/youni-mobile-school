@@ -4,21 +4,32 @@ import Icon2 from './contact/2.svg';
 import Icon3 from './contact/3.svg';
 import Icon4 from './contact/4.svg';
 
-export default function index() {
+interface userInfo{
+  data:{
+    nickName:string,
+    education:{
+    year:string,
+    major:string
+  }
+  avatar:string
+  }
+}
+export default function index(props:userInfo) {
+  const {data}= props
   return (
     <div className="w-full bg-white h-44">
       <div className="flex items-center">
         <div className="avatar placeholder">
           <div className="w-12 rounded-full bg-neutral-focus text-neutral-content">
-            <img src="https://placeimg.com/192/192/people" />
+            <img src={`${Cons.BASEURL}${data?.avatar}`} />
           </div>
         </div>
         <div>
           <div className="ml-4 text-sm font-medium max-w-8 text-blueTitle">
-            测试用户
+            {data?.nickName}
           </div>
           <div className="ml-4 text-xs text-gray-200">
-            2022届 · B.Com Accounting
+            {data?.education?.year} · {data?.education?.major}
           </div>
         </div>
       </div>

@@ -48,17 +48,17 @@ export default function courseEvaluation() {
           <FilterIcon></FilterIcon>
         </Title>
         <div className="space-y-4">
-          {professorList.map((item) => {
+          {/* {professorList.map((item) => {
             return (
-              <ProfessorCard
-                data={item}
-                key={item.id}
-                onClick={() => {
-                  router.push(`/professor/detail/${item.id}`);
-                }}
-              ></ProfessorCard>
+              // <ProfessorCard
+              //   data={item}
+              //   key={item.id}
+              //   onClick={() => {
+              //     router.push(`/professor/detail/${item.id}`);
+              //   }}
+              // ></ProfessorCard>
             );
-          })}
+          })} */}
         </div>
       </CommonLayout>
     );
@@ -127,7 +127,7 @@ export default function courseEvaluation() {
       <HeaderMenu
         headerMenuList={headerMenuList}
         switchMenu={(val) => {
-          setMenu(menuList[val]);
+          // setMenu(menuList[val]);
         }}
       ></HeaderMenu>
       {/* <div className='mt-6'></div> */}

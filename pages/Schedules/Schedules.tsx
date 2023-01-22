@@ -586,6 +586,7 @@ export default function Schedules() {
       ></CourseDetailCard>
       {setting.view === 'year' ? (
         <Month></Month>
+        
       ) : (
         <Calendar
           setting={setting}

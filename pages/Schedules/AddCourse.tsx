@@ -123,7 +123,7 @@ export default function AddSchedule() {
   }
   interface CCourseInput {
     title: string;
-    isNess: boolean;
+    isNess?: boolean;
     children?: any;
     data: any;
     change?: (data: ChangeType) => void;
@@ -537,7 +537,7 @@ export default function AddSchedule() {
         <CCourseInput
           title="Section"
           change={(val) => {
-            handleChange(val.name, 'section');
+            handleChange(val.label, 'section');
           }}
           data={courseDetailData?.data?.sections}
           renderData={courseDetailData?.data?.sections?.map(
@@ -547,13 +547,13 @@ export default function AddSchedule() {
         <CCourseInput
           title="课程形式"
           change={(val) => {
-            handleChange(val, 'name');
+            handleChange(val.label, 'name');
           }}
         ></CCourseInput>
         <CCourseInput
           title="教授"
           change={(val) => {
-            handleChange(val.title, 'name');
+            handleChange(val.label, 'name');
             handleChange(val.id, 'courseId');
           }}
           data={courseDetailData?.data?.sections}

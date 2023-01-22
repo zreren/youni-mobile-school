@@ -5,7 +5,8 @@
     "build": "next build",
     "start": "next start",
     "test": "jest",
-    "lint": "next lint"
+    "lint": "next lint",
+    "tscheck":"tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "@babel/preset-react": "^7.18.6",
