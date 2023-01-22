@@ -13,7 +13,7 @@ import { Flex, Loading } from 'react-vant';
 const Masonry = dynamic(
   () => import('masonic').then((module) => module.Masonry),
   { ssr: false },
-);
+)  as any;
 
 const dataList = [
   {

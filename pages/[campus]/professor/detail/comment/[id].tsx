@@ -22,7 +22,7 @@ export default function userComment() {
     const data = await useRequest.post(`/api/comment/like`, {
       id: id,
     });
-    console.log(data.message, "message")
+    // console.log(data.message, "message")
     // if(data.message){
     // setReRender(!reRender);
     // }
@@ -421,7 +421,7 @@ export default function userComment() {
           <Discussion data={data?.data?.comments}></Discussion>
         </div>
       </div>
-      <FooterDiscussionInput></FooterDiscussionInput>
+      <FooterDiscussionInput send={()=>{}} data={data?.data}></FooterDiscussionInput>
     </>
   );
 }

@@ -123,6 +123,7 @@ const SetSchedule = (props) => {
       anchor="bottom"
       open={props.visible}
       disableDiscovery={true}
+      disableSwipeToOpen={true}
       onClose={() => {
         props.setVisible(false);
       }}
@@ -402,9 +403,10 @@ export default function Schedules() {
     // }
     console.log(data, 'data');
   }, [data]);
-  const [arg, setArg] = useState();
+  const [arg, setArg] = useState<any>();
   const [setting, setSetting] = useState({
     view: 'day',
+    isWeekend:false,
   });
   const Dayliy = (props) => {
     const { title } = props;
@@ -513,7 +515,7 @@ export default function Schedules() {
         <div className="flex items-center justify-around w-2/3 h-8 bg-white rounded-xl">
           <button
             onClick={() => {
-              setSetting({ ...setting, view: 'day' });
+              setSetting({ ...setting,isWeekend:false, view: 'day' });
             }}
             className={classnames(
               '"btn  p-1 text-sm  text-gray-400  rounded-sm',
@@ -526,7 +528,7 @@ export default function Schedules() {
           </button>
           <button
             onClick={() => {
-              setSetting({ ...setting, view: 'week' });
+              setSetting({ ...setting, isWeekend:true,view: 'week' });
             }}
             className={classnames('text-sm   rounded-sm text-gray-400', {
               'text-yellow-300 bg-gray-50': setting.view === 'week',
@@ -536,7 +538,7 @@ export default function Schedules() {
           </button>
           <button
             onClick={() => {
-              setSetting({ ...setting, view: 'today' });
+              setSetting({ ...setting, isWeekend:true,view: 'today' });
             }}
             className={classnames('text-sm  rounded-sm text-gray-400', {
               'text-yellow-300 bg-gray-50': setting.view === 'today',
@@ -580,7 +582,7 @@ export default function Schedules() {
       <CourseDetailCard
         visible={visible}
         setVisible={setVisible}
-        {...arg}
+        {...arg as Object}
       ></CourseDetailCard>
       {setting.view === 'year' ? (
         <Month></Month>

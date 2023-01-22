@@ -87,8 +87,18 @@ tbody tr:first-child {
 }
 .fc-scroller {
   margin-bottom: 12px;
+  background-color: #F9FAFB;
+}
+.fc-scroller-harness{
+  /* background-color: #F9FAFB; */
 }
 .fc-col-header {
   background-color: #f6f6f6;
   /* padding-left:-20px !important; */
+}
+
+.fc .fc-scrollgrid, .fc .fc-scrollgrid table{
+  table-layout:inherit !important;
+  /* margin-left: 4px; */
+  /* padding-left: 4px !important; */
 }

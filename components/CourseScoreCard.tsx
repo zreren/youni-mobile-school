@@ -11,6 +11,8 @@ interface ICourseScoreCard {
     desc?: string;
     evaluation?:any;
     extraInfo?:any;
+    id:number;
+    [key:string]:any
   };
 }
 export default function CourseScoreCard(props: ICourseScoreCard) {

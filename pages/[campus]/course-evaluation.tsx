@@ -25,10 +25,10 @@ export default function courseEvaluation() {
     `${Cons.API.COURSE.DETAIL}?id=1`,
     'get',
   );
-  const [orderState,setOrderState] = React.useState();
+  const [orderState,setOrderState] = React.useState<undefined | string>();
   const handleChangeOrder =  (event: SelectChangeEvent) => {
     console.log(event.target.value,"event.target.value")
-    setOrderState(event.target.value as string);
+    setOrderState(event.target.value);
   };
   console.log(courseEvaluation, 'courseEvaluation');
   // if(!courseEvaluation) return
