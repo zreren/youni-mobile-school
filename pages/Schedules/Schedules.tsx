@@ -122,6 +122,7 @@ const SetSchedule = (props) => {
     <SwipeableDrawer
       anchor="bottom"
       open={props.visible}
+      disableDiscovery={true}
       onClose={() => {
         props.setVisible(false);
       }}

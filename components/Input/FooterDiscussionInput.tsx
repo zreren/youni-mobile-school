@@ -1,10 +1,21 @@
 import React, { useState } from 'react';
 import StarIcon from './star.svg';
 import DiscussionIcon from './DiscussionIcon.svg';
-export default function FooterDiscussionInput(props) {
+
+interface FooterType{
+  data:any,
+  send:(comment:string)=>void
+  [key:string]:any
+}
+/**
+ * 
+ * @param props
+ * @returns 
+ */
+export default function FooterDiscussionInput(props:FooterType) {
   const [comment, setComment] = useState<string>('');
   const { data } = props;
-  const send = ()=>{
+  const send = (comment:string):void=>{
     props.send(comment)
     setComment('')
   }
@@ -31,7 +42,7 @@ export default function FooterDiscussionInput(props) {
           </div>
         </div>
       ) : (
-        <div className="text-sm text-[#798195] whitespace-nowrap" onClick={()=>{send()}}>发送</div>
+        <div className="text-sm text-[#798195] whitespace-nowrap" onClick={()=>{send(comment)}}>发送</div>
       )}
     </div>
   );

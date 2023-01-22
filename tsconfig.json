@@ -19,6 +19,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./*"
@@ -34,7 +35,5 @@
   ],
   "exclude": [
     "node_modules",
-    "**/*.js",
-    "**/*.tsx"
   ]
 }

@@ -1,7 +1,8 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import classnames from 'classnames';
-export default function Header(props: any) {
+
+export default function Header(props: any):JSX.Element{
   const { children, title , className,returnClick} = props;
   const router = useRouter();
 

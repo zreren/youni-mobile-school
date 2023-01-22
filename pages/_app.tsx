@@ -69,10 +69,13 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
       <SwipeableDrawer
         className="topIndex"
+        disableDiscovery={true}
+        disableSwipeToOpen={true}
         onClose={() => {
           dispatch(setOpenLogin('close'));
           dispatch(setAuthState(true));
         }}
+        onOpen={() => {}}
         open={openLogin!=='close'}
         anchor="bottom"
       >

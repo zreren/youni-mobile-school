@@ -22,6 +22,10 @@ function index(props) {
   const { id } = props;
   const { data,mutate } = useFetch(`/post/detail?id=${id}`, 'get');
   // const {data:postData} = data
+  /**
+   * @description 发送评论
+   * @param e 评论内容
+   */
   const sendComment = async  (e) => {
     const {data} = await useRequest.post('/api/post/comment', {
       id: id,
@@ -32,19 +36,22 @@ function index(props) {
       mutate({},true)
     }
   }
+  /**
+   * 
+   * @param comment 评论内容
+   * @param id 当父id不存在时，id为当前评论id，否则为父id
+   * @param pid 父id
+   */
   const sendChild = async (comment,id,pid)=>{
-
       const {data} = await useRequest.post('/api/comment/comment', {
-        pid: pid !== null ? pid : id,
-        replyId:  pid !== null ?id:null,
+        pid: pid === null ? id : pid,
+        replyId:  pid === null ?null:id,
         content: comment
       });
       if(data?.message){
         Toast.success('评论成功')
         mutate({},true)
       }
-    
-   
   }
   const Map = () => {
     return (
