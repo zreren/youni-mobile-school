@@ -30,6 +30,27 @@ export default function LabelBottomNavigation(props) {
       }
     });
   }, [router]);
+  React.useEffect(()=>{
+    const BrowserInfo = {      
+      isAndroid: Boolean(navigator.userAgent.match(/android/ig)), // 是否是Android浏览器   
+      isIphone: Boolean(navigator.userAgent.match(/iphone|ipod|iOS/ig)), // 是否是苹果浏览器
+      isIpad: Boolean(navigator.userAgent.match(/ipad/ig)), // 是否是 IPad 浏览器
+      // isIpad: Boolean(navigator.userAgent.match(/Linux/ig)), // 是否是Linux平台浏览器
+      isWeixin: Boolean(navigator.userAgent.match(/MicroMessenger/ig)), // 是否是微信平台浏览器
+      isAli: Boolean(navigator.userAgent.match(/AlipayClient/ig)), // 是否是支付宝平台浏览器
+      isPhone: Boolean(/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) // 是否是手机端
+    }
+    console.log(BrowserInfo,' BrowserInfo');
+    if(BrowserInfo.isPhone){
+      const dom = document.getElementById("bottom-menu");
+      if(!dom)return
+      dom.style.paddingBottom = "8px";
+    }else{
+      const dom = document.getElementById("bottom-menu");
+      if(!dom)return
+      dom.style.paddingBottom = "0px";
+    }
+  },[])
   let body = document.body;
   const overflowState =  body.style.overflow;
   const handleChange = (event: React.SyntheticEvent, newValue: any) => {
@@ -93,8 +114,9 @@ export default function LabelBottomNavigation(props) {
         </div>
       ) : (
         <BottomNavigation
-          className="fixed -bottom-1 left-0 z-30 w-full text-sm transition-all"
+          className="fixed -bottom-1 left-0 z-30 w-full  text-sm transition-all"
           value={value}
+          id="bottom-menu"
           showLabels={true}
           onChange={handleChange}
         >
