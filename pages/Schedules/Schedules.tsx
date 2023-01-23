@@ -511,14 +511,14 @@ export default function Schedules() {
         <div className="text-base font-bold text-blueTitle">第 7 周</div>
         <div className="text-xs text-gray-400">10月10日 - 10月16日</div>
       </div>
-      <div className="flex items-center justify-between pl-5 pr-5 h-11 bg-bg">
-        <div className="flex items-center justify-around w-2/3 h-8 bg-white rounded-xl">
+      <div className="flex  px-2 items-center justify-between pl-5 pr-5 h-11 bg-bg">
+        <div className="flex items-center justify-around w-2/3 h-8 bg-white rounded-lg">
           <button
             onClick={() => {
               setSetting({ ...setting,isWeekend:false, view: 'day' });
             }}
             className={classnames(
-              '"btn  p-1 text-sm  text-gray-400  rounded-sm',
+              '"btn  p-1 text-sm mx-0.5 text-gray-400 w-full rounded-lg',
               {
                 'text-yellow-300 bg-gray-50': setting.view === 'day',
               },
@@ -530,7 +530,7 @@ export default function Schedules() {
             onClick={() => {
               setSetting({ ...setting, isWeekend:true,view: 'week' });
             }}
-            className={classnames('text-sm   rounded-sm text-gray-400', {
+            className={classnames('text-sm  w-full  p-1 rounded-lg text-gray-400', {
               'text-yellow-300 bg-gray-50': setting.view === 'week',
             })}
           >
@@ -540,7 +540,7 @@ export default function Schedules() {
             onClick={() => {
               setSetting({ ...setting, isWeekend:true,view: 'today' });
             }}
-            className={classnames('text-sm  rounded-sm text-gray-400', {
+            className={classnames('text-sm w-full p-1  rounded-lg text-gray-400', {
               'text-yellow-300 bg-gray-50': setting.view === 'today',
             })}
           >
@@ -550,7 +550,7 @@ export default function Schedules() {
             onClick={() => {
               setSetting({ ...setting, view: 'year' });
             }}
-            className={classnames('text-sm  rounded-sm text-gray-400', {
+            className={classnames('text-sm mx-0.5 w-full  p-1 rounded-lg text-gray-400', {
               'text-yellow-300 bg-gray-50': setting.view === 'year',
             })}
           >

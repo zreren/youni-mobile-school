@@ -70,9 +70,13 @@ tbody tr:first-child {
 .fc-scrollgrid-sync-inner {
   border: none !important;
 }
-/* .fc-scrollgrid-section-body{
-   padding-left: 40px !important;
-} */
+.fc-scrollgrid-section-body{
+   /* padding-left: 40px !important; */
+   /* margin-top: 16px !important; */
+}
+table tbody:first-child{
+  /* margin-top: 16px !important; */
+}
 /* .fc-col-header-cell::after {
   content: '11';
   display: block;
@@ -87,7 +91,7 @@ tbody tr:first-child {
 }
 .fc-scroller {
   margin-bottom: 12px;
-  background-color: #F9FAFB;
+  /* background-color: #F9FAFB; */
 }
 .fc-scroller-harness{
   /* background-color: #F9FAFB; */

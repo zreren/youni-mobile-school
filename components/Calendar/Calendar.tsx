@@ -19,16 +19,23 @@ import { createRef, useEffect, useRef, useState } from 'react';
 import Location from './location.svg';
 import TimeIconActive from './icon_time.svg';
 import SaveToLibButton from '@/components/Button/SaveToLibButton';
-
-
+import useLanguage from '@/hooks/useLanguage';
 
 function Calendar(props) {
   interface Event {
     dayOfWeek: number;
     // other properties
   }
-  
-  const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+  const days = [
+    'sunday',
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+  ];
   const Puller = styled(Box)(({ theme }) => ({
     width: 30,
     height: 6,
@@ -38,81 +45,130 @@ function Calendar(props) {
     top: 8,
     left: 'calc(50% - 15px)',
   }));
-  const Card = (props)=>{
-    const {title,extendedProps} = props;
-    const background = 'linear-gradient(180deg, #EBE5FE -117.9%, #FFFFFF 125.31%)';
+  const Card = (props) => {
+    const { title, extendedProps, dayOfWeek } = props;
+    const background =
+      'linear-gradient(180deg, #EBE5FE -117.9%, #FFFFFF 125.31%)';
     return (
       <div className="w-full p-4  my-3 bg-white rounded-lg h-[176px]">
-          <Puller></Puller>
-          <div style={{background:background}} className="flex justify-between w-full h-20 p-4 border border-purple-600 rounded-2xl">
-            <div className="text-purple-600">
-              <div className="flex items-center">
-                {' '}
-                <div
-                  className={classnames(
-                    'w-1 h-4 mr-2 text-lg font-medium bg-purple-500 rounded-full',
-                  )}
-                ></div>
-                <div>{title}</div>
-              </div>
-              <div className="mt-2 text-xs font-normal">
-                {' '}
-                Section {extendedProps?.section?.name}{' '}
-                {extendedProps?.online ? '线上课程' : '线下课程'}
-              </div>
+        <div
+          style={{ background: background }}
+          className="flex justify-between w-full h-20 p-4 border border-purple-600 rounded-2xl"
+        >
+          <div className="text-purple-600">
+            <div className="flex items-center">
+              {' '}
+              <div
+                className={classnames(
+                  'w-1 h-4 mr-2 text-lg font-medium bg-purple-500 rounded-full',
+                )}
+              ></div>
+              <div>{title}</div>
             </div>
-            <div className="flex flex-col items-end w-1/2">
-              <div className="-space-x-2 avatar-group">
-                <div className="avatar border-[1px]">
-                  <div className="w-6">
-                    <img src="https://placeimg.com/192/192/people" />
-                  </div>
+            <div className="mt-2 text-xs font-normal">
+              {' '}
+              Section {extendedProps?.section?.name}{' '}
+              {extendedProps?.online ? '线上课程' : '线下课程'}
+            </div>
+          </div>
+          <div className="flex flex-col items-end w-1/2">
+            <div className="-space-x-2 avatar-group">
+              <div className="avatar border-[1px]">
+                <div className="w-6">
+                  <img src="https://placeimg.com/192/192/people" />
                 </div>
-                <div className="avatar border-[1px]">
-                  <div className="w-6">
-                    <img src="https://placeimg.com/192/192/people" />
-                  </div>
+              </div>
+              <div className="avatar border-[1px]">
+                <div className="w-6">
+                  <img src="https://placeimg.com/192/192/people" />
                 </div>
-                <div className="border-[1px] avatar">
-                  <div className="w-6">
-                    <img src="https://placeimg.com/192/192/people" />
-                  </div>
+              </div>
+              <div className="border-[1px] avatar">
+                <div className="w-6">
+                  <img src="https://placeimg.com/192/192/people" />
                 </div>
-                {/* <div className="border avatar placeholder">
+              </div>
+              {/* <div className="border avatar placeholder">
                   <div className="w-6 bg-neutral-focus text-neutral-content">
                     <span>+</span>
                   </div>
                 </div> */}
+            </div>
+            <div className="text-xs">6 名同学</div>
+          </div>
+        </div>
+        <div className="mt-4 pb-4">
+          <div className="mb-2">
+            <div className="flex items-center">
+              <TimeIconActive></TimeIconActive>
+              <div className="ml-3 text-sm text-gray-400">
+                {useLanguage('l') === 'el'
+                  ? '周' + dayOfWeek
+                  : '周' + dayOfWeek}
               </div>
-              <div className="text-xs">6 名同学</div>
+              <div className="ml-10 text-sm text-gray-400 ">
+                {extendedProps.time}
+              </div>
             </div>
           </div>
-          <div className="mt-4 pb-4">
-            <div className="mb-2">
-              <div className="flex items-center">
-                <TimeIconActive></TimeIconActive>
-                <div className="ml-3 text-sm text-gray-400">周二</div>
-                <div className="ml-10 text-sm text-gray-400 ">
-                  {extendedProps.time}
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center">
-              <Location></Location>
-              <div className="ml-3 text-sm text-gray-400">地点</div>
-              <div className="ml-10 text-sm text-gray-400 ">
-                {extendedProps.classroom}
-              </div>
+          <div className="flex items-center">
+            <Location></Location>
+            <div className="ml-3 text-sm text-gray-400">地点</div>
+            <div className="ml-10 text-sm text-gray-400 ">
+              {extendedProps.classroom}
             </div>
           </div>
         </div>
-    )
+      </div>
+    );
+  };
+  function generateNewArray(timeArray: string[], dataObject: object) {
+    let newArray = [];
+    timeArray.forEach((time) => {
+      let children = dataObject[timeArray.indexOf(time)];
+      if (children) {
+        newArray.push({
+          time: time,
+          children: children,
+        });
+      }
+    });
+    console.log(newArray);
+    return newArray;
+  }
+  const groupedEvents: { [day: string]: Event[] } = props?.courseData?.reduce(
+    (acc, event) => {
+      const day = event.dayOfWeek;
+      if (!acc[day]) {
+        acc[day] = [];
+      }
+      acc[day].push(event);
+      return acc;
+    },
+    {},
+  );
+  const getWeekDates = () => {
+    const weekDates = [];
+    const currentDate = new Date();
+    let day = currentDate.getUTCDay();
+    const diff = currentDate.getUTCDate() - day;
+    for (let i = 0; i < 7; i++) {
+      const newDate = new Date(currentDate.setUTCDate(diff + i));
+      const dateString = newDate.toISOString().slice(0, 10);
+      weekDates.push(dateString);
+    }
+    return weekDates;
+  };
+  function isToday(dateString: string) {
+    let date = new Date(dateString);
+    let today = new Date();
+    return date.toDateString() === today.toDateString();
   }
   const ListView = () => {
     const YearCard = (props) => {
       const { title } = props;
       return (
-        <div className="flex p-4 card-shadow items-center my-4 justify-between bg-white w-full h-20 rounded-lg">
+        <div className="flex  p-4 card-shadow items-center my-4 justify-between bg-white w-full h-20 rounded-lg">
           <div className="space-y-2">
             <div className="flex items-center  space-x-2 ">
               <div className="text-xs font-medium text-[#13C2C2] h-5 rounded whitespace-nowrap bg-[#E6FFFB] px-[6px] py-1">
@@ -139,11 +195,10 @@ function Calendar(props) {
           <div>
             <div className="flex items-center pb-2 space-x-2">
               <div className="text-xs text-[#FAAD14] h-5 rounded whitespace-nowrap bg-[#FFFAE6] px-[6px] py-1">
-              日程
+                日程
               </div>
               <div className="text-[#37455C] text-sm font-semibold">
-                {title ||
-                  '日程日程日程'}
+                {title || '日程日程日程'}
               </div>
             </div>
             <div className="text-[#A9B0C0] text-xs ">2022年9月7日</div>
@@ -151,65 +206,80 @@ function Calendar(props) {
           <ArrowRight></ArrowRight>
         </div>
       );
-    }
-    const Identify = () => {
+    };
+    const Identify = (props) => {
+      const { title, index } = props;
       // const router = useRouter();
       // const { t } = useTranslation('translations');
-      const colorMap = [
-        '#FFD036',
-        '#798195',
-        '#FF7978',
-      ]
+      const colorMap = ['#FFD036', '#798195', '#FF7978'];
+      function getDayOfWeek(dateString: string) {
+        const date = new Date(dateString);
+        const days = [
+          'Sunday',
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday',
+        ];
+        return days[date.getUTCDay()];
+      }
+      function getMonthDay(dateString: string) {
+        const date = new Date(dateString);
+        const month = ("0" + (date.getMonth() + 1)).slice(-2); // getMonth() returns 0 for January and 11 for December
+        const day = ("0" + date.getDate()).slice(-2);
+        return `${month}-${day}`;
+    }
       return (
-        <div style={{background:colorMap[0]}} className="relative flex items-center justify-between w-full h-12 p-4 pt-0 pb-0 rounded text-gold">
-          <div className="flex items-center  ">
+        <div
+          style={{ background: colorMap[index % 3] }}
+          className="relative flex items-center justify-between w-full h-12 p-4 pt-0 pb-0 rounded text-gold"
+        >
+          <div className="flex items-end ">
             <Polygon className="absolute top-0 left-0 h-20"></Polygon>
-            {/* <ValidIcon className="absolute left-0"></ValidIcon> */}
-            {/* <div>{t("profile.identify.student.certification")}</div> */}
-            <div className="pl-1 font-bold text-white">九月</div>
+            <div className="pl-1 font-bold text-white">
+              {getDayOfWeek(title)}
+            </div>
+            <div className="pl-1 text-xs font-light text-white">{getMonthDay(title)}</div>
           </div>
-          {/* <div className="flex flex-col items-center text-xs text-brown">
-            <div>30秒认证在校生身份</div> <div>解锁YoUni全部功能</div>
-          </div> */}
           <BgSVG className="absolute h-12 scale-125  w-18 right-2"></BgSVG>
         </div>
       );
     };
     // const Month = () => {
     return (
-      <div className="w-full min-h-screen p-5">
-        <Identify></Identify>
-        <Card title="1111" extendedProps={{section:{name:'123'},online:true,time:''}}></Card>
-        <Identify></Identify>
-        <YearCard title="Classes start"></YearCard>
+      <div className="w-full min-h-screen p-5 ">
+        {generateNewArray(getWeekDates(), groupedEvents).map((item, index) => {
+          console.log(item, 'item');
+          if(setting.view === 'today' && !isToday(item.time)) return null;
+          return (
+            <>
+              <Identify title={item.time} index={index}></Identify>
+              {item?.children?.map((item, index) => {
+                return (
+                  <Card
+                    title={item.name}
+                    dayOfWeek={item?.dayOfWeek}
+                    extendedProps={{
+                      section: { name: item.section?.name },
+                      online: true,
+                      time: '',
+                    }}
+                  ></Card>
+                );
+              })}
+            </>
+          );
+        })}
+        {/* <Identify></Identify> */}
+        {/* <YearCard title="Classes start"></YearCard> */}
       </div>
     );
     // };
   };
-  const groupedEvents: { [day: string]: Event[] } = props?.courseData?.reduce((acc, event) => {
-    const day = days[event.dayOfWeek - 1];
-    if (!acc[day]) {
-        acc[day] = []
-    }
-    acc[day].push(event);
-    return acc;
-  }, {})
-  const getWeekDates = () => {
-    const weekDates = [];
-    const currentDate = new Date();
-    let day = currentDate.getUTCDay();
-    if (day === 0) {
-      day = 7;
-    }
-    const diff = currentDate.getUTCDate() - day + 1;
-    for (let i = 0; i < 7; i++) {
-      const newDate = new Date(currentDate.setUTCDate(diff + i));
-      const dateString = newDate.toISOString().slice(0, 10);
-      weekDates.push(dateString);
-    }
-    return weekDates;
-  };
-  console.log(getWeekDates(),"getWeekDates")
+
+  console.log(getWeekDates(), 'getWeekDates');
   console.log(groupedEvents, 'groupedEventscourseData');
   const [setting, setSetting] = useState(props.setting);
   const viewMap = {
@@ -219,13 +289,13 @@ function Calendar(props) {
     month: 'dayGridMonth',
   };
   const calendarRef = createRef<any>();
-  useEffect(()=>{
-    if(setting.view==='today') {
-      setView(false)
-      return
+  useEffect(() => {
+    if (setting.view === 'today') {
+      setView(false);
+      return;
     }
-    setView(true)
-  },[setting])
+    setView(true);
+  }, [setting]);
   useEffect(() => {
     setSetting(props.setting);
   }, [props.setting.view]);
@@ -265,7 +335,7 @@ function Calendar(props) {
     const body = document.getElementsByClassName(
       'fc-scrollgrid-section-body',
     )[0];
-    if (!calendarView) {
+    if (!calendarView || setting.view === 'today') {
       console.log(body, 'body');
       body.setAttribute('style', 'display:none');
     } else {
@@ -395,9 +465,10 @@ function Calendar(props) {
           //     viewClassNames="
           // h-screen"
         />
-
       </div>
-      <div className="bg-gray-50">{!calendarView ? <ListView></ListView> : null}</div>
+      <div className="bg-gray-50 topIndex relative -translate-y-3">
+        {!calendarView ? <ListView></ListView> : null}
+      </div>
     </div>
   );
 }
