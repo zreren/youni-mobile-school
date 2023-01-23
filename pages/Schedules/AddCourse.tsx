@@ -353,7 +353,9 @@ export default function AddSchedule() {
       dayOfWeek: [],
       classroom: '',
       courseId: null,
-      section: '',
+      section: {
+        courseName: '',
+      },
     });
     const { data: courseDetailData } = useFetch(
       `/course/detail?id=${CURRICULUM.courseId}`,

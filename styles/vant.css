@@ -1,8 +1,8 @@
-.rv-uploader__preview-image{
+.valid  .rv-uploader__preview-image{
     --rv-uploader-size:"100%" !important;
 
 }
-.rv-uploader{
+.valid .rv-uploader{
     width: 100%;
     height: 100%;
     display: flex !important;
@@ -10,10 +10,10 @@
     align-items: center;
     overflow: hidden;
 }
-.Popup{
+.valid .Popup{
     background: rgba(0, 0, 0, 0.6);
 }
-.rv-overlay{
+.valid .rv-overlay{
     background: rgba(0, 0, 0, 0.15) !important;
     z-index: 19999 !important;
     height: 100% !important;

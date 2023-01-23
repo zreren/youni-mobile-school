@@ -136,8 +136,6 @@ export default function courseEvaluation() {
 
   const [isFilteringOut, setisFilteringOut] = React.useState(true);
 
-  // evaluationData?.data?.sort(sortFunction);
-
   const CourseEva = (props) => {
     type order = 'default' | 'positive' | 'negative'
     const [evaluationOrder, setEvaluationOrder] = React.useState<order>('default');
@@ -165,20 +163,6 @@ export default function courseEvaluation() {
       'get',
     );
     const [data, setData] = React.useState(evaluationData?.data);
-    // useEffect(() => {
-    //   if (!evaluationData?.data) return
-    //   const sortFunction = (a, b) => {
-    //     console.log(a, b, "sortFunction")
-    //     if (evaluationOrder === 'positive')
-    //       return b.professorRating - a.professorRating;
-    //     if (evaluationOrder === 'negative')
-    //       return a.professorRating - b.professorRating;
-    //     if (evaluationOrder === 'default') return 0
-    //     // return 0;
-    //   };
-    //   setData(evaluationData?.data.sort(sortFunction))
-    // }, [evaluationData, evaluationOrder])
-
     if (!props) {
       props = {
         rating: {

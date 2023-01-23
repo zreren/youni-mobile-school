@@ -19,11 +19,11 @@ import DraftIcon from './draft.svg';
 import NoteIcon1 from './note1.svg';
 import NoteIcon2 from './note2.svg';
 import NoteIcon3 from './note3.svg';
-// const useWindowSize = dynamic(() => import('react-use').then(mod=>mod.useWindowSize), {
-//   ssr: false,
-// });
-// const
+import useRequest from '@/libs/request';
+import useFetch from '@/hooks/useFetch';
+
 export default function addPost() {
+
   const Footer = () => {
     return (
       <div className="w-full bg-white h-[60px] space-x-4 flex justify-between fixed -bottom-1 px-5 py-2">
@@ -42,29 +42,46 @@ export default function addPost() {
       </div>
     );
   };
-
+  const upload = async (file) => {
+    console.log(file,"file")
+    try {
+      const body = new FormData()
+      body.append('file', file)
+      const {data:resp} = await useRequest.post('/api/upload', body)
+      const json = resp
+      console.log(json?.data,"json")
+      // return包含 url 的一个对象 例如: {url:'https://img.yzcdn.cn/vant/sand.jpg'}
+      return { url: Cons.BASEURL + json?.data?.filename ,name:json?.data?.filename }
+    } catch (error) {
+      console.log(error,"error")
+      return { url: `demo_path/${file.name}` }
+    }
+  }
+  
   const headerMenuList = [
     {
-      label: '关注',
-    },
-    {
-      label: '推荐',
-    },
-    {
       label: '闲置',
+      key: 'idle',
     },
     {
       label: '活动',
+      key: 'activity',
     },
     {
       label: '新闻',
+      key: 'news',
     },
     {
       label: '转租',
+      key: 'sublet',
     },
     {
-      label: '转租',
-    },
+      label: '群聊',
+      key: 'group',
+    },{
+      label: '拼车',
+      key: 'carpool',
+    }
   ];
 
   const item = {
@@ -81,67 +98,83 @@ export default function addPost() {
       url: 'https://img.yzcdn.cn/vant/sand.jpg', // 其他文件
     },
   ];
-
+  const IconList = {
+    // "youni:seat": <Seat></Seat>,
+    "youni:org": <Org></Org>,
+    "youni:startTime": <StartTime></StartTime>,
+    "youni:endTime": <EndTime></EndTime>,
+    "youni:location": <Org></Org>,
+    "youni:price":<Org></Org>,
+    "youni:note": <Org></Org>,
+    "youni:switch": <Org></Org>,
+    "youni:prices": <Org></Org>,
+    "youni:contact": <Org></Org>,
+    "youni:map": <Org></Org>,
+  }
   /** 活动的动态表单 */
-  const dynamicForm = [
-    {
-      type: 'input',
-      label: '主办方',
-      value: 0,
-      dataIndex: 'title',
-      Icon: <Org></Org>,
-    },
-    {
-      type: 'time',
-      label: '开始时间',
-      Icon: <StartTime></StartTime>,
-      dataIndex: 'startTime',
-    },
-    {
-      type: 'time',
-      label: '结束时间',
-      value: new Date(),
-      dataIndex: 'endTime',
-      Icon: <EndTime></EndTime>,
-    },
-    {
-      type: 'location',
-      label: '地点',
-      value: new Date(),
-      dataIndex: 'location',
-      Icon: <EndTime></EndTime>,
-    },
-    {
-      type: 'prices',
-      label: '价格',
-      value: new Date(),
-      dataIndex: 'prices',
-      Icon: <EndTime></EndTime>,
-    },
-    {
-      type: 'input',
-      label: '报名链接',
-      value: new Date(),
-      dataIndex: 'link',
-      Icon: <EndTime></EndTime>,
-    },
-    {
-      type: 'input',
-      label: '联系方式',
-      value: new Date(),
-      dataIndex: 'contact',
-      Icon: <EndTime></EndTime>,
-    },
-    {
-      type: 'Switch',
-      label: '地图',
-      dataIndex: 'map',
-      Icon: <EndTime></EndTime>,
-    },
-  ];
-  const [title, setTitle] = React.useState('');
-  const [form] = Form.useForm();
+  // const dynamicForm = [
+  //   {
+  //     type: 'input',
+  //     label: '主办方',
+  //     value: 0,
+  //     dataIndex: 'title',
+  //     Icon: <Org></Org>,
+  //   },
+  //   {
+  //     type: 'time',
+  //     label: '开始时间',
+  //     Icon: <StartTime></StartTime>,
+  //     dataIndex: 'startTime',
+  //   },
+  //   {
+  //     type: 'time',
+  //     label: '结束时间',
+  //     value: new Date(),
+  //     dataIndex: 'endTime',
+  //     Icon: <EndTime></EndTime>,
+  //   },
+  //   {
+  //     type: 'location',
+  //     label: '地点',
+  //     value: new Date(),
+  //     dataIndex: 'location',
+  //     Icon: <EndTime></EndTime>,
+  //   },
+  //   {
+  //     type: 'prices',
+  //     label: '价格',
+  //     value: new Date(),
+  //     dataIndex: 'prices',
+  //     Icon: <EndTime></EndTime>,
+  //   },
+  //   {
+  //     type: 'input',
+  //     label: '报名链接',
+  //     value: new Date(),
+  //     dataIndex: 'link',
+  //     Icon: <EndTime></EndTime>,
+  //   },
+  //   {
+  //     type: 'input',
+  //     label: '联系方式',
+  //     value: new Date(),
+  //     dataIndex: 'contact',
+  //     Icon: <EndTime></EndTime>,
+  //   },
+  //   {
+  //     type: 'Switch',
+  //     label: '地图',
+  //     dataIndex: 'map',
+  //     Icon: <EndTime></EndTime>,
+  //   },
+  // ];
 
+  
+  const [title, setTitle] = React.useState('');
+  const [content, setContent] = React.useState('');
+  const [form] = Form.useForm();
+  const [type, setType] = React.useState(headerMenuList[0].key);
+  const [previews,setPreviews] = React.useState([])
   const customComponents = {
     input: <Input placeholder="请输入"></Input>,
     time: (
@@ -158,31 +191,9 @@ export default function addPost() {
     prices: <div></div>,
     Switch: <Switch activeColor="#FFD036" size={20} inactiveColor="#dcdee0" />,
   };
-  // const judgeDeviceType = function () {
-  //   var ua = window.navigator.userAgent.toLocaleLowerCase();
-  //   var isIOS = /iphone|ipad|ipod/.test(ua);
-  //   var isAndroid = /android/.test(ua);
-
-  //   return {
-  //     isIOS: isIOS,
-  //     isAndroid: isAndroid
-  //   }
-  // }()
-  // if (judgeDeviceType.isAndroid) {
-  //   var originHeight = document.documentElement.clientHeight || document.body.clientHeight;
-  //   window.addEventListener('resize', function () {
-  //     var resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
-  //     if (originHeight < resizeHeight) {
-  //       console.log('Android 键盘收起啦！')
-  //       // Android 键盘收起后操作
-  //     } else {
-  //       console.log('Android 键盘弹起啦！');
-  //       // Android 键盘弹起后操作
-  //     }
-
-  //     originHeight = resizeHeight;
-  //   }, false)
-  // }
+  const {data:dynamicForm,mutate} = useFetch('/post/dynamicForm','get',{
+    type:type
+  })
   const Keyboard = () => {
     return (
       <div className="bg-[#F9FAFB] text-[#798195] w-screen h-12  z-30 fixed bottom-0 flex justify-around items-center">
@@ -246,6 +257,28 @@ export default function addPost() {
       stop.current = true;
     };
   }
+  const submitPost = (form,draft)=>{
+   
+    useRequest.post('/api/post/create',{
+      form:{...form},
+      draft:draft,
+      title:title,
+      body:content,
+      preview:previews,
+      type:type
+    })
+  }
+  const changeCategory = (val)=>{
+    console.log(val,'changeCategory')
+    setType(val)
+  }
+  useEffect(()=>{
+    mutate()
+  },[type])
+  const addPreviews =(items)=>{
+    console.log(items,'addPreviews')
+    setPreviews(items.map((item)=> item.name));
+  }
   useWatch(height,(pre)=>{
     if(pre && pre < height){
       setKeyboardShow(true)
@@ -275,6 +308,7 @@ export default function addPost() {
       </div>
       <div className="p-5 pt-3">
         <PostCategory
+        change={(e)=>{changeCategory(headerMenuList[e].key)}}
           headerMenuList={headerMenuList}
           className="mt-0"
         ></PostCategory>
@@ -283,9 +317,9 @@ export default function addPost() {
       <div className="px-5 py-3">
         <Uploader
           accept="*"
+          upload={upload}
           uploadIcon={<AddUploaderIcon></AddUploaderIcon>}
-          defaultValue={defaultValue}
-          onChange={(v) => console.log(v)}
+          onChange={(items)=>{addPreviews(items)}}
         />
       </div>
       <div className="px-5 post-title">
@@ -302,6 +336,8 @@ export default function addPost() {
       <div className="px-5 mt-4">
         <Input.TextArea
           placeholder="添加正文"
+          value={content}
+          onChange={setContent}
           autoSize={{ minHeight: 180, maxHeight: 180 }}
         />
       </div>
@@ -310,31 +346,28 @@ export default function addPost() {
         <Form
           form={form}
           onFinish={(v) => {
+            submitPost(v,false);
             console.log(v);
           }}
         >
-          {dynamicForm.map((item) => {
+          {dynamicForm?.data?.map((item) => {
             const Node = customComponents[item.type];
             const Label = () => {
+              const Icon = ()=>{
+                return IconList[item.icon] ? IconList[item.icon] : <div></div>
+              }
               return (
                 <div className="flex items-center space-x-4">
-                  {item.Icon ? item.Icon : null}
+                  <Icon></Icon>
                   <div>{item.label}</div>
                 </div>
               );
             };
-
             return (
-              // <div className="flex justify-between">
-              //   <div>
-              //     <div></div>
-              //     <div>{item.label}</div>
-              //   </div>
-              //   <div className="youni-form">{customComponents[item.type]}</div>
-              // </div>
               <Form.Item
                 name={item.dataIndex}
                 label={<Label></Label>}
+                key={item.dataIndex}
                 valuePropName="checked"
                 onClick={
                   item.type === 'time'

@@ -1,3 +1,7 @@
+/**
+ * @file 课程评价
+ * @description 课程评价页面 已废弃
+ */
 import React from 'react';
 import Header from '../components/Header';
 import ProfessorCard from '@/components/ProfessorListItem';
@@ -103,7 +107,7 @@ export default function courseEvaluation() {
   }
   const menuList = [Introduce, evaluation, CourseEva, GroupChat, Pending];
   const router = useRouter();
-  const [menu, setMenu] = React.useState(Introduce);
+  // const [menu, setMenu] = React.useState(Introduce);
   const headerMenuList = [
     {
       label: '简介',
@@ -131,7 +135,7 @@ export default function courseEvaluation() {
         }}
       ></HeaderMenu>
       {/* <div className='mt-6'></div> */}
-      {menu}
+      {/* {menu} */}
     </div>
   );
 }

@@ -148,9 +148,10 @@ function index(props) {
             <PostGroup></PostGroup>
           </div>
         ) : (
-          <Waterfall postData={data?.data.map((item) => {
-            return { ...item, student: { nickName: user.student.nickName } }
-          })}></Waterfall>
+          <div></div>
+          // <Waterfall postData={data?.data.map((item) => {
+          //   return { ...item, student: { nickName: user.student.nickName } }
+          // })}></Waterfall>
         )}
       </div>
     );

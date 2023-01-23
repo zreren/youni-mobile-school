@@ -36,7 +36,7 @@ import Box from '@mui/material/Box';
 import useLocalStorage from '../hooks/useStore';
 function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useDispatch();
-  const [language,setLanguage] = useLocalStorage('language','ename')
+  // const [language,setLanguage] = useLocalStorage('language','ename')
   const authState = useSelector(selectAuthState);
   const openLogin = useSelector(selectOpen);
   const [stopScroll, setStopScroll] = useState(false);
@@ -52,7 +52,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   console.log(i18n);
   useEffect(() => {
     console.log(router.pathname);
-    setLanguage('ename')
+    // setLanguage('ename')
     if (routerTable.indexOf(router.pathname) > -1) {
       dispatch(setAuthState(true));
     }

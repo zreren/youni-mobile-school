@@ -14,6 +14,7 @@ export default function idValid() {
     email: string;
     code: string;
     degree: string;
+    campusId: string;
   }
   interface CardValidForm {
     schoolName: string;
@@ -22,6 +23,7 @@ export default function idValid() {
     degree: string;
     frontImg: string;
     backImg: string;
+    campusId: string;
   }
   const upload = async (file: File) => {
     try {
@@ -230,6 +232,7 @@ export default function idValid() {
       degree: '',
       frontImg: '',
       backImg: '',
+      campusId: '',
     });
     const form = [
       { label: '学校名称', type: 'input', Value: 1 },
@@ -333,7 +336,7 @@ export default function idValid() {
   const [form, setFrom] = React.useState({});
 
   return (
-    <div className="h-screen bg-bg">
+    <div className="h-screen bg-bg valid">
       <Header title="学生认证"></Header>
       <HeaderMenu
         headerMenuList={headerMenuList}

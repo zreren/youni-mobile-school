@@ -12,6 +12,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import CScanRating from '@/components/Rating/CScanRating';
 import { styled } from '@mui/material/styles';
 import DownIcon from './down.svg';
+import useLanguage from '@/hooks/useLanguage';
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
@@ -84,7 +85,7 @@ export default function Introduce(props: Course) {
       },
     };
   }
-  const { ename, code ,sections ,subject ,type ,rating} = porpsIntroduce;
+  const { ename, code ,sections ,subject ,type ,rating,cname} = porpsIntroduce;
   const Section = (props) => {
     const { name, startTime, endTime } = props.data;
     return (
@@ -145,14 +146,15 @@ export default function Introduce(props: Course) {
       </div>
     );
   };
+  // console.log(useLanguage(), 'useLanguage');
   return (
     <CommonLayout className="mb-16">
       <Search></Search>
       <div className="flex items-center mt-3">
         <RedIcon className="mr-2"></RedIcon>
-        <Title className="mb-0 mt-0" title={`${ename} ${code}`}></Title>
+        <Title className="mb-0 mt-0" title={`${porpsIntroduce[useLanguage('name')]} ${code}`}></Title>
       </div>
-      <Title className="mt-0" title="Introduction to Business"></Title>
+      <Title className="mt-0" title={porpsIntroduce[useLanguage('desc')]}></Title>
       <CourseIntroCard></CourseIntroCard>
       <Title title="数据概览"></Title>
       <CDataGrip data={rating}></CDataGrip>

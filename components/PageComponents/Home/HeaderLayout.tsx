@@ -5,6 +5,7 @@ import SchoolIcon from './school.svg';
 import Link from 'next/link';
 export default function HeaderLayout(props) {
   const { school } = props;
+  if(!school) return null
   return (
     <div
       className="w-full h-auto pb-2 bg-gradient-to-r from-green-50 to-yellow-50 "

@@ -14,10 +14,12 @@ import { selectAuthState, setAuthState } from '@/stores/authSlice';
 import Waterfall from '@/components/Layout/Waterfall';
 import LoadingWaterfall from '@/components/Layout/WaterfallLoading';
 import PostCategory from '@/components/Menu/post-category';
+import useRequest from '@/libs/request';
 import { PullRefresh } from 'react-vant';
 import { Skeleton } from 'react-vant';
+import useLanguage from '@/hooks/useLanguage';
 import { Flex, Loading } from 'react-vant';
-
+// import Header from '@/components/Header';
 import Post from './post/post';
 import useFetch from '../../hooks/useFetch';
 const PostDetail = (props) => {
@@ -41,7 +43,7 @@ const PostDetail = (props) => {
 };
 
 const RedCountyList = (props) => {
-  const { arg } = props;
+  const { arg ,data} = props;
   const [select, setSelect] = useState('Canada');
   const CountryButton = (props1) => {
     const { title } = props1;
@@ -70,6 +72,13 @@ const RedCountyList = (props) => {
         }}
         className="h-screen"
       >
+        <Header
+          returnClick={() => {
+            props.setVisible(false);
+          }}
+          title={'选择国家和地区'}
+          className="shadow-none"
+        ></Header>
         <div className="w-screen h-screen p-4 pt-6 space-y-4 bg-bg">
           <div className="w-full h-auto overflow-visible red-gradient card">
             <div className="relative w-full h-full p-4">
@@ -80,10 +89,12 @@ const RedCountyList = (props) => {
                 热门国家和地区
               </div>
               <div className="z-50 grid grid-cols-3 gap-2 pt-2">
-                <CountryButton title="美国"></CountryButton>
-                <CountryButton title="美国"></CountryButton>
-                <CountryButton title="美国"></CountryButton>
-                <CountryButton title="美国"></CountryButton>
+                {data?.map((item) => {
+                  return (
+                      <CountryButton title={item.name}></CountryButton>
+                  )
+                })}
+
               </div>
             </div>
           </div>
@@ -279,6 +290,7 @@ function SchoolPage(props) {
       }, 1000);
     });
   };
+  const {data:hotCountryList,error:hotCountryListError} = useFetch('/campus/popularCountry','get')
   const [loading, setLoading] = useState(true);
   const [imageSize, setSmageSize] = React.useState({
     width: '1000%',
@@ -299,7 +311,9 @@ function SchoolPage(props) {
   React.useEffect(() => {
     dispatch(setAuthState(true));
   }, []);
-
+  if(!Post){
+    return <div>loading</div>
+  }
   return (
     <div className="w-screen min-h-screen mb-20 pb-36">
       <PostDetail
@@ -309,6 +323,7 @@ function SchoolPage(props) {
       <RedCountyList
         setVisible={setIsSelect}
         visible={isSelect}
+        data={hotCountryList?.data}
         setSelectSchool={setSelectSchool}
       ></RedCountyList>
       <SchoolList
@@ -323,7 +338,7 @@ function SchoolPage(props) {
           selectSchool={() => {
             setIsSelect(true);
           }}
-          school={props.post.school}
+          school={props.post[useLanguage('name')]}
         ></HeaderLayout>
         <MenuAtSchool></MenuAtSchool>
         <div className="w-full pl-5 pr-5">
@@ -373,12 +388,12 @@ function SchoolPage(props) {
           ) : null}
           {!postData?.data && postData?.code !== 1102 ? (
             <LoadingWaterfall
-            key={category}
-            show={() => {
-              setPostDetailShow(true);
-            }}
-            onClick={() => {}}
-          ></LoadingWaterfall>
+              key={category}
+              show={() => {
+                setPostDetailShow(true);
+              }}
+              onClick={() => {}}
+            ></LoadingWaterfall>
           ) : null}
           {error ? 'error' : null}
           {/* ):null} */}
@@ -390,6 +405,12 @@ function SchoolPage(props) {
 
 export async function getServerSideProps({ params }) {
   console.log(params, 'getServerSideProps params');
+  const { data } = await useRequest.get(`/api/campus/query`,{
+    params:{
+      name:params.campus
+    }
+  });
+  console.log(data,"data")
   const School = [
     {
       id: 1,
@@ -411,7 +432,7 @@ export async function getServerSideProps({ params }) {
   };
   return {
     props: {
-      post: map[params.campus],
+      post: data?.data[0],
     },
   };
 }

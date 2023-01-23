@@ -126,8 +126,11 @@ export default function CustomizedTabs(props) {
   const { headerMenuList, className } = props;
   const handleChange = (newValue: number) => {
     setValue(newValue);
-    // props.switchMenu(newValue);
   };
+  React.useEffect(() => {
+    props.change(value);
+    console.log(value,'index');
+  },[value])
   const getIcon = (props) => {
     const Icon = props;
     return <Icon></Icon>;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Form from '@/components/Form/Form';
@@ -48,8 +48,15 @@ function SimpleDialog(props: SimpleDialogProps) {
 }
 
 export default function account() {
-  const LanguageSelect = () => {
+  // if(typeof window === 'undefined') return (<div>ssr disable</div>);
+  const [language, setLanguage] =useLocalStorage('language', 'zh');
+  const [defaultLanguage, setDefaultLanguage] = useState('zh');
+  useEffect(()=>{
+    setDefaultLanguage(language)
+  },[language])
+  const LanguageSelect = (props) => {
     const [school, setSchool] = useState('cn');
+    const {value, onChange} = props;
     return (
       // <div className="flex items-center text-gray-400">
       //   <div>简体中文</div>
@@ -59,7 +66,7 @@ export default function account() {
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         className="w-full p-0"
-        value={school}
+        value={value}
         sx={{
           boxShadow: 'none',
           padding: 0,
@@ -73,10 +80,10 @@ export default function account() {
         }}
         label="select school"
         onChange={(e) => {
-          setSchool(e.target.value);
+          props.onChange(e.target.value);
         }}
       >
-        <MenuItem value={'cn'}>
+        <MenuItem value={'zh'}>
           简体中文
         </MenuItem>
         <MenuItem value={'en'}>
@@ -89,7 +96,7 @@ export default function account() {
     {
       title: '应用语言',
       intro: '选择默认应用语言',
-      action: <LanguageSelect></LanguageSelect>,
+      action: <LanguageSelect value={defaultLanguage} onChange={(v)=>{setLanguage(v)}}></LanguageSelect>,
       event: () => { setOpen(true) }
     },
     {
