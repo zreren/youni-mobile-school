@@ -51,7 +51,8 @@ function useFetch(path, method, body?) {
     return instance({
       method,
       url,
-      data: body,
+      data: method !=='get'?body:null,
+      params:method === 'get' || method === 'Get'?body:null,
       headers: {
         Authorization: token,
         'Accept-Language': 'zh',

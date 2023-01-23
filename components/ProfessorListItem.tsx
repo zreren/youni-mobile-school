@@ -1,12 +1,15 @@
 import React, { FC } from 'react';
 import CRating from './Rating/CRating';
-interface TProfessorCard {
-  data: {
+type TProfessorCardData = 
+  {
     avatar: string;
     name: string;
     score: number;
     rating: number;
   };
+
+interface TProfessorCard {
+  data: TProfessorCardData;
   onClick?: React.MouseEventHandler;
 }
 

@@ -28,6 +28,7 @@ import useSWR from 'swr';
 import prefixSorted from '../../libs/phone';
 import useLocalStorage from '@/hooks/useStore';
 import useRequest from '@/libs/request';
+import { Popup } from 'react-vant';
 import { setOpenLogin } from '../../stores/authSlice';
 import SignUp from './signup';
 // import { useDispatch } from 'react-redux';
@@ -107,6 +108,7 @@ export default function SignIn(props) {
   };
   const ChooseYourRole = (props) => {
     const MailLabel = () => {
+      const [visible, setVisible] = useState(false);
       const [form, setForm] = useState({
         mail: '',
         password: '',
@@ -121,6 +123,16 @@ export default function SignIn(props) {
       }, []);
       return (
         <div className="h-screen space-y-4">
+          <Popup overlayClass={"Popup"} overlay={true} className='z-30 topIndexPlus w-4/5 rounded-2xl shadow' visible={visible} onClose={() => setVisible(false)}>
+            <div className='h-[232px] flex flex-col  items-center' >
+              <div className='pt-4  pb-4 text-[#37455C] '>Reset password with</div>
+              {/* <div> */}
+              <div className='py-4 text-[#798195]'>Phone number</div>
+              <div className='py-4 text-[#798195]'>Email</div>
+              <div className='py-4 text-[#A9B0C0]'>Cancel</div>
+              {/* </div> */}
+            </div>
+          </Popup>
           <div className="flex items-center w-full">
             <input
               type="text"
@@ -144,7 +156,12 @@ export default function SignIn(props) {
               className="w-full input"
             />
           </div>
-          <div className="mb-10 pl-4 text-xs text-gray-300">
+          <div
+            onClick={() => {
+              setVisible(true);
+            }}
+            className="mb-10 pl-4 text-xs text-gray-300"
+          >
             Forgot Password?
           </div>
           <button
@@ -312,13 +329,13 @@ export default function SignIn(props) {
         </div> */}
         <div className="w-full h-22"></div>
         <div className="z-30 h-full p-4 space-y-10 bg-white border-t border-yellow-300 rounded-t-3xl">
-          <div className="flex items-center justify-around h-10 rounded-xl bg-bg">
+          <div className="flex items-center px-1 justify-around h-10 rounded-xl bg-bg">
             <div
               onClick={() => {
                 setLabel(0);
               }}
               className={classnames(
-                'w-2/5 h-4/5  flex items-center justify-center text-center',
+                'w-full h-4/5  flex items-center justify-center text-center',
                 {
                   'bg-white text-[#FFD036] rounded-lg': label === 0,
                   'text-[#798195]': label !== 0,
@@ -332,7 +349,7 @@ export default function SignIn(props) {
                 setLabel(1);
               }}
               className={classnames(
-                'w-2/5 h-4/5 flex items-center justify-center text-center',
+                'w-full h-4/5 flex items-center justify-center text-center',
                 {
                   'bg-white text-[#FFD036] rounded-lg': label === 1,
                   'text-[#798195]': label !== 1,
@@ -370,47 +387,49 @@ export default function SignIn(props) {
           </div>
         </div>
         <div className="w-full h-44"></div>
-        <div className='absolute bottom-0'>
-        <div
-          className="z-20 h-[300px] pt-4 pl-8 pr-8 space-y-4 bg-white-mask"
-          onClick={() => {
-            props.setProgress(1);
-          }}
-        >
-          <SignUpButton
-            icon={Youni}
-            label="Use phone or school email"
-          ></SignUpButton>
-          <SignUpButton
-            icon={Google}
-            label="Continue with Google"
-          ></SignUpButton>
-          <SignUpButton
-            icon={Wechat}
-            label="Continue with WeChat/Weixin"
-          ></SignUpButton>
-        </div>
-        <div className="bottom-0 z-30 w-full">
-          <div className="w-full h-full p-10 pt-2 pb-2 text-xs text-center text-gray-300 bg-white">
-            By continuing, you agree to our{' '}
-            <Link href="">
-              <span className="text-[#3665FF]">Term of Service</span>
-            </Link>{' '}
-            and acknowledge that you have read our{' '}
-            <Link href="">
-              <span className="text-[#3665FF]">Privacy Policy</span>
-            </Link>{' '}
-            to learn how we collect, use and share your data.
+        <div className="absolute bottom-0">
+          <div
+            className="z-20 h-[300px] pt-4 pl-8 pr-8 space-y-4 bg-white-mask"
+            onClick={() => {
+              props.setProgress(1);
+            }}
+          >
+            <SignUpButton
+              icon={Youni}
+              label="Use phone or school email"
+            ></SignUpButton>
+            <SignUpButton
+              icon={Google}
+              label="Continue with Google"
+            ></SignUpButton>
+            <SignUpButton
+              icon={Wechat}
+              label="Continue with WeChat/Weixin"
+            ></SignUpButton>
           </div>
-          <div className="h-24 pt-8 space-x-2 text-sm text-center bg-bg">
-            <span className="text-blueTitle">Don’t have an account? </span>
-            <span
-             onClick={()=>{dispatch(setOpenLogin('register'))}}
-            >
-              <span className="text-[#FFD036]"> Sign up</span>
-            </span>{' '}
+          <div className="bottom-0 z-30 w-full">
+            <div className="w-full h-full p-10 pt-2 pb-2 text-xs text-center text-gray-300 bg-white">
+              By continuing, you agree to our{' '}
+              <Link href="">
+                <span className="text-[#3665FF]">Term of Service</span>
+              </Link>{' '}
+              and acknowledge that you have read our{' '}
+              <Link href="">
+                <span className="text-[#3665FF]">Privacy Policy</span>
+              </Link>{' '}
+              to learn how we collect, use and share your data.
+            </div>
+            <div className="h-24 pt-8 space-x-2 text-sm text-center bg-bg">
+              <span className="text-blueTitle">Don’t have an account? </span>
+              <span
+                onClick={() => {
+                  dispatch(setOpenLogin('register'));
+                }}
+              >
+                <span className="text-[#FFD036]"> Sign up</span>
+              </span>{' '}
+            </div>
           </div>
-        </div>
         </div>
         {/* <Button variant="outlined" startIcon={<WeChat />}>
       Delete
@@ -430,7 +449,11 @@ export default function SignIn(props) {
   return (
     <div>
       {isLogin ? (
-        <SignUp isLogin={()=>{setLogin(false)}}></SignUp>
+        <SignUp
+          isLogin={() => {
+            setLogin(false);
+          }}
+        ></SignUp>
       ) : (
         <div className="relative w-full h-screen overflow-hidden bg-fixed">
           <div className="absolute inset-0 z-0 w-full -top-24">

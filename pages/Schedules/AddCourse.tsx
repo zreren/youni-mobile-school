@@ -125,9 +125,9 @@ export default function AddSchedule() {
     title: string;
     isNess?: boolean;
     children?: any;
-    data: any;
+    data?: any;
     change?: (data: ChangeType) => void;
-    renderData: any;
+    renderData?: any;
   }
   const CCourseInput = (props: CCourseInput) => {
     const { title, isNess, children, data, renderData } = props;
@@ -325,7 +325,7 @@ export default function AddSchedule() {
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
             <div>颜色</div>
-            <CCourseColor></CCourseColor>
+            <CCourseColor setColor={()=>{}}></CCourseColor>
           </div>
         </div>
         <div className="flex justify-center mx-10 space-x-4">

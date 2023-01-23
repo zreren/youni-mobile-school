@@ -18,7 +18,7 @@ export default function professorEvaluation() {
       <Search placeholder="搜索教授"></Search>
       <Title title="教授列表"></Title>
       <div className="space-y-4">
-        {professorList.map((item) => {
+        {/* {professorList.map((item) => {
           return (
             <ProfessorCard
               data={item}
@@ -28,7 +28,7 @@ export default function professorEvaluation() {
               }}
             ></ProfessorCard>
           );
-        })}
+        })} */}
       </div>
     </CommonLayout>
   );

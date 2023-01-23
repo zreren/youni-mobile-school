@@ -155,7 +155,7 @@ function index(props) {
   }
   return (
     <div className="mb-10">
-      <UserHeader data={data?.data?.student}></UserHeader>
+      <UserHeader className="sticky z-30 bg-white top-0" data={data?.data?.student}></UserHeader>
       <div className="min-h-[380px]">
         <Swiper
           spaceBetween={30}

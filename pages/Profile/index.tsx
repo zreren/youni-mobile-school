@@ -213,7 +213,7 @@ function index(props) {
   const { user, loggedOut } = useUser();
   const Profile1 = () => {
     return (
-      <div className="h-[calc(100vh-320px)] relative">
+      <div className="h-[calc(100vh-320px)] overflow-x-hidden relative w-full overflow-y-scroll">
         <div className="w-full p-5 pb-1 bg-white ">
           <Identify></Identify>
         </div>
@@ -404,7 +404,7 @@ function index(props) {
           ></HeaderMenu>
         ) : null}
       </div>
-      <div className="relative overflow-scroll ">
+      <div className="relative overflow-x-hidden overflow-y-scroll w-full">
         {menuVal !== 4 ? headerList[menuVal].menu : <EmptyData></EmptyData>}
       </div>
     </div>

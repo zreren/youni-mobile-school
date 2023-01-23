@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import '../styles/calendar.css';
+import '../styles/vant.css';
 // import '../styles/picker.less'
 import '@fullcalendar/common/main.css';
 import '@fullcalendar/daygrid/main.css';
@@ -79,7 +80,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         open={openLogin!=='close'}
         anchor="bottom"
       >
-        <div className="h-[96vh] z-30">
+        <div className="h-[96vh]">
           <Puller></Puller>
           {openLogin === 'login' ? <SignIn></SignIn> : null}
           {openLogin === 'register' ? <SignUp></SignUp> : null}

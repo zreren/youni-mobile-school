@@ -146,7 +146,7 @@ export default function Introduce(props: Course) {
     );
   };
   return (
-    <CommonLayout>
+    <CommonLayout className="mb-16">
       <Search></Search>
       <div className="flex items-center mt-3">
         <RedIcon className="mr-2"></RedIcon>

@@ -53,7 +53,7 @@ export default function index() {
   const { data:total, error:totalError } = useFetch('/grade/stat', 'get');
 
   const deleteGapItem = async(id:number | string):Promise<any>=>{
-    useRequest().post('/api/grade/delete', { id })
+    useRequest.post('/api/grade/delete', { id })
   }
   if(error) return
   console.log(data);
@@ -423,7 +423,9 @@ export default function index() {
     })
   }
  },[data])
-
+  const value = {
+    '--value': 70
+  }
   return (
     <div className='min-h-screen'>
       <div className="relative h-[280px] w-full gap-bg pt-4  bg-gradient-to-l to-[#EAE6FF] from-[#ECF5FF] ">
@@ -433,7 +435,7 @@ export default function index() {
           {/* 70为满 */}
           <div
             className="radial-progress text-primary"
-            style={{ '--value': 70 }}
+            style={value}
           >
             <div className="-rotate-220">
               <div className="flex flex-col items-center justify-center">

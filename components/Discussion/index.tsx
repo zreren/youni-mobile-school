@@ -104,6 +104,7 @@ export default function index(props) {
     const timeDiff = currentDate.getTime() - createdDate.getTime();
     const hours = timeDiff / (1000 * 60 * 60);
     console.log(timeDiff / (1000 * 60 * 60),date,'time');
+    if(hours < 1) return timeDiff / (1000 * 60) > 1 ? `${parseInt(String(timeDiff / (1000 * 60)))}分钟` : '刚刚';
     return hours > 24 ? `${Math.floor(hours/24)}天` : `${parseInt(String(hours))}小时`;
     // return timeDiff / (1000 * 60 * 60);
   }

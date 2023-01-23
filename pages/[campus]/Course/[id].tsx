@@ -308,7 +308,7 @@ export default function courseEvaluation() {
   ];
 
   return (
-    <div className="w-screen min-h-screen bg-bg">
+    <div className="w-screen min-h-screen bg-bg pb-2">
       <Header
         title={`${courseEvaluation?.data?.ename} ${courseEvaluation?.data?.code}`}
       ></Header>

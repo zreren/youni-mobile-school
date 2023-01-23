@@ -20,7 +20,15 @@ import Location from './location.svg';
 import TimeIconActive from './icon_time.svg';
 import SaveToLibButton from '@/components/Button/SaveToLibButton';
 
+
+
 function Calendar(props) {
+  interface Event {
+    dayOfWeek: number;
+    // other properties
+  }
+  
+  const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   const Puller = styled(Box)(({ theme }) => ({
     width: 30,
     height: 6,
@@ -178,7 +186,31 @@ function Calendar(props) {
     );
     // };
   };
-  console.log(props.courseData, 'courseData');
+  const groupedEvents: { [day: string]: Event[] } = props?.courseData?.reduce((acc, event) => {
+    const day = days[event.dayOfWeek - 1];
+    if (!acc[day]) {
+        acc[day] = []
+    }
+    acc[day].push(event);
+    return acc;
+  }, {})
+  const getWeekDates = () => {
+    const weekDates = [];
+    const currentDate = new Date();
+    let day = currentDate.getUTCDay();
+    if (day === 0) {
+      day = 7;
+    }
+    const diff = currentDate.getUTCDate() - day + 1;
+    for (let i = 0; i < 7; i++) {
+      const newDate = new Date(currentDate.setUTCDate(diff + i));
+      const dateString = newDate.toISOString().slice(0, 10);
+      weekDates.push(dateString);
+    }
+    return weekDates;
+  };
+  console.log(getWeekDates(),"getWeekDates")
+  console.log(groupedEvents, 'groupedEventscourseData');
   const [setting, setSetting] = useState(props.setting);
   const viewMap = {
     day: 'timeGridWeek',

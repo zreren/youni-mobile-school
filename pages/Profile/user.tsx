@@ -104,7 +104,10 @@ const PostGroup = () => {
 };
 
 function index(props) {
-  const { user, loggedOut } = useUser();
+  // const { user, loggedOut } = useUser();
+  // const router = useRouter();
+
+  // const 
   const Profile2 = () => {
     const [menu, setMenu] = useState(0);
     const { data } = useFetch('/post/list', 'get');
@@ -201,6 +204,9 @@ function index(props) {
   };
   // const { user, loggedOut } = useUser();
   const router = useRouter();
+  const {data:UserData} = useFetch('/user/info', 'get',{
+
+  })
   const [school, setSchool] = useLocalStorage('school', 'York');
   const { i18n } = useTranslation('common');
   console.log(i18n, 'i18n');
@@ -221,7 +227,7 @@ function index(props) {
 
   return (
     <div className="w-screen min-h-screen">
-      <ProfileHeader data={user}></ProfileHeader>
+      <ProfileHeader data={UserData?.data}></ProfileHeader>
       <div className="w-full overflow-hidden rounded-full ">
         {menuVal !== 4 ? (
           <HeaderMenu

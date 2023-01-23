@@ -1,11 +1,20 @@
 import { useRouter } from 'next/router';
 import React from 'react';
+import classnames from 'classnames';
 
 export default function UserHeader(props) {
   const { children, title, className, returnClick, data } = props;
   const router = useRouter();
+  const checkUser =(id:number)=>{
+    router.push({
+      pathname:`/Profile/user`,
+      query:{
+        id:id
+      }
+    })
+  }
   return (
-    <div className="flex items-center p-2">
+    <div className={classnames("flex items-center p-2",className)} >
       <div className="avatar placeholder">
         <div
           onClick={() => {
@@ -29,11 +38,11 @@ export default function UserHeader(props) {
             />
           </svg>
         </div>
-        <div className="w-8 rounded-full bg-neutral-focus text-neutral-content">
+        <div onClick={()=>{checkUser(data?.id)}} className="w-8 rounded-full bg-neutral-focus text-neutral-content">
           <img src={`${Cons.BASEURL}${data?.avatar}`} />
         </div>
       </div>
-      <div>
+      <div  onClick={()=>{checkUser(data?.id)}} >
         <div className="ml-4 text-sm font-medium max-w-8 text-blueTitle">
           {data?.nickName}
         </div>

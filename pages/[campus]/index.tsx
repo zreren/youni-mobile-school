@@ -12,6 +12,7 @@ import Header from '@/components/Header';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAuthState, setAuthState } from '@/stores/authSlice';
 import Waterfall from '@/components/Layout/Waterfall';
+import LoadingWaterfall from '@/components/Layout/WaterfallLoading';
 import PostCategory from '@/components/Menu/post-category';
 import { PullRefresh } from 'react-vant';
 import { Skeleton } from 'react-vant';
@@ -371,10 +372,13 @@ function SchoolPage(props) {
             </div>
           ) : null}
           {!postData?.data && postData?.code !== 1102 ? (
-            <div className="flex justify-center items-center w-full">
-              {' '}
-              <Loading type="spinner" color="#FED64B" />
-            </div>
+            <LoadingWaterfall
+            key={category}
+            show={() => {
+              setPostDetailShow(true);
+            }}
+            onClick={() => {}}
+          ></LoadingWaterfall>
           ) : null}
           {error ? 'error' : null}
           {/* ):null} */}

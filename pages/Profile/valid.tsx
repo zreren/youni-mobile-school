@@ -99,6 +99,7 @@ export default function idValid() {
 
     const [ValidFormData, setValidFormData] = useState<ValidForm>({
       schoolName: '',
+      campusId:'',
       enrollYear: '',
       degree: '',
       major: '',
@@ -124,24 +125,24 @@ export default function idValid() {
         <InputComponent label={'学校名称'}>
           <Input
             align="right"
-            value={ValidFormData.schoolName}
+            value={ValidFormData.campusId}
             // onBlur={updateData}
             key={'schoolName'}
             onChange={(val) => {
-              updateData('schoolName', val);
+              updateData('campusId', val);
             }}
             placeholder="请输入文本"
             className="text-sm font-medium w-[50px] text-right text-gray-500 placeholder-gray-300 border-none input hover:outline-none"
           />
         </InputComponent>
-        <InputComponent label={'专业'}>
+        <InputComponent label={'学历'}>
           <Input
             align="right"
-            value={ValidFormData.major}
+            value={ValidFormData.degree}
             // onBlur={updateData}
             key={'major'}
             onChange={(val) => {
-              updateData('major', val);
+              updateData('degree', val);
             }}
             placeholder="请输入文本"
             className="text-sm font-medium w-[50px] text-right text-gray-500 placeholder-gray-300 border-none input hover:outline-none"
@@ -295,12 +296,21 @@ export default function idValid() {
                 upload={upload}
                 defaultValue={[demoData[0]]}
                 maxCount={1}
-                maxSize={15 * 1024}
+                className="w-full h-full "
+                maxSize={2500 * 1024}
                 onOversize={() => Toast.info('文件大小不能超过15kb')}
               />
             </div>
             <div className="flex items-center justify-center w-full h-full text-center bg-bg">
-              反面
+            <Uploader
+                multiple
+                upload={upload}
+                defaultValue={[demoData[0]]}
+                maxCount={1}
+                className="w-full h-full "
+                maxSize={2500 * 1024}
+                onOversize={() => Toast.info('文件大小不能超过15kb')}
+              />
             </div>
           </div>
         </div>
