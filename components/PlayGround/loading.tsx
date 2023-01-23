@@ -51,7 +51,8 @@ export default function Display(props) {
           <Skeleton
             loading={true}
             row={1}
-            round={true}
+            rowHeight={24}
+            round={false}
             rowWidth={'100%'}
             className="rounded-xl w-full p-0 h-full mt-2"
           >
@@ -59,7 +60,8 @@ export default function Display(props) {
           <Skeleton
             loading={true}
             row={1}
-            round={true}
+            rowHeight={24}
+            round={false}
             rowWidth={'100%'}
             className=" w-full p-0 h-full mt-2"
           >

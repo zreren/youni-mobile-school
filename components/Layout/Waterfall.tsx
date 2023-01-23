@@ -152,7 +152,7 @@ export default function Waterfall(props) {
         onOpen={() => {
           props.setVisible(true);
         }}
-        className="h-screen"
+        className="h-screen post"
       >
         <div className="w-screen h-screen">
           {/* <PostMemo></PostMemo> */}

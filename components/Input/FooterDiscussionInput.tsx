@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import StarIcon from './star.svg';
 import DiscussionIcon from './DiscussionIcon.svg';
-
+import useRequest from '@/libs/request';
 interface FooterType{
   data:any,
   send:(comment:string)=>void
@@ -19,6 +19,9 @@ export default function FooterDiscussionInput(props:FooterType) {
     props.send(comment)
     setComment('')
   }
+  const starPost = (id) =>{
+    useRequest.post('/api/post/star',{id:id})
+  }
   return (
     <div className="sticky  z-30 bottom-0 flex   items-center w-full p-5 bg-white h-[60px]">
       <div className="absolute flex  items-center font-medium left-7 text-sm text-[#798195]">
@@ -34,7 +37,7 @@ export default function FooterDiscussionInput(props:FooterType) {
         }}
       ></input>
       {comment?.length === 0 ? (
-        <div className="flex items-center ml-4 space-x-1">
+        <div className="flex items-center ml-4 space-x-1" onClick={()=>{starPost(data?.id)}}>
           <StarIcon></StarIcon>
           <div className="text-sm text-[#798195]">
             {' '}

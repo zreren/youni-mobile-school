@@ -79,23 +79,7 @@ function index(props) {
     const { tag } = props;
     return <div className="mt-2 text-[#2347D9] text-sm">#{tag}</div>;
   };
-  // const UserHeader = ()=>{
-  //   return (
-  //     <div className="flex items-center mb-4">
-  //       <div className="avatar placeholder">
-  //         <div className="w-8 rounded-full bg-neutral-focus text-neutral-content">
-  //           <img src="https://placeimg.com/192/192/people" />
-  //         </div>
-  //       </div>
-  //       <div>
-  //         <div className="ml-4 text-sm FONT_MEDIUM max-w-8 text-blueTitle">
-  //           测试用户
-  //         </div>
-  //         <div className="ml-4 text-xs text-gray-200">2022届 · B.Com Accounting</div>
-  //       </div>
-  //     </div>
-  //   )
-  // }
+
   const CImage = (props) => {
     const { item } = props;
     const [loading, setLoading] = useState(true);
@@ -193,7 +177,7 @@ function index(props) {
           })}
         </Swiper>
       </div>
-      <div className="p-5 bg-white">
+      <div className="p-5 bg-white mt-2">
         <div className="text-lg font-bold text-blueTitle">
           {data?.data?.title}
         </div>

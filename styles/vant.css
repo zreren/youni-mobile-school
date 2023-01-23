@@ -19,3 +19,20 @@
     height: 100% !important;
     backdrop-filter: none !important;
 }
+.post .swiper-pagination-bullet-active{
+    background: #FFD036 !important;
+}
+.post .swiper{
+    overflow: visible;
+    overflow-y: visible;
+    /* overflow-x: hidden; */
+}
+.post .swiper-wrapper{
+    overflow: hidden;
+}
+.post .swiper-horizontal>.swiper-pagination-bullets, .swiper-pagination-bullets.swiper-pagination-horizontal, .swiper-pagination-custom, .swiper-pagination-fraction{
+    bottom: -20px;
+}
+.post .swiper-pagination-bullet{
+    background: #E1E3E7;
+}

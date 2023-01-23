@@ -315,7 +315,7 @@ function SchoolPage(props) {
     return <div>loading</div>
   }
   return (
-    <div className="w-screen min-h-screen mb-20 pb-36">
+    <div className="w-screen  pb-10">
       <PostDetail
         setVisible={setPostDetailShow}
         visible={postDetailShow}
