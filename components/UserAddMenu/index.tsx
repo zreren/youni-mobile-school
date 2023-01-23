@@ -37,6 +37,7 @@ export default function index(props) {
         className={styles.element}
       >
         <Icon4></Icon4>
+        <div className='text-[#8C6008] text-xs font-medium'>加课表</div>
       </div>
       <div
         onClick={() => {
@@ -49,6 +50,7 @@ export default function index(props) {
         className={styles.element}
       >
         <Icon5></Icon5>
+        <div className='text-[#8C6008] text-xs font-medium'>加提醒</div>
       </div>
       <div
         className={styles.element}
@@ -61,6 +63,7 @@ export default function index(props) {
         }}
       >
         <Icon1></Icon1>
+        <div className='text-[#8C6008] text-xs font-medium'>写课评</div>
       </div>
       <div
         onClick={() => {
@@ -73,6 +76,7 @@ export default function index(props) {
         className={styles.element}
       >
         <Icon2></Icon2>
+        <div className='text-[#8C6008] text-xs font-medium'>二手书</div>
       </div>
       <div
         onClick={() => {
@@ -85,6 +89,7 @@ export default function index(props) {
         className={styles.element}
       >
         <Icon3></Icon3>
+        <div className='text-[#8C6008] text-xs font-medium'>转闲置</div>
       </div>
       <Subtract className="absolute bottom-0 w-screen -z-30"></Subtract>
     </div>
