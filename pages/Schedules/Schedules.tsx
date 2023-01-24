@@ -22,6 +22,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import IOSSwitch from './components/ios';
 import RightIcon from '@/components/PageComponents/Profile/right.svg';
 import useFetch from '../../hooks/useFetch';
+import { Popup } from 'react-vant';
 import { getCourses, addFullStartDate } from '@/libs/schedule';
 import axios from 'axios';
 import useLocalStorage from '../../hooks/useStore';
@@ -31,6 +32,8 @@ import BgSVG from './bg.svg';
 import ArrowRight from './arrow-right.svg';
 import { setOpenLogin } from '../../stores/authSlice';
 import { useDispatch } from 'react-redux';
+import { Loading } from 'react-vant';
+
 
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
@@ -483,6 +486,16 @@ export default function Schedules() {
   };
   return (
     <div className="space-y-1 bg-bg">
+      {/* div className="mb-10"> */}
+      <Popup
+        overlayClass={'Popup'}
+        className="z-30 topIndexPlus rounded-full "
+        visible={!data}
+      >
+        <div className="rounded-full w-10 h-10 flex overflow-hidden justify-center items-center">
+          <Loading type="spinner" color="#FED64B" />
+        </div>
+      </Popup>
       <Dialog
         visible={dialogVisible}
         title="登录"
