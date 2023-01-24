@@ -11,7 +11,9 @@ import MapIcon from './mapIcon.svg';
 import PostDiscussionInput from '@/components/Input/PostDiscussionInput';
 import FooterDiscussionInput from '@/components/Input/FooterDiscussionInput';
 import { Skeleton } from 'react-vant';
+import { Loading } from 'react-vant';
 import useRequest from '@/libs/request';
+import { Popup } from 'react-vant';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -20,39 +22,38 @@ import { Toast } from 'react-vant';
 import { areOptionsEqual } from '@mui/base';
 function index(props) {
   const { id } = props;
-  const { data,mutate } = useFetch(`/post/detail?id=${id}`, 'get');
-  // const {data:postData} = data
+  const { data, mutate } = useFetch(`/post/detail?id=${id}`, 'get');
   /**
    * @description 发送评论
    * @param e 评论内容
    */
-  const sendComment = async  (e) => {
-    const {data} = await useRequest.post('/api/post/comment', {
+  const sendComment = async (e) => {
+    const { data } = await useRequest.post('/api/post/comment', {
       id: id,
-      content: e
+      content: e,
     });
-    if(data?.message){
-      Toast.success('评论成功')
-      mutate({},true)
+    if (data?.message) {
+      Toast.success('评论成功');
+      mutate({}, true);
     }
-  }
+  };
   /**
-   * 
+   *
    * @param comment 评论内容
    * @param id 当父id不存在时，id为当前评论id，否则为父id
    * @param pid 父id
    */
-  const sendChild = async (comment,id,pid)=>{
-      const {data} = await useRequest.post('/api/comment/comment', {
-        pid: pid === null ? id : pid,
-        replyId:  pid === null ?null:id,
-        content: comment
-      });
-      if(data?.message){
-        Toast.success('评论成功')
-        mutate({},true)
-      }
-  }
+  const sendChild = async (comment, id, pid) => {
+    const { data } = await useRequest.post('/api/comment/comment', {
+      pid: pid === null ? id : pid,
+      replyId: pid === null ? null : id,
+      content: comment,
+    });
+    if (data?.message) {
+      Toast.success('评论成功');
+      mutate({}, true);
+    }
+  };
   const Map = () => {
     return (
       <div className="w-full relative h-[185px] bg-white px-5 py-4 rounded-xl overflow-hidden 	">
@@ -105,22 +106,20 @@ function index(props) {
     );
   };
   const [commentChild, setCommentChild] = useState({
-    id:null,
-    user:null,
-    pid:null
-
-
+    id: null,
+    user: null,
+    pid: null,
   });
-  const commentComment = (e)=>{
-    setCommentChild(e)
-  }
+  const commentComment = (e) => {
+    setCommentChild(e);
+  };
   function FooterDiscussionInputChild(props) {
     const [comment, setComment] = useState<string>('');
-    const { user,id,pid } = props;
-    const send = ()=>{
-      props.send(comment,id,pid)
-      setComment('')
-    }
+    const { user, id, pid } = props;
+    const send = () => {
+      props.send(comment, id, pid);
+      setComment('');
+    };
     return (
       <div className="sticky  z-30 bottom-0 flex   items-center w-full p-5 bg-white h-[60px]">
         <input
@@ -131,15 +130,33 @@ function index(props) {
             setComment(e.target.value);
           }}
         ></input>
-         
-          <div className="text-sm text-[#798195] whitespace-nowrap" onClick={()=>{send()}}>发送</div>
-        
+
+        <div
+          className="text-sm text-[#798195] whitespace-nowrap"
+          onClick={() => {
+            send();
+          }}
+        >
+          发送
+        </div>
       </div>
     );
   }
   return (
     <div className="mb-10">
-      <UserHeader className="sticky z-30 bg-white top-0" data={data?.data?.student}></UserHeader>
+      <Popup
+        overlayClass={'Popup'}
+        className="z-30 topIndexPlus rounded-full "
+        visible={!data}
+      >
+        <div className="rounded-full w-10 h-10 flex overflow-hidden justify-center items-center">
+          <Loading type="spinner" color="#FED64B" />
+        </div>
+      </Popup>
+      <UserHeader
+        className="sticky z-30 bg-white top-0"
+        data={data?.data?.student}
+      ></UserHeader>
       <div className="min-h-[380px]">
         <Swiper
           spaceBetween={30}
@@ -149,9 +166,15 @@ function index(props) {
           modules={[Pagination]}
           height={520}
           className="mySwiper"
-          onClick={() => { props.stop() }}
-          onTouchStart={() => { props.stop() }}
-          onTouchEnd={() => { props.start() }}
+          onClick={() => {
+            props.stop();
+          }}
+          onTouchStart={() => {
+            props.stop();
+          }}
+          onTouchEnd={() => {
+            props.start();
+          }}
         >
           {/* <SwiperSlide>
             <Image
@@ -167,11 +190,13 @@ function index(props) {
             //     setLoading(false);
             // }, 1000);
             return (
-              <SwiperSlide >
-
+              <SwiperSlide>
                 <CImage
-                  onTouchStart={() => { props.stop() }} item={item}></CImage>
-
+                  onTouchStart={() => {
+                    props.stop();
+                  }}
+                  item={item}
+                ></CImage>
               </SwiperSlide>
             );
           })}
@@ -201,7 +226,10 @@ function index(props) {
       </div>
       <div className="w-full h-2 bg-bg"></div>
       <div className="p-5 pt-4 pb-2">
-        <UserInfo contact={data?.data?.contact} data={data?.data?.student}></UserInfo>
+        <UserInfo
+          contact={data?.data?.contact}
+          data={data?.data?.student}
+        ></UserInfo>
       </div>
       <div className="w-full h-2 bg-bg"></div>
       <div>
@@ -210,14 +238,30 @@ function index(props) {
       <div className="w-full h-2 bg-bg"></div>
       <div className="p-5">
         <PostDiscussionInput></PostDiscussionInput>
-        <Discussion commentComment={(e)=>{commentComment(e)}} comments={data?.data?.comments}></Discussion>
-      </div>{
-        commentChild?.id?<FooterDiscussionInputChild send={(comment,id,pid)=>{sendChild(comment,id,pid)}}  {...commentChild}></FooterDiscussionInputChild>:
-        <FooterDiscussionInput  send={(e) => { sendComment(e) }} data={data?.data}></FooterDiscussionInput>
-      }
-      
+        <Discussion
+          commentComment={(e) => {
+            commentComment(e);
+          }}
+          comments={data?.data?.comments}
+        ></Discussion>
+      </div>
+      {commentChild?.id ? (
+        <FooterDiscussionInputChild
+          send={(comment, id, pid) => {
+            sendChild(comment, id, pid);
+          }}
+          {...commentChild}
+        ></FooterDiscussionInputChild>
+      ) : (
+        <FooterDiscussionInput
+          send={(e) => {
+            sendComment(e);
+          }}
+          data={data?.data}
+        ></FooterDiscussionInput>
+      )}
     </div>
   );
-};
+}
 
-export default index
+export default index;
