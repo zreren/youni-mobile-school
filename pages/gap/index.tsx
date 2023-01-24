@@ -409,6 +409,7 @@ export default function index() {
   const dispatch = useDispatch()
   
  useEffect(()=>{
+  const campus = router.query.campus;
   // console.log(data,"useEffectdata");
   if(data?.code === 1102 || data?.code === 1101){
     Dialog.confirm({
@@ -419,7 +420,8 @@ export default function index() {
       // router.push("/Login/signin");
       // console.log(res,"登录YoUni");
     }).catch((err)=>{
-       dispatch(setOpenLogin('register'))
+      router.push(`/${campus}`);
+      //  dispatch(setOpenLogin('register'))
     })
   }
  },[data])
