@@ -405,8 +405,8 @@ export default function AddSchedule() {
         };
       });
     }, []);
-    const translateTime = (time)=>{
-      if(!time) return;
+    const translateTime = (time,endTime)=>{
+      if(!time || !endTime) return;
       // time:"12:00-18:00 转 time:"12.00-18.00
       const timeArr = time?.split(':');
       const endTimeArr = endTime?.split(':');
@@ -421,7 +421,7 @@ export default function AddSchedule() {
         submitCourse({
           ...values,
           dayOfWeek: Number(item),
-          time: `${translateTime(time)}-${translateTime(endTime)}`,
+          time: translateTime(time,endTime),
         });
       });
       // dayOfWeek.forEach((item) => {
