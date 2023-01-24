@@ -6,7 +6,7 @@
     "start": "next start",
     "test": "jest",
     "lint": "next lint",
-    "tscheck":"tsc --noEmit -p tsconfig.json"
+    "tscheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "@babel/preset-react": "^7.18.6",
@@ -26,6 +26,7 @@
     "daisyui": "^2.31.0",
     "dayjs": "^1.11.6",
     "eslint-config-airbnb": "^19.0.4",
+    "html2canvas": "^1.4.1",
     "i18next": "^22.0.6",
     "masonic": "^3.7.0",
     "next": "12.3.1",

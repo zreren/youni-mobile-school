@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Calendar from '@/components/Calendar/Calendar';
 import Header from '@/components/Header';
 import CButton from '@/components/Button/CButton';
@@ -17,6 +17,7 @@ import Icon2 from './components/timeIcon/2.svg';
 import Icon3 from './components/timeIcon/3.svg';
 import Icon4 from './components/timeIcon/4.svg';
 import Icon5 from './components/timeIcon/5.svg';
+import exportAsImage from '@/libs/exportImage';
 import Polygon from './polygon.svg';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import IOSSwitch from './components/ios';
@@ -33,7 +34,6 @@ import ArrowRight from './arrow-right.svg';
 import { setOpenLogin } from '../../stores/authSlice';
 import { useDispatch } from 'react-redux';
 import { Loading } from 'react-vant';
-
 
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
@@ -59,165 +59,7 @@ const CCourseInput = (props) => {
     </div>
   );
 };
-const SetSchedule = (props) => {
-  const Menu = () => {
-    const [menu, setMenu] = useState(0);
-    return (
-      <div className="w-full px-2">
-        <div className="border-[#DCDDE1] border rounded-lg overflow-hidden w-full h-[28px]  flex ">
-          <div
-            onClick={() => {
-              setMenu(0);
-            }}
-            className={classnames(
-              'w-full  flex justify-center whitespace-nowrap items-center text-center text-[#A9B0C0]',
-              {
-                'bg-slate-50 text-[#FFD036]': menu === 0,
-              },
-            )}
-          >
-            五天
-          </div>
-          <div
-            onClick={() => {
-              setMenu(1);
-            }}
-            className={classnames(
-              'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
-              {
-                'bg-slate-50 text-[#FFD036]': menu === 1,
-              },
-            )}
-          >
-            周
-          </div>
-          <div
-            onClick={() => {
-              setMenu(2);
-            }}
-            className={classnames(
-              'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
-              {
-                'bg-slate-50 text-[#FFD036]': menu === 2,
-              },
-            )}
-          >
-            日
-          </div>
-          <div
-            onClick={() => {
-              setMenu(3);
-            }}
-            className={classnames(
-              'w-full  flex justify-center whitespace-nowrap items-center text-center text-[#A9B0C0]',
-              {
-                'bg-slate-50 text-[#FFD036]': menu === 3,
-              },
-            )}
-          >
-            校历
-          </div>
-        </div>
-      </div>
-    );
-  };
-  return (
-    <SwipeableDrawer
-      anchor="bottom"
-      open={props.visible}
-      disableDiscovery={true}
-      disableSwipeToOpen={true}
-      onClose={() => {
-        props.setVisible(false);
-      }}
-      onOpen={() => {
-        props.setVisible(true);
-      }}
-      className="h-screen"
-    >
-      <div className="w-full p-4 bg-white h-96 mb-14">
-        <div className="flex w-full space-x-2">
-          <SaveToLibButton
-            color="#3665FF"
-            icon="wechat"
-            title="保存到相册"
-          ></SaveToLibButton>
-          <SaveToLibButton
-            color="#FFD036"
-            icon="share"
-            title="分享课表"
-          ></SaveToLibButton>
-        </div>
-        <div className="w-full p-2 mt-2">
-          <CCourseInput Icon={Icon1} title="打开时显示">
-            <div className={'w-[55%]'}>
-              {' '}
-              <Menu></Menu>
-            </div>
-          </CCourseInput>
-          <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
-          <CCourseInput title="课表视图显示日程" Icon={Icon2}>
-            <div>
-              <FormControlLabel
-                control={<IOSSwitch defaultChecked />}
-                label=""
-              />
-            </div>
-          </CCourseInput>
-          <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
-          <CCourseInput title="添加课程/日程" Icon={Icon3}>
-            {' '}
-            <RightIcon className="mr-2"></RightIcon>
-          </CCourseInput>
-          <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
-          <CCourseInput title="自定义背景" Icon={Icon4}>
-            <RightIcon className="mr-2"></RightIcon>
-          </CCourseInput>
-          <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
-          <CCourseInput title="切换课表" Icon={Icon5}></CCourseInput>
-          <div className="flex justify-between pl-4 pr-4 mt-4">
-            <div className="flex flex-col items-center">
-              <div className="flex flex-col avatar placeholder">
-                <div className="bg-[#FFD03640] rounded-full text-neutral-content w-14">
-                  <span className="text-xs font-medium text-[#FFD036]">
-                    我的
-                  </span>
-                </div>
-              </div>
-              {/* <div className="text-xs">我的课表</div> */}
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="flex flex-col avatar placeholder">
-                <div className="bg-[#F7F8F9] rounded-full text-neutral-content w-14">
-                  <span className="text-xs font-medium text-[#A9B0C0]">
-                    Test User
-                  </span>
-                </div>
-              </div>
-              {/* <div className="text-xs">课表1</div> */}
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="flex flex-col avatar placeholder">
-                <div className="bg-gray-300 rounded-full text-neutral-content w-14">
-                  <span className="text-3xl"></span>
-                </div>
-              </div>
-              {/* <div className="text-xs">课表2</div> */}
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="flex flex-col avatar placeholder">
-                <div className="bg-gray-300 rounded-full text-neutral-content w-14">
-                  <span className="text-3xl"></span>
-                </div>
-              </div>
-              {/* <div className="text-xs">课表3</div> */}
-            </div>
-          </div>
-        </div>
-      </div>
-    </SwipeableDrawer>
-  );
-};
+
 const CourseDetailCard = (props) => {
   const { event, borderColor } = props;
   const [token, setToken] = useLocalStorage('token', '');
@@ -235,7 +77,7 @@ const CourseDetailCard = (props) => {
   console.log(borderColor, 'backgroundColor');
   // if (!arg) return null;
   return (
-    <div className="">
+    <div className="topIndexPlus">
       {/* <div className='w-4 h-1 bg-gray-400 rounded-xs '></div> */}
       <SwipeableDrawer
         anchor="bottom"
@@ -269,18 +111,17 @@ const CourseDetailCard = (props) => {
             </div>
             <div className="flex flex-col items-end w-1/2">
               <div className="-space-x-2 avatar-group">
-              {
-                extendedProps?.section?.students?.slice(0,3).map((item,index)=>{
-                  return (
-                    <div className="avatar border-[1px]">
-                      <div className="w-6">
-                        <img src={`${Cons.BASEURL}${item.avatar}`} />
+                {extendedProps?.section?.students
+                  ?.slice(0, 3)
+                  .map((item, index) => {
+                    return (
+                      <div className="avatar border-[1px]">
+                        <div className="w-6">
+                          <img src={`${Cons.BASEURL}${item.avatar}`} />
+                        </div>
                       </div>
-                    </div>
-                  )
-                })
-              }
-               
+                    );
+                  })}
               </div>
               <div className="text-xs text-[#798195]">6 名同学</div>
             </div>
@@ -351,7 +192,175 @@ const CourseDetailCard = (props) => {
 };
 
 export default function Schedules() {
-  const dispatch = useDispatch()
+  const calendarRef = useRef<any>();
+  const [defaultScheduleView, setDefaultScheduleView] = useLocalStorage('defaultScheduleView',0);
+  const SetSchedule = (props) => {
+    const Menu = () => {
+      const [menu, setMenu] = useState(defaultScheduleView);
+      useEffect(()=>{
+        setDefaultScheduleView(menu)
+      },[menu])
+      return (
+        <div className="w-full px-2">
+          <div className="border-[#DCDDE1] border rounded-lg overflow-hidden w-full h-[28px]  flex ">
+            <div
+              onClick={() => {
+                setMenu(0);
+              }}
+              className={classnames(
+                'w-full  flex justify-center whitespace-nowrap items-center text-center text-[#A9B0C0]',
+                {
+                  'bg-slate-50 text-[#FFD036]': menu === 0,
+                },
+              )}
+            >
+              五天
+            </div>
+            <div
+              onClick={() => {
+                setMenu(1);
+              }}
+              className={classnames(
+                'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
+                {
+                  'bg-slate-50 text-[#FFD036]': menu === 1,
+                },
+              )}
+            >
+              周
+            </div>
+            <div
+              onClick={() => {
+                setMenu(2);
+              }}
+              className={classnames(
+                'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
+                {
+                  'bg-slate-50 text-[#FFD036]': menu === 2,
+                },
+              )}
+            >
+              日
+            </div>
+            <div
+              onClick={() => {
+                setMenu(3);
+              }}
+              className={classnames(
+                'w-full  flex justify-center whitespace-nowrap items-center text-center text-[#A9B0C0]',
+                {
+                  'bg-slate-50 text-[#FFD036]': menu === 3,
+                },
+              )}
+            >
+              校历
+            </div>
+          </div>
+        </div>
+      );
+    };
+    return (
+      <SwipeableDrawer
+        anchor="bottom"
+        open={props.visible}
+        disableDiscovery={true}
+        disableSwipeToOpen={true}
+        onClose={() => {
+          props.setVisible(false);
+        }}
+        onOpen={() => {
+          props.setVisible(true);
+        }}
+        className="h-screen"
+      >
+        <div className="w-full p-4 bg-white h-96 mb-14">
+          <div className="flex w-full space-x-2">
+            <SaveToLibButton
+              onClick={() => {
+                exportAsImage(calendarRef.current, '课表');
+              }}
+              color="#3665FF"
+              icon="wechat"
+              title="保存到相册"
+            ></SaveToLibButton>
+            <SaveToLibButton
+              onClick={() => {}}
+              color="#FFD036"
+              icon="share"
+              title="分享课表"
+            ></SaveToLibButton>
+          </div>
+          <div className="w-full p-2 mt-2">
+            <CCourseInput Icon={Icon1} title="打开时显示">
+              <div className={'w-[55%]'}>
+                {' '}
+                <Menu></Menu>
+              </div>
+            </CCourseInput>
+            <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
+            <CCourseInput title="课表视图显示日程" Icon={Icon2}>
+              <div>
+                <FormControlLabel
+                  control={<IOSSwitch defaultChecked />}
+                  label=""
+                />
+              </div>
+            </CCourseInput>
+            <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
+            <CCourseInput title="添加课程/日程" Icon={Icon3}>
+              {' '}
+              <RightIcon className="mr-2"></RightIcon>
+            </CCourseInput>
+            <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
+            <CCourseInput title="自定义背景" Icon={Icon4}>
+              <RightIcon className="mr-2"></RightIcon>
+            </CCourseInput>
+            <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
+            <CCourseInput title="切换课表" Icon={Icon5}></CCourseInput>
+            <div className="flex justify-between pl-4 pr-4 mt-4">
+              <div className="flex flex-col items-center">
+                <div className="flex flex-col avatar placeholder">
+                  <div className="bg-[#FFD03640] rounded-full text-neutral-content w-14">
+                    <span className="text-xs font-medium text-[#FFD036]">
+                      我的
+                    </span>
+                  </div>
+                </div>
+                {/* <div className="text-xs">我的课表</div> */}
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="flex flex-col avatar placeholder">
+                  <div className="bg-[#F7F8F9] rounded-full text-neutral-content w-14">
+                    <span className="text-xs font-medium text-[#A9B0C0]">
+                      Test User
+                    </span>
+                  </div>
+                </div>
+                {/* <div className="text-xs">课表1</div> */}
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="flex flex-col avatar placeholder">
+                  <div className="bg-gray-300 rounded-full text-neutral-content w-14">
+                    <span className="text-3xl"></span>
+                  </div>
+                </div>
+                {/* <div className="text-xs">课表2</div> */}
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="flex flex-col avatar placeholder">
+                  <div className="bg-gray-300 rounded-full text-neutral-content w-14">
+                    <span className="text-3xl"></span>
+                  </div>
+                </div>
+                {/* <div className="text-xs">课表3</div> */}
+              </div>
+            </div>
+          </div>
+        </div>
+      </SwipeableDrawer>
+    );
+  };
+  const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const [scheduleVisible, setScheduleVisible] = useState(false);
   const [addCourse, setAddCourse] = useState(false);
@@ -389,9 +398,8 @@ export default function Schedules() {
     if (!data?.data) {
       setDialogVisible(true);
     }
-    if(data?.data){
+    if (data?.data) {
       setDialogVisible(false);
-
     }
     // if (!data?.data) {
     //   setDialogVisible(true);
@@ -401,8 +409,20 @@ export default function Schedules() {
   const [arg, setArg] = useState<any>();
   const [setting, setSetting] = useState({
     view: 'day',
-    isWeekend:false,
+    isWeekend: false,
   });
+  const ViewListMap = [
+    'day',
+    'week',
+    'today',
+    'year',
+  ]
+  useEffect(()=>{
+    setSetting({
+      ...setting,
+      view:ViewListMap[defaultScheduleView]
+    })
+  },[])
   const Dayliy = (props) => {
     const { title } = props;
     return (
@@ -410,11 +430,10 @@ export default function Schedules() {
         <div>
           <div className="flex items-center pb-2 space-x-2">
             <div className="text-xs text-[#FAAD14] h-5 rounded whitespace-nowrap bg-[#FFFAE6] px-[6px] py-1">
-            日程
+              日程
             </div>
             <div className="text-[#37455C] text-sm font-semibold">
-              {title ||
-                '日程日程日程'}
+              {title || '日程日程日程'}
             </div>
           </div>
           <div className="text-[#A9B0C0] text-xs ">2022年9月7日</div>
@@ -422,12 +441,12 @@ export default function Schedules() {
         <ArrowRight></ArrowRight>
       </div>
     );
-  }
+  };
   const YearCard = (props) => {
     const { title } = props;
     return (
       <div className="flex p-4 card-shadow items-center my-4 justify-between bg-white w-full h-20 rounded-lg">
-        <div className='space-y-2'>
+        <div className="space-y-2">
           <div className="flex items-center  space-x-2 ">
             <div className="text-xs font-medium text-[#13C2C2] h-5 rounded whitespace-nowrap bg-[#E6FFFB] px-[6px] py-1">
               校历
@@ -439,7 +458,10 @@ export default function Schedules() {
           </div>
           <div className="text-[#A9B0C0] text-xs ">2022年9月7日</div>
         </div>
-       <div> <ArrowRight></ArrowRight></div>
+        <div>
+          {' '}
+          <ArrowRight></ArrowRight>
+        </div>
       </div>
     );
   };
@@ -447,9 +469,7 @@ export default function Schedules() {
     const router = useRouter();
     // const { t } = useTranslation('translations');
     return (
-      <div
-        className="relative flex items-center justify-between w-full h-12 p-4 pt-0 pb-0 bg-[#FF7978] rounded text-gold"
-      >
+      <div className="relative flex items-center justify-between w-full h-12 p-4 pt-0 pb-0 bg-[#FF7978] rounded text-gold">
         <div className="flex items-center  ">
           <Polygon className="absolute top-0 left-0 h-20"></Polygon>
           {/* <ValidIcon className="absolute left-0"></ValidIcon> */}
@@ -495,11 +515,11 @@ export default function Schedules() {
         confirmButtonText="登录"
         cancelButtonText="注册"
         onConfirm={() => {
-          dispatch(setOpenLogin('login'))
+          dispatch(setOpenLogin('login'));
           // setDialogVisible(false)
         }}
         onCancel={() => {
-          dispatch(setOpenLogin('register'))
+          dispatch(setOpenLogin('register'));
           // setDialogVisible(false)
         }}
         className="shadow-xl  backdrop-opacity-50  backdrop-filter backdrop-blur-2xl"
@@ -517,7 +537,7 @@ export default function Schedules() {
         <div className="flex items-center justify-around w-2/3 h-8 bg-white rounded-lg">
           <button
             onClick={() => {
-              setSetting({ ...setting,isWeekend:false, view: 'day' });
+              setSetting({ ...setting, isWeekend: false, view: 'day' });
             }}
             className={classnames(
               '"btn  p-1 text-sm mx-0.5 text-gray-400 w-full rounded-lg',
@@ -530,21 +550,27 @@ export default function Schedules() {
           </button>
           <button
             onClick={() => {
-              setSetting({ ...setting, isWeekend:true,view: 'week' });
+              setSetting({ ...setting, isWeekend: true, view: 'week' });
             }}
-            className={classnames('text-sm  w-full  p-1 rounded-lg text-gray-400', {
-              'text-yellow-300 bg-gray-50': setting.view === 'week',
-            })}
+            className={classnames(
+              'text-sm  w-full  p-1 rounded-lg text-gray-400',
+              {
+                'text-yellow-300 bg-gray-50': setting.view === 'week',
+              },
+            )}
           >
             近一周
           </button>
           <button
             onClick={() => {
-              setSetting({ ...setting, isWeekend:true,view: 'today' });
+              setSetting({ ...setting, isWeekend: true, view: 'today' });
             }}
-            className={classnames('text-sm w-full p-1  rounded-lg text-gray-400', {
-              'text-yellow-300 bg-gray-50': setting.view === 'today',
-            })}
+            className={classnames(
+              'text-sm w-full p-1  rounded-lg text-gray-400',
+              {
+                'text-yellow-300 bg-gray-50': setting.view === 'today',
+              },
+            )}
           >
             今日
           </button>
@@ -552,9 +578,12 @@ export default function Schedules() {
             onClick={() => {
               setSetting({ ...setting, view: 'year' });
             }}
-            className={classnames('text-sm mx-0.5 w-full  p-1 rounded-lg text-gray-400', {
-              'text-yellow-300 bg-gray-50': setting.view === 'year',
-            })}
+            className={classnames(
+              'text-sm mx-0.5 w-full  p-1 rounded-lg text-gray-400',
+              {
+                'text-yellow-300 bg-gray-50': setting.view === 'year',
+              },
+            )}
           >
             校历
           </button>
@@ -577,28 +606,31 @@ export default function Schedules() {
           </Tooltips>
         </div>
       </div>
-      <SetSchedule
+     <div className='topIndexPlus'>
+     <SetSchedule
         visible={scheduleVisible}
         setVisible={setScheduleVisible}
       ></SetSchedule>
+     </div>
       <CourseDetailCard
         visible={visible}
         setVisible={setVisible}
-        {...arg as Object}
+        {...(arg as Object)}
       ></CourseDetailCard>
       {setting.view === 'year' ? (
         <Month></Month>
-        
       ) : (
-        <Calendar
-          setting={setting}
-          courseData={courseData}
-          clickEvent={(arg) => {
-            setArg({ ...arg });
-            console.log(arg, 'Calendar clcik');
-            setVisible(true);
-          }}
-        ></Calendar>
+        <div ref={calendarRef}>
+          <Calendar
+            setting={setting}
+            courseData={courseData}
+            clickEvent={(arg) => {
+              setArg({ ...arg });
+              console.log(arg, 'Calendar clcik');
+              setVisible(true);
+            }}
+          ></Calendar>
+        </div>
       )}
     </div>
   );

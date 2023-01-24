@@ -4,7 +4,7 @@ import Icon from '../Icon';
 import { styled } from '@mui/material/styles';
 import classnames from 'classnames';
 export default function SaveToLibButton(props) {
-  const { color, icon, title } = props;
+  const { color, icon, title,onClick } = props;
   const MyButton = styled(Button)(({ theme }) => ({
     backgroundColor: color + '!important',
     boxShadow: 'none',
@@ -15,7 +15,7 @@ export default function SaveToLibButton(props) {
     },
   }));
   return (
-    <div className="w-full h-10">
+    <div className="w-full h-10" onClick={()=>{onClick()}}>
       <MyButton
         startIcon={<Icon type={icon} />}
         variant="contained"
