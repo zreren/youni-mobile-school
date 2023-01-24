@@ -267,30 +267,22 @@ const CourseDetailCard = (props) => {
                 {extendedProps?.online ? '线上课程' : '线下课程'}
               </div>
             </div>
-            <div className="flex flex-col ">
-              <div className="-space-x-6 avatar-group">
-                <div className="avatar border-1">
-                  <div className="w-6">
-                    <img src="https://placeimg.com/192/192/people" />
-                  </div>
-                </div>
-                <div className="border avatar">
-                  <div className="w-6">
-                    <img src="https://placeimg.com/192/192/people" />
-                  </div>
-                </div>
-                <div className="border avatar">
-                  <div className="w-6">
-                    <img src="https://placeimg.com/192/192/people" />
-                  </div>
-                </div>
-                <div className="border avatar placeholder">
-                  <div className="w-6 bg-neutral-focus text-neutral-content">
-                    <span>+</span>
-                  </div>
-                </div>
+            <div className="flex flex-col items-end w-1/2">
+              <div className="-space-x-2 avatar-group">
+              {
+                extendedProps?.section?.students?.slice(0,3).map((item,index)=>{
+                  return (
+                    <div className="avatar border-[1px]">
+                      <div className="w-6">
+                        <img src={`${Cons.BASEURL}${item.avatar}`} />
+                      </div>
+                    </div>
+                  )
+                })
+              }
+               
               </div>
-              <div className="text-xs">6 名同学</div>
+              <div className="text-xs text-[#798195]">6 名同学</div>
             </div>
           </div>
           <div className="mt-4 mb-4">

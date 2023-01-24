@@ -95,7 +95,7 @@ function Calendar(props) {
                   </div>
                 </div> */}
             </div>
-            <div className="text-xs">{students?.length }名同学</div>
+            <div className="text-xs text-[#798195]">{students?.length }名同学</div>
           </div>
         </div>
         <div className="mt-4 pb-4">

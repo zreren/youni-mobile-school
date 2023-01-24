@@ -160,7 +160,7 @@
 }
 .element:nth-child(1){
     position: absolute;
-    bottom: 50px;
+    bottom: 40px;
     left: 2px;
     -webkit-transition-delay: 0.24s, 0.48s;
     transition-delay: 0.24s, 0.48s;
@@ -169,7 +169,7 @@
 
 .element:nth-child(2){
     position: absolute;
-    bottom: 120px;
+    bottom: 110px;
     transform: rotate(218.57143deg) translateX(0%) rotate(-218.57143deg);
     left: calc(25% - 25px);
     -webkit-transition-delay: 0.24s, 0.48s;
@@ -179,7 +179,7 @@
 .element:nth-child(3){
     /* transform: rotate(-90deg) translateY(50%) translateX(50%) rotate(90deg); */
     position: absolute;
-    bottom: 140px;
+    bottom: 130px;
     left: calc(50% - 25px);
     -webkit-transition-delay: 0.24s, 0.48s;
     transition-delay: 0.24s, 0.48s;
@@ -189,7 +189,7 @@
     /* transform: rotate(-90deg) translateX(00%) rotate(90deg); */
     transform: rotate(-90deg) translateX(00%) rotate(90deg);
     position: absolute;
-    bottom: 120px;
+    bottom: 110px;
     -webkit-transition-delay: 0.24s, 0.48s;
     transition-delay: 0.24s, 0.48s;
     left: calc(75% - 30px);
@@ -197,7 +197,7 @@
 
 .element:nth-child(5){
     position: absolute;
-    bottom: 3.12rem;
+    bottom: calc(3.12rem - 10px);
     left: calc(100% - 75px);
     -webkit-transition-delay: 0.24s, 0.48s;
     transition-delay: 0.24s, 0.48s;
