@@ -19,6 +19,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import instance from '@/libs/request';
 import classnames from 'classnames';
 import useFetch from '../../hooks/useFetch';
+import useLanguage from '@/hooks/useLanguage';
 // import axios from 'axios';
 
 // import { View, Text, Picker } from '@tarojs/components';
@@ -60,6 +61,9 @@ const CCourseColor = ({setColor}) => {
       id: 5,
     },
   ]
+  useEffect(()=>{
+    setColor(colorList[0].dark);
+  },[])
   return (
     <div className="flex space-x-2">
       {colorList.map((item) => {
@@ -132,9 +136,17 @@ export default function AddSchedule() {
   const CCourseInput = (props: CCourseInput) => {
     const { title, isNess, children, data, renderData } = props;
     const selectItem = (e) => {
-      let allValuesGreaterThanZero = true;
+      console.log(e,'selectItem');
+      if(!data){
+        props.change({
+          id: null,
+          label: e,
+        });
+        return
+      }
+      // let allValuesGreaterThanZero = true;
       if (
-        !Object.values(data).some((value: any) => {
+        !Object?.values(data)?.some((value: any) => {
           if (value.ename === e) {
             props.change({
               id: value.id,
@@ -144,12 +156,25 @@ export default function AddSchedule() {
           }
           return false;
         })
-      ) {
+      ) 
+      if(!Object?.values(data)?.some((value: any) => {
+        if(value.name === e){
+          props.change({
+            id:value.id,
+            label:value.name
+          })
+          return true
+        }
+        return false
+      }))
+      if(typeof e === 'string'){
         props.change({
           id: null,
           label: e,
         });
+        return
       }
+      
 
       // if (!allValuesGreaterThanZero) {
       //   // execute code
@@ -225,6 +250,7 @@ export default function AddSchedule() {
                     },
                   }}
                   {...params}
+                  onChange={(e) => {selectItem(e.target.value)}}
                   InputProps={{
                     ...params.InputProps,
                     disableUnderline: true,
@@ -342,60 +368,60 @@ export default function AddSchedule() {
 
   const AddCourse = (props) => {
     const [dayOfWeek, setDayOfWeek] = useState([]);
-    const [time, setTime] = useState('12:00');
-    const [endTime, setEndTime] = useState('12:00');
+    const [time, setTime] = useState();
+    const [endTime, setEndTime] = useState();
     // useFetch('/course/query?campusId=1', 'get');
     const [CURRICULUM, setCURRICULUM] = useState({
       name: '',
-      color: '',
-      time: `${time}-${endTime}`,
+      color: null,
+      // time: `${time}-${endTime}`,
       period: 0,
       dayOfWeek: [],
       classroom: '',
       courseId: null,
-      section: {
-        courseName: '',
-      },
+      sectionId: null,
+      sectionName:null,
+      professorName: '',
     });
     const { data: courseDetailData } = useFetch(
       `/course/detail?id=${CURRICULUM.courseId}`,
       'get',
     );
     const courseFormat = useMemo(() => {
-      console.log(CURRICULUM.section, 'CURRICULUM.section');
-      return courseDetailData?.data?.sections.filter((item) => {
-        return item.name === CURRICULUM.section.courseName;
-      });
-    }, [CURRICULUM.section]);
+      return courseDetailData?.data?.sections.slice().filter((item) => {
+        return item.id === CURRICULUM.sectionId;
+      })[0];
+    }, [CURRICULUM.sectionId]);
     useEffect(() => {
       console.log(courseFormat, 'courseFormat');
     }, [courseFormat]);
-    // useEffect(()=>{
-    //   setCourseId(CURRICULUM.courseId)
-    // },[CURRICULUM.courseId])
     const [value, setValue] = React.useState<Dayjs | null>(null);
     const { data: courseData } = useFetch('/course/query?campusId=1', 'get');
     const handleChange = useCallback((val: any, name: string) => {
-      // if(name === 'courseId'){
-      //   setCourseId(val)
-      // }
       setCURRICULUM((preVal: any) => {
         return {
           ...preVal,
           [name]: val,
         };
       });
-      // if(name === 'courseId'){
-      //   props.fetchData(CURRICULUM.courseId)
-      // }
     }, []);
+    const translateTime = (time)=>{
+      if(!time) return;
+      // time:"12:00-18:00 转 time:"12.00-18.00
+      const timeArr = time?.split(':');
+      const endTimeArr = endTime?.split(':');
+      const timeStr = timeArr?.join('.');
+      const endTimeStr = endTimeArr.join('.');
+      return `${timeStr}-${endTimeStr}`
+    }
     const submitForm = async (values: any) => {
       console.log(dayOfWeek, 'dayOfWeek');
       console.log(values, 'values');
       dayOfWeek.forEach((item) => {
         submitCourse({
           ...values,
-          dayOfWeek: item,
+          dayOfWeek: Number(item),
+          time: `${translateTime(time)}-${translateTime(endTime)}`,
         });
       });
       // dayOfWeek.forEach((item) => {
@@ -423,8 +449,6 @@ export default function AddSchedule() {
           change={(val) => {
             handleChange(val.label, 'name');
             handleChange(val.id, 'courseId');
-            // props.fetchData(val.id)
-            // setCourseId(val.id)
           }}
           renderData={courseData?.data?.map((item) => item.ename)}
           data={courseData?.data}
@@ -458,11 +482,6 @@ export default function AddSchedule() {
                   console.log(arr, dayOfWeek);
                 }}
               />
-              {/* <CCourseTime title="周一"></CCourseTime>
-            <CCourseTime title="周一"></CCourseTime>
-            <CCourseTime title="周一"></CCourseTime>
-            <CCourseTime title="周一"></CCourseTime>
-            <CCourseTime title="周一"></CCourseTime> */}
             </div>
           </label>
         </div>
@@ -470,7 +489,7 @@ export default function AddSchedule() {
           <div className="flex youni-form items-center justify-between h-full space-x-4">
             <div className="flex items-center">
               <NessIcon className="mr-1"></NessIcon>
-              <div>开始时间</div>
+              <div className='text-sm text-blueTitle'>开始时间</div>
             </div>
             <div>
               <DatetimePicker
@@ -505,7 +524,7 @@ export default function AddSchedule() {
           <div className="flex youni-form items-center justify-between h-full space-x-4">
             <div className="flex items-center">
               <NessIcon className="mr-1"></NessIcon>
-              <div>结束时间</div>
+              <div className='text-sm text-blueTitle'>结束时间</div>
             </div>
             <div>
               <DatetimePicker
@@ -539,7 +558,8 @@ export default function AddSchedule() {
         <CCourseInput
           title="Section"
           change={(val) => {
-            handleChange(val.label, 'section');
+            handleChange(val.label, 'sectionName');
+            handleChange(val.id, 'sectionId');
           }}
           data={courseDetailData?.data?.sections}
           renderData={courseDetailData?.data?.sections?.map(
@@ -549,19 +569,19 @@ export default function AddSchedule() {
         <CCourseInput
           title="课程形式"
           change={(val) => {
-            handleChange(val.label, 'name');
+            // handleChange(val.label, 'name');
           }}
+          data={courseFormat?.mode}
+          renderData={courseFormat?.mode?.map((item) => item[useLanguage('name')])}
         ></CCourseInput>
         <CCourseInput
           title="教授"
           change={(val) => {
-            handleChange(val.label, 'name');
-            handleChange(val.id, 'courseId');
+            handleChange(val.label, 'professorName');
+            // handleChange(val.id, 'courseId');
           }}
-          data={courseDetailData?.data?.sections}
-          renderData={courseDetailData?.data?.sections?.map(
-            (item) => item.name,
-          )}
+          data={courseFormat?.professors}
+          renderData={courseFormat?.professors?.map((item) => item.name)}
         ></CCourseInput>
         <CCourseInput
           title="教室"
@@ -572,7 +592,7 @@ export default function AddSchedule() {
         ></CCourseInput>
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
-            <div>单双周</div>
+            <div className='text-xs text-blueTitle'>单双周</div>
             <div className="w-[250px] h-full flex items-center justify-end pr-1 rounded-lg">
               <div className="border-[#DCDDE1] border  overflow-hidden  rounded-lg  h-[28px]   flex ">
                 <div
@@ -622,8 +642,8 @@ export default function AddSchedule() {
 
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
-            <div>颜色</div>
-            <CCourseColor setColor={(val)=>{ handleChange(val, 'color');}}></CCourseColor>
+            <div className='text-sm text-blueTitle'>颜色</div>
+            <CCourseColor setColor={(val)=>{ console.log(val),handleChange(val, 'color');}}></CCourseColor>
           </div>
         </div>
         <div className="flex justify-center mx-10 space-x-4">

@@ -22,6 +22,7 @@ import { Flex, Loading } from 'react-vant';
 // import Header from '@/components/Header';
 import Post from './post/post';
 import useFetch from '../../hooks/useFetch';
+import { useLocalStorage } from 'react-use';
 const PostDetail = (props) => {
   return (
     <SwipeableDrawer
@@ -247,6 +248,7 @@ function SchoolPage(props) {
   const [isSelect, setIsSelect] = useState(false);
   const [schoolSelect, setSelectSchool] = useState(false);
   const [postDetailShow, setPostDetailShow] = useState(false);
+  const [campusIdMap, setCampusIdMap] = useLocalStorage(props?.post?.alias, props?.post?.id);
   // const [postData, setPostData] = useState({});
   const dispatch = useDispatch();
   const headerMenuList = [
@@ -302,13 +304,12 @@ function SchoolPage(props) {
     `/post/home_list?type=${category}`,
     'get',
   );
-  //   setpostData(data?.data);
-  // }, [category]);
-  // console.log(postData, 'postData');
-  // useEffect(() => {
-  //   setreRender(reRender + 1);
-  // },[postData])
+
   React.useEffect(() => {
+    setCampusIdMap(props?.post?.id);
+    // setCampusIdMap([...campusIdMap, {
+    //   [props?.post?.alias]: props?.post?.id
+    // }])
     dispatch(setAuthState(true));
   }, []);
   if(!Post){

@@ -17,6 +17,7 @@ import Icon2 from './components/timeIcon/2.svg';
 import Icon3 from './components/timeIcon/3.svg';
 import Icon4 from './components/timeIcon/4.svg';
 import Icon5 from './components/timeIcon/5.svg';
+import getCampusId from '@/hooks/useId';
 import exportAsImage from '@/libs/exportImage';
 import Polygon from './polygon.svg';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -193,7 +194,25 @@ const CourseDetailCard = (props) => {
 
 export default function Schedules() {
   const calendarRef = useRef<any>();
+  const router = useRouter();
+  // const [campusIdMap, setCampusIdMap] = useLocalStorage(getCampusId(router.query.campus), props?.post?.id);
   const [defaultScheduleView, setDefaultScheduleView] = useLocalStorage('defaultScheduleView',0);
+  const {data:termInfo} = useFetch('/campus/term/current','get',{campusId:1});
+  const getWeekDates = () => {
+    const weekDates = [];
+    const currentDate = new Date();
+    let day = currentDate.getUTCDay();
+    const diff = currentDate.getUTCDate() - day;
+    for (let i = 0; i < 7; i++) {
+      const newDate = new Date(currentDate.setUTCDate(diff + i));
+      const dateString = newDate.toISOString().slice(0, 10);
+      weekDates.push(dateString);
+    }
+    return weekDates;
+  };
+  // const currenTerm = React.useMemo(()=>{
+  //   return termInfo?.data?.filter((item)=>item?.current)
+  // },[termInfo])
   const SetSchedule = (props) => {
     const Menu = () => {
       const [menu, setMenu] = useState(defaultScheduleView);
@@ -362,6 +381,7 @@ export default function Schedules() {
   };
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
+  
   const [scheduleVisible, setScheduleVisible] = useState(false);
   const [addCourse, setAddCourse] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -370,6 +390,7 @@ export default function Schedules() {
     `${Cons.API.CURRICULUM.QUERY}?campusId=1`,
     'get',
   );
+  // const []
   // const currentDate = new Date();
   // currentDate.setDate(currentDate.getDate()+7)
   let courseData;
@@ -392,7 +413,7 @@ export default function Schedules() {
     const all = addFullStartDate(courseData, weekDate);
     console.log(all, 'courseData');
   }
-  const router = useRouter();
+
   React.useEffect(() => {
     if (!data) return;
     if (!data?.data) {
@@ -530,8 +551,8 @@ export default function Schedules() {
       </Dialog>
 
       <div className="pl-5 text-left f-11 ">
-        <div className="text-base font-bold text-blueTitle">第 7 周</div>
-        <div className="text-xs text-gray-400">10月10日 - 10月16日</div>
+        <div className="text-base font-bold text-blueTitle">第 {termInfo?.data?.name} 周</div>
+        <div className="text-xs text-gray-400">{getWeekDates()[0]} - {getWeekDates()[6]}</div>
       </div>
       <div className="flex  px-2 items-center justify-between pl-5 pr-5 h-11 bg-bg">
         <div className="flex items-center justify-around w-2/3 h-8 bg-white rounded-lg">
