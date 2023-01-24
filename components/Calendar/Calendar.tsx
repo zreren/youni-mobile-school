@@ -46,7 +46,7 @@ function Calendar(props) {
     left: 'calc(50% - 15px)',
   }));
   const Card = (props) => {
-    const { title, extendedProps, dayOfWeek } = props;
+    const { title, extendedProps, dayOfWeek,students} = props;
     const background =
       'linear-gradient(180deg, #EBE5FE -117.9%, #FFFFFF 125.31%)';
     return (
@@ -73,49 +73,50 @@ function Calendar(props) {
           </div>
           <div className="flex flex-col items-end w-1/2">
             <div className="-space-x-2 avatar-group">
-              <div className="avatar border-[1px]">
+              {
+                students?.slice(0,3).map((item,index)=>{
+                  return (
+                    <div className="avatar border-[1px]">
+                      <div className="w-6">
+                        <img src={`${Cons.BASEURL}${item.avatar}`} />
+                      </div>
+                    </div>
+                  )
+                })
+              }
+              {/* <div className="avatar border-[1px]">
                 <div className="w-6">
                   <img src="https://placeimg.com/192/192/people" />
                 </div>
-              </div>
-              <div className="avatar border-[1px]">
-                <div className="w-6">
-                  <img src="https://placeimg.com/192/192/people" />
-                </div>
-              </div>
-              <div className="border-[1px] avatar">
-                <div className="w-6">
-                  <img src="https://placeimg.com/192/192/people" />
-                </div>
-              </div>
+              </div> */}
               {/* <div className="border avatar placeholder">
                   <div className="w-6 bg-neutral-focus text-neutral-content">
                     <span>+</span>
                   </div>
                 </div> */}
             </div>
-            <div className="text-xs">6 名同学</div>
+            <div className="text-xs">{students?.length }名同学</div>
           </div>
         </div>
         <div className="mt-4 pb-4">
           <div className="mb-2">
             <div className="flex items-center">
               <TimeIconActive></TimeIconActive>
-              <div className="ml-3 text-sm text-gray-400">
+              <div className="ml-3 text-sm text-gray-400 w-10">
                 {useLanguage('l') === 'el'
                   ? '周' + dayOfWeek
                   : '周' + dayOfWeek}
               </div>
-              <div className="ml-10 text-sm text-gray-400 ">
+              <div className="ml-8 text-sm text-gray-400 ">
                 {extendedProps.time}
               </div>
             </div>
           </div>
           <div className="flex items-center">
             <Location></Location>
-            <div className="ml-3 text-sm text-gray-400">地点</div>
-            <div className="ml-10 text-sm text-gray-400 ">
-              {extendedProps.classroom}
+            <div className="ml-3 text-sm text-gray-400 w-10">地点</div>
+            <div className="ml-8 text-sm text-gray-400 ">
+            {extendedProps.classroom}
             </div>
           </div>
         </div>
@@ -214,7 +215,7 @@ function Calendar(props) {
       const colorMap = ['#FFD036', '#798195', '#FF7978'];
       function getDayOfWeek(dateString: string) {
         const date = new Date(dateString);
-        const days = [
+        const edays = [
           'Sunday',
           'Monday',
           'Tuesday',
@@ -223,7 +224,20 @@ function Calendar(props) {
           'Friday',
           'Saturday',
         ];
-        return days[date.getUTCDay()];
+        const cdays = [
+          '周日',
+          '周一',
+          '周二',
+          '周三',
+          '周四',
+          '周五',
+          '周六',
+        ]
+        const days = {
+          cdays: cdays,
+          edays: edays,
+        }
+        return days[useLanguage('days')][date.getUTCDay()];
       }
       function getMonthDay(dateString: string) {
         const date = new Date(dateString);
@@ -259,12 +273,14 @@ function Calendar(props) {
               {item?.children?.map((item, index) => {
                 return (
                   <Card
-                    title={item.name}
+                    title={item?.name}
+                    students={item?.section?.students}
                     dayOfWeek={item?.dayOfWeek}
                     extendedProps={{
                       section: { name: item.section?.name },
                       online: true,
-                      time: '',
+                      time: item.time,
+                      classroom: item.classroom,
                     }}
                   ></Card>
                 );
@@ -334,13 +350,13 @@ function Calendar(props) {
     if (typeof window === 'undefined') return;
     const body = document.getElementsByClassName(
       'fc-scrollgrid-section-body',
-    )[0];
+    )[0] as HTMLElement;
     if (!calendarView || setting.view === 'today') {
       console.log(body, 'body');
-      body.setAttribute('style', 'display:none');
+      body.style.display = 'none';
     } else {
-      console.log(body, 'body');
-      body.removeAttribute('style');
+      body.style.display = '';
+      // body.removeAttribute('style');
     }
   }, [calendarView]);
   return (

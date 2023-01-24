@@ -106,7 +106,7 @@ const PostGroup = () => {
 function index(props) {
   // const { user, loggedOut } = useUser();
   // const router = useRouter();
-
+  // const { t } = useTranslation('common');
   // const 
   const Profile2 = () => {
     const [menu, setMenu] = useState(0);
@@ -205,8 +205,8 @@ function index(props) {
   };
   // const { user, loggedOut } = useUser();
   const router = useRouter();
-  const {data:UserData} = useFetch('/user/info', 'get',{
-
+  const {data:UserData} = useFetch('/student/info', 'get',{
+    id: router.query.id
   })
   const [school, setSchool] = useLocalStorage('school', 'York');
   const { i18n } = useTranslation('common');
@@ -234,7 +234,7 @@ function index(props) {
           <HeaderMenu
             headerMenuList={headerList}
             switchMenu={(val) => {
-              setMenu(val);
+              setMenu(val + 1);
             }}
           ></HeaderMenu>
         ) : null}

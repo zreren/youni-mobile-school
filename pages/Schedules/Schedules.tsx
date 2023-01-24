@@ -456,7 +456,7 @@ export default function Schedules() {
         onClick={() => {
           router.push('./Profile/valid');
         }}
-        className="relative flex items-center justify-between w-full h-16 p-4 pt-0 pb-0 bg-[#FF7978] rounded text-gold"
+        className="relative flex items-center justify-between w-full h-12 p-4 pt-0 pb-0 bg-[#FF7978] rounded text-gold"
       >
         <div className="flex items-center  ">
           <Polygon className="absolute top-0 left-0 h-20"></Polygon>
