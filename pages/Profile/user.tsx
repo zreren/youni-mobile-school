@@ -113,46 +113,9 @@ function index(props) {
     const { data } = useFetch('/post/list', 'get');
     return (
       <div className="h-full ">
-        <div className="w-full px-2">
-          <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
-            <div
-              onClick={() => {
-                setMenu(0);
-              }}
-              className={classnames(
-                'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
-                {
-                  'bg-slate-50 text-[#FFD036]': menu === 0,
-                },
-              )}
-            >
-              贴文
-            </div>
-            <div
-              onClick={() => {
-                setMenu(1);
-              }}
-              className={classnames(
-                'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
-                {
-                  'bg-slate-50 text-[#FFD036]': menu === 1,
-                },
-              )}
-            >
-              文集
-            </div>
-          </div>
-        </div>
-        {menu === 0 ? (
-          <div className="px-[10px]">
-            <PostGroup></PostGroup>
-          </div>
-        ) : (
-          <div></div>
-          // <Waterfall postData={data?.data.map((item) => {
-          //   return { ...item, student: { nickName: user.student.nickName } }
-          // })}></Waterfall>
-        )}
+          {/* <Waterfall postData={data?.data.map((item) => {
+            return { ...item, student: { nickName: user.student.nickName } }
+          })} ></Waterfall> */}
       </div>
     );
   };
@@ -163,43 +126,13 @@ function index(props) {
     const { data: stard } = useFetch('/post/stard', 'get');
     return (
       <div className="w-full">
-        <div className="w-full px-2">
-          <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
-            <div
-              onClick={() => {
-                setMenu(0);
-              }}
-              className={classnames(
-                'w-full flex justify-center items-center text-center text-[#A9B0C0]',
-                {
-                  'bg-slate-50 text-[#FFD036]': menu === 0,
-                },
-              )}
-            >
-              贴文
-            </div>
-            <div
-              onClick={() => {
-                setMenu(1);
-              }}
-              className={classnames(
-                'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
-                {
-                  'bg-slate-50 text-[#FFD036]': menu === 1,
-                },
-              )}
-            >
-              文集
-            </div>
-          </div>
-        </div>
-        {menu === 0 ? (
+        {/* {menu === 0 ? (
           <div className="px-[10px]">
             <PostGroup></PostGroup>
           </div>
         ) : (
           <Waterfall postData={Object.assign(liked?.data, stard?.data.length > 0 ? stard?.data : null)}></Waterfall>
-        )}
+        )} */}
       </div>
     );
   };
@@ -228,8 +161,10 @@ function index(props) {
 
   return (
     <div className="w-screen min-h-screen">
-      <ProfileHeader data={UserData?.data}></ProfileHeader>
-      <div className="w-full overflow-hidden rounded-full ">
+      {/* <div className=''> */}
+      <ProfileHeader myProfile={false} data={{student:UserData?.data}}></ProfileHeader>
+      {/* </div> */}
+      <div className="w-full header-shadow overflow-hidden rounded-t-2xl -translate-y-[6px]">
         {menuVal !== 4 ? (
           <HeaderMenu
             headerMenuList={headerList}
@@ -238,6 +173,10 @@ function index(props) {
             }}
           ></HeaderMenu>
         ) : null}
+      </div>
+      <div>
+        {menuVal === 1?<Profile2></Profile2>:null}
+        {menuVal === 2?<Profile3></Profile3>:null}
       </div>
     </div>
   );

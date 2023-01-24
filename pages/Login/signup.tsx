@@ -208,7 +208,7 @@ const ChooseYourRole = (props) => {
   };
   const list = [PhoneLabel, MailLabel];
   const [label, setLabel] = useState(0);
-  const Node = list[label];
+  const Node = React.useMemo(() => list[label], [label]);
   return (
     <div className="z-10 flex flex-col w-full h-full overflow-hidden transition mt-11">
       {/* <Image src={Logo} alt=""></Image> */}
@@ -236,6 +236,7 @@ const ChooseYourRole = (props) => {
           className="flex flex-col items-center w-full space-y-4"
           onClick={() => {
             props.selectRole('Graduated');
+            setLabel(0);
           }}
         >
           <div
@@ -253,7 +254,7 @@ const ChooseYourRole = (props) => {
             onClick={() => {
               setLabel(0);
             }}
-            className={classnames('w-full font-medium  mx-2 text-center', {
+            className={classnames('w-full font-medium h-8  mx-1 flex justify-center items-center', {
               'bg-white  text-yellow-300 rounded-lg': label === 0,
                 "text-[#798195]" : label !== 0
             })}
@@ -264,7 +265,7 @@ const ChooseYourRole = (props) => {
                 onClick={() => {
                     setLabel(1);
                 }}
-                className={classnames('w-full font-medium    mx-2 text-center', {
+                className={classnames('w-full font-medium  h-8  mx-1 flex justify-center items-center', {
                     'bg-white text-yellow-300 rounded-lg': label === 1,
                     "text-[#798195]" : label !== 1
                 })}

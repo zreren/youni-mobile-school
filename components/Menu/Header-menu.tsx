@@ -131,7 +131,7 @@ export default function CustomizedTabs(props) {
   return (
     <Box
       sx={{ bgcolor: '#fff', width: '100%' }}
-      className={classnames('sticky z-10 top-11 text-xs', className)}
+      className={classnames('sticky z-10 top-11  text-xs ', className)}
     >
       <StyledTabs
         variant="fullWidth"
