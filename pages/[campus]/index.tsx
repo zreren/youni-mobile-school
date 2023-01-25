@@ -229,7 +229,7 @@ function SchoolPage(props) {
     // }
     return (
       <div className="">
-         <Popup
+         {/* <Popup
         overlayClass={'Popup'}
         className="z-30 topIndexPlus rounded-full "
         visible={!countryData}
@@ -237,7 +237,7 @@ function SchoolPage(props) {
         <div className="rounded-full w-10 h-10 flex overflow-hidden justify-center items-center">
           <Loading type="spinner" color="#FED64B" />
         </div>
-      </Popup>
+      </Popup> */}
         <SwipeableDrawer
           anchor="left"
           open={props.visible}
