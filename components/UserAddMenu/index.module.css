@@ -160,8 +160,7 @@
 }
 .element:nth-child(1){
     position: absolute;
-    bottom: 3
-    0px;
+    bottom: 30px;
     left: 2px;
     -webkit-transition-delay: 0.24s, 0.48s;
     transition-delay: 0.24s, 0.48s;

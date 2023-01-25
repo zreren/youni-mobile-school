@@ -429,7 +429,7 @@ export default function index() {
     '--value': 70
   }
   return (
-    <div className='min-h-screen'>
+    <div className='min-h-screen pb-20'>
       <div className="relative h-[280px] w-full gap-bg pt-4  bg-gradient-to-l to-[#EAE6FF] from-[#ECF5FF] ">
         <Header className="bg-transparent fixed top-0"></Header>
         <div className="absolute p-4 bg-white rounded-full left-8 rotate-220">

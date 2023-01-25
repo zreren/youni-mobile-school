@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import HeaderLayout from '@/components/PageComponents/Home/HeaderLayout';
 import MenuAtSchool from '@/components/PageComponents/Home/MenuAtSchool';
 import ad from './components/ad.png';
@@ -15,7 +15,7 @@ import Waterfall from '@/components/Layout/Waterfall';
 import LoadingWaterfall from '@/components/Layout/WaterfallLoading';
 import PostCategory from '@/components/Menu/post-category';
 import useRequest from '@/libs/request';
-import { PullRefresh } from 'react-vant';
+import { Dialog, PullRefresh } from 'react-vant';
 import { Skeleton } from 'react-vant';
 import useLanguage from '@/hooks/useLanguage';
 import { Flex, Loading } from 'react-vant';
@@ -23,6 +23,8 @@ import { Flex, Loading } from 'react-vant';
 import Post from './post/post';
 import useFetch from '../../hooks/useFetch';
 import { useLocalStorage } from 'react-use';
+import { Popup } from 'react-vant';
+import { useRouter } from 'next/router';
 const PostDetail = (props) => {
   return (
     <SwipeableDrawer
@@ -44,13 +46,14 @@ const PostDetail = (props) => {
 };
 
 const RedCountyList = (props) => {
-  const { arg ,data} = props;
+  const { arg ,data,otherData} = props;
   const [select, setSelect] = useState('Canada');
   const CountryButton = (props1) => {
-    const { title } = props1;
+    const { title ,id } = props1;
     return (
       <div
         onClick={() => {
+          props.setCountryId(id)
           props.setVisible(false);
           props.setSelectSchool(true);
         }}
@@ -92,157 +95,39 @@ const RedCountyList = (props) => {
               <div className="z-50 grid grid-cols-3 gap-2 pt-2">
                 {data?.map((item) => {
                   return (
-                      <CountryButton title={item.name}></CountryButton>
+                      <CountryButton id={item.id} title={item.name}></CountryButton>
                   )
                 })}
 
               </div>
             </div>
           </div>
-          <div className="w-full h-auto overflow-visible bg-white card">
-            <div className="relative w-full h-full p-4">
-              <div className="text-base font-medium ">北美洲</div>
-              <div className="z-50 grid grid-cols-3 gap-2 pt-2">
-                <CountryButton title="美国"></CountryButton>
-                <CountryButton title="美国"></CountryButton>
-                <CountryButton title="美国"></CountryButton>
-                <CountryButton title="美国"></CountryButton>
-                <CountryButton title="美国"></CountryButton>
-                <CountryButton title="美国"></CountryButton>
-                <CountryButton title="美国"></CountryButton>
-                <CountryButton title="美国"></CountryButton>
-                <CountryButton title="美国"></CountryButton>
-                <CountryButton title="美国"></CountryButton>
-                <CountryButton title="美国"></CountryButton>
-                <CountryButton title="美国"></CountryButton>
+          {
+            otherData?.map((item)=>{
+              return (
+                <div className="w-full h-auto overflow-visible bg-white card">
+                <div className="relative w-full h-full p-4">
+                  <div className="text-base font-medium ">{item.name}</div>
+                  <div className="z-50 grid grid-cols-3 gap-2 pt-2">
+                    {item.countries.map((item)=>{
+                        return (
+                          <CountryButton title={item.name} id={item.id}></CountryButton>
+                        )
+                    })}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+              )
+            }
+          )}
+         
         </div>
       </SwipeableDrawer>
     </div>
   );
 };
 
-const SchoolList = (props) => {
-  const { arg } = props;
-  const [select, setSelect] = useState('Canada');
-  const countryList = [
-    { label: '中国', value: 'Canada' },
-    { label: '中国', value: 'China' },
-  ];
-  const chinaSchoolList = [
-    {
-      label: 'York Unviersity (Canada)',
-      cnLabel: '多伦多大学密西沙加校区',
-      value: 1,
-      short: 'YU',
-      belong: 'Canada',
-    },
-    {
-      label: 'York Unviersity (Canada)',
-      cnLabel: '多伦多大学密西沙加校区',
-      value: 1,
-      short: 'YU',
-    },
-    {
-      label: 'York Unviersity (Canada)',
-      cnLabel: '多伦多大学密西沙加校区',
-      value: 1,
-      short: 'YU',
-    },
-  ];
-  const schoolList = [
-    {
-      label: 'York Unviersity (Canada)',
-      cnLabel: '多伦多大学密西沙加校区',
-      value: 1,
-      short: 'YU',
-      belong: 'Canada',
-    },
-    {
-      label: 'York Unviersity (Canada)',
-      cnLabel: '多伦多大学密西沙加校区',
-      value: 1,
-      short: 'YU',
-    },
-    {
-      label: 'York Unviersity (Canada)',
-      cnLabel: '多伦多大学密西沙加校区',
-      value: 1,
-      short: 'YU',
-    },
-    {
-      label: 'York Unviersity (Canada)',
-      cnLabel: '多伦多大学密西沙加校区',
-      value: 1,
-      short: 'YU',
-    },
-  ];
-  const countrySchoolList = {
-    Canada: schoolList,
-    China: chinaSchoolList,
-  };
-  return (
-    <div className="">
-      <SwipeableDrawer
-        anchor="left"
-        open={props.visible}
-        onClose={() => {
-          props.setVisible(false);
-        }}
-        onOpen={() => {
-          props.setVisible(true);
-        }}
-        className="h-screen"
-      >
-        <div className="flex w-screen h-screen">
-          <Header
-            returnClick={() => {
-              props.setVisible(false);
-            }}
-            title={select}
-            className="shadow-none"
-          ></Header>
-          <div className="w-1/5 h-full pt-10 min-w-30 bg-bg">
-            {countryList?.map((item) => {
-              return (
-                <div
-                  onClick={() => {
-                    setSelect(item.value);
-                  }}
-                  className={classnames('p-4 h-14', {
-                    'text-yellow-400': select === item.value,
-                  })}
-                >
-                  {item.label}
-                </div>
-              );
-            })}
-          </div>
-          <div className="w-4/5 h-full">
-            {countrySchoolList[select].map((item) => {
-              return (
-                <div
-                  className="h-12 pt-3 pl-4"
-                  onClick={() => {
-                    props.setVisible(false);
-                  }}
-                >
-                  <div className="flex items-center h-4 space-x-2">
-                    <div> {item.cnLabel}</div>
-                    <div className="p-1 text-xs bg-bg">{item.short}</div>
-                  </div>
-                  <div className="text-xs text-lightGray">{item.label}</div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </SwipeableDrawer>
-    </div>
-  );
-};
+
 function SchoolPage(props) {
   console.log(props, 'SchoolPage');
   const [isSelect, setIsSelect] = useState(false);
@@ -292,12 +177,14 @@ function SchoolPage(props) {
       }, 1000);
     });
   };
-  const {data:hotCountryList,error:hotCountryListError} = useFetch('/campus/popularCountry','get')
+  const {data:hotCountryList,error:hotCountryListError} = useFetch('/country/hot','get');
+  const {data:otherCountryList,error:otherCountryListError} = useFetch('/country/query_by_area','get');
   const [loading, setLoading] = useState(true);
   const [imageSize, setSmageSize] = React.useState({
     width: '1000%',
     height: '0rem',
-  });
+  })
+  const router = useRouter();
   const [category, setCategory] = useState('idle');
   // useEffect(() => {
   const { data: postData, error } = useFetch(
@@ -312,6 +199,108 @@ function SchoolPage(props) {
     // }])
     dispatch(setAuthState(true));
   }, []);
+  const [countryId, setCountryId] = useState();
+  const SchoolList = (props) => {
+    const { arg ,countryId } = props;
+    const [select, setSelect] = useState();
+    const {data:countryData,mutate} = useFetch('/country/campus','get',{
+      countryId:countryId
+    });
+    useEffect(()=>{
+      setSelect(countryData?.data?.[0]?.id)
+    },[countryData])
+    const schoolList = useMemo(()=>{
+      return countryData?.data?.filter((item)=>{
+        return item.id === select;
+      }).map((item)=>{return item.campuses})[0]
+    },[countryData,countryId,select]);
+    useEffect(()=>{
+      mutate()
+    },[countryId])
+    console.log(schoolList,"schoolList")
+    const countryList = [
+      { label: '中国', value: 'Canada' },
+      { label: '中国', value: 'China' },
+    ];
+    // if(countryData?.data?.length === 0){
+    //   return (
+    //     // <div>No</div>
+    //   )
+    // }
+    return (
+      <div className="">
+         <Popup
+        overlayClass={'Popup'}
+        className="z-30 topIndexPlus rounded-full "
+        visible={!countryData}
+      >
+        <div className="rounded-full w-10 h-10 flex overflow-hidden justify-center items-center">
+          <Loading type="spinner" color="#FED64B" />
+        </div>
+      </Popup>
+        <SwipeableDrawer
+          anchor="left"
+          open={props.visible}
+          onClose={() => {
+            props.setVisible(false);
+          }}
+          onOpen={() => {
+            props.setVisible(true);
+          }}
+          className="h-screen"
+        >
+          <div className="flex w-screen h-screen">
+            <Header
+              returnClick={() => {
+                props.setVisible(false);
+              }}
+              title={schoolList?.name}
+              className="shadow-none"
+            ></Header>
+            <div className="w-1/5 h-full pt-10 min-w-30 bg-bg">
+              {countryData?.data?.map((item) => {
+                return (
+                  <div
+                    onClick={() => {
+                      setSelect(item.id);
+                    }}
+                    className={classnames('p-4 h-14', {
+                      'text-yellow-400': select === item.id,
+                    })}
+                  >
+                    {item.name}
+                  </div>
+                );
+              })}
+            </div>
+            <div className="w-4/5 h-full mt-14">
+              {schoolList?.map((item) => {
+                console.log(item,'schoolList Item')
+                return (
+                  <div
+                    className="h-12 pt-3 pl-4"
+                    onClick={() => {
+                      router.push({
+                        pathname: '/[campus]',
+                        query: { campus: item.alias },
+                      })
+                      props.setVisible(false);
+                    }}
+                  >
+                    <div className="flex items-center h-4 space-x-2">
+                      <div> {item[useLanguage('name')]}</div>
+                      <div className="p-1 text-xs bg-bg">{item.shortName}</div>
+                    </div>
+                    <div className="text-xs text-lightGray">{item.alias}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </SwipeableDrawer>
+      </div>
+    );
+  };
   if(!Post){
     return <div>loading</div>
   }
@@ -324,11 +313,14 @@ function SchoolPage(props) {
       <RedCountyList
         setVisible={setIsSelect}
         visible={isSelect}
+        setCountryId={(id)=>{setCountryId(id)}}
         data={hotCountryList?.data}
+        otherData={otherCountryList?.data}
         setSelectSchool={setSelectSchool}
       ></RedCountyList>
       <SchoolList
         setVisible={setSelectSchool}
+        countryId={countryId}
         visible={schoolSelect && !isSelect}
       ></SchoolList>
       <PullRefresh

@@ -272,7 +272,7 @@ export default function AddSchedule() {
     const [time, setTime] = useState('12:00');
     return (
       <div className="w-full space-y-4 youni-form">
-        <CCourseInput title="课程名称" isNess></CCourseInput>
+        <CCourseInput title="日程名称" isNess></CCourseInput>
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
             <div className="flex items-center">
@@ -370,11 +370,9 @@ export default function AddSchedule() {
     const [dayOfWeek, setDayOfWeek] = useState([]);
     const [time, setTime] = useState();
     const [endTime, setEndTime] = useState();
-    // useFetch('/course/query?campusId=1', 'get');
     const [CURRICULUM, setCURRICULUM] = useState({
       name: '',
       color: null,
-      // time: `${time}-${endTime}`,
       period: 0,
       dayOfWeek: [],
       classroom: '',
@@ -392,9 +390,7 @@ export default function AddSchedule() {
         return item.id === CURRICULUM.sectionId;
       })[0];
     }, [CURRICULUM.sectionId]);
-    useEffect(() => {
-      console.log(courseFormat, 'courseFormat');
-    }, [courseFormat]);
+
     const [value, setValue] = React.useState<Dayjs | null>(null);
     const { data: courseData } = useFetch('/course/query?campusId=1', 'get');
     const handleChange = useCallback((val: any, name: string) => {
@@ -415,6 +411,7 @@ export default function AddSchedule() {
       return `${timeStr}-${endTimeStr}`
     }
     const submitForm = async (values: any) => {
+
       const requestQueen = dayOfWeek.map((item) => {
         return submitCourse({
           ...values,

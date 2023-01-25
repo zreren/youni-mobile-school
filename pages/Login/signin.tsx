@@ -3,6 +3,7 @@ import backgroundImage1 from './assets/background2.png';
 import backgroundImage2 from './assets/1.png';
 import Image from 'next/image';
 import Logo from './assets/logo.png';
+import Forget from './forget';
 import Button from '@mui/material/Button';
 import WeChat from './assets/wechat.svg';
 import CommonLayout from '@/components/Layout/CommonLayout';
@@ -127,9 +128,9 @@ export default function SignIn(props) {
             <div className='h-[232px] flex flex-col  items-center' >
               <div className='pt-4  pb-4 text-[#37455C] '>Reset password with</div>
               {/* <div> */}
-              <div className='py-4 text-[#798195]'>Phone number</div>
+              <div onClick={()=>{ setProgress(2);}} className='py-4 text-[#798195]'>Phone number</div>
               <div className='py-4 text-[#798195]'>Email</div>
-              <div className='py-4 text-[#A9B0C0]'>Cancel</div>
+              <div onClick={() => setVisible(false)} className='py-4 text-[#A9B0C0]'>Cancel</div>
               {/* </div> */}
             </div>
           </Popup>
@@ -439,7 +440,7 @@ export default function SignIn(props) {
   };
   const [progress, setProgress] = useState(0);
   const [role, selectRole] = useState('Student');
-  const ProgressList = [SelectSignUpWay, ChooseYourRole, SelectLanguage];
+  const ProgressList = [SelectSignUpWay, ChooseYourRole, Forget];
   const Node = ProgressList[progress];
   const dispatch = useDispatch();
   React.useEffect(() => {
@@ -456,7 +457,7 @@ export default function SignIn(props) {
         ></SignUp>
       ) : (
         <div className="relative w-full h-screen overflow-hidden bg-fixed">
-          <div className="absolute inset-0 z-0 w-full -top-24">
+          <div className="absolute inset-0 z-0 bgIndex w-full -top-24">
             <Image
               className="z-0 h-full"
               layout="fill"
@@ -464,7 +465,7 @@ export default function SignIn(props) {
               alt="Picture of the author"
             />
           </div>
-          <div>
+          <div className='z-30 w-full'>
             <SwitchTransition mode="out-in">
               <CSSTransition classNames="btn" timeout={260} key={progress}>
                 {
@@ -474,6 +475,7 @@ export default function SignIn(props) {
                     }}
                     role={role}
                     selectRole={selectRole}
+                    returnClick={()=>{setProgress(progress - 1)}}
                   ></Node>
                 }
               </CSSTransition>
