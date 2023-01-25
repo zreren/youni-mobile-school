@@ -12,7 +12,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import IOSSwitch from './components/ios';
-import { DatetimePicker, Field } from 'react-vant';
+import { DatetimePicker, Field, Toast } from 'react-vant';
 import { Form, Selector } from 'react-vant';
 // import { Button } from 'ppfish-mobile/es/components/index.js';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -415,32 +415,19 @@ export default function AddSchedule() {
       return `${timeStr}-${endTimeStr}`
     }
     const submitForm = async (values: any) => {
-      console.log(dayOfWeek, 'dayOfWeek');
-      console.log(values, 'values');
-      dayOfWeek.forEach((item) => {
-        submitCourse({
+      const requestQueen = dayOfWeek.map((item) => {
+        return submitCourse({
           ...values,
           dayOfWeek: Number(item),
           time: translateTime(time,endTime),
         });
       });
-      // dayOfWeek.forEach((item) => {
-      //   axios({
-      //     method:"post",
-      //     url:`${Cons.BASEURL}${Cons.CURRICULUM.CREATE}`,
-      //     data: {
-      //       "name":CURRICULUM.name,
-      //       "dayOfWeek": item.index,
-      //       "period": CURRICULUM.period,
-      //       "time": CURRICULUM.startTime,
-      //       "classroom": CURRICULUM.classroom,
-      //       "color": CURRICULUM.color,
-      //       "sectionId": 1,
-      //       "termId": 1
-      //     },
-      //   })
-      // });
-    };
+      Promise.all(requestQueen).then((res)=>{
+        Toast.success('添加成功');
+      }).catch((err)=>{
+        Toast.fail('添加失败');
+      })
+    }
     return (
       <div className="w-full space-y-4">
         <CCourseInput
@@ -648,6 +635,7 @@ export default function AddSchedule() {
         </div>
         <div className="flex justify-center mx-10 space-x-4">
           <div
+          onClick={() => {router.push('/Schedule')}}
             className="flex items-center
           justify-center w-full text-[#FFD036]
           font-semibold   bg-[#FFFCF3] h-10 rounded-lg"

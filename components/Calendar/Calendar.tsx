@@ -16,8 +16,8 @@ import classnames from 'classnames';
 import Polygon from './polygon.svg';
 import ArrowRight from './arrow-right.svg';
 import { createRef, useEffect, useRef, useState } from 'react';
-import Location from './location.svg';
-import TimeIconActive from './icon_time.svg';
+import Location from './location';
+import TimeIconActive from './icon_time';
 import SaveToLibButton from '@/components/Button/SaveToLibButton';
 import useLanguage from '@/hooks/useLanguage';
 
@@ -46,21 +46,31 @@ function Calendar(props) {
     left: 'calc(50% - 15px)',
   }));
   const Card = (props) => {
-    const { title, extendedProps, dayOfWeek,students} = props;
+    const { title, extendedProps, dayOfWeek,students,color} = props;
+    const rgba = (hex, opacity) => {
+      hex = hex.replace('#', '');
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      const result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
+      console.log(result,"result");
+      return result;
+    }
     const background =
-      'linear-gradient(180deg, #EBE5FE -117.9%, #FFFFFF 125.31%)';
+    `linear-gradient(180deg, ${rgba(color,0.1)} -117.9%, #FFFFFF 125.31%)`;
     return (
       <div className="w-full p-4  my-3 bg-white rounded-lg h-[176px]">
         <div
-          style={{ background: background }}
-          className="flex justify-between w-full h-20 p-4 border border-purple-600 rounded-2xl"
+          style={{ background: background ,borderColor:color}}
+          className="flex justify-between w-full h-20 p-4 border  rounded-2xl"
         >
-          <div className="text-purple-600">
+          <div style={{color:color}}>
             <div className="flex items-center">
               {' '}
               <div
+              style={{ background: color }}
                 className={classnames(
-                  'w-1 h-4 mr-2 text-lg font-medium bg-purple-500 rounded-full',
+                  'w-1 h-4 mr-2 text-lg font-medium  rounded-full',
                 )}
               ></div>
               <div>{title}</div>
@@ -101,7 +111,7 @@ function Calendar(props) {
         <div className="mt-4 pb-4">
           <div className="mb-2">
             <div className="flex items-center">
-              <TimeIconActive></TimeIconActive>
+              <TimeIconActive  color={color}></TimeIconActive>
               <div className="ml-3 text-sm text-gray-400 w-10">
                 {useLanguage('l') === 'el'
                   ? '周' + dayOfWeek
@@ -113,7 +123,7 @@ function Calendar(props) {
             </div>
           </div>
           <div className="flex items-center">
-            <Location></Location>
+            <Location color={color}></Location>
             <div className="ml-3 text-sm text-gray-400 w-10">地点</div>
             <div className="ml-8 text-sm text-gray-400 ">
             {extendedProps.classroom}
@@ -167,6 +177,7 @@ function Calendar(props) {
     return date.toDateString() === today.toDateString();
   }
   const ListView = () => {
+    const colorMap = ['#FFD036', '#798195', '#FF7978'];
     const YearCard = (props) => {
       const { title } = props;
       return (
@@ -213,7 +224,6 @@ function Calendar(props) {
       const { title, index } = props;
       // const router = useRouter();
       // const { t } = useTranslation('translations');
-      const colorMap = ['#FFD036', '#798195', '#FF7978'];
       function getDayOfWeek(dateString: string) {
         const date = new Date(dateString);
         const edays = [
@@ -268,12 +278,14 @@ function Calendar(props) {
         {generateNewArray(getWeekDates(), groupedEvents).map((item, index) => {
           console.log(item, 'item');
           if(setting.view === 'today' && !isToday(item.time)) return null;
+          const color = colorMap[index % 3];
           return (
             <>
               <Identify title={item.time} index={index}></Identify>
               {item?.children?.map((item, index) => {
                 return (
                   <Card
+                    color={color}
                     title={item?.name}
                     students={item?.section?.students}
                     dayOfWeek={item?.dayOfWeek}
@@ -440,7 +452,9 @@ function Calendar(props) {
                 </div>
               </div>
             ) : (
-              <div className="flex overflow-hidden flex-col justify-center h-full w-full items-center">
+              <div  onClick={() => {
+                props.clickEvent(arg);
+              }} className="flex overflow-hidden flex-col justify-center h-full w-full items-center">
                 <div className="font-bold scale-[0.7]		text-10   text-center  whitespace-nowrap">
                   {arg.event.title}
                 </div>

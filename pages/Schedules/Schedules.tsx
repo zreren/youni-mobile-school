@@ -9,8 +9,8 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { styled } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import Box from '@mui/material/Box';
-import Location from './location.svg';
-import TimeIconActive from './icon_time.svg';
+import Location from './location';
+import TimeIconActive from './icon_time';
 import SaveToLibButton from '@/components/Button/SaveToLibButton';
 import Icon1 from './components/timeIcon/1.svg';
 import Icon2 from './components/timeIcon/2.svg';
@@ -77,6 +77,10 @@ const CourseDetailCard = (props) => {
   console.log(props, 'CourseDetailCard');
   console.log(borderColor, 'backgroundColor');
   // if (!arg) return null;
+  const background =
+  `linear-gradient(180deg, ${props.backgroundColor} -117.9%, #FFFFFF 125.31%)`;
+  // const darkBackground = props.border
+
   return (
     <div className="topIndexPlus">
       {/* <div className='w-4 h-1 bg-gray-400 rounded-xs '></div> */}
@@ -93,13 +97,14 @@ const CourseDetailCard = (props) => {
       >
         <div className="w-full p-4 rounded-full h-80">
           <Puller></Puller>
-          <div className="flex justify-between w-full h-20 p-4 border border-purple-600 rounded-2xl">
-            <div className="text-purple-600">
+          <div style={{ background: background ,borderColor: borderColor}} className="flex justify-between w-full h-20 p-4 border  rounded-2xl">
+            <div style={{color:borderColor}}>
               <div className="flex items-center">
                 {' '}
                 <div
+                style={{ background: borderColor }}
                   className={classnames(
-                    'w-1 h-4 mr-2 text-lg font-medium bg-purple-500 rounded-full',
+                    'w-1 h-4 mr-2 text-lg font-medium  rounded-full',
                   )}
                 ></div>
                 <div>{title}</div>
@@ -124,13 +129,13 @@ const CourseDetailCard = (props) => {
                     );
                   })}
               </div>
-              <div className="text-xs text-[#798195]">6 名同学</div>
+              <div className="text-xs text-[#798195]">{extendedProps?.section?.students.length} 名同学</div>
             </div>
           </div>
           <div className="mt-4 mb-4">
             <div className="mb-4">
               <div className="flex items-center">
-                <TimeIconActive></TimeIconActive>
+                <TimeIconActive color={borderColor}></TimeIconActive>
                 <div className="ml-3 text-sm text-gray-400">周二</div>
                 <div className="ml-10 text-sm text-gray-400 ">
                   {extendedProps.time}
@@ -138,7 +143,7 @@ const CourseDetailCard = (props) => {
               </div>
             </div>
             <div className="flex items-center">
-              <Location></Location>
+              <Location color={borderColor}></Location>
               <div className="ml-3 text-sm text-gray-400">地点</div>
               <div className="ml-10 text-sm text-gray-400 ">
                 {extendedProps.classroom}
@@ -196,8 +201,13 @@ export default function Schedules() {
   const calendarRef = useRef<any>();
   const router = useRouter();
   // const [campusIdMap, setCampusIdMap] = useLocalStorage(getCampusId(router.query.campus), props?.post?.id);
-  const [defaultScheduleView, setDefaultScheduleView] = useLocalStorage('defaultScheduleView',0);
-  const {data:termInfo} = useFetch('/campus/term/current','get',{campusId:1});
+  const [defaultScheduleView, setDefaultScheduleView] = useLocalStorage(
+    'defaultScheduleView',
+    0,
+  );
+  const { data: termInfo } = useFetch('/campus/term/current', 'get', {
+    campusId: 1,
+  });
   const getWeekDates = () => {
     const weekDates = [];
     const currentDate = new Date();
@@ -210,15 +220,25 @@ export default function Schedules() {
     }
     return weekDates;
   };
+  // 给开始时间和结束时间，计算当前属于这个时间段的第几个星期
+  const getWeekNumber = (start) => {
+    const startDate = new Date(start);
+    // const endDate = new Date(end);
+    const today = new Date();
+    const week = Math.floor((today.getTime() - startDate.getTime()) / 604800000) + 1;
+    console.log(week);
+    return week;
+  };
+
   // const currenTerm = React.useMemo(()=>{
   //   return termInfo?.data?.filter((item)=>item?.current)
   // },[termInfo])
   const SetSchedule = (props) => {
     const Menu = () => {
       const [menu, setMenu] = useState(defaultScheduleView);
-      useEffect(()=>{
-        setDefaultScheduleView(menu)
-      },[menu])
+      useEffect(() => {
+        setDefaultScheduleView(menu);
+      }, [menu]);
       return (
         <div className="w-full px-2">
           <div className="border-[#DCDDE1] border rounded-lg overflow-hidden w-full h-[28px]  flex ">
@@ -381,7 +401,7 @@ export default function Schedules() {
   };
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
-  
+
   const [scheduleVisible, setScheduleVisible] = useState(false);
   const [addCourse, setAddCourse] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -407,8 +427,8 @@ export default function Schedules() {
   if (data?.data) {
     courseData = getCourses(
       data.data,
-      new Date(Date.parse('2022-08-31T16:00:00.000Z')),
-      new Date(Date.parse('2023-12-30T16:00:00.000Z')),
+      new Date(termInfo?.data?.startDate),
+      new Date(termInfo?.data?.endDate),
     );
     const all = addFullStartDate(courseData, weekDate);
     console.log(all, 'courseData');
@@ -432,18 +452,13 @@ export default function Schedules() {
     view: 'day',
     isWeekend: false,
   });
-  const ViewListMap = [
-    'day',
-    'week',
-    'today',
-    'year',
-  ]
-  useEffect(()=>{
+  const ViewListMap = ['day', 'week', 'today', 'year'];
+  useEffect(() => {
     setSetting({
       ...setting,
-      view:ViewListMap[defaultScheduleView]
-    })
-  },[])
+      view: ViewListMap[defaultScheduleView],
+    });
+  }, []);
   const Dayliy = (props) => {
     const { title } = props;
     return (
@@ -551,8 +566,12 @@ export default function Schedules() {
       </Dialog>
 
       <div className="pl-5 text-left f-11 ">
-        <div className="text-base font-bold text-blueTitle">第 {termInfo?.data?.name} 周</div>
-        <div className="text-xs text-gray-400">{getWeekDates()[0]} - {getWeekDates()[6]}</div>
+        <div className="text-base font-bold text-blueTitle">
+          第 {getWeekNumber(termInfo?.data?.startDate)} 周
+        </div>
+        <div className="text-xs text-gray-400">
+          {getWeekDates()[0]} - {getWeekDates()[6]}
+        </div>
       </div>
       <div className="flex  px-2 items-center justify-between pl-5 pr-5 h-11 bg-bg">
         <div className="flex items-center justify-around w-2/3 h-8 bg-white rounded-lg">
@@ -627,12 +646,12 @@ export default function Schedules() {
           </Tooltips>
         </div>
       </div>
-     <div className='topIndexPlus'>
-     <SetSchedule
-        visible={scheduleVisible}
-        setVisible={setScheduleVisible}
-      ></SetSchedule>
-     </div>
+      <div className="topIndexPlus">
+        <SetSchedule
+          visible={scheduleVisible}
+          setVisible={setScheduleVisible}
+        ></SetSchedule>
+      </div>
       <CourseDetailCard
         visible={visible}
         setVisible={setVisible}
