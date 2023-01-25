@@ -502,7 +502,7 @@ export default function AddSchedule() {
                 minHour="10"
                 maxHour="20"
                 value={time}
-                onConfirm={setTime}
+                onConfirm={(val) => {setTime(val)}}
               >
                 {(val, _, actions) => {
                   return (
@@ -537,7 +537,7 @@ export default function AddSchedule() {
                 minHour="10"
                 maxHour="20"
                 value={endTime}
-                onConfirm={setEndTime}
+                onConfirm={(val) => {setEndTime(val)}}
               >
                 {(val, _, actions) => {
                   return (
