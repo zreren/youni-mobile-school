@@ -489,7 +489,7 @@ function Calendar(props) {
           locale="en"
           allDaySlot={false}
           slotMinTime="07:00:00"
-          slotMaxTime="22:00:00"
+          slotMaxTime="24:00:00"
           slotDuration="00:30:00"
           slotLabelInterval="00:30"
           weekends={setting.isWeekend}
