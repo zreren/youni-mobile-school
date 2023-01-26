@@ -13,7 +13,7 @@ import { Flex, Loading } from 'react-vant';
 export default function course() {
   const router = useRouter()
   const { data, error } = useFetch(`${Cons.API.SUBJECT.QUERY}?campusId=1`,"get");
-  const { data:hotCourseData, error: hotCourseDataError} = useFetch(`${Cons.API.COURSE.HOT}?campusId=1`,"get");
+  const { data:hotCourseData, error: hotCourseDataError, mutate:hotMutate} = useFetch(`${Cons.API.COURSE.HOT}?campusId=1`,"get");
 
   console.log(data,"data")
   const randomColor = ['red', 'blue', 'yellow', 'green', 'pink', 'purple']
@@ -43,9 +43,9 @@ export default function course() {
         <button onClick={() => { router.push({pathname:'/[campus]/Course/AllSubject',query:{campus:"York"}}) }} className='btn hover:bg-white border-none btn-sm w-full bg-white text-gray-400'>查看全部</button>
       </div>
       <Title title="热门课程">
-        <CButtonNoLine></CButtonNoLine>
+        <CButtonNoLine onClick={()=>{hotMutate()}}></CButtonNoLine>
       </Title>
-      <div className='space-y-2'>
+      <div className='space-y-3'>
         {hotCourseData?hotCourseData?.data?.map((item,index) => {
           return (
             <CourseScoreCard data={item}></CourseScoreCard>
