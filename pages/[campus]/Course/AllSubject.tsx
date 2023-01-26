@@ -9,10 +9,10 @@ export default function AllSubject() {
   const randomColor = ['red', 'blue', 'yellow', 'green', 'pink', 'purple']
 
   return (
-    <CommonLayout>
+    <CommonLayout className="pb-16">
         <Header title="课程评价"></Header>
         <div className="space-y-2 mt-4">
-        <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+        <div className="grid grid-cols-2 gap-x-2 gap-y-2">
           {
             data?.data?.map((item,index) => {
               return (

@@ -28,7 +28,7 @@ export default function course() {
       <Header title="课程评价" />
       <Title title="按学科查询"></Title>
       <Search placeholder="搜索课程"></Search>
-      <div className='space-y-2 mt-4'>
+      <div className='space-y-3 mt-4'>
         {courseData?.data?.map((item,index) => {
           return (
             <CourseScoreCard data={item}></CourseScoreCard>

@@ -233,25 +233,13 @@ function index(props) {
     );
   };
   const Profile2 = () => {
-    const [menu, setMenu] = useState(0);
+    const [menu, setMenu] = useState(1);
     const { data } = useFetch('/post/list', 'get');
     return (
       <div className="h-full ">
         <div className="w-full px-2">
           <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
-            <div
-              onClick={() => {
-                setMenu(0);
-              }}
-              className={classnames(
-                'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
-                {
-                  'bg-slate-50 text-[#FFD036]': menu === 0,
-                },
-              )}
-            >
-              贴文
-            </div>
+           
             <div
               onClick={() => {
                 setMenu(1);
@@ -264,6 +252,19 @@ function index(props) {
               )}
             >
               文集
+            </div>
+            <div
+              onClick={() => {
+                setMenu(0);
+              }}
+              className={classnames(
+                'w-full  flex justify-center items-center text-center text-[#A9B0C0]',
+                {
+                  'bg-slate-50 text-[#FFD036]': menu === 0,
+                },
+              )}
+            >
+              贴文
             </div>
           </div>
         </div>
@@ -288,19 +289,7 @@ function index(props) {
       <div className="w-full">
         <div className="w-full px-2">
           <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
-            <div
-              onClick={() => {
-                setMenu(0);
-              }}
-              className={classnames(
-                'w-full flex justify-center items-center text-center text-[#A9B0C0]',
-                {
-                  'bg-slate-50 text-[#FFD036]': menu === 0,
-                },
-              )}
-            >
-              贴文
-            </div>
+           
             <div
               onClick={() => {
                 setMenu(1);
@@ -313,6 +302,19 @@ function index(props) {
               )}
             >
               文集
+            </div>
+            <div
+              onClick={() => {
+                setMenu(0);
+              }}
+              className={classnames(
+                'w-full flex justify-center items-center text-center text-[#A9B0C0]',
+                {
+                  'bg-slate-50 text-[#FFD036]': menu === 0,
+                },
+              )}
+            >
+              贴文
             </div>
           </div>
         </div>

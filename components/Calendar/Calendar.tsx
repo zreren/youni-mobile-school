@@ -497,7 +497,7 @@ function Calendar(props) {
           // h-screen"
         />
       </div>
-      <div className="bg-gray-50 z-30 relative -translate-y-3">
+      <div className="bg-gray-50 z-20 relative -translate-y-3">
         {!calendarView ? <ListView></ListView> : null}
       </div>
     </div>
