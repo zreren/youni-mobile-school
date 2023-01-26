@@ -18,7 +18,7 @@ export default function course() {
   return (
     <CommonLayout isBottom={true}>
       <Header title="课程评价" />
-      <Title title="按专业查询"></Title>
+      <Title title="按学科查询"></Title>
       <Search placeholder="搜索课程"></Search>
       <div className="space-y-2 mt-4">
         <div className="grid grid-cols-2 gap-x-2 gap-y-1">

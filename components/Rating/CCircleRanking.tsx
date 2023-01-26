@@ -1,6 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import styles from './index.module.css';
+import useLanguage from '@/hooks/useLanguage';
 
 interface TCCRating {
   children?: React.ReactNode;
@@ -13,9 +14,9 @@ export default function CCircleRanking(props: TCCRating) {
     if (!Score || Score < 0) {
       return 'score5';
     }
-    if (Score <= 2) {
+    if (Score < 2) {
       return 'text-score1';
-    } if (Score > 2 && Score <= 3) {
+    } if (Score >= 2 && Score <= 3) {
       return 'text-score2';
     } if (Score > 3 && Score <= 4) {
       return 'text-score3';
@@ -34,6 +35,10 @@ export default function CCircleRanking(props: TCCRating) {
   const text2ClassNames = classnames('text-xs', [
     `${styles[`DScore${String(score).substring(0, 1)}`]}`,
   ]);
+  const without = {
+    cname: '暂无评价',
+    ename: 'No Rating',
+  }
   return (
     <>
       {/* @ts-ignore */}

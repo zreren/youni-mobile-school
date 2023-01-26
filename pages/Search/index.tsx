@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CustomizedTabs from '@/components/Menu/Header-menu';
 import Title from '@/components/Title/Title';
 import DeleteIcon from './delete.svg';
 import SearchIcon from './search.svg';
 import { useRouter } from 'next/router';
+import { useLocalStorage } from 'react-use';
 const SearchTag = (props)=>{
   const {title} = props;
   return  (
@@ -13,13 +14,22 @@ const SearchTag = (props)=>{
   )
 }
 export default function index() {
-  const history = [
-    'ADMS1000',
-    'Natalie Guriel',
-    'yorku',
-    'Eli Bartner',
-    'John Amanatides'
-  ]
+  const [history,setHistory] = useLocalStorage('history',[])
+  const [value,setValue] = React.useState('');
+  const [historyList,setHistoryList] = useState<any []>();
+  useEffect(()=>{
+    setHistoryList(history)
+  },[])
+  useEffect(()=>{
+    setHistoryList(history)
+  },[history])
+  // const history = [
+  //   'ADMS1000',
+  //   'Natalie Guriel',
+  //   'yorku',
+  //   'Eli Bartner',
+  //   'John Amanatides'
+  // ]
   const headerMenuList = [
     {
       label: '教授',
@@ -32,6 +42,11 @@ export default function index() {
     },
   ];
   const router = useRouter();
+  const beginSearch = (value)=>{
+    if(value){
+      setHistory([...history,value])
+    }
+  }
   return (
     <div className="w-screen h-screen">
       <div>
@@ -46,8 +61,11 @@ export default function index() {
             <span className='bg-bg'><SearchIcon></SearchIcon></span>
             <input
               type="text"
+              value={value}
+              onBlur={()=>{beginSearch(value)}}
+              onChange={(e)=>{setValue(e.target.value)}}
               placeholder="Type here"
-              className="bg-bg hover:outline-none input border-none input-bordered w-full input-md"
+              className="bg-bg hover:outline-none -ml-4 input border-none input-bordered w-full input-md"
             />
           </label>
         </div>
@@ -58,16 +76,20 @@ export default function index() {
         </div>
       </div>
       <div className="w-full h-full pr-5 pl-5">
-        <Title title="搜索历史">
-          <DeleteIcon></DeleteIcon>
-        </Title>
+        {
+          value.length > 1 ? null : <>
+          <Title title="搜索历史">
+          <DeleteIcon onClick={()=>{setHistory([])}}></DeleteIcon>
+        </Title> 
         <div className='flex  flex-wrap w-7/10'>
-          {history.map((item)=>{
-            return (
-              <SearchTag title={item}></SearchTag>
-            )
-          })}
-        </div>
+        {historyList?.map((item)=>{
+          return (
+            <SearchTag title={item}></SearchTag>
+          )
+        })}
+      </div></>
+        }
+        
       </div>
     </div>
   );

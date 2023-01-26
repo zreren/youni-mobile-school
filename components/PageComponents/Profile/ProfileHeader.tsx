@@ -29,7 +29,7 @@ export default function ProfileHeader(props) {
       <div className="flex items-center justify-between p-4 pb-2">
         <div className="flex items-center space-x-2 ">
           <div className="flex flex-col items-center justify-center">
-            <div className="font-bold text-blueTitle">{data?.student?.extraInfo?.following || 0}</div>
+            <div className="font-bold text-blueTitle">{data?.student?.extraInfo?.following || data?.extraInfo?.following}</div>
             <div className="text-xs text-gray-400">关注</div>
           </div>
           <div>
@@ -52,7 +52,7 @@ export default function ProfileHeader(props) {
             </svg>
           </div>
           <div className="flex flex-col items-center">
-            <div className="font-bold text-blueTitle">{data?.student?.extraInfo?.followers || 0}</div>
+            <div className="font-bold text-blueTitle">{data?.student?.extraInfo?.followers || data?.extraInfo?.followers}</div>
             <div className="text-xs text-gray-400">粉丝</div>
           </div>
           <div>
@@ -75,7 +75,7 @@ export default function ProfileHeader(props) {
             </svg>
           </div>
           <div className="flex flex-col items-center">
-            <div className="font-bold text-blueTitle">{data?.student?.extraInfo?.likeAndStar || 0}</div>
+            <div className="font-bold text-blueTitle">{data?.student?.extraInfo?.likeAndStar || data?.extraInfo?.likeAndStar}</div>
             <div className="text-xs text-gray-400">赞&收藏</div>
           </div>
         </div>

@@ -13,13 +13,13 @@ export default function CategoryButton(props) {
       }
       className={classnames(
         `text-white
-     h-16 w-full rounded-lg pt-3 pl-3 flex justify-between`,
+     h-16 w-full rounded-lg pt-3 pl-3 flex justify-between overflow-hidden`,
         styles[color],
       )}
     >
       <div>
-        <div className="text-base font-semibold text-PingFang">{data?.ename}</div>
-        <div className="text-xs font-normal text-opacity-80">{data?.ename}</div>
+        <div className="text-base font-semibold text-PingFang  overflow-hidden">{data?.ename.toUpperCase()}</div>
+        <div className="text-xs font-normal text-opacity-80  overflow-hidden">{data?.cname}</div>
       </div>
       <div className="pr-2">
         <svg
