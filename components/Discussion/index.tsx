@@ -1,9 +1,10 @@
-import React, { useState ,useMemo} from 'react';
+import React, { useState, useMemo } from 'react';
 import EmptyIcon from './empty.svg';
 import Image from 'next/image';
 import LikeActive from './like-active.svg';
 import Like from './Like.svg';
-import useRequest from '@/libs/request'
+import useRequest from '@/libs/request';
+import { useRouter } from 'next/router';
 export default function index(props) {
   // const comments = [
   //     {
@@ -97,23 +98,29 @@ export default function index(props) {
   //       deletedAt: null
   //     }
   //   ];
-  const { comments ,commentComment} = props;
-  const  timeSince = (date: string): string => {
+  const { comments, commentComment } = props;
+  const router = useRouter();
+  const timeSince = (date: string): string => {
     const createdDate = new Date(date);
     const currentDate = new Date();
     const timeDiff = currentDate.getTime() - createdDate.getTime();
     const hours = timeDiff / (1000 * 60 * 60);
-    console.log(timeDiff / (1000 * 60 * 60),date,'time');
-    if(hours < 1) return timeDiff / (1000 * 60) > 1 ? `${parseInt(String(timeDiff / (1000 * 60)))}分钟` : '刚刚';
-    return hours > 24 ? `${Math.floor(hours/24)}天` : `${parseInt(String(hours))}小时`;
+    console.log(timeDiff / (1000 * 60 * 60), date, 'time');
+    if (hours < 1)
+      return timeDiff / (1000 * 60) > 1
+        ? `${parseInt(String(timeDiff / (1000 * 60)))}分钟`
+        : '刚刚';
+    return hours > 24
+      ? `${Math.floor(hours / 24)}天`
+      : `${parseInt(String(hours))}小时`;
     // return timeDiff / (1000 * 60 * 60);
-  }
+  };
   const DiscussionComponentFooter = (props) => {
-    const { data, id ,user ,isChild,parent ,time} = props;
+    const { data, id, user, isChild, parent, time } = props;
     const [clike, setLike] = useState(data?.liked);
-    const like =  (id: number) =>{
-      useRequest.post('/api/comment/like', { id: id })
-    }
+    const like = (id: number) => {
+      useRequest.post('/api/comment/like', { id: id });
+    };
     const handleLike = (e) => {
       setLike(!e);
       like(id);
@@ -130,10 +137,13 @@ export default function index(props) {
       // if(defaultLike && clike){
     }, [clike]);
     return (
-      <div className="w-full flex justify-between mt-2 mb-2" >
-        <div className="flex items-center space-x-2" onClick={()=>{
-        commentComment({user,id,pid:parent?.id})
-      }}>
+      <div className="w-full flex justify-between mt-2 mb-2">
+        <div
+          className="flex items-center space-x-2"
+          onClick={() => {
+            commentComment({ user, id, pid: parent?.id });
+          }}
+        >
           <div className="text-xs text-lightGray">{timeSince(time)}前</div>
           <div className="text-xs font-semibold text-secondGray">回复</div>
         </div>
@@ -145,50 +155,64 @@ export default function index(props) {
         >
           {clike ? <LikeActive></LikeActive> : <Like></Like>}
 
-          <div className="flex  text-xs text-[#A9B0C0]">
-            {likeCount|| 0}
-          </div>
+          <div className="flex  text-xs text-[#A9B0C0]">{likeCount || 0}</div>
           {/* <div className="flex items-center text-xs">3</div> */}
         </div>
       </div>
     );
   };
-  const DiscussionComponent = ({ children ,data }) => {
+  const DiscussionComponent = ({ children, data }) => {
     return (
       <div className="w-full mt-2 flex justify-start space-x-3">
-      <div className="rounded-full">
-        {data?.student?.avatar ? (
-          <Image
-            placeholder="blur"
-            objectFit="cover"
-            blurDataURL={`${Cons.BASEURL}${data?.student.avatar}`}
-            width={'24px'}
-            height={'24px'}
-            className="rounded-full"
-            src={`${Cons.BASEURL}${data?.student?.avatar}`}
-          />
-        ) : (
-          <span className="text-3xl">K</span>
-        )}
-      </div>
-      <div className="w-full pr-4">
-        <div className="font-medium">{data?.student.nickName}</div>
-        <div className="text-xs text-secondGray mt-1">
-          {data?.student?.education?.year} · {data?.student?.education?.major}
+        <div
+          className="rounded-full"
+          onClick={() => {
+            router.push({
+              pathname: '/Profile/user',
+              query: { id: data?.student?.id },
+            });
+          }}
+        >
+          {data?.student?.avatar ? (
+            <Image
+              placeholder="blur"
+              objectFit="cover"
+              blurDataURL={`${Cons.BASEURL}${data?.student.avatar}`}
+              width={'24px'}
+              height={'24px'}
+              className="rounded-full"
+              src={`${Cons.BASEURL}${data?.student?.avatar}`}
+            />
+          ) : (
+            <span className="text-3xl"></span>
+          )}
         </div>
-        <div className="text-sm mt-1">
-         
-          {data?.content}</div>
-        <DiscussionComponentFooter
-          id={data?.id}
-          data={data?.interactInfo}
-          user={data?.student}
-          parent={data?.parent}
-          time={data?.createdAt}
-        ></DiscussionComponentFooter>
-        <div>{children}</div>
+        <div className="w-full pr-4">
+          <div
+            className="font-medium"
+            onClick={() => {
+              router.push({
+                pathname: '/Profile/user',
+                query: { id: data?.student?.id },
+              });
+            }}
+          >
+            {data?.student.nickName}
+          </div>
+          <div className="text-xs text-secondGray mt-1">
+            {data?.student?.education?.year} · {data?.student?.education?.major}
+          </div>
+          <div className="text-sm mt-1">{data?.content}</div>
+          <DiscussionComponentFooter
+            id={data?.id}
+            data={data?.interactInfo}
+            user={data?.student}
+            parent={data?.parent}
+            time={data?.createdAt}
+          ></DiscussionComponentFooter>
+          <div>{children}</div>
+        </div>
       </div>
-    </div>
     );
   };
   const Discussion = ({ comments }) => {
@@ -204,7 +228,15 @@ export default function index(props) {
                     ? item?.children?.map((item) => {
                         return (
                           <div className="w-full mt-2 flex justify-start space-x-3">
-                            <div className="rounded-full">
+                            <div
+                              className="rounded-full"
+                              onClick={() => {
+                                router.push({
+                                  pathname: '/Profile/user',
+                                  query: { id: item?.student?.id },
+                                });
+                              }}
+                            >
                               {item?.student?.avatar ? (
                                 <Image
                                   placeholder="blur"
@@ -220,21 +252,37 @@ export default function index(props) {
                               )}
                             </div>
                             <div className="w-full">
-                              <div className="font-medium">
+                              <div
+                                className="font-medium"
+                                onClick={() => {
+                                  router.push({
+                                    pathname: '/Profile/user',
+                                    query: { id: item?.student?.id },
+                                  });
+                                }}
+                              >
                                 {item.student.nickName}
                               </div>
                               <div className="text-xs text-secondGray mt-1">
                                 {item?.student?.education?.year || '未认证'} ·{' '}
                                 {item.student?.education?.major || '未认证'}
                               </div>
-                              <div className=' items-center space-x-1'>
-                              {item?.reply?<span className='whitespace-nowrap text-sm'>回复</span>:null}
-                              <span className="text-sm mt-1 whitespace-nowrap font-medium">{item?.reply?item?.reply?.student?.nickName:null}</span>
-                              <span className="text-sm mt-1 w-full">
-                               {item.content}
-                              </span>
+                              <div className=" items-center space-x-1">
+                                {item?.reply ? (
+                                  <span className="whitespace-nowrap text-sm">
+                                    回复
+                                  </span>
+                                ) : null}
+                                <span className="text-sm mt-1 whitespace-nowrap font-medium">
+                                  @{item?.reply
+                                    ? item?.reply?.student?.nickName
+                                    : null}
+                                </span>
+                                <span className="text-sm mt-1 w-full">
+                                  {item.content}
+                                </span>
                               </div>
-                              
+
                               <DiscussionComponentFooter
                                 id={item?.id}
                                 data={item?.interactInfo}
@@ -246,10 +294,18 @@ export default function index(props) {
                           </div>
                         );
                       })
-                      : item?.children?.slice(0, 2).map((item) => {
+                    : item?.children?.slice(0, 2).map((item) => {
                         return (
                           <div className="w-full mt-2 flex justify-start space-x-3">
-                            <div className="rounded-full">
+                            <div
+                              className="rounded-full"
+                              onClick={() => {
+                                router.push({
+                                  pathname: '/Profile/user',
+                                  query: { id: item?.student?.id },
+                                });
+                              }}
+                            >
                               {item?.student?.avatar ? (
                                 <Image
                                   placeholder="blur"
@@ -261,24 +317,40 @@ export default function index(props) {
                                   src={`${Cons.BASEURL}${item?.student?.avatar}`}
                                 />
                               ) : (
-                                <span className="text-3xl">K</span>
+                                <span className="text-3xl"></span>
                               )}
                             </div>
                             <div className="w-full">
-                              <div className="font-medium">
+                              <div
+                                className="font-medium"
+                                onClick={() => {
+                                  router.push({
+                                    pathname: '/Profile/user',
+                                    query: { id: item?.student?.id },
+                                  });
+                                }}
+                              >
                                 {item?.student?.nickName}
                               </div>
                               <div className="text-xs text-secondGray mt-1">
                                 {item.student?.education?.year} ·{' '}
                                 {item?.student?.education?.major || '未认证'}
                               </div>
-                              <div className=' items-center space-x-1'>
-                                {item?.reply?<span className='whitespace-nowrap text-sm'>回复</span>:null}
-                              
-                              <span className="text-sm mt-1 whitespace-nowrap font-medium">{item?.reply?item?.reply?.student?.nickName:null}</span>
-                              <span className="text-sm mt-1 w-full">
-                               {item.content}
-                              </span>
+                              <div className=" items-center space-x-1">
+                                {item?.reply ? (
+                                  <span className="whitespace-nowrap text-sm">
+                                    回复
+                                  </span>
+                                ) : null}
+
+                                <span className="text-sm mt-1 whitespace-nowrap font-medium">
+                                  @{item?.reply
+                                    ? item?.reply?.student?.nickName
+                                    : null}
+                                </span>
+                                <span className="text-sm mt-1 w-full">
+                                  {item.content}
+                                </span>
                               </div>
                               <DiscussionComponentFooter
                                 id={item?.id}
@@ -301,7 +373,9 @@ export default function index(props) {
                       className="font-semibold text-primary text-xs"
                       onClick={() => [setExpand(!expand)]}
                     >
-                      {expand ? '收起' : `查看全部 ${item?.children?.length} 条回复`}
+                      {expand
+                        ? '收起'
+                        : `查看全部 ${item?.children?.length} 条回复`}
                     </div>
                   ) : null}
                 </div>

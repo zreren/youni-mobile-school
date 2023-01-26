@@ -11,6 +11,7 @@ import Icon2 from './2.svg';
 import Icon2Select from './2-select.svg';
 import Icon3Select from './3-select.svg';
 import Icon3 from './3.svg';
+import PrivateIcon from './private.svg';
 import Icon4 from './4.svg';
 import ValidIcon from './validstu.svg';
 import MenuIcon1 from './menu/menu1.svg';
@@ -44,6 +45,7 @@ import { Picker, Toast } from 'react-vant';
 import { setOpenLogin } from '@/stores/authSlice';
 import { useDispatch } from 'react-redux';
 import useFetch from '@/hooks/useFetch';
+import { use } from 'i18next';
 const PostGroup = () => {
   return (
     <div className="w-full px-5 py-4  rounded-lg border border-[#D9E7FF] bg-PostGroup">
@@ -104,28 +106,43 @@ const PostGroup = () => {
 };
 
 function index(props) {
-  // const { user, loggedOut } = useUser();
-  // const router = useRouter();
-  // const { t } = useTranslation('common');
-  // const 
+  const { user } = useUser();
+  const router = useRouter();
+  const userId = Number(router.query.id);
   const Profile2 = () => {
     const [menu, setMenu] = useState(0);
-    const { data } = useFetch('/post/list', 'get');
+    const { data, mutate } = useFetch('/student/post_liked_list', 'get', {
+      id: userId,
+    });
+    useEffect(() => {
+      mutate();
+    }, [userId]);
     return (
       <div className="h-full ">
-          {/* <Waterfall postData={data?.data.map((item) => {
-            return { ...item, student: { nickName: user.student.nickName } }
-          })} ></Waterfall> */}
+        <Waterfall
+          postData={data?.data?.map((item) => {
+            return { ...item, student: { nickName: user.student.nickName } };
+          })}
+        ></Waterfall>
       </div>
     );
   };
 
   const Profile3 = () => {
     const [menu, setMenu] = useState(0);
-    const { data: liked } = useFetch('/post/liked', 'get');
-    const { data: stard } = useFetch('/post/stard', 'get');
+    const { data, mutate } = useFetch('/student/post_stared_list', 'get', {
+      id: userId,
+    });
+    useEffect(() => {
+      mutate();
+    }, [userId]);
     return (
       <div className="w-full">
+        <Waterfall
+          postData={data?.data?.map((item) => {
+            return { ...item, student: { nickName: user.student.nickName } };
+          })}
+        ></Waterfall>
         {/* {menu === 0 ? (
           <div className="px-[10px]">
             <PostGroup></PostGroup>
@@ -133,36 +150,65 @@ function index(props) {
         ) : (
           <Waterfall postData={Object.assign(liked?.data, stard?.data.length > 0 ? stard?.data : null)}></Waterfall>
         )} */}
+        {data?.code === 400 ? (
+          <div className="w-full h-full mt-10 flex justify-center items-center flex-col">
+            <PrivateIcon></PrivateIcon>
+            <div className="text-[#A9B0C0] text-xs mt-4">
+              该用户隐藏了自己的收藏
+            </div>
+          </div>
+        ) : null}
       </div>
     );
   };
-  // const { user, loggedOut } = useUser();
-  const router = useRouter();
-  const {data:UserData} = useFetch('/student/info', 'get',{
-    id: router.query.id
-  })
+
+  const { data: UserData, mutate } = useFetch('/student/info', 'get', {
+    id: router.query.id,
+  });
+  useEffect(() => {
+    if (user?.student?.id === Number(router.query.id)) {
+      router.push('/Profile');
+    } else {
+      mutate();
+    }
+  }, [router.query.id]);
+  // useEffect(()=>{
+  //   console.log(user?.student?.id,"user?.student?.id",router.query.id)
+  //   if(user?.student?.id === router.query.id){
+  //     router.push('/Profile')
+  //   }else{
+  //     mutate();
+  //   }
+
+  // },[])
   const [school, setSchool] = useLocalStorage('school', 'York');
   const { i18n } = useTranslation('common');
   console.log(i18n, 'i18n');
   const [menuVal, setMenu] = useState(1);
   const headerList = [
     {
-      icon: menuVal === 1 ? <Icon2Select></Icon2Select> : <Icon2></Icon2>,
+      icon: menuVal === 1 ? <Icon3Select></Icon3Select> : <Icon3></Icon3>,
       menu: <Profile2></Profile2>,
     },
     {
-      icon: menuVal === 2 ? <Icon3Select></Icon3Select> : <Icon3></Icon3>,
+      icon: menuVal === 2 ? <Icon2Select></Icon2Select> : <Icon2></Icon2>,
       menu: <Profile3></Profile3>,
     },
   ];
   const container = React.useRef<any>(null);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   return (
     <div className="w-screen min-h-screen">
       {/* <div className=''> */}
-      <ProfileHeader myProfile={false} data={{student:UserData?.data}}></ProfileHeader>
+      <ProfileHeader
+        mutate={() => {
+          mutate();
+        }}
+        myProfile={false}
+        data={{ student: UserData?.data }}
+      ></ProfileHeader>
       {/* </div> */}
       <div className="w-full header-shadow overflow-hidden rounded-t-2xl -translate-y-[6px]">
         {menuVal !== 4 ? (
@@ -175,8 +221,8 @@ function index(props) {
         ) : null}
       </div>
       <div>
-        {menuVal === 1?<Profile2></Profile2>:null}
-        {menuVal === 2?<Profile3></Profile3>:null}
+        {menuVal === 1 ? <Profile2></Profile2> : null}
+        {menuVal === 2 ? <Profile3></Profile3> : null}
       </div>
     </div>
   );

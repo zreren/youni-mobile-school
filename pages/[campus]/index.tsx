@@ -403,26 +403,6 @@ export async function getServerSideProps({ params }) {
       name:params.campus
     }
   });
-  console.log(data,"data")
-  const School = [
-    {
-      id: 1,
-      school: '约克大学 (加拿大)',
-    },
-    {
-      id: 2,
-      school: '牛津大学 (英国)',
-    },
-    {
-      id: 3,
-      school: '斯坦福大学 (美国)',
-    },
-  ];
-  const map = {
-    York: School[0],
-    Harvard: School[1],
-    Stanford: School[2],
-  };
   return {
     props: {
       post: data?.data[0],

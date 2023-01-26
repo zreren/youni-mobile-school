@@ -154,8 +154,8 @@ export default function Introduce(props: Course) {
         <RedIcon className="mr-2"></RedIcon>
         <Title className="mb-0 mt-0" title={`${porpsIntroduce[useLanguage('name')]} ${code}`}></Title>
       </div>
-      <Title className="mt-0" title={porpsIntroduce[useLanguage('desc')]}></Title>
-      <CourseIntroCard></CourseIntroCard>
+      <Title className="mt-0" title={porpsIntroduce[useLanguage('name')]}></Title>
+      <CourseIntroCard content={porpsIntroduce[useLanguage('desc')]}></CourseIntroCard>
       <Title title="数据概览"></Title>
       <CDataGrip data={rating}></CDataGrip>
       <Title title="Section"></Title>

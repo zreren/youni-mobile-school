@@ -8,16 +8,28 @@ import LikeActive from './LikeActive.svg';
 import Like from './Like.svg';
 import Dislike from './dislike.svg';
 import useLanguage from '@/hooks/useLanguage';
-
+import useRequest from '@/libs/request';
+import { useRouter } from 'next/router';
+import { Toast } from 'react-vant';
 export default function ProfileHeader(props) {
+  const {data,myProfile,mutate} = props;
+  const router = useRouter();
   const UserData = (props) => {
     const {data} = props;
+    const follow = async (id:number):Promise<void>=>{
+      const {data} = await useRequest.post('/api/friend/follow',{studentId:id});
+      console.log(data,"data")
+      if(data?.message){
+        Toast.success('关注成功');
+        mutate()
+      }
+    }
     // if(!data?.extraInfo) return 
     return (
       <div className="flex items-center justify-between p-4 pb-2">
         <div className="flex items-center space-x-2 ">
           <div className="flex flex-col items-center justify-center">
-            <div className="font-bold text-blueTitle">{data?.extraInfo?.following || 0}</div>
+            <div className="font-bold text-blueTitle">{data?.student?.extraInfo?.following || 0}</div>
             <div className="text-xs text-gray-400">关注</div>
           </div>
           <div>
@@ -40,7 +52,7 @@ export default function ProfileHeader(props) {
             </svg>
           </div>
           <div className="flex flex-col items-center">
-            <div className="font-bold text-blueTitle">{data?.extraInfo?.followers || 0}</div>
+            <div className="font-bold text-blueTitle">{data?.student?.extraInfo?.followers || 0}</div>
             <div className="text-xs text-gray-400">粉丝</div>
           </div>
           <div>
@@ -63,15 +75,14 @@ export default function ProfileHeader(props) {
             </svg>
           </div>
           <div className="flex flex-col items-center">
-            <div className="font-bold text-blueTitle">{data?.extraInfo?.likeAndStar || 0}</div>
+            <div className="font-bold text-blueTitle">{data?.student?.extraInfo?.likeAndStar || 0}</div>
             <div className="text-xs text-gray-400">赞&收藏</div>
           </div>
         </div>
-        { myProfile === false ? null :<Link href="/Setting/profile"><Button></Button></Link>}
+        { myProfile === false ? <div onClick={()=>{follow(Number(router.query.id))}} className='bg-[#FFD036] text-xs h-6 flex justify-center items-center text-[#8C6008] rounded-full w-12'>关注</div> :<Link href="/Setting/profile"><Button></Button></Link>}
       </div>
     );
   };
-  const {data,myProfile} = props;
   return (
     <div className="w-full h-auto pt-10 pb-8 bg-gradient-to-tr from-red-50 via-yellow-50 to-red-100">
       <div className="flex h-20 p-4">

@@ -227,16 +227,13 @@ export default function courseEvaluation() {
           </Select>
         </Title>
         <div>
-
           {
             evaluationData?.data?.map((item, index) => {
               console.log(item, evaluationOrder, 'item');
               return <UserComment data={item} key={item.id}></UserComment>;
             })
           }
-
         </div>
-        {/* <UserComment></UserComment> */}
       </div>
     );
   };
@@ -256,23 +253,12 @@ export default function courseEvaluation() {
   const MyIntroduce = React.useMemo(() => {
     return courseEvaluation?.data;
   }, [courseEvaluation]);
-  const menuList = [
-    Introduce(MyIntroduce),
-    Evaluation(evaluationData?.data),
-    CourseEva(courseEvaluation?.data),
-    GroupChat,
-    Pending,
-  ];
   useEffect(() => {
     if (courseEvaluation?.data) {
       setMenu(0);
     }
   }, [courseEvaluation]);
   const [Menu, setMenu] = React.useState(-1);
-  // if(courseEvaluation?.data){
-  //   setMenu(menuList[0])
-  // }
-
   const headerMenuList = [
     {
       label: '简介',
