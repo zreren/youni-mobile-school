@@ -4,6 +4,9 @@ import Title from '@/components/Title/Title';
 import DeleteIcon from './delete.svg';
 import SearchIcon from './search.svg';
 import { useRouter } from 'next/router';
+import { debounce } from "lodash";
+import CourseScoreCard from '@/components/CourseScoreCard';
+import useFetch from '@/hooks/useFetch';
 import { useLocalStorage } from 'react-use';
 const SearchTag = (props)=>{
   const {title} = props;
@@ -17,6 +20,11 @@ export default function index() {
   const [history,setHistory] = useLocalStorage('history',[])
   const [value,setValue] = React.useState('');
   const [historyList,setHistoryList] = useState<any []>();
+  const {data:courseData,error:courseError,mutate} = useFetch(`/course/query`,"get",{
+    params:{
+      name:value
+    }
+  });
   useEffect(()=>{
     setHistoryList(history)
   },[])
@@ -47,6 +55,12 @@ export default function index() {
       setHistory([...history,value])
     }
   }
+  const handleChange = (e)=>{
+    setValue(e.target.value)
+    debounce(async ()=>{
+      beginSearch(e.target.value)
+    },1000)
+  }
   return (
     <div className="w-screen h-screen">
       <div>
@@ -63,7 +77,7 @@ export default function index() {
               type="text"
               value={value}
               onBlur={()=>{beginSearch(value)}}
-              onChange={(e)=>{setValue(e.target.value)}}
+              onChange={(e)=>{handleChange(e)}}
               placeholder="Type here"
               className="bg-bg hover:outline-none -ml-4 input border-none input-bordered w-full input-md"
             />

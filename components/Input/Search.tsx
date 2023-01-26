@@ -6,7 +6,10 @@ export default function Search(props) {
   const router = useRouter()
   return (
     <div onClick={()=>{
-      router.push('/Search');
+      router.push({
+        pathname:'/[campus]/Search',
+        query:{campus:router.query.campus}
+      })
     }} className="w-full relative">
       <div className='absolute left-3 top-3'>
         <svg

@@ -19,6 +19,7 @@ import prefixSorted from '../../../libs/phone';
 import MenuItem from '@mui/material/MenuItem';
 import { Loading } from 'react-vant';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import useLanguage from '@/hooks/useLanguage';
 // import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function courseEvaluation() {
@@ -97,7 +98,7 @@ export default function courseEvaluation() {
           </Select>
         </Title>
         <div className="space-y-4">
-          {props?.map((item, index) => {
+          {props?.length > 0 ?props?.map((item, index) => {
             return (
               <ProfessorCard
                 data={item}
@@ -111,7 +112,9 @@ export default function courseEvaluation() {
                 }}
               ></ProfessorCard>
             );
-          })}
+          }):<div>
+          <div className="flex justify-center items-center text-gray-300">{useLanguage('')==='e'?'waiting for adding':'暂无教授'}</div>
+        </div>}
         </div>
       </CommonLayout>
     );
@@ -228,10 +231,12 @@ export default function courseEvaluation() {
         </Title>
         <div>
           {
-            evaluationData?.data?.map((item, index) => {
+             evaluationData?.data?.length > 0?evaluationData?.data?.map((item, index) => {
               console.log(item, evaluationOrder, 'item');
               return <UserComment data={item} key={item.id}></UserComment>;
-            })
+            }):<div>
+              <div className="flex justify-center items-center text-gray-300">{useLanguage('')==='e'?'waiting for evaluation':'暂无评价'}</div>
+            </div>
           }
         </div>
       </div>
@@ -280,7 +285,7 @@ export default function courseEvaluation() {
   return (
     <div className="w-screen min-h-screen bg-bg pb-2">
       <Header
-        title={`${courseEvaluation?.data?.ename} ${courseEvaluation?.data?.code}`}
+        title={`${courseEvaluation?.data?.subject[useLanguage('name')]?.toUpperCase()} ${courseEvaluation?.data?.code}`}
       ></Header>
       <HeaderMenu
         headerMenuList={headerMenuList}

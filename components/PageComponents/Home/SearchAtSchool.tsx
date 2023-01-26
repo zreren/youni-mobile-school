@@ -1,10 +1,17 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
 export default function SearchInSchool(props) {
   const { placeholder } = props;
+  const router =  useRouter();
   return (
-   <Link href='/Search'>
-    <div className="relative flex justify-center w-full px-4">
+  //  <Link href='/Search'>
+    <div className="relative flex justify-center w-full px-4" onClick={()=>{
+      router.push({
+        pathname:'/[campus]/Search',
+        query:{campus:router.query.campus}
+      })
+    }}>
       {/* <div className='absolute pl-20 left-1/3 top-3'>
         <svg
           width="16"
@@ -25,6 +32,6 @@ export default function SearchInSchool(props) {
         className="w-full h-10 text-center border-none rounded-full input input-md"
       />
     </div>
-   </Link>
+  //  </Link>
   );
 }

@@ -109,7 +109,7 @@ export default function Introduce(props: Course) {
           </div>
         </AccordionSummary>
         <AccordionDetails>
-          <div className="text-gray-300">线下课程ACE 036</div>
+          <div className="text-gray-300">线下课程 ACE 036</div>
         </AccordionDetails>
       </Accordion>
     );
@@ -152,7 +152,7 @@ export default function Introduce(props: Course) {
       <Search></Search>
       <div className="flex items-center mt-3">
         <RedIcon className="mr-2"></RedIcon>
-        <Title className="mb-0 mt-0" title={`${porpsIntroduce.subject[useLanguage('name')]} ${code}`}></Title>
+        <Title className="mb-0 mt-0" title={`${porpsIntroduce.subject[useLanguage('name')].toUpperCase()} ${code}`}></Title>
       </div>
       <Title className="mt-0" title={porpsIntroduce[useLanguage('name')]}></Title>
       <CourseIntroCard content={porpsIntroduce[useLanguage('desc')]}></CourseIntroCard>
@@ -160,9 +160,11 @@ export default function Introduce(props: Course) {
       <CDataGrip data={rating}></CDataGrip>
       <Title title="Section"></Title>
       <div className={"space-y-2"}>
-        {sections.map((item, index) => {
+        {sections?.length >0?sections.map((item, index) => {
           return <Section data={item} key={index}></Section>;
-        })}
+        }):<div className='w-full flex justify-center rounded-lg bg-white h-12 items-center'>
+          <div className='text-gray-300  text-xs text-center'>{useLanguage('')==='e'?'Contact administrator to add section':'暂无班级，联系管理员添加'}</div>
+          </div>}
       </div>
       <CourseModel></CourseModel>
     </CommonLayout>
