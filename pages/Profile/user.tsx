@@ -209,7 +209,6 @@ function index(props) {
         myProfile={false}
         data={{ student: UserData?.data }}
       ></ProfileHeader>
-      {/* </div> */}
       <div className="w-full header-shadow overflow-hidden rounded-t-2xl -translate-y-[6px]">
         {menuVal !== 4 ? (
           <HeaderMenu
