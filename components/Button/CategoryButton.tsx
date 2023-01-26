@@ -18,7 +18,7 @@ export default function CategoryButton(props) {
       )}
     >
       <div>
-        <div className="text-base font-semibold text-PingFang  overflow-hidden">{data?.ename.toUpperCase()}</div>
+        <div className="text-base font-semibold text-PingFang  overflow-hidden">{data?.ename?.toUpperCase()}</div>
         <div className="text-xs font-normal text-opacity-80  overflow-hidden">{data?.cname}</div>
       </div>
       <div className="pr-2">

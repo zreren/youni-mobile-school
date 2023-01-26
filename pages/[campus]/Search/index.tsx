@@ -45,10 +45,10 @@ export default function index() {
     setHistoryList(history)
   },[history])
   useEffect(()=>{
-    if(menu === 0){
+    if(menu === 1){
       mutate()
     }
-    if(menu === 1){
+    if(menu === 0){
       professorMutate()
     }
    
@@ -90,8 +90,11 @@ export default function index() {
     setValue(e.target.value)
     // debounceSearch(value)
   }
+  useEffect(()=>{
+    console.log(menu,"menu")
+  },[menu])
   return (
-    <div className="w-screen h-screen bg-gray-50">
+    <div className="w-screen min-h-screen bg-gray-50">
       <div>
         <CustomizedTabs
           switchMenu={(val) => {setMenu(val)}}
@@ -128,7 +131,7 @@ export default function index() {
           <Title title="搜索历史">
           <DeleteIcon onClick={()=>{setHistory([])}}></DeleteIcon>
         </Title> 
-        <div className='flex  flex-wrap w-7/10 mb-2'>
+        <div className='flex  flex-wrap w-7/10 mb-3'>
         {historyList?.map((item)=>{
           return (
             <SearchTag title={item}></SearchTag>
@@ -136,14 +139,14 @@ export default function index() {
         })}
       </div></>
         }
-        <div>
+        <div className='min-h-full'>
           {menu === 1?courseData?.data?.map((item)=>{
             return (
-              <div className='mt-2'><CourseScoreCard data={item}></CourseScoreCard></div>
+              <div className='mt-3'><CourseScoreCard data={item}></CourseScoreCard></div>
             )
           }):null}
         </div>
-        <div className='space-y-2'>
+        <div className='space-y-3'>
           {menu === 0 ? (
             professorList?.data?.map((item) => {
               return (

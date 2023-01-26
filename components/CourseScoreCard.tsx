@@ -31,7 +31,7 @@ export default function CourseScoreCard(props: ICourseScoreCard) {
       },1000)
     }} className="flex p-6 course-card-shadow items-align bg-white justify-between rounded-xl">
       <div className="h-1/1 flex flex-col content-between  ">
-        <div className="text-xl ">{props.data.subject[useLanguage('name')].toUpperCase()} {props.data.code}</div>
+        <div className="text-xl ">{props.data.subject[useLanguage('name')]?.toUpperCase()} {props.data.code}</div>
         <div className="text-gray-400 text-sm flex-grow">
           {/* Introduction to Microeconomics */}
           {props.data[useLanguage('name')]}
