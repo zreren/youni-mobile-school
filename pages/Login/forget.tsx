@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import Header from '@/components/Header';
 import useCountDown from '../../hooks/useCountDown';
 import classNames from 'classnames';
@@ -84,17 +84,17 @@ const Password = (props) => {
           label="Password"
         />
       </div>
-      <div className='mb-2'>Your password must have at least:</div>
+      <div className="mb-2">Your password must have at least:</div>
       <div className="flex flex-col items-start -space-y-2">
-        <div className='flex items-center'>
+        <div className="flex items-center">
           <Checkbox {...label} defaultChecked color="success" />
           <div>label="Parent</div>
         </div>
-        <div className='flex items-center'>
+        <div className="flex items-center">
           <Checkbox {...label} defaultChecked color="success" />
           <div>label="Parent</div>
         </div>
-        <div className='flex items-center'>
+        <div className="flex items-center">
           <Checkbox {...label} defaultChecked color="success" />
           <div>label="Parent</div>
         </div>
@@ -117,9 +117,9 @@ const Password = (props) => {
 };
 
 export default function Valid(props) {
-  const {returnClick} = props
+  const { returnClick } = props;
   const [state, setState] = React.useState(0);
-  
+
   const PhoneValid = (props) => {
     const [count] = useCountDown({ mss: 60 });
     const [age, setAge] = React.useState('86');
@@ -132,9 +132,7 @@ export default function Valid(props) {
         <div className="z-30 w-full h-screen p-8  topIndexPlus">
           <Header className="shadow-none bg-transparent" title=""></Header>
           <div className="text-2xl font-medium">Forget Password</div>
-          <div>
-            We will send a code to your phone
-          </div>
+          <div>We will send a code to your phone</div>
           <div className="mt-6 mb-6">
             <input
               type="text"
@@ -172,46 +170,49 @@ export default function Valid(props) {
     const [phoneNumber, setPhoneNumber] = useState('');
     return (
       <div className="z-30 w-full h-full p-8 bg-white h-screen">
-        <Header returnClick={()=>{returnClick()}} className="shadow-none bg-transparent" title=""></Header>
+        <Header
+          returnClick={() => {
+            returnClick();
+          }}
+          className="shadow-none bg-transparent"
+          title=""
+        ></Header>
         <div className="text-2xl font-medium">Forget Password</div>
-        <div>
-        We will send a code to your phone
-        </div>
+        <div>We will send a code to your phone</div>
         <div className="mt-6 mb-6">
-        <label className="flex items-center input-group">
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={age}
-                sx={{
-                  boxShadow: 'none',
-                  '.MuiOutlinedInput-notchedOutline': { border: 0 },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    border: 0,
-                    'border-width': 0,
-                    'border-color': 'transparent',
-                  },
-                }}
-                disableUnderline
-                label="Age"
-                onChange={handleChange}
-              >
-                {prefixSorted.map((item) => {
-                  return (
-                    <MenuItem value={item.prefix}>+{item.prefix}</MenuItem>
-                  );
-                })}
-              </Select>
-              <input
-                type="text"
-                placeholder="Phone Number"
-                className="w-full input hover:outline-none"
-                value={phoneNumber}
-                onChange={(e) => {
-                  setPhoneNumber(e.target.value);
-                }}
-              />
-            </label>
+          <label className="flex items-center input-group topIndex">
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              className='topIndexPlus'
+              value={age}
+              sx={{
+                boxShadow: 'none',
+                '.MuiOutlinedInput-notchedOutline': { border: 0 },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  border: 0,
+                  'border-width': 0,
+                  'border-color': 'transparent',
+                },
+              }}
+              disableUnderline
+              label="Age"
+              onChange={handleChange}
+            >
+              {prefixSorted.map((item) => {
+                return <MenuItem className='topIndexPlus' value={item.prefix}>+{item.prefix}</MenuItem>;
+              })}
+            </Select>
+            <input
+              type="text"
+              placeholder="Phone Number"
+              className="w-full input hover:outline-none"
+              value={phoneNumber}
+              onChange={(e) => {
+                setPhoneNumber(e.target.value);
+              }}
+            />
+          </label>
           {/* <input
             type="text"
             placeholder="Type here"
@@ -222,9 +223,9 @@ export default function Valid(props) {
                 : setCodeInput(false);
             }}
           /> */}
-          <div className="w-full text-xs text-right">
+          {/* <div className="w-full text-xs text-right">
             {count === 0 ? <ReSentCode /> : `Code sent (${count}s)`}
-          </div>
+          </div> */}
         </div>
         <button
           onClick={() => {
@@ -237,18 +238,76 @@ export default function Valid(props) {
               : 'bg-gray-300 hover:bg-gray-300 ',
           )}
         >
-          Next
+          Send code
         </button>
-        <div className="w-full mt-8 text-xs text-left text-darkYellow">
+        {/* <div className="w-full mt-8 text-xs text-left text-darkYellow">
           No code?
-        </div>
+        </div> */}
       </div>
     );
   };
-  const NodeList = [PhoneValid, PhoneValid, Password];
+  const CodeValid = (props) => {
+    const [code,setCode] = useState('')
+    return (
+      <div className="z-30 w-full h-full p-8 bg-white h-screen">
+        <Header
+          returnClick={() => {
+            returnClick();
+          }}
+          className="shadow-none bg-transparent"
+          title=""
+        ></Header>
+        <div className="text-2xl font-medium">Enter 6-digit code</div>
+        <div>
+          Enter the 6-digit verification code you received at +86 133 9987
+          3321.The code are valid for 30 minutes
+        </div>
+        <div className="mt-6 mb-6">
+            <input
+              type="text"
+              placeholder="Phone Number"
+              className="w-full input hover:outline-none"
+              value={code}
+              onChange={(e) => {
+                setCode(e.target.value);
+              }}
+            />    {/* <input
+          type="text"
+          placeholder="Type here"
+          className="w-full input hover:outline-none"
+          onChange={(e) => {
+            e.target.value.length > 3
+              ? setCodeInput(true)
+              : setCodeInput(false);
+          }}
+        /> */}
+          {/* <div className="w-full text-xs text-right">
+          {count === 0 ? <ReSentCode /> : `Code sent (${count}s)`}
+        </div> */}
+        </div>
+        <button
+          onClick={() => {
+            props.setState(2);
+          }}
+          className={classNames(
+            'w-full border-0 rounded-full btn ',
+            code.length > 5
+              ? 'bg-[#FFD036] hover:bg-yellow-400 text-[#8C6008] '
+              : 'bg-gray-300 hover:bg-gray-300 ',
+          )}
+        >
+          Next
+        </button>
+        {/* <div className="w-full mt-8 text-xs text-left text-darkYellow">
+        No code?
+      </div> */}
+      </div>
+    );
+  };
+  const NodeList = [PhoneValid, PhoneValid, CodeValid];
   const Node = NodeList[state];
   return (
-    <div className='topIndexPlus  z-30'>
+    <div className="topIndexPlus  z-30">
       <Node setState={setState}></Node>
     </div>
   );
