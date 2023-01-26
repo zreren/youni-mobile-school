@@ -282,9 +282,10 @@ function index(props) {
   };
 
   const Profile3 = () => {
-    const [menu, setMenu] = useState(0);
+    const [menu, setMenu] = useState(1);
     const { data: liked } = useFetch('/post/liked', 'get');
     const { data: stard } = useFetch('/post/stard', 'get');
+    if(!liked || !stard) return null;
     return (
       <div className="w-full">
         <div className="w-full px-2">
@@ -323,7 +324,7 @@ function index(props) {
             <PostGroup></PostGroup>
           </div>
         ) : (
-          <Waterfall postData={Object.assign(liked?.data, stard?.data.length > 0 ? stard?.data : null)}></Waterfall>
+          <Waterfall postData={Object.assign(liked?.data, stard?.data )}></Waterfall>
         )}
       </div>
     );

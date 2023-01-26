@@ -30,7 +30,7 @@ export default function Header(props: any):JSX.Element{
             />
           </svg>
         </div>
-        <div className="w-2/3 text-lg font-medium text-center">{title}</div>
+        <div className="w-2/3 text-lg font-medium text-center whitespace-nowrap overflow-hidden">{title}</div>
         <div className="flex justify-end w-1/6">{children}</div>
       </div>
       <div className="mb-11"></div>
