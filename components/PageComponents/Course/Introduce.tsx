@@ -152,7 +152,7 @@ export default function Introduce(props: Course) {
       <Search></Search>
       <div className="flex items-center mt-3">
         <RedIcon className="mr-2"></RedIcon>
-        <Title className="mb-0 mt-0" title={`${porpsIntroduce[useLanguage('name')]} ${code}`}></Title>
+        <Title className="mb-0 mt-0" title={`${porpsIntroduce.subject[useLanguage('name')]} ${code}`}></Title>
       </div>
       <Title className="mt-0" title={porpsIntroduce[useLanguage('name')]}></Title>
       <CourseIntroCard content={porpsIntroduce[useLanguage('desc')]}></CourseIntroCard>

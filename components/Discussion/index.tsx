@@ -274,8 +274,8 @@ export default function index(props) {
                                   </span>
                                 ) : null}
                                 <span className="text-sm mt-1 whitespace-nowrap font-medium">
-                                  @{item?.reply
-                                    ? item?.reply?.student?.nickName
+                                  {item?.reply
+                                    ? `@${item?.reply?.student?.nickName}`
                                     : null}
                                 </span>
                                 <span className="text-sm mt-1 w-full">
@@ -344,8 +344,8 @@ export default function index(props) {
                                 ) : null}
 
                                 <span className="text-sm mt-1 whitespace-nowrap font-medium">
-                                  @{item?.reply
-                                    ? item?.reply?.student?.nickName
+                                  {item?.reply
+                                    ? `@${item?.reply?.student?.nickName}`
                                     : null}
                                 </span>
                                 <span className="text-sm mt-1 w-full">

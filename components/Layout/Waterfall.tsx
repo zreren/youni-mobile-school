@@ -9,6 +9,7 @@ import dynamic from 'next/dynamic';
 import MasonryLayout from 'react-fast-masonry';
 // import { Masonry } from "masonic";
 import { Flex, Loading } from 'react-vant';
+import { useRouter } from 'next/router';
 
 const Masonry = dynamic(
   () => import('masonic').then((module) => module.Masonry),
@@ -119,6 +120,8 @@ const dataList = [
 
 export default function Waterfall(props) {
   const { postData } = props;
+  const router = useRouter();
+  const campus = router.query.campus;
   console.log(postData, 'postData in waterfull');
   const [data, setData] = useState<any[]>(postData);
   const [id, setId] = useState(0);
@@ -126,7 +129,15 @@ export default function Waterfall(props) {
   const [hasMore, setHasMore] = useState(true);
   const [reRender, setReRender] = useState(true);
   const container = React.useRef<HTMLElement | null>(null);
-
+  useEffect(()=>{
+    // window.location.href = 
+    if(id===0) return
+    window.history.replaceState({}, '', `/${campus}/post/${id}`);
+  //  router.replace({
+  //   pathname:'[campus]/post/[id]',
+  //   query:{campus:campus,id:id},
+  //  })
+  },[id])
 
   const PostDetail = (props) => {
     const [anchor, setAnchor] = React.useState<'bottom' | 'top' | 'left' | 'right'>('right')
@@ -163,6 +174,9 @@ export default function Waterfall(props) {
   };
   useEffect(() => {
     // setReRender(false);
+    // router.push('/post/[id]', {
+    //   query: {campus:campus,id:id},
+    // }, {shallow: false});
     setData([])
     if (postData?.length >= 1) {
       setData(postData);
