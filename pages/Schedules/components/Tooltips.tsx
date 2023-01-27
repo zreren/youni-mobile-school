@@ -48,7 +48,7 @@ export default function Tooltips(props) {
               <React.Fragment>
                 <List sx={style} component="nav" aria-label="mailbox folders" > 
                   <ListItem button onClick={props.add}>
-                    <ListItemText className='order-opacity-40	' primary="一键导入课表" />
+                    <ListItemText className='order-opacity-40	' onClick={()=>{router.push('/Schedules/reorganize')}} primary="一键导入课表" />
                   </ListItem>
                   <Divider />
                   <ListItem button  onClick={()=>{router.push('/Schedules/AddCourse?id=1')}} className='border-opacity-40'>

@@ -6,17 +6,19 @@ interface IProps {
 type Fnc = () => void;
 const noop = () => {};
 
-const useCountDown = (props: Partial<IProps>) => {
+const useCountDown = (props: IProps) => {
   const { mss } = props;
   const [time, setTime] = useState(mss || 0);
   const tickRef = useRef<Fnc>(noop);
 
   const tick = () => {
-    if (time > 0) {
-      setTime(time - 1);
+    setTime(currentTime => {
+    if (currentTime > 0) {
+      return currentTime - 1;
     }
-  };
-
+    return currentTime;
+  });
+};
   useEffect(() => {
     tickRef.current = tick;
   });
@@ -28,7 +30,7 @@ const useCountDown = (props: Partial<IProps>) => {
     return () => clearInterval(timerId);
   }, []);
 
-  return [time];
+  return [time,setTime];
 };
 
 export default useCountDown;

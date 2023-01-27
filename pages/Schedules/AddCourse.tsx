@@ -20,10 +20,7 @@ import instance from '@/libs/request';
 import classnames from 'classnames';
 import useFetch from '../../hooks/useFetch';
 import useLanguage from '@/hooks/useLanguage';
-// import axios from 'axios';
 
-// import { View, Text, Picker } from '@tarojs/components';
-// import { AtList, AtListItem } from 'taro-ui'
 const CCourseTime = (props) => {
   return (
     <div className="w-full text-center rounded-md bg-bg text-blueTitle">

@@ -403,6 +403,11 @@ export async function getServerSideProps({ params }) {
       name:params.campus
     }
   });
+  // if(!data?.data[0]){
+  //   return {
+  //     notFound:true
+  //   }
+  // }
   return {
     props: {
       post: data?.data[0],
