@@ -100,16 +100,16 @@ export default function LabelBottomNavigation(props) {
             showLabels={true}
             onChange={handleChange}
           >
-            <MyAction className="transition-all bg-transparent" label="" value={1} />
-            <MyAction label="" value={2} className='bg-transparent' />
+            <MyAction className="transition-all bg-transparent -z-30" label="" value={1} />
+            <MyAction label="" value={2} className='bg-transparent -z-30' />
             <MyAction
               className="transition bg-transparent ease-in-out duration-2000"
               label=" "
               icon={<IconClose type="add"></IconClose>}
               value={0}
             />
-            <MyAction label="" value={4} className='bg-transparent' />
-            <MyAction label="" value={5} className='bg-transparent' />
+            <MyAction label="" value={4} className='bg-transparent -z-30' />
+            <MyAction label="" value={5} className='bg-transparent -z-30' />
           </BottomNavigation>
         </div>
       ) : (
