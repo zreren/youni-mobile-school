@@ -112,6 +112,7 @@ export default function LabelBottomNavigation(props) {
             value={value}
             showLabels={true}
             onChange={handleChange}
+            sx={{background:'transparent'}}
           >
             {/* <MyActionSK className="transition-all bg-transparent -z-30" label="" value={1} /> */}
             <div className='w-full h-full bg-transparent'></div>
@@ -128,7 +129,7 @@ export default function LabelBottomNavigation(props) {
         </div>
       ) : (
         <BottomNavigation
-          className="fixed -bottom-1 left-0 z-30 w-full  text-sm transition-all"
+          className="fixed -bottom-1 left-0 z-30 w-full  text-sm transition-all "
           value={value}
           id="bottom-menu"
           showLabels={true}
