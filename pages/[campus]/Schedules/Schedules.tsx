@@ -23,16 +23,16 @@ import Polygon from './polygon.svg';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import IOSSwitch from './components/ios';
 import RightIcon from '@/components/PageComponents/Profile/right.svg';
-import useFetch from '../../hooks/useFetch';
+import useFetch from '@/hooks/useFetch';
 import { Popup } from 'react-vant';
 import { getCourses, addFullStartDate } from '@/libs/schedule';
 import axios from 'axios';
-import useLocalStorage from '../../hooks/useStore';
+import useLocalStorage from '@/hooks/useStore';
 import { Cell, Dialog } from 'react-vant';
 import { useRouter } from 'next/router';
 import BgSVG from './bg.svg';
 import ArrowRight from './arrow-right.svg';
-import { setOpenLogin } from '../../stores/authSlice';
+import { setOpenLogin } from '@/stores/authSlice';
 import { useDispatch } from 'react-redux';
 import { Loading } from 'react-vant';
 
@@ -569,14 +569,9 @@ export default function Schedules() {
         <div className="text-base font-bold text-blueTitle">
           第 {getWeekNumber(termInfo?.data?.startDate)} 周
         </div>
-        <div className="text-xs text-gray-400 flex space-x-2 items-center">
-          <div>{getWeekDates()[0]} - {getWeekDates()[6]}</div>
-          <div className='h-2 w-0.5 bg-gray-300 '></div>
-        <div>
-          {termInfo?.data?.name}
+        <div className="text-xs text-gray-400">
+          {getWeekDates()[0]} - {getWeekDates()[6]}
         </div>
-        </div>
-        
       </div>
       <div className="flex  px-2 items-center justify-between pl-5 pr-5 h-11 bg-bg">
         <div className="flex items-center justify-around w-2/3 h-8 bg-white rounded-lg">

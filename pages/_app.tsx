@@ -43,7 +43,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const routerTable = [
     '/School/',
-    '/Schedules/Schedules',
+    '/[campus]/Schedules/Schedules',
     '/Course/evaluation',
     '/York/Course/course',
     '/Profile',

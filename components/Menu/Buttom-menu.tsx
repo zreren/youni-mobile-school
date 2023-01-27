@@ -74,7 +74,11 @@ export default function LabelBottomNavigation(props) {
     }
     setValue(newValue);
     body.style.overflow = 'scroll';
-    router.push(routerTable[newValue]);
+    const campus = router.query.campus;
+    router.push({
+      pathname:routerTable[newValue],
+      query:{campus:campus}
+    });
 
   };
   const MyAction = styled(BottomNavigationAction)(
