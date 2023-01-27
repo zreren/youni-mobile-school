@@ -89,6 +89,19 @@ export default function LabelBottomNavigation(props) {
     }
   `,
   );
+  const MyActionSK = styled(BottomNavigationAction)(
+    `color: rgba(169, 176, 192, 0);
+    font-size:1.25rem;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 1150ms;
+    background:rgba(255,255,255,0);
+    &.Mui-selected {
+      color: rgba(55, 69, 92, 1);
+      transform:scale(1.15)
+    }
+  `,
+  );
   return (
     <div>
       {value === 3 ? (
@@ -100,16 +113,16 @@ export default function LabelBottomNavigation(props) {
             showLabels={true}
             onChange={handleChange}
           >
-            <MyAction className="transition-all bg-transparent -z-30" label="" value={1} />
-            <MyAction label="" value={2} className='bg-transparent -z-30' />
+            <MyActionSK className="transition-all bg-transparent -z-30" label="" value={1} />
+            <MyActionSK label="" value={2} className='bg-transparent -z-30' />
             <MyAction
               className="transition bg-transparent ease-in-out duration-2000"
               label=" "
               icon={<IconClose type="add"></IconClose>}
               value={0}
             />
-            <MyAction label="" value={4} className='bg-transparent -z-30' />
-            <MyAction label="" value={5} className='bg-transparent -z-30' />
+            <MyActionSK label="" value={4} className='bg-transparent -z-30' />
+            <MyActionSK label="" value={5} className='bg-transparent -z-30' />
           </BottomNavigation>
         </div>
       ) : (
