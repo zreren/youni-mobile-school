@@ -29,7 +29,7 @@ export default function userComment() {
   };
   const [language, setLanguage] = useLocalStorage('language', 'en');
   const { id } = router.query;
-  const { data, error } = useFetch(`/evaluation/detail?id=${id}&t=${new Date()}`, 'get');
+  const { data, error } = useFetch(`/evaluation/detail?id=${id}`, 'get');
   const comments = [
     {
       id: 1,

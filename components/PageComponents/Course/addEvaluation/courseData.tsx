@@ -17,17 +17,17 @@ const getIcon = (props) => {
   return <Node></Node>;
 };
 const Item = (props: any) => {
-  const { name,key, item, icon, iconListActive, updateData } = props;
+  const { name,itemKey, item, icon, iconListActive, updateData } = props;
   const [active, setActive1] = React.useState(0);
 
   const setActive = (props: any) => {
     updateData({
-      key: key,
+      key: itemKey,
       value: props,
     });
     setActive1(props);
   };
-  console.log(icon, 'icon');
+  // console.log(icon, 'icon');
   return (
     <div>
       <div className="input-group bg-white w-full flex flex-col justify-between h-22">
@@ -136,7 +136,7 @@ export default function courseInfo() {
   const [form, setForm] = React.useState({});
   const updateData = (e) => {
     data.setData({ ...data.data, [e.key]: e.value });
-    console.log(data, 'courseInfo');
+    console.log(e, 'courseInfo e');
   };
   useEffect(() => {
     // data.courseDataEvaluation = form;
@@ -161,7 +161,7 @@ export default function courseInfo() {
             }}
             name={item.name}
             item={item.item}
-            key={item.dataIndex}
+            itemKey={item.dataIndex}
             iconListActive={item.iconListActive}
             icon={item.icon}
           ></Item>
