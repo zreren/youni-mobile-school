@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PostCategory from '@/components/Menu/add-post-category';
 import Header from '@/components/Header';
 import YouniForm from '@/components/Form/Form';
@@ -10,6 +10,11 @@ import { DatetimePicker, Field } from 'react-vant';
 import { Input, Form, Cell } from 'react-vant';
 import { Button, Picker, Space } from 'react-vant';
 import Org from './assets/actives/org.svg';
+// import MapIcon from './/mapIcon.svg';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import { styled } from '@mui/material/styles';
+import { grey } from '@mui/material/colors';
+import Box from '@mui/material/Box';
 import { useWindowSize } from 'react-use';
 import dynamic from 'next/dynamic';
 import { Switch } from 'react-vant';
@@ -19,11 +24,15 @@ import DraftIcon from './draft.svg';
 import NoteIcon1 from './note1.svg';
 import NoteIcon2 from './note2.svg';
 import NoteIcon3 from './note3.svg';
+import Map from './assets/actives/map.svg';
+import Location from './assets/actives/location.svg';
+import Prices from './assets/actives/youniprice.svg';
+import Contact from './assets/actives/contact.svg';
 import useRequest from '@/libs/request';
 import useFetch from '@/hooks/useFetch';
+import { NumberKeyboard, hooks, Toast } from 'react-vant';
 
 export default function addPost() {
-
   const Footer = () => {
     return (
       <div className="w-full bg-white h-[60px] space-x-4 flex justify-between fixed -bottom-1 px-5 py-2">
@@ -43,21 +52,24 @@ export default function addPost() {
     );
   };
   const upload = async (file) => {
-    console.log(file,"file")
+    console.log(file, 'file');
     try {
-      const body = new FormData()
-      body.append('file', file)
-      const {data:resp} = await useRequest.post('/api/upload', body)
-      const json = resp
-      console.log(json?.data,"json")
+      const body = new FormData();
+      body.append('file', file);
+      const { data: resp } = await useRequest.post('/api/upload', body);
+      const json = resp;
+      console.log(json?.data, 'json');
       // return包含 url 的一个对象 例如: {url:'https://img.yzcdn.cn/vant/sand.jpg'}
-      return { url: Cons.BASEURL + json?.data?.filename ,name:json?.data?.filename }
+      return {
+        url: Cons.BASEURL + json?.data?.filename,
+        name: json?.data?.filename,
+      };
     } catch (error) {
-      console.log(error,"error")
-      return { url: `demo_path/${file.name}` }
+      console.log(error, 'error');
+      return { url: `demo_path/${file.name}` };
     }
-  }
-  
+  };
+
   const headerMenuList = [
     {
       label: '闲置',
@@ -78,10 +90,11 @@ export default function addPost() {
     {
       label: '群聊',
       key: 'group',
-    },{
+    },
+    {
       label: '拼车',
       key: 'carpool',
-    }
+    },
   ];
 
   const item = {
@@ -100,17 +113,21 @@ export default function addPost() {
   ];
   const IconList = {
     // "youni:seat": <Seat></Seat>,
-    "youni:org": <Org></Org>,
-    "youni:startTime": <StartTime></StartTime>,
-    "youni:endTime": <EndTime></EndTime>,
-    "youni:location": <Org></Org>,
-    "youni:price":<Org></Org>,
-    "youni:note": <Org></Org>,
-    "youni:switch": <Org></Org>,
-    "youni:prices": <Org></Org>,
-    "youni:contact": <Org></Org>,
-    "youni:map": <Org></Org>,
-  }
+    'youni:org': <Org></Org>,
+    'youni:startTime': <StartTime></StartTime>,
+    'youni:endTime': <EndTime></EndTime>,
+    'youni:location': <Location></Location>,
+    'youni:price': <Org></Org>,
+    'youni:note': <Org></Org>,
+    'youni:switch': <Org></Org>,
+    'youni:prices': <Prices></Prices>,
+    'youni:contact': <Contact></Contact>,
+    'youni:map': <Map></Map>,
+    'youni:link': <Org></Org>,
+    'youni:houseType': <Org></Org>,
+    'youni:discussion': <Org></Org>,
+    'youni:seat': <Org></Org>,
+  };
   /** 活动的动态表单 */
   // const dynamicForm = [
   //   {
@@ -169,12 +186,11 @@ export default function addPost() {
   //   },
   // ];
 
-  
   const [title, setTitle] = React.useState('');
   const [content, setContent] = React.useState('');
   const [form] = Form.useForm();
   const [type, setType] = React.useState(headerMenuList[0].key);
-  const [previews,setPreviews] = React.useState([])
+  const [previews, setPreviews] = React.useState([]);
   const customComponents = {
     input: <Input placeholder="请输入"></Input>,
     time: (
@@ -188,12 +204,17 @@ export default function addPost() {
         <Input placeholder="请输入"></Input>
       </div>
     ),
-    prices: <div></div>,
+    prices: (
+      <div>{form.getFieldValue('prices')?.text}</div>
+      // <Form.Item name="text" key="text" valuePropName="text">
+      // <Input placeholder="请输入"></Input>
+      // </Form.Item>
+    ),
     Switch: <Switch activeColor="#FFD036" size={20} inactiveColor="#dcdee0" />,
   };
-  const {data:dynamicForm,mutate} = useFetch('/post/dynamicForm','get',{
-    type:type
-  })
+  const { data: dynamicForm, mutate } = useFetch('/post/dynamicForm', 'get', {
+    type: type,
+  });
   const Keyboard = () => {
     return (
       <div className="bg-[#F9FAFB] text-[#798195] w-screen h-12  z-30 fixed bottom-0 flex justify-around items-center">
@@ -257,38 +278,239 @@ export default function addPost() {
       stop.current = true;
     };
   }
-  const submitPost = (form,draft)=>{
-   
-    useRequest.post('/api/post/create',{
-      form:{...form},
-      draft:draft,
-      title:title,
-      body:content,
-      preview:previews,
-      type:type
-    })
-  }
-  const changeCategory = (val)=>{
-    console.log(val,'changeCategory')
-    setType(val)
-  }
-  useEffect(()=>{
-    mutate()
-  },[type])
-  const addPreviews =(items)=>{
-    console.log(items,'addPreviews')
-    setPreviews(items.map((item)=> item.name));
-  }
-  useWatch(height,(pre)=>{
-    if(pre && pre < height){
-      setKeyboardShow(true)
-    }else{
-      setKeyboardShow(false)
+  const submitPost = (form, draft) => {
+    useRequest.post('/api/post/create', {
+      form: { ...form },
+      draft: draft,
+      title: title,
+      body: content,
+      preview: previews,
+      type: type,
+    });
+  };
+  const changeCategory = (val) => {
+    console.log(val, 'changeCategory');
+    setType(val);
+  };
+  useEffect(() => {
+    mutate();
+  }, [type]);
+  const addPreviews = (items) => {
+    console.log(items, 'addPreviews');
+    setPreviews(items.map((item) => item.name));
+  };
+  useWatch(height, (pre) => {
+    if (pre && pre < height) {
+      setKeyboardShow(true);
+    } else {
+      setKeyboardShow(false);
     }
   });
+  const Puller = styled(Box)(({ theme }) => ({
+    width: 33,
+    height: 4,
+    backgroundColor: theme.palette.mode === 'light' ? grey[300] : grey[900],
+    borderRadius: 3,
+    position: 'absolute',
+    top: 8,
+    left: 'calc(50% - 15px)',
+  }));
+  const [pricesUnit, setPricesUnit] = useState<string>('CAD');
+  const PricesModel = (props) => {
+    const { visible, open, close, confirm } = props;
+    const [currentInPut, setCurrentInPut] = useState<string>();
+    const [state, updateState] = hooks.useSetState({
+      text: '',
+      unit: '',
+      oldPrice: '',
+      showOldPrice:false,
+    });
+    const deleteInput = () => {
+      updateState({
+        [currentInPut]: state[currentInPut].slice(
+          0,
+          state[currentInPut].length - 1,
+        ),
+      });
+    };
+    const onInput = (v) => {
+      // Toast.success(v);
+      if (v === 'CAD') {
+        setPricesUnit('USD');
+      }
+      if (v === '完成') {
+        close();
+      }
+      updateState({
+        [currentInPut]: state[currentInPut] + v,
+      });
+    };
+    const columns = [
+      { text: '日', value: 0 },
+      { text: '周', value: 1 },
+      { text: '月', value: 2 },
+      { text: '季', value: 3 },
+      { text: '年', value: 4 },
+      // { text: '南通', value: 5 },
+      // { text: '宿迁', value: 6 },
+      // { text: '泰州', value: 7 },
+      // { text: '无锡', value: 8 },
+    ];
+    return (
+      <SwipeableDrawer
+        className="z-10"
+        disableDiscovery={true}
+        disableSwipeToOpen={true}
+        onClose={close}
+        onOpen={open}
+        open={visible}
+        anchor="bottom"
+      >
+        <div className="h-[450px]">
+          <Puller></Puller>
+          <div className="p-5 mt-2 ">
+            <div className="flex prices">
+              <div className="flex w-full space-x-4 items-center">
+                <div className="whitespace-nowrap text-[#37455C] text-sm">
+                  价格
+                </div>
+                <div className="flex items-end">
+                  <div className="w-[70px]">
+                    <Input
+                      onFocus={() => {
+                        setCurrentInPut('text');
+                      }}
+                      type={'number'}
+                      value={state.text}
+                      onChange={(text) => updateState({ text })}
+                      placeholder="输入价格"
+                      className="text-lg"
+                    />
+                  </div>
+                  <div className="text-sm text-[#FF4241]">{pricesUnit}</div>
+                </div>
+              </div>
+              <div className="flex w-full space-x-4 items-center">
+                <div className="whitespace-nowrap text-[#37455C] text-sm">
+                  单位
+                </div>
+                <div>
+                  <Picker
+                    popup={{
+                      round: true,
+                    }}
+                    value={state.unit}
+                    title="标题"
+                    columns={columns}
+                    className="z-20"
+                    columnsFieldNames={{ text: 'text', value: 'id' }}
+                    onConfirm={(v) => {
+                      console.log(v, 'updateState({unit:v})');
+                      updateState({ unit: v });
+                    }}
+                    onChange={(v) => updateState({ unit: v })}
+                    optionRender={(option: any) => {
+                      return (
+                        <div className="flex space-x-1">
+                          <div>{option.text}</div>
+                        </div>
+                      );
+                    }}
+                  >
+                    {(val: string, _: any, actions) => {
+                      console.log(_, val, 'select');
+                      return (
+                        <Field
+                          clickable
+                          value={val || ''}
+                          placeholder="选择单位"
+                          onClick={() => actions.open()}
+                        />
+                      );
+                    }}
+                  </Picker>
+                </div>
+              </div>
+            </div>
+            <div className="h-1 m-0 mt-2 divider opacity-30"></div>
+            <div className="flex justify-between items-center">
+              <div className="flex w-full space-x-4 items-center">
+                <div className="whitespace-nowrap text-[#37455C] text-sm">
+                  原价
+                </div>
+                <div className="flex items-end">
+                  <div className="w-[70px]">
+                    <Input
+                      onFocus={() => {
+                        setCurrentInPut('oldPrice');
+                      }}
+                      type={'number'}
+                      value={state.oldPrice}
+                      onChange={(text) => updateState({ oldPrice:text })}
+                      placeholder="输入原价"
+                      className="text-lg text-[#798195]"
+                    />
+                  </div>
+                  <div className="text-sm text-[#798195]">{pricesUnit}</div>
+                </div>
+              </div>
+             <div className='flex items-center space-x-2'>
+              <div className='whitespace-nowrap text-[#798195] text-sm'>显示原价</div>
+             <Switch onChange={(val)=>{updateState({ showOldPrice:val })}} activeColor="#FFD036" size={20} inactiveColor="#dcdee0" />
+             </div>
+              {/* swith */}
+            </div>
+            <div className="h-1 m-0 mt-2 divider opacity-30"></div>
+            <div className='flex items-center mt-2'>
+                <div className="whitespace-nowrap text-[#37455C] text-sm mr-4">服务</div>
+                <div className='flex  flex-wrap w-6/10 mb-3'>
+                  <div className='bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded'>包水</div>
+                  <div className='bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded'>包电</div>
+                  <div className='bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded'>含管理费</div>
+                  <div className='bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded'>含管理费</div>
+                  <div className='bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded'>包水</div>
+                  <div className='bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded'>包电</div>
+                  <div className='bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded'>包水</div>
+                  <div className='bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded'>包电</div>
+                </div>
+            </div>
+          </div>
+          <NumberKeyboard
+            theme="custom"
+            onDelete={() => {
+              deleteInput();
+            }}
+            extraKey={[pricesUnit, '.']}
+            closeButtonText="完成"
+            visible={true}
+            onClose={() => {
+              confirm(state);
+              close();
+            }}
+            // onChange={()=>{close();Toast.success('完成')}}
+            onInput={onInput}
+            // onDelete={onDelete}
+          />
+        </div>
+      </SwipeableDrawer>
+    );
+  };
+  const [pricesVisible, setPricesVisible] = useState(false);
   return (
     <div className="mb-14">
       {KeyboardShow ? <Keyboard></Keyboard> : null}
+      <PricesModel
+        visible={pricesVisible}
+        onClose={() => {
+          setPricesVisible(false);
+        }}
+        close={() => {
+          setPricesVisible(false);
+        }}
+        confirm={(e) => {
+          form.setFieldValue('prices', e);
+        }}
+      ></PricesModel>
       {/* <Keyboard></Keyboard> */}
       <Header className="shadow-none"></Header>
       {/* <div>
@@ -308,7 +530,9 @@ export default function addPost() {
       </div>
       <div className="p-5 pt-3">
         <PostCategory
-        change={(e)=>{changeCategory(headerMenuList[e].key)}}
+          change={(e) => {
+            changeCategory(headerMenuList[e].key);
+          }}
           headerMenuList={headerMenuList}
           className="mt-0"
         ></PostCategory>
@@ -319,7 +543,9 @@ export default function addPost() {
           accept="*"
           upload={upload}
           uploadIcon={<AddUploaderIcon></AddUploaderIcon>}
-          onChange={(items)=>{addPreviews(items)}}
+          onChange={(items) => {
+            addPreviews(items);
+          }}
         />
       </div>
       <div className="px-5 post-title">
@@ -346,16 +572,16 @@ export default function addPost() {
         <Form
           form={form}
           onFinish={(v) => {
-            submitPost(v,false);
+            submitPost(v, false);
             console.log(v);
           }}
         >
           {dynamicForm?.data?.map((item) => {
             const Node = customComponents[item.type];
             const Label = () => {
-              const Icon = ()=>{
-                return IconList[item.icon] ? IconList[item.icon] : <div></div>
-              }
+              const Icon = () => {
+                return IconList[item.icon] ? IconList[item.icon] : <div></div>;
+              };
               return (
                 <div className="flex items-center space-x-4">
                   <Icon></Icon>
@@ -368,13 +594,20 @@ export default function addPost() {
                 name={item.dataIndex}
                 label={<Label></Label>}
                 key={item.dataIndex}
+                // children={()=>{
+                //   return <Node></Node>
+                // }}
                 valuePropName="checked"
                 onClick={
                   item.type === 'time'
                     ? (_, action) => {
                         action.current?.open();
                       }
-                    : null
+                    : () => {
+                        if (item.type === 'prices') {
+                          setPricesVisible(true);
+                        }
+                      }
                 }
               >
                 {customComponents[item.type]}

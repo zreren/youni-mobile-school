@@ -20,7 +20,6 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import classnames from 'classnames';
-// import classnames  from 'classnames'
 import { appWithTranslation } from 'next-i18next';
 import UserAddMenu from '@/components/UserAddMenu';
 import nexti18nConfig from '../i18n';
@@ -28,7 +27,6 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import SignIn from './Login/signin';
 import SignUp from './Login/signup';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
-// import {API} from "@/hooks/useFetch";
 import '../cons';
 import { styled } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';

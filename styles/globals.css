@@ -415,3 +415,14 @@
   padding-left: 0px !important;
   width: auto;
 }
+
+.prices{
+  --rv-input-text-color: #FF4241 !important;
+  --rv-input-placeholder-text-color	:#FF4241 !important;
+  /* --rv-number-keyboard-button-background-color:var(--rv-selector-checked-color); */
+  --rv-number-keyboard-button-background-color: #FFD036 !important;
+}
+/* .prices  */
+.rv-key--blue{
+  background-color: #FFD036 !important;
+}
