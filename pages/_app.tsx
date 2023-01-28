@@ -45,15 +45,17 @@ function MyApp({ Component, pageProps }: AppProps) {
     '/Course/evaluation',
     '/York/Course/course',
     '/Profile',
+    'Schedules',
+    'evaluation'
   ];
   const { i18n } = useTranslation();
   console.log(i18n);
   useEffect(() => {
     console.log(router.pathname);
     // setLanguage('ename')
-    if (routerTable.indexOf(router.pathname) > -1) {
+    // if (routerTable.indexOf(router.pathname) > -1) {
       dispatch(setAuthState(true));
-    }
+    // }
   }, [router.pathname]);
   const Puller = styled(Box)(({ theme }) => ({
     width: 33,

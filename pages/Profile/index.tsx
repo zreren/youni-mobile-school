@@ -251,7 +251,7 @@ function index(props) {
                 },
               )}
             >
-              文集
+              贴文
             </div>
             <div
               onClick={() => {
@@ -264,7 +264,7 @@ function index(props) {
                 },
               )}
             >
-              贴文
+              文集
             </div>
           </div>
         </div>
@@ -302,7 +302,7 @@ function index(props) {
                 },
               )}
             >
-              文集
+              贴文
             </div>
             <div
               onClick={() => {
@@ -314,8 +314,8 @@ function index(props) {
                   'bg-slate-50 text-[#FFD036]': menu === 0,
                 },
               )}
-            >
-              贴文
+            >文集
+              
             </div>
           </div>
         </div>

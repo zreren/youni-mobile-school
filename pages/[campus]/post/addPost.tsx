@@ -14,6 +14,8 @@ import Org from './assets/actives/org.svg';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { styled } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
+import classnames from 'classnames';
+import { Dialog } from 'react-vant';
 import Box from '@mui/material/Box';
 import { useWindowSize } from 'react-use';
 import dynamic from 'next/dynamic';
@@ -35,8 +37,13 @@ import { NumberKeyboard, hooks, Toast } from 'react-vant';
 export default function addPost() {
   const Footer = () => {
     return (
-      <div className="w-full bg-white h-[60px] space-x-4 flex justify-between fixed -bottom-1 px-5 py-2">
-        <div className="flex flex-col items-center  w-[40px]">
+      <div className="w-full bg-white h-[60px] space-x-4 flex justify-between fixed bottom-10 px-5 py-2">
+        <div
+          className="flex flex-col items-center  w-[40px]"
+          onClick={() => {
+            submitPost(form, true);
+          }}
+        >
           <DraftIcon></DraftIcon>
           <div className="text-[10px] text-[#798195] whitespace-nowrap">
             存草稿
@@ -278,19 +285,64 @@ export default function addPost() {
       stop.current = true;
     };
   }
-  const submitPost = (form, draft) => {
-    useRequest.post('/api/post/create', {
-      form: { ...form },
-      draft: draft,
-      title: title,
-      body: content,
-      preview: previews,
-      type: type,
-    });
+  const submitPost = async (form, draft) => {
+    console.log(form, 'form');
+    if (
+      !Object.keys(form).some((element) => {
+        if (
+          form[element] === '' ||
+          form[element] === null ||
+          form[element] === undefined ||
+          !form[element]
+        ) {
+          Toast.fail('请完善表单');
+          return false;
+        }
+      })
+    ) {
+      return;
+    }
+    // form?.forEach((element) => {
+    //   if (element === '' || element === null || !element) {
+    //     Toast.fail('请完善表单');
+    //     return;
+    //   }
+    // });
+    if (!title || !previews || !content || previews.length < 1) {
+      Toast.fail('请完善表单');
+      return;
+    }
+    try {
+      const { data } = await useRequest.post('/api/post/create', {
+        form: { ...form },
+        draft: draft,
+        title: title,
+        body: content,
+        topic: ['York'],
+        preview: previews,
+        type: type,
+      });
+      if (data.message === 'success') {
+        Toast.success('发布成功');
+      } else {
+        Toast.fail('发布失败');
+      }
+    } catch (error) {
+      Toast.fail(error);
+    }
   };
   const changeCategory = (val) => {
-    console.log(val, 'changeCategory');
-    setType(val);
+    // console.log(val, 'changeCategory');
+    Dialog.confirm({
+      title: '切换分类',
+      message: '切换分类将导致部分自定义参数重置，确定要进行分类切换吗？',
+    })
+      .then(() => {
+        setType(val);
+      })
+      .catch(() => {
+        console.log('catch');
+      });
   };
   useEffect(() => {
     mutate();
@@ -323,7 +375,8 @@ export default function addPost() {
       text: '',
       unit: '',
       oldPrice: '',
-      showOldPrice:false,
+      showOldPrice: false,
+      service: [],
     });
     const deleteInput = () => {
       updateState({
@@ -345,6 +398,44 @@ export default function addPost() {
         [currentInPut]: state[currentInPut] + v,
       });
     };
+    const serviceList = [
+      { title: '包水' },
+      { title: '包电' },
+      { title: '包网' },
+      { title: '包气' },
+      { title: '含管理费' },
+      { title: '包铲雪' },
+      { title: '包除草' },
+      { title: '包清洁' },
+      { title: '包做饭' },
+    ];
+    const ServicesItem = (props) => {
+      const { title, defaultSelect } = props;
+      const [select, setSelect] = useState(defaultSelect);
+      // useEffect(() => {
+      //   if (select) {
+      //     props.change(title);
+      //   } else {
+      //     props.remove(title);
+      //   }
+      // }, [select]);
+      return (
+        <div
+          onClick={() => {
+            setSelect(!select);
+          }}
+          className={classnames(
+            'bg-bg m-1  text-xs font-light h-6 px-1 py-1  rounded',
+            {
+              'text-yellow-500': select,
+              'text-gray-600': !select,
+            },
+          )}
+        >
+          {title}
+        </div>
+      );
+    };
     const columns = [
       { text: '日', value: 0 },
       { text: '周', value: 1 },
@@ -358,7 +449,7 @@ export default function addPost() {
     ];
     return (
       <SwipeableDrawer
-        className="z-10"
+        className="z-10 "
         disableDiscovery={true}
         disableSwipeToOpen={true}
         onClose={close}
@@ -366,7 +457,7 @@ export default function addPost() {
         open={visible}
         anchor="bottom"
       >
-        <div className="h-[450px]">
+        <div className="h-[480px] ">
           <Puller></Puller>
           <div className="p-5 mt-2 ">
             <div className="flex prices">
@@ -403,24 +494,15 @@ export default function addPost() {
                     title="标题"
                     columns={columns}
                     className="z-20"
-                    columnsFieldNames={{ text: 'text', value: 'id' }}
+                    columnsFieldNames={{ text: 'text' }}
                     onConfirm={(v) => {
-                      console.log(v, 'updateState({unit:v})');
                       updateState({ unit: v });
-                    }}
-                    onChange={(v) => updateState({ unit: v })}
-                    optionRender={(option: any) => {
-                      return (
-                        <div className="flex space-x-1">
-                          <div>{option.text}</div>
-                        </div>
-                      );
                     }}
                   >
                     {(val: string, _: any, actions) => {
-                      console.log(_, val, 'select');
                       return (
                         <Field
+                          readOnly
                           clickable
                           value={val || ''}
                           placeholder="选择单位"
@@ -446,7 +528,7 @@ export default function addPost() {
                       }}
                       type={'number'}
                       value={state.oldPrice}
-                      onChange={(text) => updateState({ oldPrice:text })}
+                      onChange={(text) => updateState({ oldPrice: text })}
                       placeholder="输入原价"
                       className="text-lg text-[#798195]"
                     />
@@ -454,25 +536,77 @@ export default function addPost() {
                   <div className="text-sm text-[#798195]">{pricesUnit}</div>
                 </div>
               </div>
-             <div className='flex items-center space-x-2'>
-              <div className='whitespace-nowrap text-[#798195] text-sm'>显示原价</div>
-             <Switch onChange={(val)=>{updateState({ showOldPrice:val })}} activeColor="#FFD036" size={20} inactiveColor="#dcdee0" />
-             </div>
+              <div className="flex items-center space-x-2">
+                <div className="whitespace-nowrap text-[#798195] text-sm">
+                  显示原价
+                </div>
+                <Switch
+                  onChange={(val) => {
+                    updateState({ showOldPrice: val });
+                  }}
+                  activeColor="#FFD036"
+                  size={20}
+                  inactiveColor="#dcdee0"
+                />
+              </div>
               {/* swith */}
             </div>
             <div className="h-1 m-0 mt-2 divider opacity-30"></div>
-            <div className='flex items-center mt-2'>
-                <div className="whitespace-nowrap text-[#37455C] text-sm mr-4">服务</div>
-                <div className='flex  flex-wrap w-6/10 mb-3'>
-                  <div className='bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded'>包水</div>
-                  <div className='bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded'>包电</div>
-                  <div className='bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded'>含管理费</div>
-                  <div className='bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded'>含管理费</div>
-                  <div className='bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded'>包水</div>
-                  <div className='bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded'>包电</div>
-                  <div className='bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded'>包水</div>
-                  <div className='bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded'>包电</div>
+            <div className="flex items-center mt-2">
+              <div className="whitespace-nowrap text-[#37455C] text-sm mr-4">
+                服务
+              </div>
+              <div className="flex  flex-wrap w-6/10 mb-3">
+                {serviceList.map((item) => {
+                  return (
+                    <ServicesItem
+                      title={item.title}
+                      defaultSelect={
+                        state.service.indexOf(item.title) > -1 ? true : false
+                      }
+                      remove={(e) => {
+                        updateState({
+                          service: state.service.filter((item) => {
+                            return item !== e;
+                          }),
+                        });
+                      }}
+                      change={(e) => {
+                        updateState({
+                          service: [...new Set(...state.service, e)],
+                        });
+                      }}
+                    ></ServicesItem>
+                  );
+                })}
+                {/* <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
+                  包水
                 </div>
+                <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
+                  包电
+                </div>
+                <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
+                  包网
+                </div>
+                <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
+                  包气
+                </div>
+                <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
+                  含管理费
+                </div>
+                <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
+                  包铲雪
+                </div>
+                <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
+                  包除草
+                </div>
+                <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
+                  包清洁
+                </div>
+                <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
+                  包做饭
+                </div> */}
+              </div>
             </div>
           </div>
           <NumberKeyboard
@@ -487,10 +621,12 @@ export default function addPost() {
               confirm(state);
               close();
             }}
+            className="-translate-y-8"
             // onChange={()=>{close();Toast.success('完成')}}
             onInput={onInput}
             // onDelete={onDelete}
           />
+          {/* <div className='h-[20px]'></div> */}
         </div>
       </SwipeableDrawer>
     );
@@ -568,7 +704,7 @@ export default function addPost() {
         />
       </div>
       <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
-      <div className="px-5 mt-4 post-form">
+      <div className="px-5 mt-4 post-form pb-10">
         <Form
           form={form}
           onFinish={(v) => {

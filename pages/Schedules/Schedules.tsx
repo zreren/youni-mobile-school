@@ -24,7 +24,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import IOSSwitch from './components/ios';
 import RightIcon from '@/components/PageComponents/Profile/right.svg';
 import useFetch from '../../hooks/useFetch';
-import { Popup } from 'react-vant';
+import { Popup, Toast } from 'react-vant';
 import { getCourses, addFullStartDate } from '@/libs/schedule';
 import axios from 'axios';
 import useLocalStorage from '../../hooks/useStore';
@@ -35,7 +35,11 @@ import ArrowRight from './arrow-right.svg';
 import { setOpenLogin } from '../../stores/authSlice';
 import { useDispatch } from 'react-redux';
 import { Loading } from 'react-vant';
-
+import CourseIcon1 from './courseIcon1.svg';
+import CourseIcon2 from './courseIcon2.svg';
+import CourseIcon3 from './courseIcon3.svg';
+import CourseIcon4 from './courseIcon4.svg';
+import useRequest from '@/libs/request'
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
   height: 6,
@@ -61,142 +65,6 @@ const CCourseInput = (props) => {
   );
 };
 
-const CourseDetailCard = (props) => {
-  const { event, borderColor } = props;
-  const [token, setToken] = useLocalStorage('token', '');
-  const deleteCURRICULUM = async (id: number) => {
-    const { data } = await global.request.post(
-      `/api${Cons.API.CURRICULUM.DELETE}`,
-      {
-        id: Number(id),
-      },
-    );
-  };
-  if (!event) return;
-  const { title, extendedProps } = event;
-  console.log(props, 'CourseDetailCard');
-  console.log(borderColor, 'backgroundColor');
-  // if (!arg) return null;
-  const background =
-  `linear-gradient(180deg, ${props.backgroundColor} -117.9%, #FFFFFF 125.31%)`;
-  // const darkBackground = props.border
-
-  return (
-    <div className="topIndexPlus">
-      {/* <div className='w-4 h-1 bg-gray-400 rounded-xs '></div> */}
-      <SwipeableDrawer
-        anchor="bottom"
-        open={props.visible}
-        onClose={() => {
-          props.setVisible(false);
-        }}
-        onOpen={() => {
-          props.setVisible(true);
-        }}
-        className="h-screen"
-      >
-        <div className="w-full p-4 rounded-full h-80">
-          <Puller></Puller>
-          <div style={{ background: background ,borderColor: borderColor}} className="flex justify-between w-full h-20 p-4 border  rounded-2xl">
-            <div style={{color:borderColor}}>
-              <div className="flex items-center">
-                {' '}
-                <div
-                style={{ background: borderColor }}
-                  className={classnames(
-                    'w-1 h-4 mr-2 text-lg font-medium  rounded-full',
-                  )}
-                ></div>
-                <div>{title}</div>
-              </div>
-              <div className="mt-2 text-xs font-normal">
-                {' '}
-                Section {extendedProps?.section?.name}{' '}
-                {extendedProps?.online ? '线上课程' : '线下课程'}
-              </div>
-            </div>
-            <div className="flex flex-col items-end w-1/2">
-              <div className="-space-x-2 avatar-group">
-                {extendedProps?.section?.students
-                  ?.slice(0, 3)
-                  .map((item, index) => {
-                    return (
-                      <div className="avatar border-[1px]">
-                        <div className="w-6">
-                          <img src={`${Cons.BASEURL}${item.avatar}`} />
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-              <div className="text-xs text-[#798195]">{extendedProps?.section?.students.length} 名同学</div>
-            </div>
-          </div>
-          <div className="mt-4 mb-4">
-            <div className="mb-4">
-              <div className="flex items-center">
-                <TimeIconActive color={borderColor}></TimeIconActive>
-                <div className="ml-3 text-sm text-gray-400">周二</div>
-                <div className="ml-10 text-sm text-gray-400 ">
-                  {extendedProps.time}
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center">
-              <Location color={borderColor}></Location>
-              <div className="ml-3 text-sm text-gray-400">地点</div>
-              <div className="ml-10 text-sm text-gray-400 ">
-                {extendedProps.classroom}
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <div className="flex flex-col items-center space-y-2">
-              <div className="flex flex-col avatar placeholder">
-                <div className="bg-gray-300 rounded-full text-neutral-content w-14">
-                  <span className="text-3xl"></span>
-                </div>
-              </div>
-              <div className="text-xs text-[#798195]">课程评价</div>
-            </div>
-            {/* <div className="flex flex-col items-center space-y-2"> */}
-            {/*   <div className="flex flex-col avatar placeholder"> */}
-            {/*     <div className="bg-gray-300 rounded-full text-neutral-content w-14"> */}
-            {/*       <span className="text-3xl"></span> */}
-            {/*     </div> */}
-            {/*   </div> */}
-            {/*   <div className="text-xs text-[#798195]">课程评价</div> */}
-            {/* </div> */}
-            <div className="flex flex-col items-center space-y-2">
-              <div className="flex flex-col avatar placeholder">
-                <div className="bg-gray-300 rounded-full text-neutral-content w-14">
-                  <span className="text-3xl"></span>
-                </div>
-              </div>
-              <div className="text-xs text-[#798195]">编辑</div>
-            </div>
-            <div className="flex flex-col items-center space-y-2">
-              <div className="flex flex-col avatar placeholder">
-                <div className="bg-gray-300 rounded-full text-neutral-content w-14">
-                  <span className="text-3xl"></span>
-                </div>
-              </div>
-              <div
-                className="text-xs text-[#798195]"
-                onClick={() => {
-                  deleteCURRICULUM(event.id);
-                }}
-              >
-                删除
-              </div>
-            </div>
-          </div>
-        </div>
-      </SwipeableDrawer>
-    </div>
-  );
-};
-
 export default function Schedules() {
   const calendarRef = useRef<any>();
   const router = useRouter();
@@ -208,6 +76,175 @@ export default function Schedules() {
   const { data: termInfo } = useFetch('/campus/term/current', 'get', {
     campusId: 1,
   });
+  const CourseDetailCard = (props) => {
+    const { event, borderColor } = props;
+    const [token, setToken] = useLocalStorage('token', '');
+    const deleteCURRICULUM = async (id: number) => {
+      const { data } = await useRequest.post(
+        `/api${Cons.API.CURRICULUM.DELETE}`,
+        {
+          id: Number(id),
+        },
+      );
+      if (data.message === 'success') {
+        props.setVisible(false);
+        Toast.success('删除成功');
+        mutate();
+      } else {
+        Toast.fail('删除失败');
+      }
+    };
+    if (!event) return;
+    const { title, extendedProps } = event;
+    console.log(props, 'CourseDetailCard');
+    console.log(borderColor, 'backgroundColor');
+    // if (!arg) return null;
+    const background = `linear-gradient(180deg, ${props.backgroundColor} -117.9%, #FFFFFF 125.31%)`;
+    // const darkBackground = props.border
+
+    return (
+      <div className="topIndexPlus">
+        {/* <div className='w-4 h-1 bg-gray-400 rounded-xs '></div> */}
+        <SwipeableDrawer
+          anchor="bottom"
+          open={props.visible}
+          onClose={() => {
+            props.setVisible(false);
+          }}
+          onOpen={() => {
+            props.setVisible(true);
+          }}
+          className="h-screen"
+        >
+          <div className="w-full p-4 rounded-full h-80">
+            <Puller></Puller>
+            <div
+              style={{ background: background, borderColor: borderColor }}
+              className="flex justify-between w-full h-20 p-4 border  rounded-2xl"
+            >
+              <div style={{ color: borderColor }}>
+                <div className="flex items-center">
+                  {' '}
+                  <div
+                    style={{ background: borderColor }}
+                    className={classnames(
+                      'w-1 h-4 mr-2 text-lg font-medium  rounded-full',
+                    )}
+                  ></div>
+                  <div>{title}</div>
+                </div>
+                <div className="mt-2 text-xs font-normal">
+                  {' '}
+                  Section {extendedProps?.section?.name}{' '}
+                  {extendedProps?.online ? '线上课程' : '线下课程'}
+                </div>
+              </div>
+              <div className="flex flex-col items-end w-1/2">
+                <div className="-space-x-2 avatar-group">
+                  {extendedProps?.section?.students
+                    ?.slice(0, 3)
+                    .map((item, index) => {
+                      return (
+                        <div className="avatar border-[1px]">
+                          <div className="w-6">
+                            <img src={`${Cons.BASEURL}${item.avatar}`} />
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+                <div className="text-xs text-[#798195]">
+                  {extendedProps?.section?.students.length} 名同学
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 mb-4">
+              <div className="mb-4">
+                <div className="flex items-center">
+                  <TimeIconActive color={borderColor}></TimeIconActive>
+                  <div className="ml-3 text-sm text-gray-400">周二</div>
+                  <div className="ml-10 text-sm text-gray-400 ">
+                    {extendedProps.time}
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center">
+                <Location color={borderColor}></Location>
+                <div className="ml-3 text-sm text-gray-400">地点</div>
+                <div className="ml-10 text-sm text-gray-400 ">
+                  {extendedProps.classroom}
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <div
+                className="flex flex-col items-center space-y-2"
+                onClick={() => {
+                  const campus = router.query.campus;
+                  console.log(
+                    extendedProps?.section?.course?.id,
+                    'extendedProps?.section[0]?.course?.id',
+                  );
+                  router.push({
+                    pathname: '/[campus]/Course/[id]',
+                    query: {
+                      campus: campus,
+                      id: extendedProps?.section?.course?.id,
+                    },
+                  });
+                }}
+              >
+                <div className="flex flex-col avatar placeholder">
+                  <div className="bg-[#F7F8F9] rounded-full text-neutral-content w-14">
+                    <CourseIcon1></CourseIcon1>
+                  </div>
+                </div>
+                <div className="text-xs text-[#798195]">课程详情</div>
+              </div>
+              <div className="flex flex-col items-center space-y-2">
+                <div className="flex flex-col avatar placeholder">
+                  <div className="bg-[#F7F8F9]  rounded-full text-neutral-content w-14">
+                    <CourseIcon2></CourseIcon2>
+                  </div>
+                </div>
+                <div className="text-xs text-[#798195]">写课评</div>
+              </div>
+              {/* <div className="flex flex-col items-center space-y-2"> */}
+              {/*   <div className="flex flex-col avatar placeholder"> */}
+              {/*     <div className="bg-gray-300 rounded-full text-neutral-content w-14"> */}
+              {/*       <span className="text-3xl"></span> */}
+              {/*     </div> */}
+              {/*   </div> */}
+              {/*   <div className="text-xs text-[#798195]">课程评价</div> */}
+              {/* </div> */}
+              <div className="flex flex-col items-center space-y-2">
+                <div className="flex flex-col avatar placeholder">
+                  <div className="bg-[#F7F8F9] rounded-full text-neutral-content w-14">
+                    <CourseIcon3></CourseIcon3>
+                  </div>
+                </div>
+                <div className="text-xs text-[#798195]">编辑</div>
+              </div>
+              <div
+                className="flex flex-col items-center space-y-2"
+                onClick={() => {
+                  deleteCURRICULUM(event.id);
+                }}
+              >
+                <div className="flex flex-col avatar placeholder">
+                  <div className="bg-[#F7F8F9]  rounded-full text-neutral-content w-14">
+                    <CourseIcon4></CourseIcon4>
+                  </div>
+                </div>
+                <div className="text-xs text-[#798195]">删除</div>
+              </div>
+            </div>
+          </div>
+        </SwipeableDrawer>
+      </div>
+    );
+  };
+
   const getWeekDates = () => {
     const weekDates = [];
     const currentDate = new Date();
@@ -225,7 +262,8 @@ export default function Schedules() {
     const startDate = new Date(start);
     // const endDate = new Date(end);
     const today = new Date();
-    const week = Math.floor((today.getTime() - startDate.getTime()) / 604800000) + 1;
+    const week =
+      Math.floor((today.getTime() - startDate.getTime()) / 604800000) + 1;
     console.log(week);
     return week;
   };
@@ -406,7 +444,7 @@ export default function Schedules() {
   const [addCourse, setAddCourse] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [yearMethod, setYearMethod] = useState(false);
-  const { data, error } = useFetch(
+  const { data, error,mutate } = useFetch(
     `${Cons.API.CURRICULUM.QUERY}?campusId=1`,
     'get',
   );
@@ -570,13 +608,12 @@ export default function Schedules() {
           第 {getWeekNumber(termInfo?.data?.startDate)} 周
         </div>
         <div className="text-xs text-gray-400 flex space-x-2 items-center">
-          <div>{getWeekDates()[0]} - {getWeekDates()[6]}</div>
-          <div className='h-2 w-0.5 bg-gray-300 '></div>
-        <div>
-          {termInfo?.data?.name}
+          <div>
+            {getWeekDates()[0]} - {getWeekDates()[6]}
+          </div>
+          <div className="h-2 w-0.5 bg-gray-300 "></div>
+          <div>{termInfo?.data?.name}</div>
         </div>
-        </div>
-        
       </div>
       <div className="flex  px-2 items-center justify-between pl-5 pr-5 h-11 bg-bg">
         <div className="flex items-center justify-around w-2/3 h-8 bg-white rounded-lg">
