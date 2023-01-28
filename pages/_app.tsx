@@ -69,7 +69,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const LoginModel = () => {
     return (
       <SwipeableDrawer
-        className="topIndex"
+        className="z-20"
         disableDiscovery={true}
         disableSwipeToOpen={true}
         onClose={() => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import useCountDown from '../../hooks/useCountDown';
 import classNames from 'classnames';
@@ -9,6 +9,9 @@ import Visibility from './visibility.svg';
 import VisibilityOff from './visibilityHide.svg';
 import { pink } from '@mui/material/colors';
 import Checkbox from '@mui/material/Checkbox';
+import { useRouter } from 'next/router';
+import useRequest from '@/libs/request';
+import { Toast } from 'react-vant';
 
 const Password = (props) => {
   interface State {
@@ -81,17 +84,17 @@ const Password = (props) => {
           label="Password"
         />
       </div>
-      <div className='mb-2'>Your password must have at least:</div>
+      <div className="mb-2">Your password must have at least:</div>
       <div className="flex flex-col items-start -space-y-2">
-        <div className='flex items-center'>
+        <div className="flex items-center">
           <Checkbox {...label} defaultChecked color="success" />
           <div>label="Parent</div>
         </div>
-        <div className='flex items-center'>
+        <div className="flex items-center">
           <Checkbox {...label} defaultChecked color="success" />
           <div>label="Parent</div>
         </div>
-        <div className='flex items-center'>
+        <div className="flex items-center">
           <Checkbox {...label} defaultChecked color="success" />
           <div>label="Parent</div>
         </div>
@@ -112,10 +115,180 @@ const Password = (props) => {
     </div>
   );
 };
-const PhoneValid = (props) => {
-  const [count] = useCountDown({ mss: 60 });
-  const [isCodeInput, setCodeInput] = React.useState(false);
-  const ReSentCode = () => {
+
+export default function Valid() {
+  const [state, setState] = React.useState(0);
+  const router = useRouter();
+  const { query } = router;
+
+  const PhoneValid = (props) => {
+    const [count, setTime] = useCountDown({ mss: 60 });
+    const [isCodeInput, setCodeInput] = React.useState(false);
+    const [code, setCode] = useState();
+    const ReSentCode = () => {
+      return (
+        <div className="z-30 w-full h-full p-8 bg-white">
+          <Header className="shadow-none" title=""></Header>
+          <div className="text-2xl font-medium">Phone Verification</div>
+          <div>
+            Enter the 6-digit verification code you received at +
+            {query?.phoneNumber}.The code are valid for 30 minutes
+          </div>
+          <div className="mt-6 mb-6">
+            <input
+              type="text"
+              placeholder="Type here"
+              className="w-full input hover:outline-none"
+              onChange={(e) => {
+                e.target.value.length > 3
+                  ? setCodeInput(true)
+                  : setCodeInput(false);
+              }}
+            />
+            <div className="w-full text-xs text-right">
+              {count === 0 ? <ReSentCode /> : `Code sent (${count}s)`}
+            </div>
+          </div>
+          <button
+            onClick={() => {
+              props.setState(2);
+            }}
+            className={classNames(
+              'w-full border-0 rounded-full btn',
+              isCodeInput
+                ? 'bg-yellow-300 hover:bg-yellow-400 '
+                : 'bg-gray-300 hover:bg-gray-300 ',
+            )}
+          >
+            Next
+          </button>
+          <div className="w-full mt-8 text-xs text-left text-darkYellow">
+            No code?
+          </div>
+        </div>
+      );
+    };
+    const validCode = async () => {
+      try {
+        const { data } = await useRequest.post('/api/check_code', {
+          account: query?.phoneNumber,
+          code: code,
+        });
+        if(data?.message === "success"){
+          Toast.success("success")
+          props.setState(2);
+        }else{
+          Toast.fail(data?.message)
+        }
+      } catch (error) {
+        Toast.fail(error)
+      }
+      
+    };
+    useEffect(() => {
+      if (query?.phoneNumber) {
+        useRequest
+          .post('/api/sendsms_code', {
+            phone: query?.phoneNumber,
+          })
+          .then((res) => {
+            if (res.data.message) {
+              // beginCountDown()
+            }
+          });
+      }
+      if (query?.mail) {
+      }
+    }, [query]);
+    return (
+      <div className="z-30 w-full h-full p-8 bg-white">
+        <Header className="shadow-none" title=""></Header>
+        <div className="text-2xl font-medium">Phone Verification</div>
+        <div>
+          Enter the 6-digit verification code you received at +
+          {query?.phoneNumber}.The code are valid for 30 minutes
+        </div>
+        <div className="mt-6 mb-6">
+          <input
+            type="text"
+            placeholder="Type here"
+            className="w-full input hover:outline-none"
+            onChange={(e) => {
+              e.target.value.length > 3
+                ? setCodeInput(true)
+                : setCodeInput(false);
+              setCode(e.target.value);
+            }}
+          />
+          <div className="w-full text-xs text-right">
+            {count === 0 ? <ReSentCode /> : `Code sent (${count}s)`}
+          </div>
+        </div>
+        <button
+          onClick={() => {
+            validCode();
+          }}
+          className={classNames(
+            'w-full border-0 rounded-full btn',
+            isCodeInput
+              ? 'bg-yellow-300 hover:bg-yellow-400 '
+              : 'bg-gray-300 hover:bg-gray-300 ',
+          )}
+        >
+          Next
+        </button>
+        <div className="w-full mt-8 text-xs text-left text-darkYellow">
+          No code?
+        </div>
+      </div>
+    );
+  };
+  const MailValid = (props) => {
+    const [count] = useCountDown({ mss: 60 });
+    const [isCodeInput, setCodeInput] = React.useState(false);
+    const ReSentCode = () => {
+      return (
+        <div className="z-30 w-full h-full p-8 bg-white">
+          <Header className="shadow-none" title=""></Header>
+          <div className="text-2xl font-medium">Email Verification</div>
+          <div>
+            Enter the 6-digit verification code you received at
+            testemail@my.yorku.ca. The code are valid for 30 minutes
+          </div>
+          <div className="mt-6 mb-6">
+            <input
+              type="text"
+              placeholder="Type here"
+              className="w-full input hover:outline-none"
+              onChange={(e) => {
+                e.target.value.length > 3
+                  ? setCodeInput(true)
+                  : setCodeInput(false);
+              }}
+            />
+            <div className="w-full text-xs text-right">
+              {count === 0 ? <ReSentCode /> : `Code sent (${count}s)`}
+            </div>
+          </div>
+          <button
+            onClick={() => {
+              props.setState(2);
+            }}
+            className={classNames(
+              'w-full border-0 rounded-full btn',
+              isCodeInput
+                ? 'bg-yellow-300 hover:bg-yellow-400 '
+                : 'bg-gray-300 hover:bg-gray-300 ',
+            )}
+          >
+            Next
+          </button>
+          <div className="w-full mt-8 text-xs text-left text-darkYellow">
+            No code?
+          </div>
+        </div>
+      );
+    };
     return (
       <div className="z-30 w-full h-full p-8 bg-white">
         <Header className="shadow-none" title=""></Header>
@@ -158,51 +331,7 @@ const PhoneValid = (props) => {
       </div>
     );
   };
-  return (
-    <div className="z-30 w-full h-full p-8 bg-white">
-      <Header className="shadow-none" title=""></Header>
-      <div className="text-2xl font-medium">Email Verification</div>
-      <div>
-        Enter the 6-digit verification code you received at
-        testemail@my.yorku.ca. The code are valid for 30 minutes
-      </div>
-      <div className="mt-6 mb-6">
-        <input
-          type="text"
-          placeholder="Type here"
-          className="w-full input hover:outline-none"
-          onChange={(e) => {
-            e.target.value.length > 3
-              ? setCodeInput(true)
-              : setCodeInput(false);
-          }}
-        />
-        <div className="w-full text-xs text-right">
-          {count === 0 ? <ReSentCode /> : `Code sent (${count}s)`}
-        </div>
-      </div>
-      <button
-        onClick={() => {
-          props.setState(2);
-        }}
-        className={classNames(
-          'w-full border-0 rounded-full btn',
-          isCodeInput
-            ? 'bg-yellow-300 hover:bg-yellow-400 '
-            : 'bg-gray-300 hover:bg-gray-300 ',
-        )}
-      >
-        Next
-      </button>
-      <div className="w-full mt-8 text-xs text-left text-darkYellow">
-        No code?
-      </div>
-    </div>
-  );
-};
-export default function Valid() {
-  const NodeList = [PhoneValid, PhoneValid, Password];
-  const [state, setState] = React.useState(0);
+  const NodeList = [PhoneValid, MailValid, Password];
   const Node = NodeList[state];
   return <Node setState={setState}></Node>;
 }
