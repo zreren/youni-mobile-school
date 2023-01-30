@@ -32,14 +32,16 @@ import { Cell, Dialog } from 'react-vant';
 import { useRouter } from 'next/router';
 import BgSVG from './bg.svg';
 import ArrowRight from './arrow-right.svg';
-import { setOpenLogin } from '../../stores/authSlice';
+import { setOpenLogin ,selectOpen} from '../../stores/authSlice';
 import { useDispatch } from 'react-redux';
 import { Loading } from 'react-vant';
 import CourseIcon1 from './courseIcon1.svg';
 import CourseIcon2 from './courseIcon2.svg';
 import CourseIcon3 from './courseIcon3.svg';
 import CourseIcon4 from './courseIcon4.svg';
-import useRequest from '@/libs/request'
+import useRequest from '@/libs/request';
+import {  useSelector } from 'react-redux';
+
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
   height: 6,
@@ -471,7 +473,15 @@ export default function Schedules() {
     const all = addFullStartDate(courseData, weekDate);
     console.log(all, 'courseData');
   }
-
+  const openLogin = useSelector(selectOpen);
+  React.useEffect(()=>{
+    if(openLogin === 'login' || openLogin === 'register'){
+      setDialogVisible(false)
+    }
+    if(openLogin === 'close'){
+      setDialogVisible(true)
+    }
+  },[openLogin])
   React.useEffect(() => {
     if (!data) return;
     if (!data?.data) {
@@ -571,7 +581,7 @@ export default function Schedules() {
     );
   };
   return (
-    <div className="space-y-1 bg-bg">
+    <div className="space-y-1 bg-bg schedule">
       {/* div className="mb-10"> */}
       <Popup
         overlayClass={'Popup'}
@@ -596,7 +606,7 @@ export default function Schedules() {
           dispatch(setOpenLogin('register'));
           // setDialogVisible(false)
         }}
-        className="shadow-xl  backdrop-opacity-50  backdrop-filter backdrop-blur-2xl"
+        className="shadow-xl z-10  backdrop-opacity-50  backdrop-filter backdrop-blur-2xl"
       >
         <div className="text-[#798195] text-sm p-8">
           登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！

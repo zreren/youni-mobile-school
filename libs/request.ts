@@ -48,7 +48,7 @@ const Cons = {
 // const [token, setToken] = useLocalStorage('token', null);
 const instance = axios.create({
   baseURL: Cons.BASEURL,
-  timeout: 1000,
+  timeout: 10000,
   headers:{
     "authorization":typeof window !== 'undefined'?localStorage.getItem('token')?.replace("\"","")?.replace("\"",""):null
   }
