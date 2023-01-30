@@ -124,7 +124,7 @@ export default function Valid() {
   const PhoneValid = (props) => {
     const [count, setTime] = useCountDown({ mss: 60 });
     const [isCodeInput, setCodeInput] = React.useState(false);
-    const [code, setCode] = useState();
+    const [code, setCode] = useState('');
     const ReSentCode = () => {
       return (
         <div className="z-30 w-full h-full p-8 bg-white">
@@ -214,10 +214,10 @@ export default function Valid() {
             placeholder="Type here"
             className="w-full input hover:outline-none"
             onChange={(e) => {
+              setCode(e.target.value);
               e.target.value.length > 3
                 ? setCodeInput(true)
                 : setCodeInput(false);
-              setCode(e.target.value);
             }}
           />
           <div className="w-full text-xs text-right">
