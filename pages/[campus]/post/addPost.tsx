@@ -33,6 +33,8 @@ import Contact from './assets/actives/contact.svg';
 import useRequest from '@/libs/request';
 import useFetch from '@/hooks/useFetch';
 import { NumberKeyboard, hooks, Toast } from 'react-vant';
+import { update } from 'lodash';
+import mapRequest from '@/libs/mapRequest';
 
 export default function addPost() {
   const Footer = () => {
@@ -135,69 +137,65 @@ export default function addPost() {
     'youni:discussion': <Org></Org>,
     'youni:seat': <Org></Org>,
   };
-  /** 活动的动态表单 */
-  // const dynamicForm = [
-  //   {
-  //     type: 'input',
-  //     label: '主办方',
-  //     value: 0,
-  //     dataIndex: 'title',
-  //     Icon: <Org></Org>,
-  //   },
-  //   {
-  //     type: 'time',
-  //     label: '开始时间',
-  //     Icon: <StartTime></StartTime>,
-  //     dataIndex: 'startTime',
-  //   },
-  //   {
-  //     type: 'time',
-  //     label: '结束时间',
-  //     value: new Date(),
-  //     dataIndex: 'endTime',
-  //     Icon: <EndTime></EndTime>,
-  //   },
-  //   {
-  //     type: 'location',
-  //     label: '地点',
-  //     value: new Date(),
-  //     dataIndex: 'location',
-  //     Icon: <EndTime></EndTime>,
-  //   },
-  //   {
-  //     type: 'prices',
-  //     label: '价格',
-  //     value: new Date(),
-  //     dataIndex: 'prices',
-  //     Icon: <EndTime></EndTime>,
-  //   },
-  //   {
-  //     type: 'input',
-  //     label: '报名链接',
-  //     value: new Date(),
-  //     dataIndex: 'link',
-  //     Icon: <EndTime></EndTime>,
-  //   },
-  //   {
-  //     type: 'input',
-  //     label: '联系方式',
-  //     value: new Date(),
-  //     dataIndex: 'contact',
-  //     Icon: <EndTime></EndTime>,
-  //   },
-  //   {
-  //     type: 'Switch',
-  //     label: '地图',
-  //     dataIndex: 'map',
-  //     Icon: <EndTime></EndTime>,
-  //   },
-  // ];
-
   const [title, setTitle] = React.useState('');
   const [content, setContent] = React.useState('');
   const [form] = Form.useForm();
   const [type, setType] = React.useState(headerMenuList[0].key);
   const [previews, setPreviews] = React.useState([]);
+  const getCurrentLocation = async () => {
+    // const BASEURL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'
+    const TOKEN =
+      'pk.eyJ1IjoieW91bmljbHViIiwiYSI6ImNsY2M5ZHVydDNqdTAzeGxrazJuNzhzbWoifQ.wWLnf7hdCNENhcFEuY3vPw';
+    let location;
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      console.log(position.coords.latitude, position.coords.longitude);
+      const theLocation = `${position.coords.longitude},${position.coords.latitude}`;
+      // const res = await fetch(`${BASEURL}${theLocation}.json?access_token=${TOKEN}`)
+      const { data } = await mapRequest.get(
+        `geocoding/v5/mapbox.places/${theLocation}.json?access_token=${TOKEN}`,
+      );
+      // console.log(res,"res")
+      form.setFieldValue('location', data?.features[0].place_name);
+      // return  await fetch(`${BASEURL}${theLocation}.json?access_token=${TOKEN}`)
+    });
+  };
+  // useEffect(()=>{
+  //   // if(form.get){
+  //     getCurrentLocation();
+  //   // }
+  // },[])
+  const PickLocation = () => {
+    const getCurrentLocation = async () => {
+      // const BASEURL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'
+      const TOKEN =
+        'pk.eyJ1IjoieW91bmljbHViIiwiYSI6ImNsY2M5ZHVydDNqdTAzeGxrazJuNzhzbWoifQ.wWLnf7hdCNENhcFEuY3vPw';
+      let location;
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        console.log(position.coords.latitude, position.coords.longitude);
+        const theLocation = `${position.coords.longitude},${position.coords.latitude}`;
+        // const res = await fetch(`${BASEURL}${theLocation}.json?access_token=${TOKEN}`)
+        const { data } = await mapRequest.get(
+          `geocoding/v5/mapbox.places/${theLocation}.json?access_token=${TOKEN}`,
+        );
+        // console.log(res,"res")
+        form.setFieldValue('location', data?.features[0].place_name);
+        // return  await fetch(`${BASEURL}${theLocation}.json?access_token=${TOKEN}`)
+      });
+    };
+    useEffect(() => {
+      getCurrentLocation()
+    }, []);
+    return (
+      <div
+        onClick={() => {
+          getCurrentLocation();
+        }}
+      >
+         {form.getFieldValue('location') || 'locate...'}
+      </div>
+    );
+  };
+   {/* <PickLocation></PickLocation> */}
   const customComponents = {
     input: <Input placeholder="请输入"></Input>,
     time: (
@@ -205,11 +203,7 @@ export default function addPost() {
         {(val: Date) => (val ? val.toDateString() : '请选择日期')}
       </DatetimePicker>
     ),
-    location: (
-      <div className="flex flex-col justify-end">
-        <Input placeholder="请输入"></Input>
-        <Input placeholder="请输入"></Input>
-      </div>
+    location: (  <PickLocation></PickLocation>
     ),
     prices: (
       <div>{form.getFieldValue('prices')?.text}</div>
