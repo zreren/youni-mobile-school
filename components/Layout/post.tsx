@@ -207,9 +207,15 @@ function index(props) {
           {data?.data?.title}
         </div>
         <div className="flex items-end mt-2 space-x-1 text-sm">
-          <div className="text-2xl font-bold text-price"> 200</div>
-          <div className="text-sm text-price">CAD</div>
-          <div className="text-sm text-priceGray dele">348CAD</div>
+          <div className="text-2xl font-bold text-price">
+            {!data?.data?.form?.prices?null:data?.data?.form?.prices?.text === "0"? "免费":
+            data?.data?.form?.prices?.text
+            }
+            </div>
+          <div className="text-sm text-price">{!data?.data?.form?.prices?null:data?.data?.form?.prices?.text === "0"?null:
+          data?.data?.form?.prices?.priceUnit
+          }</div>
+          <div className="text-sm text-priceGray dele">{!data?.data?.form?.prices?null:data?.data?.form?.prices?.text === "0"?null:data?.data?.form?.prices?.showOldPrice?data?.data?.form?.prices?.oldPrice:null}</div>
         </div>
         <div className="mt-4 post-content">{data?.data?.body}</div>
         <div className="flex items-center space-x-1">

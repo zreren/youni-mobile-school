@@ -4,6 +4,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import classnames from 'classnames';
+import { Dialog } from 'react-vant';
 const AntTabs = styled(Tabs)({
   borderBottom: '1px solid #e8e8e8',
   '& .MuiTabs-indicator': {
@@ -125,8 +126,18 @@ export default function CustomizedTabs(props) {
   const [value, setValue] = React.useState(id);
   const { headerMenuList, className } = props;
   const handleChange = (newValue: number) => {
-    setValue(newValue);
-    props.change(newValue);
+    Dialog.confirm({
+      title: '切换分类',
+      message: '切换分类将导致部分自定义参数重置，确定要进行分类切换吗？',
+    })
+      .then(() => {
+        setValue(newValue);
+        props.change(newValue);
+      })
+      .catch(() => {
+        console.log('catch');
+      });
+   
 
   };
   React.useEffect(() => {

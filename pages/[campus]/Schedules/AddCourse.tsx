@@ -408,7 +408,6 @@ export default function AddSchedule() {
       return `${timeStr}-${endTimeStr}`
     }
     const submitForm = async (values: any) => {
-
       const requestQueen = dayOfWeek.map((item) => {
         return submitCourse({
           ...values,
@@ -417,7 +416,9 @@ export default function AddSchedule() {
         });
       });
       Promise.all(requestQueen).then((res)=>{
-        Toast.success('添加成功');
+        // if(res.)
+        console.log(res,"requestQueen")
+        // Toast.success(res);
       }).catch((err)=>{
         Toast.fail('添加失败');
       })

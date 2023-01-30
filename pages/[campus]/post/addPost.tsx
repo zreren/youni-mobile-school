@@ -168,21 +168,16 @@ export default function addPost() {
     const [localList, setLocalList] = useState([]);
     const [local, setLocal] = useState(false);
     const getCurrentLocation = async () => {
-      // const BASEURL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'
       const TOKEN =
         'pk.eyJ1IjoieW91bmljbHViIiwiYSI6ImNsY2M5ZHVydDNqdTAzeGxrazJuNzhzbWoifQ.wWLnf7hdCNENhcFEuY3vPw';
-      let location;
       navigator.geolocation.getCurrentPosition(async (position) => {
         console.log(position.coords.latitude, position.coords.longitude);
         const theLocation = `${position.coords.longitude},${position.coords.latitude}`;
-        // const res = await fetch(`${BASEURL}${theLocation}.json?access_token=${TOKEN}`)
         const { data } = await mapRequest.get(
           `geocoding/v5/mapbox.places/${theLocation}.json?access_token=${TOKEN}`,
         );
-        // console.log(res,"res")
-        form.setFieldValue('location', data?.features[0].text);
+        form.setFieldValue('location', data?.features[0].place_name);
         setLocalList(data?.features);
-        // return  await fetch(`${BASEURL}${theLocation}.json?access_token=${TOKEN}`)
       });
     };
     useEffect(() => {
@@ -338,21 +333,21 @@ export default function addPost() {
   }
   const submitPost = async (form, draft) => {
     console.log(form, 'form');
-    if (
-      !Object.keys(form).some((element) => {
-        if (
-          form[element] === '' ||
-          form[element] === null ||
-          form[element] === undefined ||
-          !form[element]
-        ) {
-          Toast.fail('请完善表单');
-          return false;
-        }
-      })
-    ) {
-      return;
-    }
+    // if (
+    //   !Object.keys(form).some((element) => {
+    //     if (
+    //       form[element] === '' ||
+    //       form[element] === null ||
+    //       form[element] === undefined ||
+    //       !form[element]
+    //     ) {
+    //       Toast.fail('请完善表单');
+    //       return true;
+    //     }
+    //   })
+    // ) {
+    //   return false;
+    // }
     // form?.forEach((element) => {
     //   if (element === '' || element === null || !element) {
     //     Toast.fail('请完善表单');
@@ -384,16 +379,16 @@ export default function addPost() {
   };
   const changeCategory = (val) => {
     // console.log(val, 'changeCategory');
-    Dialog.confirm({
-      title: '切换分类',
-      message: '切换分类将导致部分自定义参数重置，确定要进行分类切换吗？',
-    })
-      .then(() => {
+    // Dialog.confirm({
+    //   title: '切换分类',
+    //   message: '切换分类将导致部分自定义参数重置，确定要进行分类切换吗？',
+    // })
+      // .then(() => {
         setType(val);
-      })
-      .catch(() => {
-        console.log('catch');
-      });
+      // })
+      // .catch(() => {
+      //   console.log('catch');
+      // });
   };
   useEffect(() => {
     mutate();
