@@ -143,7 +143,6 @@ export default function addPost() {
   const [type, setType] = React.useState(headerMenuList[0].key);
   const [previews, setPreviews] = React.useState([]);
   const getCurrentLocation = async () => {
-    // const BASEURL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'
     const TOKEN =
       'pk.eyJ1IjoieW91bmljbHViIiwiYSI6ImNsY2M5ZHVydDNqdTAzeGxrazJuNzhzbWoifQ.wWLnf7hdCNENhcFEuY3vPw';
     let location;
@@ -155,16 +154,19 @@ export default function addPost() {
         `geocoding/v5/mapbox.places/${theLocation}.json?access_token=${TOKEN}`,
       );
       // console.log(res,"res")
-      form.setFieldValue('location', data?.features[0].place_name);
+      form.setFieldValue('location', data?.features[0].text);
+      // setLocalList(data?.features);
       // return  await fetch(`${BASEURL}${theLocation}.json?access_token=${TOKEN}`)
     });
   };
-  // useEffect(()=>{
-  //   // if(form.get){
-  //     getCurrentLocation();
-  //   // }
-  // },[])
+  useEffect(() => {
+    // if(form.get){
+    getCurrentLocation();
+    // }
+  }, []);
   const PickLocation = () => {
+    const [localList, setLocalList] = useState([]);
+    const [local, setLocal] = useState(false);
     const getCurrentLocation = async () => {
       // const BASEURL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'
       const TOKEN =
@@ -178,24 +180,80 @@ export default function addPost() {
           `geocoding/v5/mapbox.places/${theLocation}.json?access_token=${TOKEN}`,
         );
         // console.log(res,"res")
-        form.setFieldValue('location', data?.features[0].place_name);
+        form.setFieldValue('location', data?.features[0].text);
+        setLocalList(data?.features);
         // return  await fetch(`${BASEURL}${theLocation}.json?access_token=${TOKEN}`)
       });
     };
     useEffect(() => {
-      getCurrentLocation()
-    }, []);
+      getCurrentLocation();
+    }, [navigator.geolocation]);
     return (
-      <div
-        onClick={() => {
-          getCurrentLocation();
-        }}
-      >
-         {form.getFieldValue('location') || 'locate...'}
+      <div>
+        <div
+          onClick={() => {
+            setLocal(true);
+          }}
+        >
+          {form.getFieldValue('location') || 'locate...'}
+        </div>
+        <div>
+          <SwipeableDrawer
+            className="z-20"
+            disableDiscovery={true}
+            disableSwipeToOpen={true}
+            onClose={() => {
+              setLocal(false);
+            }}
+            onOpen={() => {}}
+            open={local}
+            anchor="bottom"
+          >
+            <div className="h-[96vh]">
+              <Puller></Puller>
+              {/* <SignIn></SignIn> */}
+              <div className="p-5">
+                <div
+                  className="w-full flex items-center min-h-[60px]"
+                  onClick={() => {
+                    form.setFieldValue('location', 'none');
+                    setLocal(false);
+                  }}
+                >
+                  <div className="text-gray-500 font-semibold text-sm">
+                    不显示
+                  </div>
+                </div>
+                <div className="h-1 m-0 divider opacity-30"></div>
+                {localList?.map((item) => {
+                  return (
+                    <div
+                      className="w-full flex flex-col justify-center  min-h-[60px]"
+                      onClick={() => {
+                        form.setFieldValue('location', item.place_name);
+                        setLocal(false);
+                      }}
+                    >
+                      <div className="text-gray-500 font-semibold text-sm">
+                        {item.text}
+                      </div>
+                      <div className="text-gray-400 font-medium text-sm">
+                        {item.place_name}
+                      </div>
+                      <div className="h-1 m-0 divider opacity-30"></div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </SwipeableDrawer>
+        </div>
       </div>
     );
   };
-   {/* <PickLocation></PickLocation> */}
+  {
+    /* <PickLocation></PickLocation> */
+  }
   const customComponents = {
     input: <Input placeholder="请输入"></Input>,
     time: (
@@ -203,8 +261,7 @@ export default function addPost() {
         {(val: Date) => (val ? val.toDateString() : '请选择日期')}
       </DatetimePicker>
     ),
-    location: (  <PickLocation></PickLocation>
-    ),
+    location: <PickLocation></PickLocation>,
     prices: (
       <div>{form.getFieldValue('prices')?.text}</div>
       // <Form.Item name="text" key="text" valuePropName="text">
