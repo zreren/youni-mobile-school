@@ -27,7 +27,7 @@ export default function account() {
       action: <InputSelect label={user?.student.email}></InputSelect>,
     },
     {
-      title: '密码',
+      title: '性别',
       intro: '',
       action: <RightIcon></RightIcon>,
     },
