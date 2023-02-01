@@ -8,6 +8,7 @@ export default function SaveToLibButton(props) {
   const MyButton = styled(Button)(({ theme }) => ({
     backgroundColor: color + '!important',
     boxShadow: 'none',
+    height:40,
     '&:hover': {
       backgroundColor: color,
       borderColor: '#0062cc',
@@ -19,9 +20,9 @@ export default function SaveToLibButton(props) {
       <MyButton
         startIcon={<Icon type={icon} />}
         variant="contained"
-        className={classnames('w-full h-10 btn')}
+        className={classnames('w-full h-10 ')}
       >
-        {title}
+       <span className='font-semibold'> {title}</span>
       </MyButton>
     </div>
   );

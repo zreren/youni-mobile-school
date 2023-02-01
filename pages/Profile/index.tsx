@@ -183,10 +183,12 @@ const Setting = () => {
             <SettingIcon7></SettingIcon7>
             <div className="text-xs text-[#798195]">我的积分</div>
           </div>
+          <Link href="/Setting/contact">
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon8></SettingIcon8>
             <div className="text-xs text-[#798195]">联系方式</div>
           </div>
+          </Link>
         </div>
         <div className="grid grid-cols-4">
           <div className="flex flex-col items-center space-y-3">
