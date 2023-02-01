@@ -50,7 +50,7 @@ export default function account() {
     },
   ];
   return (
-    <CommonLayout className="overflow-hidden">
+    <CommonLayout className="overflow-hidden bg-white">
       <Header title="账号"></Header>
       <Form header="账号信息" List={List1}></Form>
       <Form header="绑定信息" List={List2}></Form>

@@ -126,7 +126,7 @@ export default function index() {
     },
   ];
   return (
-    <CommonLayout className="overflow-hidden">
+    <CommonLayout className="overflow-hidden bg-white">
       <Header title="Setting"></Header>
       <Form header="Account" List={List1}></Form>
       <Form header="Content" List={List2}></Form>

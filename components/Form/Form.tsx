@@ -13,7 +13,7 @@ export default function Form(props) {
     ];
   }
   return (
-    <div className="w-full h-full p-4">
+    <div className="w-full h-full p-0">
       <div className="mb-4 text-xs text-gray-300">{header}</div>
       {List?.map((item, index) => {
         const Icon = item.Icon;
@@ -22,15 +22,15 @@ export default function Form(props) {
             <div className="flex justify-between">
               <div className="flex space-x-2">
                  {item.Icon ? <Icon className="mt-1"></Icon> : null}
-                <div className="mb-2 text-gray-500">{item.title}</div>
+                <div className="mb-2 text-sm font-medium text-[#798195]">{item.title}</div>
               </div>
-              <div>{item.action}</div>
+              <div className='text-sm'>{item.action}</div>
             </div>
-            <div className="text-xs text-gray-300">{item.intro}</div>
+            <div className="text-xs text-[#DCDDE1 ]">{item.intro}</div>
           </div>
         );
       })}
-      <div className="h-1 m-0 divider opacity-30"></div>
+      <div className="h-1 m-0 divider opacity-30 mb-4"></div>
     </div>
   );
 }
