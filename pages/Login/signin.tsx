@@ -29,7 +29,7 @@ import useSWR from 'swr';
 import prefixSorted from '../../libs/phone';
 import useLocalStorage from '@/hooks/useStore';
 import useRequest from '@/libs/request';
-import { Popup } from 'react-vant';
+import { Popup, Toast } from 'react-vant';
 import { setOpenLogin } from '../../stores/authSlice';
 import SignUp from './signup';
 // import { useDispatch } from 'react-redux';
@@ -38,20 +38,29 @@ export default function SignIn(props) {
   const [myItem, setMyItem] = useLocalStorage('token', null);
   const route = useRouter();
   // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const login = async (way: string, form: any) => {
-    const { data } = await useRequest.post(`/api/student/password_login`, {
-      account: form.mail,
-      password: form.password,
-    });
-    console.log(data, 'data');
-    if (data.code === 200) {
-      if (data.data.token) {
-        setMyItem(data.data.token);
-        route.push('/Profile', undefined, { shallow: true });
-        route.reload();
-        dispatch(setOpenLogin('close'));
+    try {
+      const { data } = await useRequest.post(`/api/student/password_login`, {
+        account: form.mail,
+        password: form.password,
+      });
+      console.log(data, 'data');
+      if (data.code === 200) {
+        if (data.data.token) {
+          Toast.success('登录成功')
+          setMyItem(data.data.token);
+          route.push('/Profile', undefined, { shallow: true });
+          route.reload();
+          dispatch(setOpenLogin('close'));
+        }
+      }else{
+        Toast.fail(`登录失败${data.message}`)
       }
+    } catch (error) {
+      Toast.fail(`登录失败${error}`)
     }
+   
   };
 
   const SignUpButton = (props) => {
@@ -170,11 +179,13 @@ export default function SignIn(props) {
               login('mail', form);
             }}
             className={classnames(
-              'w-full bg-[#F7F8F9] text-[#A9B0C0] border-0 rounded-full btn',
+              'w-full bg-[#F7F8F9]  border-0 rounded-full btn',
               {
                 'bg-yellow-400 hover:bg-yellow-400 text-[#8C6008]':
                   form.mail.length > 1 && form.password.length > 1,
-              },
+              },{
+                'bg-[#F7F8F9] hover:bg-[#F7F8F9] text-[#798195]':  form.mail.length <= 1 && form.password.length <= 1,
+              }
             )}
           >
             Log in
@@ -442,7 +453,6 @@ export default function SignIn(props) {
   const [role, selectRole] = useState('Student');
   const ProgressList = [SelectSignUpWay, ChooseYourRole, Forget];
   const Node = ProgressList[progress];
-  const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(setAuthState(false));
   }, []);
