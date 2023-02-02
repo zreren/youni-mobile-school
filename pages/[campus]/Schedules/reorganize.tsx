@@ -66,7 +66,6 @@ export default function reorganize() {
               multiple
               upload={upload}
               maxCount={1}
-              className="w-full h-full "
               maxSize={2500 * 1024}
               onOversize={() => Toast.info('文件大小不能超过15kb')}
             />
