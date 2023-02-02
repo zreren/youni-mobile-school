@@ -12,10 +12,16 @@ import useRequest from '@/libs/request';
 import { useRouter } from 'next/router';
 import { Toast } from 'react-vant';
 export default function ProfileHeader(props) {
-  const {data,myProfile,mutate} = props;
+  const {myProfile,mutate} = props;
+  const data = {
+    student: props.data,
+  }
   const router = useRouter();
   const UserData = (props) => {
     const {data} = props;
+    // const data = {
+    //   student: props.data,
+    // }
     const follow = async (id:number):Promise<void>=>{
       const {data} = await useRequest.post('/api/friend/follow',{studentId:id});
       console.log(data,"data")
@@ -52,7 +58,7 @@ export default function ProfileHeader(props) {
             </svg>
           </div>
           <div className="flex flex-col items-center">
-            <div className="font-bold text-blueTitle">{data?.student?.extraInfo?.followers || data?.extraInfo?.followers}</div>
+            <div className="font-bold text-blueTitle">{data?.student?.extraInfo?.followers || data?.extraInfo?.followers || 0}</div>
             <div className="text-xs text-gray-400">粉丝</div>
           </div>
           <div>

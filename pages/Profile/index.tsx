@@ -276,7 +276,7 @@ function index(props) {
           </div>
         ) : (
           <Waterfall postData={data?.data.map((item) => {
-            return { ...item, student: { nickName: user.student.nickName } }
+            return { ...item, student: { nickName: user.nickName } }
           })}></Waterfall>
         )}
       </div>
