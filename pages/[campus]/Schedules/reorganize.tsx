@@ -37,39 +37,39 @@ export default function reorganize() {
   };
   const upload = async (file: File) => {
     try {
-      const body = new FormData()
-      body.append('source', file)
+      const body = new FormData();
+      body.append('source', file);
       const resp = await fetch('', {
         method: 'POST',
         body,
-      })
-      const json = await resp.json()
+      });
+      const json = await resp.json();
       // return包含 url 的一个对象 例如: {url:'https://img.yzcdn.cn/vant/sand.jpg'}
-      return json.image
+      return json.image;
     } catch (error) {
-      return { url: `demo_path/${file.name}` }
+      return { url: `demo_path/${file.name}` };
     }
-  }
+  };
   return (
     <div className="w-full min-h-screen bg-[#F6F6F6]">
       <Header title="一键导入课表"></Header>
       <div className="p-4 space-y-4">
         <CCourseInput isNess title="学年&学期"></CCourseInput>
-        <div className="h-[170px] w-full bg-white p-3 rounded-lg">
-          <div className='text-[#37455C] text-sm font-medium'>上传课表图片</div>
-          <div className='text-xs text-[#A9B0C0] mt-2'>
+        <div className="h-[170px] preview w-full bg-white p-3 rounded-lg">
+          <div className="text-[#37455C] text-sm font-medium">上传课表图片</div>
+          <div className="text-xs text-[#A9B0C0] mt-2">
             上传清晰，图片内仅包含课表主要内容的图片，可以大
             大提升识别成功率哦！
           </div>
-          <div className='mt-2'>
-          <Uploader
-                multiple
-                upload={upload}
-                maxCount={1}
-                className="w-full h-full "
-                maxSize={2500 * 1024}
-                onOversize={() => Toast.info('文件大小不能超过15kb')}
-              />
+          <div className="mt-2 preview">
+            <Uploader
+              multiple
+              upload={upload}
+              maxCount={1}
+              className="w-full h-full "
+              maxSize={2500 * 1024}
+              onOversize={() => Toast.info('文件大小不能超过15kb')}
+            />
           </div>
         </div>
         <div className="w-full rounded-md h-10 bg-[#FFD036] text-[#8C6008] text-center flex justify-center items-center">

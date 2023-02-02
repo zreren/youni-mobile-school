@@ -735,6 +735,10 @@ export default function addPost() {
           onChange={setContent}
           autoSize={{ minHeight: 180, maxHeight: 180 }}
         />
+        <div className='flex space-x-[10px] mb-2'>
+          <div className='text-[#B38314] rounded bg-[#FFFBD9] px-2 text-xs py-1'># 话题 </div>
+          <div className='text-[#798195] rounded bg-[#F3F4F6] px-2 text-xs py-1'># 约克大学 </div>
+        </div>
       </div>
       <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
       <div className="px-5 mt-4 post-form pb-10">

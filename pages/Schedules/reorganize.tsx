@@ -712,7 +712,7 @@ export default function reorganize() {
               上传清晰，图片内仅包含课表主要内容的图片，可以大
               大提升识别成功率哦！
             </div>
-            <div className="mt-2">
+            <div className="mt-2 preview">
               <Uploader
                 multiple
                 value={image}

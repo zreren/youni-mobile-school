@@ -45,3 +45,9 @@
 .term-pick .rv-input__control{
  text-align: right;   
 }
+
+.preview .rv-image--block{
+    width: none !important;
+    height: none !important;
+    overflow: hidden;
+}
