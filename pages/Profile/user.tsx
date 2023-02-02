@@ -121,7 +121,7 @@ function index(props) {
       <div className="h-full ">
         <Waterfall
           postData={data?.data?.map((item) => {
-            return { ...item, student: { nickName: user.nickName } };
+            return { ...item,  nickName: user.nickName  };
           })}
         ></Waterfall>
       </div>
@@ -140,7 +140,7 @@ function index(props) {
       <div className="w-full">
         <Waterfall
           postData={data?.data?.map((item) => {
-            return { ...item, student: { nickName: user.nickName } };
+            return { ...item, nickName: user.nickName };
           })}
         ></Waterfall>
         {/* {menu === 0 ? (
