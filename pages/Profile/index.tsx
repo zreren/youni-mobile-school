@@ -398,7 +398,7 @@ function index(props) {
 
   return (
     <div className="w-screen min-h-screen">
-      <ProfileHeader data={user}></ProfileHeader>
+      <ProfileHeader data={{student:user}}></ProfileHeader>
       <div className="w-full overflow-hidden rounded-full ">
         {menuVal !== 4 ? (
           <HeaderMenu
