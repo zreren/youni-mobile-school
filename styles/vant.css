@@ -42,3 +42,6 @@
     background: rgba(0, 0, 0, 0.15);
 }
 
+.term-pick .rv-input__control{
+ text-align: right;   
+}
