@@ -258,7 +258,12 @@ export default function addPost() {
     ),
     location: <PickLocation></PickLocation>,
     prices: (
-      <div>{form.getFieldValue('prices')?.text}</div>
+      <div>
+        {form.getFieldValue('prices')?.text === 0 ||
+        form.getFieldValue('prices')?.text === '0'
+          ? '免费'
+          : form.getFieldValue('prices')?.text || '点击输入价格信息'}
+      </div>
       // <Form.Item name="text" key="text" valuePropName="text">
       // <Input placeholder="请输入"></Input>
       // </Form.Item>
@@ -378,17 +383,7 @@ export default function addPost() {
     }
   };
   const changeCategory = (val) => {
-    // console.log(val, 'changeCategory');
-    // Dialog.confirm({
-    //   title: '切换分类',
-    //   message: '切换分类将导致部分自定义参数重置，确定要进行分类切换吗？',
-    // })
-      // .then(() => {
-        setType(val);
-      // })
-      // .catch(() => {
-      //   console.log('catch');
-      // });
+    setType(val);
   };
   useEffect(() => {
     mutate();
@@ -418,15 +413,26 @@ export default function addPost() {
     const { visible, open, close, confirm } = props;
     const [currentInPut, setCurrentInPut] = useState<string>();
     const [state, updateState] = hooks.useSetState({
-      text: '',
-      unit: '',
-      oldPrice: '',
-      showOldPrice: false,
-      service: [],
+      text: form?.getFieldValue('prices')?.text || '',
+      unit:  form?.getFieldValue('prices')?.unit ||'',
+      oldPrice: form?.getFieldValue('prices')?.oldPrice ||'',
+      showOldPrice: form?.getFieldValue('prices')?.showOldPrice ||  false,
+      service:form?.getFieldValue('prices')?.service ||  [],
     });
+    useEffect(() => {
+      console.log(form.getFieldValue('prices'),"form")
+      // updateState({
+      //   text: form.getFieldValue('text'),
+      //   unit: form.getFieldValue('unit'),
+      //   oldPrice: form.getFieldValue('oldPrice'),
+      //   showOldPrice: form.getFieldValue('showOldPrice'),
+      //   service: form.getFieldValue('service'),
+      // });
+    }, [form]);
     const deleteInput = () => {
+      if(!currentInPut) return
       updateState({
-        [currentInPut]: state[currentInPut].slice(
+        [currentInPut]: state[currentInPut]?.slice(
           0,
           state[currentInPut].length - 1,
         ),
@@ -436,6 +442,9 @@ export default function addPost() {
       // Toast.success(v);
       if (v === 'CAD') {
         setPricesUnit('USD');
+      }
+      if(v === 'USD') {
+        setPricesUnit('CAD');
       }
       if (v === '完成') {
         close();
@@ -456,15 +465,15 @@ export default function addPost() {
       { title: '包做饭' },
     ];
     const ServicesItem = (props) => {
-      const { title, defaultSelect } = props;
+      const { title, defaultSelect,change} = props;
       const [select, setSelect] = useState(defaultSelect);
-      // useEffect(() => {
-      //   if (select) {
-      //     props.change(title);
-      //   } else {
-      //     props.remove(title);
-      //   }
-      // }, [select]);
+      useEffect(() => {
+        if(select) {
+          props.change(title)
+        }else{
+          props.remove(title)
+        }
+      },[select])
       return (
         <div
           onClick={() => {
@@ -519,8 +528,9 @@ export default function addPost() {
                       }}
                       type={'number'}
                       value={state.text}
+                      readOnly
                       onChange={(text) => updateState({ text })}
-                      placeholder="输入价格"
+                      placeholder={currentInPut === 'text' ? '|' : '输入价格'}
                       className="text-lg"
                     />
                   </div>
@@ -550,7 +560,7 @@ export default function addPost() {
                         <Field
                           readOnly
                           clickable
-                          value={val || ''}
+                          value={_?.text || ''}
                           placeholder="选择单位"
                           onClick={() => actions.open()}
                         />
@@ -574,8 +584,11 @@ export default function addPost() {
                       }}
                       type={'number'}
                       value={state.oldPrice}
+                      readOnly
                       onChange={(text) => updateState({ oldPrice: text })}
-                      placeholder="输入原价"
+                      placeholder={
+                        currentInPut === 'oldPrice' ? '|' : '输入原价'
+                      }
                       className="text-lg text-[#798195]"
                     />
                   </div>
@@ -590,6 +603,7 @@ export default function addPost() {
                   onChange={(val) => {
                     updateState({ showOldPrice: val });
                   }}
+                  checked={state.showOldPrice}
                   activeColor="#FFD036"
                   size={20}
                   inactiveColor="#dcdee0"
@@ -608,7 +622,7 @@ export default function addPost() {
                     <ServicesItem
                       title={item.title}
                       defaultSelect={
-                        state.service.indexOf(item.title) > -1 ? true : false
+                        state.service?.indexOf(item.title) > -1 ? true : false
                       }
                       remove={(e) => {
                         updateState({
@@ -619,39 +633,12 @@ export default function addPost() {
                       }}
                       change={(e) => {
                         updateState({
-                          service: [...new Set(...state.service, e)],
+                          service: [...new Set(state.service), e],
                         });
                       }}
                     ></ServicesItem>
                   );
                 })}
-                {/* <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
-                  包水
-                </div>
-                <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
-                  包电
-                </div>
-                <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
-                  包网
-                </div>
-                <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
-                  包气
-                </div>
-                <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
-                  含管理费
-                </div>
-                <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
-                  包铲雪
-                </div>
-                <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
-                  包除草
-                </div>
-                <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
-                  包清洁
-                </div>
-                <div className="bg-bg m-1 text-xs font-light h-6 px-1 py-1  rounded">
-                  包做饭
-                </div> */}
               </div>
             </div>
           </div>
