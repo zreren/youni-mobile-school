@@ -15,15 +15,15 @@ export default function PostDiscussionInput() {
   return (
     <div className="flex w-full h-9" onClick={()=>{callLogin()}}>
       <div className="rounded-full w-9 min-w-[2.25rem] h-9 bg-slate-400">
-        {user?.student.avatar ? (
+        {user?.avatar ? (
           <Image
             placeholder="blur"
             objectFit="cover"
             className='rounded-full'
-            blurDataURL={`${Cons.BASEURL}${user?.student.avatar }`}
+            blurDataURL={`${Cons.BASEURL}${user?.avatar }`}
             width={'80px'}
             height={'80px'}
-            src={`${Cons.BASEURL}${user?.student.avatar }`}
+            src={`${Cons.BASEURL}${user?.avatar }`}
           />
         ) : (
           <span className="text-3xl"></span>

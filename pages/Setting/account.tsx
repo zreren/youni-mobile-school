@@ -19,12 +19,12 @@ export default function account() {
     {
       title: '账号',
       intro: '',
-      action: <InputSelect label={user?.student.no}></InputSelect>,
+      action: <InputSelect label={user?.no}></InputSelect>,
     },
     {
       title: 'Email',
       intro: '',
-      action: <InputSelect label={user?.student.email}></InputSelect>,
+      action: <InputSelect label={user?.email}></InputSelect>,
     },
     {
       title: '性别',
