@@ -173,32 +173,32 @@ export default function reorganize() {
   };
   const [image, setImage] = React.useState<any>();
   const CCourseColor = ({ setColor }) => {
-    const [select, setSelect] = useState(1);
+    const [select, setSelect] = useState(0);
     const colorList = [
       {
         light: '#D9E7FF',
         dark: '#3A66FF',
-        id: 1,
+        id: 0,
       },
       {
         light: '#FFE7E3',
         dark: '#FF8A00',
-        id: 2,
+        id: 1,
       },
       {
         light: '#FFF0D6',
         dark: '#FFB800',
-        id: 3,
+        id: 2,
       },
       {
         light: '#FFFBD9',
         dark: '#FFD800',
-        id: 4,
+        id: 3,
       },
       {
         light: '#E7CCFF',
         dark: '#A800FF',
-        id: 5,
+        id: 4,
       },
     ];
     useEffect(() => {
@@ -268,7 +268,7 @@ export default function reorganize() {
     const { name, dayOfWeek: dayOfWeeksItem,sectionName,mode,classroom,time:courseTime,id} = data;
     const timeSpirit = useMemo(()=>{
       console.log(courseTime,"courseTime")
-        const pattern = /^(\d{2}:\d{2})-(\d{2}:\d{2})$/;
+        const pattern =  /^(\d{1,2}:\d{2})-(\d{1,2}:\d{2})$/;
         const match = courseTime?.match(pattern);
         console.log(match,"match")
         if (!match) return;

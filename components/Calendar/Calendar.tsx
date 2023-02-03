@@ -106,7 +106,7 @@ function Calendar(props) {
                 </div> */}
             </div>
             <div className="text-xs text-[#798195]">
-              {students?.length}名同学
+              {students?.length > 0?`${students?.length}名同学`:null}
             </div>
           </div>
         </div>

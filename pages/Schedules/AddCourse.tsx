@@ -571,7 +571,7 @@ export default function AddSchedule() {
         <CCourseInput
           title="课程形式"
           change={(val) => {
-            // handleChange(val.label, 'name');
+            handleChange(val.label, 'name');
           }}
           data={courseFormat?.mode}
           renderData={courseFormat?.mode?.map(

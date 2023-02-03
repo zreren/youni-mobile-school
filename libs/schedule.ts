@@ -74,10 +74,11 @@ function getCourses(
   const weekNum = getWeekNum(startTime, endTime);
   // 计算最近一周的周数
   const recentWeekNum = weekNum % 2 === 0 ? weekNum - 1 : weekNum;
+  console.log((recentWeekNum % 2) + 2,"recentWeekNum")
   // 过滤出最近一周的课程
   const recentCourses = coursesData?.filter((courseData) => {
-    if (courseData.period === 0) return true;
-    return courseData.period === (recentWeekNum % 2) + 1;
+    // if (courseData.period === 0) return true;
+    return courseData.period === (recentWeekNum % 2) + 2 || courseData.period === 0;
   });
   return recentCourses;
 }

@@ -82,19 +82,29 @@ export default function Schedules() {
     const { event, borderColor } = props;
     const [token, setToken] = useLocalStorage('token', '');
     const deleteCURRICULUM = async (id: number) => {
-      const { data } = await useRequest.post(
-        `/api${Cons.API.CURRICULUM.DELETE}`,
-        {
-          id: Number(id),
-        },
-      );
-      if (data.message === 'success') {
-        props.setVisible(false);
-        Toast.success('删除成功');
-        mutate();
-      } else {
-        Toast.fail('删除失败');
-      }
+      Dialog.confirm({
+        title: '删除课程',
+        message: '确定删除该课程吗？',
+      })
+        .then(async () => {
+          const { data } = await useRequest.post(
+            `/api${Cons.API.CURRICULUM.DELETE}`,
+            {
+              id: Number(id),
+            },
+          );
+          if (data.message === 'success') {
+            props.setVisible(false);
+            Toast.success('删除成功');
+            mutate();
+          } else {
+            Toast.fail('删除失败');
+          }
+        })
+        .catch(() => {
+          console.log('catch');
+        });
+
     };
     if (!event) return;
     const { title, extendedProps } = event;
@@ -156,7 +166,7 @@ export default function Schedules() {
                     })}
                 </div>
                 <div className="text-xs text-[#798195]">
-                  {extendedProps?.section?.students.length} 名同学
+                  {extendedProps?.section?.students.length > 0? `${extendedProps?.section?.students.length}名同学`:null} 
                 </div>
               </div>
             </div>
@@ -183,6 +193,13 @@ export default function Schedules() {
                 className="flex flex-col items-center space-y-2"
                 onClick={() => {
                   const campus = router.query.campus;
+                  if(!extendedProps?.section?.course?.id){
+                    Dialog.alert({
+                      message:'该课程为自定义课程'
+                    })
+                    return
+                    // Toast.fail('该课程为自定义课程')
+                  }
                   console.log(
                     extendedProps?.section?.course?.id,
                     'extendedProps?.section[0]?.course?.id',
@@ -203,7 +220,21 @@ export default function Schedules() {
                 </div>
                 <div className="text-xs text-[#798195]">课程详情</div>
               </div>
-              <div className="flex flex-col items-center space-y-2">
+              <div 
+              onClick={()=>{
+                if(!extendedProps?.section?.course?.id){
+                  Dialog.alert({
+                    message:'该课程为自定义课程'
+                  })
+                  return
+                  // Toast.fail('该课程为自定义课程')
+                }
+                router.push({
+                  pathname: '/[campus]/Course/evaluation',
+                  query: { campus: 'York' },
+                });
+              }}
+              className="flex flex-col items-center space-y-2">
                 <div className="flex flex-col avatar placeholder">
                   <div className="bg-[#F7F8F9]  rounded-full text-neutral-content w-14">
                     <CourseIcon2></CourseIcon2>
@@ -219,7 +250,14 @@ export default function Schedules() {
               {/*   </div> */}
               {/*   <div className="text-xs text-[#798195]">课程评价</div> */}
               {/* </div> */}
-              <div className="flex flex-col items-center space-y-2">
+              <div
+              onClick={()=>{
+                router.push({
+                  pathname: '/Schedules/editCourse',
+                  query: { id: event.id },
+                })
+              }}
+              className="flex flex-col items-center space-y-2">
                 <div className="flex flex-col avatar placeholder">
                   <div className="bg-[#F7F8F9] rounded-full text-neutral-content w-14">
                     <CourseIcon3></CourseIcon3>
