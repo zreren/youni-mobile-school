@@ -7,6 +7,7 @@ import { useState } from 'react';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { styled } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
+import { Swiper } from 'react-vant';
 import classnames from 'classnames';
 import Header from '@/components/Header';
 import { useDispatch, useSelector } from 'react-redux';
@@ -46,14 +47,14 @@ const PostDetail = (props) => {
 };
 
 const RedCountyList = (props) => {
-  const { arg ,data,otherData} = props;
+  const { arg, data, otherData } = props;
   const [select, setSelect] = useState('Canada');
   const CountryButton = (props1) => {
-    const { title ,id } = props1;
+    const { title, id } = props1;
     return (
       <div
         onClick={() => {
-          props.setCountryId(id)
+          props.setCountryId(id);
           props.setVisible(false);
           props.setSelectSchool(true);
         }}
@@ -95,45 +96,49 @@ const RedCountyList = (props) => {
               <div className="z-50 grid grid-cols-3 gap-2 pt-2">
                 {data?.map((item) => {
                   return (
-                      <CountryButton id={item.id} title={item.name}></CountryButton>
-                  )
+                    <CountryButton
+                      id={item.id}
+                      title={item.name}
+                    ></CountryButton>
+                  );
                 })}
-
               </div>
             </div>
           </div>
-          {
-            otherData?.map((item)=>{
-              return (
-                <div className="w-full h-auto overflow-visible bg-white card">
+          {otherData?.map((item) => {
+            return (
+              <div className="w-full h-auto overflow-visible bg-white card">
                 <div className="relative w-full h-full p-4">
                   <div className="text-base font-medium ">{item.name}</div>
                   <div className="z-50 grid grid-cols-3 gap-2 pt-2">
-                    {item.countries.map((item)=>{
-                        return (
-                          <CountryButton title={item.name} id={item.id}></CountryButton>
-                        )
+                    {item.countries.map((item) => {
+                      return (
+                        <CountryButton
+                          title={item.name}
+                          id={item.id}
+                        ></CountryButton>
+                      );
                     })}
                   </div>
                 </div>
               </div>
-              )
-            }
-          )}
-         
+            );
+          })}
         </div>
       </SwipeableDrawer>
     </div>
   );
 };
 
-
 function SchoolPage(props) {
   console.log(props, 'SchoolPage');
   const [isSelect, setIsSelect] = useState(false);
   const [schoolSelect, setSelectSchool] = useState(false);
   const [postDetailShow, setPostDetailShow] = useState(false);
-  const [campusIdMap, setCampusIdMap] = useLocalStorage(props?.post?.alias, props?.post?.id);
+  const [campusIdMap, setCampusIdMap] = useLocalStorage(
+    props?.post?.alias,
+    props?.post?.id,
+  );
   // const [postData, setPostData] = useState({});
   const dispatch = useDispatch();
   const headerMenuList = [
@@ -177,13 +182,20 @@ function SchoolPage(props) {
       }, 1000);
     });
   };
-  const {data:hotCountryList,error:hotCountryListError} = useFetch('/country/hot','get');
-  const {data:otherCountryList,error:otherCountryListError} = useFetch('/country/query_by_area','get');
+  const { data: hotCountryList, error: hotCountryListError } = useFetch(
+    '/country/hot',
+    'get',
+  );
+  const { data: otherCountryList, error: otherCountryListError } = useFetch(
+    '/country/query_by_area',
+    'get',
+  );
   const [loading, setLoading] = useState(true);
   const [imageSize, setSmageSize] = React.useState({
     width: '1000%',
     height: '0rem',
-  })
+  });
+
   const router = useRouter();
   const [category, setCategory] = useState('idle');
   // useEffect(() => {
@@ -191,6 +203,9 @@ function SchoolPage(props) {
     `/post/home_list?type=${category}`,
     'get',
   );
+  // const {data:carouselData} = useFetch('/campus/carousel/list','get',{
+  //   campusId: campusIdMap
+  // })
 
   React.useEffect(() => {
     setCampusIdMap(props?.post?.id);
@@ -201,23 +216,27 @@ function SchoolPage(props) {
   }, []);
   const [countryId, setCountryId] = useState();
   const SchoolList = (props) => {
-    const { arg ,countryId } = props;
+    const { arg, countryId } = props;
     const [select, setSelect] = useState();
-    const {data:countryData,mutate} = useFetch('/country/campus','get',{
-      countryId:countryId
+    const { data: countryData, mutate } = useFetch('/country/campus', 'get', {
+      countryId: countryId,
     });
-    useEffect(()=>{
-      setSelect(countryData?.data?.[0]?.id)
-    },[countryData])
-    const schoolList = useMemo(()=>{
-      return countryData?.data?.filter((item)=>{
-        return item.id === select;
-      }).map((item)=>{return item.campuses})[0]
-    },[countryData,countryId,select]);
-    useEffect(()=>{
-      mutate()
-    },[countryId])
-    console.log(schoolList,"schoolList")
+    useEffect(() => {
+      setSelect(countryData?.data?.[0]?.id);
+    }, [countryData]);
+    const schoolList = useMemo(() => {
+      return countryData?.data
+        ?.filter((item) => {
+          return item.id === select;
+        })
+        .map((item) => {
+          return item.campuses;
+        })[0];
+    }, [countryData, countryId, select]);
+    useEffect(() => {
+      mutate();
+    }, [countryId]);
+    console.log(schoolList, 'schoolList');
     const countryList = [
       { label: '中国', value: 'Canada' },
       { label: '中国', value: 'China' },
@@ -229,7 +248,7 @@ function SchoolPage(props) {
     // }
     return (
       <div className="">
-         {/* <Popup
+        {/* <Popup
         overlayClass={'Popup'}
         className="z-30 topIndexPlus rounded-full "
         visible={!countryData}
@@ -275,7 +294,7 @@ function SchoolPage(props) {
             </div>
             <div className="w-4/5 h-full mt-14">
               {schoolList?.map((item) => {
-                console.log(item,'schoolList Item')
+                console.log(item, 'schoolList Item');
                 return (
                   <div
                     className="h-12 pt-3 pl-4"
@@ -283,7 +302,7 @@ function SchoolPage(props) {
                       router.push({
                         pathname: '/[campus]',
                         query: { campus: item.alias },
-                      })
+                      });
                       props.setVisible(false);
                     }}
                   >
@@ -301,8 +320,8 @@ function SchoolPage(props) {
       </div>
     );
   };
-  if(!Post){
-    return <div>loading</div>
+  if (!Post) {
+    return <div>loading</div>;
   }
   return (
     <div className="w-screen  pb-10">
@@ -313,7 +332,9 @@ function SchoolPage(props) {
       <RedCountyList
         setVisible={setIsSelect}
         visible={isSelect}
-        setCountryId={(id)=>{setCountryId(id)}}
+        setCountryId={(id) => {
+          setCountryId(id);
+        }}
         data={hotCountryList?.data}
         otherData={otherCountryList?.data}
         setSelectSchool={setSelectSchool}
@@ -335,24 +356,58 @@ function SchoolPage(props) {
         ></HeaderLayout>
         <MenuAtSchool></MenuAtSchool>
         <div className="w-full pl-5 pr-5">
-          <Skeleton loading={loading} row={1} rowWidth={'100%'} rowHeight={70}>
-            {' '}
-          </Skeleton>
-          <Image
-            src={ad}
-            width="100%"
-            height={imageSize.height}
-            layout="responsive"
-            alt=""
-            onLoadingComplete={(target) => {
-              setSmageSize({
-                width: '100%',
-                height: '20rem',
-              });
-              setLoading(false);
-            }}
-            objectFit="contain"
-          ></Image>
+          <Swiper>
+            <Swiper.Item>
+              <Skeleton
+                loading={loading}
+                row={1}
+                rowWidth={'100%'}
+                rowHeight={70}
+              >
+                {' '}
+              </Skeleton>
+              <Image
+                src={ad}
+                width="100%"
+                height={imageSize.height}
+                layout="responsive"
+                alt=""
+                onLoadingComplete={(target) => {
+                  setSmageSize({
+                    width: '100%',
+                    height: '20rem',
+                  });
+                  setLoading(false);
+                }}
+                objectFit="contain"
+              ></Image>
+            </Swiper.Item>
+            <Swiper.Item>
+              <Skeleton
+                loading={loading}
+                row={1}
+                rowWidth={'100%'}
+                rowHeight={70}
+              >
+                {' '}
+              </Skeleton>
+              <Image
+                src={ad}
+                width="100%"
+                height={imageSize.height}
+                layout="responsive"
+                alt=""
+                onLoadingComplete={(target) => {
+                  setSmageSize({
+                    width: '100%',
+                    height: '20rem',
+                  });
+                  setLoading(false);
+                }}
+                objectFit="contain"
+              ></Image>
+            </Swiper.Item>
+          </Swiper>
         </div>
         <div className="p-5">
           <PostCategory
@@ -398,10 +453,10 @@ function SchoolPage(props) {
 
 export async function getServerSideProps({ params }) {
   console.log(params, 'getServerSideProps params');
-  const { data } = await useRequest.get(`/api/campus/query`,{
-    params:{
-      name:params.campus
-    }
+  const { data } = await useRequest.get(`/api/campus/query`, {
+    params: {
+      name: params.campus,
+    },
   });
   // if(!data?.data[0]){
   //   return {
