@@ -190,7 +190,7 @@ function SchoolPage(props) {
     '/country/query_by_area',
     'get',
   );
-  const [loading, setLoading] = useState(true);
+
   const [imageSize, setSmageSize] = React.useState({
     width: '1000%',
     height: '0rem',
@@ -203,9 +203,9 @@ function SchoolPage(props) {
     `/post/home_list?type=${category}`,
     'get',
   );
-  // const {data:carouselData} = useFetch('/campus/carousel/list','get',{
-  //   campusId: campusIdMap
-  // })
+  const { data: carouselData } = useFetch('/campus/carousel', 'get', {
+    id: campusIdMap,
+  });
 
   React.useEffect(() => {
     setCampusIdMap(props?.post?.id);
@@ -323,6 +323,7 @@ function SchoolPage(props) {
   if (!Post) {
     return <div>loading</div>;
   }
+                const [loading, setLoading] = useState(true);
   return (
     <div className="w-screen  pb-10">
       <PostDetail
@@ -357,56 +358,41 @@ function SchoolPage(props) {
         <MenuAtSchool></MenuAtSchool>
         <div className="w-full pl-5 pr-5">
           <Swiper>
-            <Swiper.Item>
-              <Skeleton
-                loading={loading}
-                row={1}
-                rowWidth={'100%'}
-                rowHeight={70}
-              >
+            {
+              loading ?  <Swiper.Item>
+              <Skeleton loading={true} row={1} rowWidth={'100%'} rowHeight={70}>
                 {' '}
               </Skeleton>
-              <Image
-                src={ad}
-                width="100%"
-                height={imageSize.height}
-                layout="responsive"
-                alt=""
-                onLoadingComplete={(target) => {
-                  setSmageSize({
-                    width: '100%',
-                    height: '20rem',
-                  });
-                  setLoading(false);
-                }}
-                objectFit="contain"
-              ></Image>
-            </Swiper.Item>
-            <Swiper.Item>
-              <Skeleton
-                loading={loading}
-                row={1}
-                rowWidth={'100%'}
-                rowHeight={70}
-              >
-                {' '}
-              </Skeleton>
-              <Image
-                src={ad}
-                width="100%"
-                height={imageSize.height}
-                layout="responsive"
-                alt=""
-                onLoadingComplete={(target) => {
-                  setSmageSize({
-                    width: '100%',
-                    height: '20rem',
-                  });
-                  setLoading(false);
-                }}
-                objectFit="contain"
-              ></Image>
-            </Swiper.Item>
+            </Swiper.Item>:null
+            }
+            {carouselData?.data.map((item, index) => {
+              // if (index !== 0) return;
+              return (
+                <Swiper.Item>
+                  <Image
+                    src={
+                      item.img.indexOf('http') > -1
+                        ? item.img
+                        : `${Cons.BASEURL}${item.img}`
+                    }
+                    width="100%"
+                    height={imageSize.height}
+                    layout="responsive"
+                    alt=""
+                    onLoadingComplete={(target) => {
+                      setSmageSize({
+                        width: '100%',
+                        height: '20rem',
+                      });
+                      if(index === 0){
+                      setLoading(false);
+                      }
+                    }}
+                    objectFit="contain"
+                  ></Image>
+                </Swiper.Item>
+              );
+            })}
           </Swiper>
         </div>
         <div className="p-5">

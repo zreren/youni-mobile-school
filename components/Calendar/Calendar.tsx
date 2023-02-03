@@ -313,7 +313,7 @@ function Calendar(props) {
         })}
         {
           <>
-          <div className="w-full text-center bg-white rounded-lg p-4 text-blueTitle text-sm font-medium">
+          <div className="w-full text-center bg-white rounded-lg p-4 text-[#A9B0C0] text-sm font-medium">
             {todayItemCount?.length === 0 ? '今日暂无课程或日程安排' : null}
           </div>
           {/* <div className='btn btn-primary w-full '>前往添加</div> */}
@@ -488,7 +488,7 @@ function Calendar(props) {
                     y="10"
                     fill={arg.textColor}
                   >
-                    Section {arg.event.extendedProps.section.name}
+                    Section {arg.event.extendedProps?.section?.name}
                   </text>
                 </svg>
                 <svg
@@ -581,7 +581,7 @@ function Calendar(props) {
                     y="10"
                     fill={arg.textColor}
                   >
-                    Section {arg.event.extendedProps.section.name}
+                    Section {arg.event.extendedProps?.section?.name}
                   </text>
                 </svg>
                 <div className="font-bold leading-none truncate	whitespace-nowrap scale-[0.7]		text-10 ">

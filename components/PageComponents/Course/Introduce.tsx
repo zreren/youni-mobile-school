@@ -85,7 +85,8 @@ export default function Introduce(props: Course) {
       },
     };
   }
-  const { ename, code ,sections ,subject ,type ,rating,cname} = porpsIntroduce;
+  const { ename, code, sections, subject, type, rating, cname } =
+    porpsIntroduce;
   const Section = (props) => {
     const { name, startTime, endTime } = props.data;
     return (
@@ -101,7 +102,7 @@ export default function Introduce(props: Course) {
                 className="w-4 h-5   text-white text-xs rounded-sm
           text-center bg-red-400"
               >
-                {name.slice(0,1)}
+                {name.slice(0, 1)}
               </div>
               <div>Indira Somwaru</div>
               <CScanRating score={4.5}></CScanRating>
@@ -152,19 +153,37 @@ export default function Introduce(props: Course) {
       <Search></Search>
       <div className="flex items-center mt-3">
         <RedIcon className="mr-2"></RedIcon>
-        <Title className="mb-0 mt-0" title={`${porpsIntroduce.subject[useLanguage('name')]?.toUpperCase()} ${code}`}></Title>
+        <Title
+          className="mb-0 mt-0"
+          title={`${porpsIntroduce.subject[
+            useLanguage('name')
+          ]?.toUpperCase()} ${code}`}
+        ></Title>
       </div>
-      <Title className="mt-0" title={porpsIntroduce[useLanguage('name')]}></Title>
-      <CourseIntroCard content={porpsIntroduce[useLanguage('desc')]}></CourseIntroCard>
+      <Title
+        className="mt-0"
+        title={porpsIntroduce[useLanguage('name')]}
+      ></Title>
+      <CourseIntroCard
+        content={porpsIntroduce[useLanguage('desc')]}
+      ></CourseIntroCard>
       <Title title="数据概览"></Title>
       <CDataGrip data={rating}></CDataGrip>
       <Title title="Section"></Title>
-      <div className={"space-y-2"}>
-        {sections?.length >0?sections.map((item, index) => {
-          return <Section data={item} key={index}></Section>;
-        }):<div className='w-full flex justify-center rounded-lg bg-white h-12 items-center'>
-          <div className='text-gray-300  text-xs text-center'>{useLanguage('')==='e'?'Contact administrator to add section':'暂无班级，联系管理员添加'}</div>
-          </div>}
+      <div className={'space-y-2'}>
+        {sections?.length > 0 ? (
+          sections.map((item, index) => {
+            return <Section data={item} key={index}></Section>;
+          })
+        ) : (
+          <div className="w-full flex justify-center rounded-lg bg-white h-12 items-center">
+            <div className="text-gray-300  text-xs text-center">
+              {useLanguage('') === 'e'
+                ? 'Contact administrator to add section'
+                : '暂无班级，联系管理员添加'}
+            </div>
+          </div>
+        )}
       </div>
       <CourseModel></CourseModel>
     </CommonLayout>

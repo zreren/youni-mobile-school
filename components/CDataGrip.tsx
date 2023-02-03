@@ -16,7 +16,7 @@ const Card = (props) => {
   return (
     <div className={classNames}>
       <div className={classnames('text-2xl', textColorTable[color])}>
-        {score?score:'4.5'}
+        {score?score:'0.0'}
       </div>
       <div className={classnames('text-xs', textColorTable[color])}>
         {label?label:'default'}
@@ -30,7 +30,7 @@ export default function CDataGrip(props) {
     <div className="card rounded-lg w-full bg-base-100 ">
       <div className="card-body p-4">
         <div className="flex space-x-2">
-          <Card label="课程综合评分" score={data?.overallRatting} color="origin"></Card>
+          <Card label="课程综合评分" score={data?.overallRatting || 0} color="origin"></Card>
           <Card label="平均成绩" score={`${data?.courseAverage?.score || 0}% ${data.courseAverage?.level || 0}`} color="lightOrigin"></Card>
         </div>
         <div className="flex justify-between mt-2">

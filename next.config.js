@@ -31,7 +31,10 @@ module.exports = withPlugins([
   withSvgr,
   {
     images: {
-      domains: ['fakeimg.pl', 'goflash.pincman.com',"source.unsplash.com",'youni-admin.kuizuo.cn'],
+      domains: ['fakeimg.pl',
+       'goflash.pincman.com',"source.unsplash.com",'youni-admin.kuizuo.cn',
+       'dummyimage.com'
+      ],
     },
     compiler: {
       styledComponents: true,

@@ -253,6 +253,11 @@ export default function reorganize() {
       }
       const result = data?.data?.curriculums?.slice()?.filter((item)=>{
         return item?.name.indexOf("undefined") < 0 
+      }).map((item,index)=>{
+        return {
+          ...item,
+          id:index,
+        }
       })
       setReorganizeData({curriculums:result});
       console.log(result);
@@ -260,7 +265,7 @@ export default function reorganize() {
   };
   const AddCourse = (props) => {
     const { data } = props;
-    const { name, dayOfWeek: dayOfWeeksItem,sectionName,mode,classroom,time:courseTime} = data;
+    const { name, dayOfWeek: dayOfWeeksItem,sectionName,mode,classroom,time:courseTime,id} = data;
     const timeSpirit = useMemo(()=>{
       console.log(courseTime,"courseTime")
         const pattern = /^(\d{2}:\d{2})-(\d{2}:\d{2})$/;
@@ -366,6 +371,13 @@ export default function reorganize() {
             Toast.fail(`添加失败`);
           } else {
             Toast.success('添加成功');
+            const data = reorganizeData.curriculums.slice().filter((item) => {
+              return item.id !== values.id;
+            });
+            setReorganizeData({
+              ...reorganizeData,
+              curriculums: data,
+            })
           }
           // if(res.)
           // Toast.success('添加成功');
@@ -374,10 +386,10 @@ export default function reorganize() {
           Toast.fail('添加失败');
         });
     };
-    const deleteCourse = () => {
+    const deleteCourse = (id) => {
       try{
         const data = reorganizeData.curriculums.slice().filter((item) => {
-          return item.name !== name;
+          return item.id !== id;
         });
         setReorganizeData({
           ...reorganizeData,
@@ -599,13 +611,13 @@ export default function reorganize() {
           <div className="bg-[#FF7978] h-11 w-24 rounded-full flex justify-center items-center">
             <DeleteIcon
               onClick={() => {
-                deleteCourse();
+                deleteCourse(id);
               }}
             ></DeleteIcon>
           </div>
           <div className="bg-[#3665FF] h-11 w-24 rounded-full flex justify-center items-center">
             <ConfirmIcon
-            onClick={()=>{submitForm(CURRICULUM)}}
+            onClick={()=>{submitForm({id,...CURRICULUM})}}
             ></ConfirmIcon>
           </div>
         </div>
