@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
 import CommonLayout from '../Layout/CommonLayout';
 import { styled } from '@mui/material/styles';
 import interactionPlugin from '@fullcalendar/interaction';
-import React from 'react';
+import React, { useMemo } from 'react';
 import './index.module.css';
 import Box from '@mui/material/Box';
 import { grey } from '@mui/material/colors';
@@ -46,29 +46,31 @@ function Calendar(props) {
     left: 'calc(50% - 15px)',
   }));
   const Card = (props) => {
-    const { title, extendedProps, dayOfWeek,students,color} = props;
+    const { title, extendedProps, dayOfWeek, students, color } = props;
     const rgba = (hex, opacity) => {
       hex = hex.replace('#', '');
       const r = parseInt(hex.substring(0, 2), 16);
       const g = parseInt(hex.substring(2, 4), 16);
       const b = parseInt(hex.substring(4, 6), 16);
       const result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
-      console.log(result,"result");
+      console.log(result, 'result');
       return result;
-    }
-    const background =
-    `linear-gradient(180deg, ${rgba(color,0.1)} -117.9%, #FFFFFF 125.31%)`;
+    };
+    const background = `linear-gradient(180deg, ${rgba(
+      color,
+      0.1,
+    )} -117.9%, #FFFFFF 125.31%)`;
     return (
       <div className="w-full p-4  my-3 bg-white rounded-lg h-[176px]">
         <div
-          style={{ background: background ,borderColor:color}}
+          style={{ background: background, borderColor: color }}
           className="flex justify-between w-full h-20 p-4 border  rounded-2xl"
         >
-          <div style={{color:color}}>
+          <div style={{ color: color }}>
             <div className="flex items-center">
               {' '}
               <div
-              style={{ background: color }}
+                style={{ background: color }}
                 className={classnames(
                   'w-1 h-4 mr-2 text-lg font-medium  rounded-full',
                 )}
@@ -83,17 +85,15 @@ function Calendar(props) {
           </div>
           <div className="flex flex-col items-end w-1/2">
             <div className="-space-x-2 avatar-group">
-              {
-                students?.slice(0,3).map((item,index)=>{
-                  return (
-                    <div className="avatar border-[1px]">
-                      <div className="w-6">
-                        <img src={`${Cons.BASEURL}${item.avatar}`} />
-                      </div>
+              {students?.slice(0, 3).map((item, index) => {
+                return (
+                  <div className="avatar border-[1px]">
+                    <div className="w-6">
+                      <img src={`${Cons.BASEURL}${item.avatar}`} />
                     </div>
-                  )
-                })
-              }
+                  </div>
+                );
+              })}
               {/* <div className="avatar border-[1px]">
                 <div className="w-6">
                   <img src="https://placeimg.com/192/192/people" />
@@ -105,13 +105,15 @@ function Calendar(props) {
                   </div>
                 </div> */}
             </div>
-            <div className="text-xs text-[#798195]">{students?.length }名同学</div>
+            <div className="text-xs text-[#798195]">
+              {students?.length}名同学
+            </div>
           </div>
         </div>
         <div className="mt-4 pb-4">
           <div className="mb-2">
             <div className="flex items-center">
-              <TimeIconActive  color={color}></TimeIconActive>
+              <TimeIconActive color={color}></TimeIconActive>
               <div className="ml-3 text-sm text-gray-400 w-10">
                 {useLanguage('l') === 'el'
                   ? '周' + dayOfWeek
@@ -126,7 +128,7 @@ function Calendar(props) {
             <Location color={color}></Location>
             <div className="ml-3 text-sm text-gray-400 w-10">地点</div>
             <div className="ml-8 text-sm text-gray-400 ">
-            {extendedProps.classroom}
+              {extendedProps.classroom}
             </div>
           </div>
         </div>
@@ -134,7 +136,7 @@ function Calendar(props) {
     );
   };
   function generateNewArray(timeArray: string[], dataObject: object) {
-    if(!dataObject) return [];
+    if (!dataObject) return [];
     const newArray = [];
     timeArray.forEach((time) => {
       const children = dataObject[timeArray.indexOf(time)];
@@ -235,27 +237,19 @@ function Calendar(props) {
           'Friday',
           'Saturday',
         ];
-        const cdays = [
-          '周日',
-          '周一',
-          '周二',
-          '周三',
-          '周四',
-          '周五',
-          '周六',
-        ]
+        const cdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
         const days = {
           cdays: cdays,
           edays: edays,
-        }
+        };
         return days[useLanguage('days')][date.getUTCDay()];
       }
       function getMonthDay(dateString: string) {
         const date = new Date(dateString);
-        const month = ("0" + (date.getMonth() + 1)).slice(-2); // getMonth() returns 0 for January and 11 for December
-        const day = ("0" + date.getDate()).slice(-2);
+        const month = ('0' + (date.getMonth() + 1)).slice(-2); // getMonth() returns 0 for January and 11 for December
+        const day = ('0' + date.getDate()).slice(-2);
         return `${month}-${day}`;
-    }
+      }
       return (
         <div
           style={{ background: colorMap[index % 3] }}
@@ -266,18 +260,34 @@ function Calendar(props) {
             <div className="pl-1 font-bold text-white">
               {getDayOfWeek(title)}
             </div>
-            <div className="pl-1 text-xs font-light text-white">{getMonthDay(title)}</div>
+            <div className="pl-1 text-xs font-light text-white">
+              {getMonthDay(title)}
+            </div>
           </div>
           <BgSVG className="absolute h-12 scale-125  w-18 right-2"></BgSVG>
         </div>
       );
     };
+    const todayItemCount = useMemo(() => {
+      return generateNewArray(getWeekDates(), groupedEvents)?.filter(
+        (item, index) => {
+          console.log(item, 'item');
+          if (setting.view === 'today' && !isToday(item.time)) {
+            return;
+          }
+          return item;
+        },
+      );
+    }, [groupedEvents]);
+    useEffect(() => {
+      console.log(todayItemCount, 'todayItemCount');
+    }, [todayItemCount]);
     // const Month = () => {
     return (
       <div className="w-full min-h-screen p-5 ">
         {generateNewArray(getWeekDates(), groupedEvents).map((item, index) => {
           console.log(item, 'item');
-          if(setting.view === 'today' && !isToday(item.time)) return null;
+          if (setting.view === 'today' && !isToday(item.time)) return null;
           const color = colorMap[index % 3];
           return (
             <>
@@ -301,6 +311,14 @@ function Calendar(props) {
             </>
           );
         })}
+        {
+          <>
+          <div className="w-full text-center bg-white rounded-lg p-4 text-blueTitle text-sm font-medium">
+            {todayItemCount?.length === 0 ? '今日暂无课程或日程安排' : null}
+          </div>
+          {/* <div className='btn btn-primary w-full '>前往添加</div> */}
+          </>
+        }
         {/* <Identify></Identify> */}
         {/* <YearCard title="Classes start"></YearCard> */}
       </div>
@@ -438,29 +456,134 @@ function Calendar(props) {
                 }}
                 className="flex flex-col overflow-hidden justify-center h-full w-full items-center"
               >
+                <svg
+                  height={'14px'}
+                  width={'100%'}
+                  className="z-30 relative"
+                  xmlns="http://www.w3.org/2000/svg"
+                  version="1.1"
+                >
+                  <text
+                    font-size="10px"
+                    x="50%"
+                    text-anchor="middle"
+                    y="10"
+                    fill={arg.textColor}
+                  >
+                    {arg.event.title}
+                  </text>
+                </svg>
+                <svg
+                  height={'14px'}
+                  width={'100%'}
+                  className="z-30 relative"
+                  xmlns="http://www.w3.org/2000/svg"
+                  version="1.1"
+                >
+                  <text
+                    className="font-light leading-none	text-10  truncate"
+                    font-size="10px"
+                    x="50%"
+                    text-anchor="middle"
+                    y="10"
+                    fill={arg.textColor}
+                  >
+                    Section {arg.event.extendedProps.section.name}
+                  </text>
+                </svg>
+                <svg
+                  height={'14px'}
+                  width={'100%'}
+                  className="z-30 relative"
+                  xmlns="http://www.w3.org/2000/svg"
+                  version="1.1"
+                >
+                  <text
+                    font-size="10px"
+                    x="50%"
+                    text-anchor="middle"
+                    y="10"
+                    fill={arg.textColor}
+                    className="font-light text-ellipsis	truncate whitespace-nowrap leading-none	 "
+                  >
+                    {arg.event.extendedProps.classroom}
+                  </text>
+                </svg>
+                <svg
+                  height={'14px'}
+                  width={'100%'}
+                  className="z-30 relative"
+                  xmlns="http://www.w3.org/2000/svg"
+                  version="1.1"
+                >
+                  <text
+                    font-size="10px"
+                    x="50%"
+                    text-anchor="middle"
+                    y="10"
+                    fill={arg.textColor}
+                    className="font-light leading-none	text-10	  "
+                  >
+                    {arg.event.extendedProps.online ? '线上课程' : '线下课程'}
+                  </text>
+                </svg>
+                {/*  
                 <div className="font-bold	 scale-75 text-xs text-center  whitespace-nowrap">
                   {arg.event.title}
-                </div>
-                <div className="font-light leading-none	text-10  truncate">
+                </div> */}
+                {/* <div  className="font-light leading-none	text-10  truncate">
                   Section {arg.event.extendedProps.section.name}
-                </div>
-                <div className="font-light text-ellipsis	truncate whitespace-nowrap leading-none	 scale-90	  ">
+                </div> */}
+                {/* <div className="font-light text-ellipsis	truncate whitespace-nowrap leading-none	 scale-90	  ">
                   {arg.event.extendedProps.classroom}
-                </div>
-                <div className="font-light leading-none	text-10	  ">
+                </div> */}
+                {/* <div className="font-light leading-none	text-10	  ">
                   {arg.event.extendedProps.online ? '线上课程' : '线下课程'}
-                </div>
+                </div> */}
               </div>
             ) : (
-              <div  onClick={() => {
-                props.clickEvent(arg);
-              }} className="flex overflow-hidden flex-col justify-center h-full w-full items-center">
-                <div className="font-bold scale-[0.7]		text-10   text-center  whitespace-nowrap">
-                  {arg.event.title}
-                </div>
-                <div className="font-bold 	text-center scale-[0.7]		text-10 leading-none whitespace-nowrap	 ">
-                  Section {arg.event.extendedProps.section.name}
-                </div>
+              <div
+                onClick={() => {
+                  props.clickEvent(arg);
+                }}
+                className="flex overflow-hidden flex-col justify-center h-full w-full items-center"
+              >
+                <svg
+                  height={'14px'}
+                  width={'100%'}
+                  className="z-30 relative"
+                  xmlns="http://www.w3.org/2000/svg"
+                  version="1.1"
+                >
+                  <text
+                    font-size="6px"
+                    x="50%"
+                    className="font-bold "
+                    text-anchor="middle"
+                    y="10"
+                    fill={arg.textColor}
+                  >
+                    {arg.event.title}
+                  </text>
+                </svg>
+                <svg
+                  height={'14px'}
+                  width={'100%'}
+                  className="z-30 relative"
+                  xmlns="http://www.w3.org/2000/svg"
+                  version="1.1"
+                >
+                  <text
+                    className="font-bold  leading-none truncate"
+                    font-size="7px"
+                    x="50%"
+                    text-anchor="middle"
+                    y="10"
+                    fill={arg.textColor}
+                  >
+                    Section {arg.event.extendedProps.section.name}
+                  </text>
+                </svg>
                 <div className="font-bold leading-none truncate	whitespace-nowrap scale-[0.7]		text-10 ">
                   {arg.event.extendedProps.classroom}
                 </div>

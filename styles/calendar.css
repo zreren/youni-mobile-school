@@ -90,9 +90,9 @@ table tbody:first-child{
   border: none !important;
 }
 .fc-scroller {
-  margin-bottom: 12px;
-  /* background-color: #F9FAFB; */
-}
+  padding-bottom: 12px;
+  background-color: #FFFFFF !important;
+} 
 .fc-scroller-harness{
   /* background-color: #F9FAFB; */
 }
