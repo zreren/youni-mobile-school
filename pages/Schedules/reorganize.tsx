@@ -246,13 +246,34 @@ export default function reorganize() {
     console.log(image[0].file, 'image', body, 'body');
     useRequest.post('/api/curriculum/ocr', body).then((res) => {
       setBegin(false);
-      setReorganizeData(res.data.data);
-      console.log(res);
+      const {data} = res;
+      if(!data){
+        Toast.fail('识别失败')
+        // return;
+      }
+      const result = data?.data?.curriculums?.slice()?.filter((item)=>{
+        return item?.name.indexOf("undefined") < 0 
+      })
+      setReorganizeData({curriculums:result});
+      console.log(result);
     });
   };
   const AddCourse = (props) => {
     const { data } = props;
-    const { name, dayOfWeek: dayOfWeeksItem } = data;
+    const { name, dayOfWeek: dayOfWeeksItem,sectionName,mode,classroom,time:courseTime} = data;
+    const timeSpirit = useMemo(()=>{
+      console.log(courseTime,"courseTime")
+        const pattern = /^(\d{2}:\d{2})-(\d{2}:\d{2})$/;
+        const match = courseTime?.match(pattern);
+        console.log(match,"match")
+        if (!match) return;
+        return [match[1], match[2]];
+    },[courseTime])
+    useEffect(()=>{
+      console.log(timeSpirit,"timeSpirit")
+      setTime(timeSpirit?.[0])
+      setEndTime(timeSpirit?.[1])
+    },[timeSpirit])
     const [dayOfWeek, setDayOfWeek] = useState([String(dayOfWeeksItem)]);
     useEffect(() => {
       // setDayOfWeek([String])
@@ -262,14 +283,14 @@ export default function reorganize() {
     const [time, setTime] = useState();
     const [endTime, setEndTime] = useState();
     const [CURRICULUM, setCURRICULUM] = useState({
-      name: '',
+      name: name,
       color: null,
       period: 0,
-      dayOfWeek: [],
-      classroom: '',
+      dayOfWeek: [dayOfWeeksItem],
+      classroom: classroom,
       courseId: null,
       sectionId: null,
-      sectionName: null,
+      sectionName: sectionName,
       professorName: '',
     });
 
@@ -327,11 +348,12 @@ export default function reorganize() {
     };
 
     const submitForm = async (values: any) => {
-      return;
+      // return;
       const requestQueen = dayOfWeek.map(async (item) => {
         const data = await submitCourse({
           ...values,
           dayOfWeek: Number(item),
+          termId:termId,
           time: translateTime(time, endTime),
         });
         return data;
@@ -341,9 +363,9 @@ export default function reorganize() {
           console.log(res, 'res');
           // if(res.every((item)=>item.code===200))
           if (res.some((item) => item.message !== 'success')) {
-            Toast.success('添加成功');
+            Toast.fail(`添加失败`);
           } else {
-            Toast.fail('添加失败');
+            Toast.success('添加成功');
           }
           // if(res.)
           // Toast.success('添加成功');
@@ -421,7 +443,7 @@ export default function reorganize() {
                   round: true,
                 }}
                 title=""
-                defaultValue="7:00"
+                defaultValue={timeSpirit[0]}
                 type="time"
                 minHour="7"
                 maxHour="24"
@@ -458,7 +480,7 @@ export default function reorganize() {
                   round: true,
                 }}
                 title=""
-                defaultValue="7:00"
+                defaultValue={timeSpirit[1]}
                 type="time"
                 minHour="7"
                 maxHour="24"
@@ -485,6 +507,7 @@ export default function reorganize() {
         </div>
         <CCourseInput
           title="Section"
+          value={sectionName}
           change={(val) => {
             handleChange(val.label, 'sectionName');
             handleChange(val.id, 'sectionId');
@@ -492,6 +515,7 @@ export default function reorganize() {
         ></CCourseInput>
         <CCourseInput
           title="课程形式"
+          value={mode}
           change={(val) => {
             // handleChange(val.label, 'name');
           }}
@@ -505,6 +529,7 @@ export default function reorganize() {
         ></CCourseInput>
         <CCourseInput
           title="教室"
+          value={classroom}
           change={(val) => {
             console.log(val, 'classroom');
             handleChange(val.label, 'classroom');
@@ -579,7 +604,9 @@ export default function reorganize() {
             ></DeleteIcon>
           </div>
           <div className="bg-[#3665FF] h-11 w-24 rounded-full flex justify-center items-center">
-            <ConfirmIcon></ConfirmIcon>
+            <ConfirmIcon
+            onClick={()=>{submitForm(CURRICULUM)}}
+            ></ConfirmIcon>
           </div>
         </div>
       </div>
@@ -598,7 +625,7 @@ export default function reorganize() {
   };
   const Result = (props) => {
     return (
-      <div className="w-full  space-y-6 overflow-hidden h-full flex flex-col justify-center items-center p-4">
+      <div className="w-full pb-14  space-y-6 overflow-hidden h-full flex flex-col justify-center items-center p-4">
         <div className="w-full px-6 py-5  overflow-hidden bg-white h-[92px] relative youni-boxShadow  rounded-[10px]">
           <div className="mb-2">
             <span className="text-[#37455C]">成功识别</span>
@@ -680,7 +707,7 @@ export default function reorganize() {
   };
   return (
     <div className="w-full min-h-screen bg-[#F6F6F6]">
-      <Header title="一键导入课表&alpha version"></Header>
+      <Header title="一键导入课表&Beta Ver"></Header>
       <Popup
         overlayClass={'Popup'}
         className="z-30 topIndexPlus rounded-full "
@@ -712,7 +739,7 @@ export default function reorganize() {
               上传清晰，图片内仅包含课表主要内容的图片，可以大
               大提升识别成功率哦！
             </div>
-            <div className="mt-2 preview mt-2 preview w-16 h-16 overflow-hidden">
+            <div className="mt-2 preview w-16 h-16 overflow-hidden">
               <Uploader
                 multiple
                 value={image}
@@ -721,7 +748,6 @@ export default function reorganize() {
                 onChange={(items) => {
                   setImage(items);
                 }}
-                className="w-full h-full "
                 maxSize={2500 * 1024}
                 onOversize={() => Toast.info('文件大小不能超过15kb')}
               />
