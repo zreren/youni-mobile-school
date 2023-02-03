@@ -428,9 +428,9 @@ export default function AddSchedule() {
           console.log(res, 'res');
           // if(res.every((item)=>item.code===200))
           if(res.some((item)=>item.message!=="success")){
-            Toast.success('添加成功');
-          }else{
             Toast.fail('添加失败');
+          }else{
+            Toast.success('添加成功');
           }
           // if(res.)
           // Toast.success('添加成功');

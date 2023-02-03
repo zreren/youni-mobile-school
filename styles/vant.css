@@ -51,3 +51,11 @@
     height: none !important;
     overflow: hidden;
 }
+.contact .rv-input__control{
+    color:#37455C !important;
+    font-weight: 500 !important;
+}
+.contact-false .rv-input__control{
+    color:#A9B0C0 !important;
+    font-weight: 500 !important;
+}
