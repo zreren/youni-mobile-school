@@ -29,12 +29,16 @@ import NoteIcon3 from './note3.svg';
 import Map from './assets/actives/map.svg';
 import Location from './assets/actives/location.svg';
 import Prices from './assets/actives/youniprice.svg';
+import TypeIcon from "./assets/actives/type.svg";
+import HouseTypeIcon from "./assets/actives/houseType.svg";
 import Contact from './assets/actives/contact.svg';
 import useRequest from '@/libs/request';
 import useFetch from '@/hooks/useFetch';
 import { NumberKeyboard, hooks, Toast } from 'react-vant';
 import { update } from 'lodash';
 import mapRequest from '@/libs/mapRequest';
+import MediaIcon from './assets/actives/media.svg';
+import SeatIcon from './assets/actives/seat.svg';
 
 export default function addPost() {
   const Footer = () => {
@@ -88,10 +92,10 @@ export default function addPost() {
       label: '活动',
       key: 'activity',
     },
-    {
-      label: '新闻',
-      key: 'news',
-    },
+    // {
+    //   label: '新闻',
+    //   key: 'news',
+    // },
     {
       label: '转租',
       key: 'sublet',
@@ -133,9 +137,10 @@ export default function addPost() {
     'youni:contact': <Contact></Contact>,
     'youni:map': <Map></Map>,
     'youni:link': <Org></Org>,
-    'youni:houseType': <Org></Org>,
-    'youni:discussion': <Org></Org>,
-    'youni:seat': <Org></Org>,
+    'youni:type': <TypeIcon></TypeIcon>,
+    'youni:houseType': <HouseTypeIcon></HouseTypeIcon>,
+    'youni:discussion': <MediaIcon></MediaIcon>,
+    'youni:seat': <SeatIcon></SeatIcon>,
   };
   const [title, setTitle] = React.useState('');
   const [content, setContent] = React.useState('');
