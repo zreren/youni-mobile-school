@@ -297,6 +297,7 @@ export default function reorganize() {
       sectionId: null,
       sectionName: sectionName,
       professorName: '',
+      mode:'',
     });
 
     const [value, setValue] = React.useState<Dayjs | null>(null);
@@ -360,6 +361,7 @@ export default function reorganize() {
           dayOfWeek: Number(item),
           termId:termId,
           time: translateTime(time, endTime),
+          mode:mode
         });
         return data;
       });
@@ -529,7 +531,7 @@ export default function reorganize() {
           title="课程形式"
           value={mode}
           change={(val) => {
-            // handleChange(val.label, 'name');
+            handleChange(val.label, 'mode');
           }}
         ></CCourseInput>
         <CCourseInput

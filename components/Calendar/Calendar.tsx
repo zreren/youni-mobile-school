@@ -191,6 +191,7 @@ function Calendar(props) {
   function generateNewArray(timeArray: string[], dataObject: object) {
     if (!dataObject) return [];
     const newArray = [];
+    console.log(dataObject,"dataObject")
     timeArray.forEach((time) => {
       const children = dataObject[timeArray.indexOf(time)];
       if (children) {
@@ -356,12 +357,26 @@ function Calendar(props) {
     useEffect(() => {
       console.log(todayItemCount, 'todayItemCount');
     }, [todayItemCount]);
-    // const Month = () => {
+    type ObjectType = { [key: string]: any };
+    function mergeObjects(objects: ObjectType[]): ObjectType {
+      return objects.reduce((prev, curr) => {
+        Object.keys(curr).forEach(key => {
+          if (Array.isArray(prev[key]) && Array.isArray(curr[key])) {
+            prev[key] = prev[key].concat(curr[key]);
+          } else if (prev[key] && typeof prev[key] === 'object') {
+            prev[key] = mergeObjects([prev[key], curr[key]]);
+          } else {
+            prev[key] = curr[key];
+          }
+        });
+        return prev;
+      }, {});
+    }
     return (
       <div className="w-full pb-10  min-h-screen p-5 ">
         {generateNewArray(
           getWeekDates(),
-          Object.assign(groupedEvents, dayTimeEvents),
+          mergeObjects([groupedEvents, dayTimeEvents]),
         ).map((item, index) => {
           console.log(item, 'item');
           if (setting.view === 'today' && !isToday(item.time)) return null;
