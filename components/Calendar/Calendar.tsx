@@ -26,7 +26,60 @@ function Calendar(props) {
     dayOfWeek: number;
     // other properties
   }
-
+  function formatTimestamps(startTime, endTime) {
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+    return `${start.getUTCHours() + 8}.${start.getUTCMinutes()}-${
+      end.getUTCHours() + 8
+    }.${end.getUTCMinutes()}`;
+  }
+  const getDayOfWeek = (date) => {
+    // date是这样的格式，返回对应的星期几，星期日是0，星期一是1，星期六是6
+    const day = new Date(date).getUTCDay();
+    return day;
+  };
+  const translateTimeFormat = (_date) => {
+    // "2023-02-04T01:00:00.000Z" to '2023-01-29T11:30:00'
+    const date = new Date(_date);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  };
+  const timeTable = useMemo(() => {
+    if (!props.timeTable) return [];
+    return props?.timeTable?.slice().map((item) => {
+      return {
+        ...item,
+        name: item.name,
+        sectionName: '',
+        dayOfWeek: getDayOfWeek(item.startTime),
+        period: 0,
+        time: formatTimestamps(item.startTime, item.endTime),
+        classroom: '日程',
+        color: item.color,
+        term: null,
+        section: null,
+        title: item.name,
+        extendedProps: {
+          section: '',
+          department: '日程',
+        },
+        start: translateTimeFormat(item.startTime),
+        end: translateTimeFormat(item.endTime),
+        description: '',
+        borderColor: 'rgba(58,102,255,1)',
+        textColor: 'rgba(58,102,255,1)',
+        backgroundColor: 'rgb(235,240,255)',
+      };
+    });
+  }, [props.timeTable]);
+  useEffect(()=>{
+    console.log(timeTable)
+  },[timeTable])
   const days = [
     'sunday',
     'monday',
@@ -106,7 +159,7 @@ function Calendar(props) {
                 </div> */}
             </div>
             <div className="text-xs text-[#798195]">
-              {students?.length > 0?`${students?.length}名同学`:null}
+              {students?.length > 0 ? `${students?.length}名同学` : null}
             </div>
           </div>
         </div>
@@ -147,7 +200,7 @@ function Calendar(props) {
         });
       }
     });
-    console.log(newArray);
+    console.log(newArray, 'newArray');
     return newArray;
   }
   const groupedEvents: { [day: string]: Event[] } = props?.courseData?.reduce(
@@ -161,17 +214,32 @@ function Calendar(props) {
     },
     {},
   );
+  const dayTimeEvents = timeTable.reduce((acc, event) => {
+    const day = event.dayOfWeek;
+    if (!acc[day]) {
+      acc[day] = [];
+    }
+    acc[day].push(event);
+    return acc;
+  }, {});
   const getWeekDates = () => {
     const weekDates = [];
     const currentDate = new Date();
-    let day = currentDate.getUTCDay();
+    const day = currentDate.getUTCDay();
     const diff = currentDate.getUTCDate() - day;
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 1; i++) {
       const newDate = new Date(currentDate.setUTCDate(diff + i));
       const dateString = newDate.toISOString().slice(0, 10);
       weekDates.push(dateString);
     }
-    return weekDates;
+    const weekDates2 = [weekDates[0]];
+    const startDate = new Date(weekDates[0]);
+    for (let i = 1; i <= 6; i++) {
+      const nextDate = new Date(startDate);
+      nextDate.setDate(startDate.getDate() + i);
+      weekDates2.push(nextDate.toISOString().split('T')[0]);
+    }
+    return weekDates2;
   };
   function isToday(dateString: string) {
     let date = new Date(dateString);
@@ -204,7 +272,10 @@ function Calendar(props) {
       );
     };
     const Dayliy = (props) => {
-      const { title } = props;
+      const { title, data } = props;
+      const Time = new Date(data.start);
+      const dateTime =
+        Time.getUTCFullYear() + Time.getUTCMonth() + Time.getUTCDate();
       return (
         <div className="flex p-4 card-shadow items-center my-4 justify-between bg-white w-full h-20 rounded-lg">
           <div>
@@ -213,10 +284,10 @@ function Calendar(props) {
                 日程
               </div>
               <div className="text-[#37455C] text-sm font-semibold">
-                {title || '日程日程日程'}
+                {data.title || title || '日程日程日程'}
               </div>
             </div>
-            <div className="text-[#A9B0C0] text-xs ">2022年9月7日</div>
+            <div className="text-[#A9B0C0] text-xs ">{data.start}</div>
           </div>
           <ArrowRight></ArrowRight>
         </div>
@@ -246,9 +317,12 @@ function Calendar(props) {
       }
       function getMonthDay(dateString: string) {
         const date = new Date(dateString);
-        const month = ('0' + (date.getMonth() + 1)).slice(-2); // getMonth() returns 0 for January and 11 for December
-        const day = ('0' + date.getDate()).slice(-2);
+        // Fri Nov 04 2022 08:00:00 GMT+0800 (中国标准时间) 获得月份和日
+        const month = date.getUTCMonth() + 1;
+        const day = date.getUTCDate();
         return `${month}-${day}`;
+        // console.log(date,"getMonthDaydate")
+        // return `${month}-${day}`;
       }
       return (
         <div
@@ -284,8 +358,11 @@ function Calendar(props) {
     }, [todayItemCount]);
     // const Month = () => {
     return (
-      <div className="w-full min-h-screen p-5 ">
-        {generateNewArray(getWeekDates(), groupedEvents).map((item, index) => {
+      <div className="w-full pb-10  min-h-screen p-5 ">
+        {generateNewArray(
+          getWeekDates(),
+          Object.assign(groupedEvents, dayTimeEvents),
+        ).map((item, index) => {
           console.log(item, 'item');
           if (setting.view === 'today' && !isToday(item.time)) return null;
           const color = colorMap[index % 3];
@@ -293,6 +370,9 @@ function Calendar(props) {
             <>
               <Identify title={item.time} index={index}></Identify>
               {item?.children?.map((item, index) => {
+                if (item.type === 2) {
+                  return <Dayliy data={item}></Dayliy>;
+                }
                 return (
                   <Card
                     color={color}
@@ -313,10 +393,12 @@ function Calendar(props) {
         })}
         {
           <>
-          <div className="w-full text-center bg-white rounded-lg p-4 text-[#A9B0C0] text-sm font-medium">
-            {todayItemCount?.length === 0 ? '今日暂无课程或日程安排' : null}
-          </div>
-          {/* <div className='btn btn-primary w-full '>前往添加</div> */}
+            {todayItemCount?.length === 0 && timeTable.length === 0? (
+              <div className="w-full text-center bg-white rounded-lg p-4 text-[#A9B0C0] text-sm font-medium">
+                今日暂无课程或日程安排'
+              </div>
+            ) : null}
+            {/* <div className='btn btn-primary w-full '>前往添加</div> */}
           </>
         }
         {/* <Identify></Identify> */}
@@ -390,6 +472,20 @@ function Calendar(props) {
       // body.removeAttribute('style');
     }
   }, [calendarView]);
+  useEffect(() => {
+    console.log(props.courseData, 'props.courseData');
+  }, []);
+
+  useEffect(() => {
+    console.log(timeTable, 'timeTable');
+  }, [timeTable]);
+  const { courseData } = props;
+  const ALLEvents = useMemo(() => {
+    // 两个数组合并
+    if (!courseData && timeTable) return timeTable;
+    if (!timeTable && courseData) return courseData;
+    return [...courseData, ...timeTable];
+  }, [courseData, timeTable]);
   return (
     <div>
       <div className="h-full w-full  bg-white">
@@ -446,9 +542,37 @@ function Calendar(props) {
               </div>
             );
           }}
-          events={props.courseData}
+          events={ALLEvents}
           eventContent={(arg: any) => {
             console.log(arg, 'course arg');
+            if (arg.event.extendedProps.type === 2) {
+              return (
+                <div
+                  onClick={() => {
+                    props.clickEvent(arg);
+                  }}
+                  className="flex flex-col overflow-hidden justify-center h-full w-full items-center"
+                >
+                  <svg
+                    height={'14px'}
+                    width={'100%'}
+                    className="z-30 relative"
+                    xmlns="http://www.w3.org/2000/svg"
+                    version="1.1"
+                  >
+                    <text
+                      font-size="10px"
+                      x="50%"
+                      text-anchor="middle"
+                      y="10"
+                      fill={arg.textColor}
+                    >
+                      {arg.event.title}
+                    </text>
+                  </svg>
+                </div>
+              );
+            }
             return setting.view === 'day' ? (
               <div
                 onClick={() => {
@@ -616,8 +740,6 @@ function Calendar(props) {
           slotDuration="00:30:00"
           slotLabelInterval="00:30"
           weekends={setting.isWeekend}
-          //     viewClassNames="
-          // h-screen"
         />
       </div>
       <div className="bg-gray-50 z-20 relative -translate-y-3">

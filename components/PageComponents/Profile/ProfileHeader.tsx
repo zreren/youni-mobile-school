@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import RightIcon from './right.svg';
 import Subtract from './Subtract.svg';
 import Button from './Button.svg';
@@ -11,6 +11,7 @@ import useLanguage from '@/hooks/useLanguage';
 import useRequest from '@/libs/request';
 import { useRouter } from 'next/router';
 import { Toast } from 'react-vant';
+import classnames from "classnames";
 export default function ProfileHeader(props) {
   const {data,myProfile,mutate} = props;
   // const data = {
@@ -24,19 +25,34 @@ export default function ProfileHeader(props) {
     //   student: props.data,
     // }
     const follow = async (id:number):Promise<void>=>{
-      const {data} = await useRequest.post('/api/friend/follow',{studentId:id});
-      console.log(data,"data")
-      if(data?.message){
-        Toast.success('关注成功');
-        mutate()
+      if(!isFollow){
+        const {data} = await useRequest.post('/api/friend/follow',{studentId:id});
+        console.log(data,"data")
+        if(data?.message){
+          Toast.success('关注成功');
+          mutate()
+        }
       }
-    }
+      if(isFollow){
+        const {data} = await useRequest.post('/api/friend/unfollow',{studentId:id});
+        // console.log(data,"data")
+        if(data?.message){
+          Toast.success('取消关注成功');
+          mutate()
+        }
+      }
+      
+    };
+    useEffect(()=>{
+      console.log(data,"UserData")
+    },[data])
+    const [isFollow,setIsFollow] = useState(data?.student?.extraInfo?.followed)
     // if(!data?.extraInfo) return 
     return (
       <div className="flex items-center justify-between p-4 pb-2">
         <div className="flex items-center space-x-2 ">
           <div className="flex flex-col items-center justify-center">
-            <div className="font-bold text-blueTitle">{data?.student?.extraInfo?.following }</div>
+            <div className="font-bold text-blueTitle">{data?.student?.extraInfo?.following || 0 }</div>
             <div className="text-xs text-gray-400">关注</div>
           </div>
           <div>
@@ -86,7 +102,14 @@ export default function ProfileHeader(props) {
             <div className="text-xs text-gray-400">赞&收藏</div>
           </div>
         </div>
-        { myProfile === false ? <div onClick={()=>{follow(Number(router.query.id))}} className='bg-[#FFD036] text-xs h-6 flex justify-center items-center text-[#8C6008] rounded-full w-12'>关注</div> :<Link href="/Setting/profile"><Button></Button></Link>}
+        { myProfile === false ? <div onClick={()=>{follow(Number(router.query.id))}} className={
+          classnames(
+            ' text-xs h-6 flex justify-center items-center  rounded-full w-12',
+            {
+            'bg-[#FFD036] text-[#8C6008]': !isFollow,
+            'bg-[#E5E5E5] text-[#808080]': isFollow,
+            })
+        }>{isFollow?'已关注':'关注'}</div> :<Link href="/Setting/profile"><Button></Button></Link>}
       </div>
     );
   };

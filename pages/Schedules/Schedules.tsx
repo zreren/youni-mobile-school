@@ -70,7 +70,8 @@ const CCourseInput = (props) => {
 export default function Schedules() {
   const calendarRef = useRef<any>();
   const router = useRouter();
-  // const [campusIdMap, setCampusIdMap] = useLocalStorage(getCampusId(router.query.campus), props?.post?.id);
+  const [campusIdMapSchool, setCampusIdMapSchool] = useLocalStorage('school',null);
+  const [campusIdMap, setCampusIdMap] = useLocalStorage(campusIdMapSchool, null);
   const [defaultScheduleView, setDefaultScheduleView] = useLocalStorage(
     'defaultScheduleView',
     0,
@@ -113,7 +114,83 @@ export default function Schedules() {
     // if (!arg) return null;
     const background = `linear-gradient(180deg, ${props.backgroundColor} -117.9%, #FFFFFF 125.31%)`;
     // const darkBackground = props.border
-
+    if(extendedProps.type === 2){
+      return (
+        <div className="topIndexPlus">
+        {/* <div className='w-4 h-1 bg-gray-400 rounded-xs '></div> */}
+        <SwipeableDrawer
+          anchor="bottom"
+          open={props.visible}
+          onClose={() => {
+            props.setVisible(false);
+          }}
+          onOpen={() => {
+            props.setVisible(true);
+          }}
+          className="h-screen"
+        >
+          <div className="w-full p-4 rounded-full h-72">
+            <Puller></Puller>
+            <div
+              style={{ background: background, borderColor: borderColor }}
+              className="flex justify-between w-full h-20 p-4 border  rounded-2xl"
+            >
+              <div style={{ color: borderColor }}>
+                <div className="flex items-center">
+                  {' '}
+                  <div
+                    style={{ background: borderColor }}
+                    className={classnames(
+                      'w-1 h-4 mr-2 text-lg font-medium  rounded-full',
+                    )}
+                  ></div>
+                  <div>{title}</div>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 mb-4">
+              <div className="mb-4">
+                <div className="flex items-center">
+                  <TimeIconActive color={borderColor}></TimeIconActive>
+                  <div className="ml-3 text-sm text-gray-400">周{extendedProps.dayOfWeek}</div>
+                  <div className="ml-10 text-sm text-gray-400 ">
+                    {extendedProps.time}
+                  </div>
+                </div>
+              </div>
+              {/* <div className="flex items-center">
+                <Location color={borderColor}></Location>
+                <div className="ml-3 text-sm text-gray-400">地点</div>
+                <div className="ml-10 text-sm text-gray-400 ">
+                  {extendedProps.classroom}
+                </div>
+              </div> */}
+            </div>
+            <div className="flex justify-between space-x-3">
+              <div
+              onClick={()=>{
+                router.push({
+                  pathname: '/Schedules/editDayTime',
+                  query: { id: event.id },
+                })
+              }}
+              className="flex w-full rounded-lg h-10 text-[#fff] items-center bg-[#3665FF] justify-center space-y-2">
+                <div className="text-xs  text-white  ">编辑</div>
+              </div>
+              <div
+                className="flex flex-col rounded-lg  bg-[#FF6E69]  items-center justify-center  space-y-2  h-10 w-full"
+                onClick={() => {
+                  deleteCURRICULUM(event.id);
+                }}
+              >
+                <div className="text-xs text-white ">删除</div>
+              </div>
+            </div>
+          </div>
+        </SwipeableDrawer>
+      </div>
+      )
+    }
     return (
       <div className="topIndexPlus">
         {/* <div className='w-4 h-1 bg-gray-400 rounded-xs '></div> */}
@@ -485,7 +562,14 @@ export default function Schedules() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [yearMethod, setYearMethod] = useState(false);
   const { data, error,mutate } = useFetch(
-    `${Cons.API.CURRICULUM.QUERY}?campusId=1`,
+    `${Cons.API.CURRICULUM.QUERY}`,
+    'get',
+    {
+      campusId: campusIdMap
+    }
+  );
+  const { data:timeTableData } = useFetch(
+    `/timetable/query`,
     'get',
   );
   // const []
@@ -509,7 +593,7 @@ export default function Schedules() {
       new Date(termInfo?.data?.endDate),
     );
     const all = addFullStartDate(courseData, weekDate);
-    console.log(all, 'courseData');
+    console.log(courseData, 'courseData');
   }
   const openLogin = useSelector(selectOpen);
   React.useEffect(()=>{
@@ -543,6 +627,7 @@ export default function Schedules() {
     setSetting({
       ...setting,
       view: ViewListMap[defaultScheduleView],
+      isWeekend: defaultScheduleView === 1,
     });
   }, []);
   const Dayliy = (props) => {
@@ -753,6 +838,7 @@ export default function Schedules() {
         <div ref={calendarRef}>
           <Calendar
             setting={setting}
+            timeTable={timeTableData?.data}
             courseData={courseData}
             clickEvent={(arg) => {
               setArg({ ...arg });

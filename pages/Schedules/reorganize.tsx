@@ -734,7 +734,7 @@ export default function reorganize() {
       {!begin && !reorganizeData?.curriculums ? (
         <div className="p-4 space-y-4">
           <div className="w-full bg-white  text-right rounded-xl">
-            <label className="flex justify-between w-full h-12 input-group ">
+            <label className="flex items-center justify-between w-full h-12 input-group ">
               <span className="text-sm font-medium bg-white text-blueTitle">
                 {<NessIcon className="mr-1"></NessIcon>} 学年&学期
               </span>

@@ -365,16 +365,34 @@ function index(props) {
       { text: '一键导入大学课表', value: '1' },
       { text: '便捷计算自己的GPA', value: '2' },
     ];
+    const [value,setValue] = useState('1')
+    useEffect(()=>{
+      const interval = setInterval(()=>{
+        const _value = Number(value)
+        // if(_value>=3){
+        //   setValue('1')
+        // }else{
+        //   setValue(String(_value + 1))
+        // }
+        // if(_value===1){
+        //   setValue('2')
+        // }
+        // if(_value===2){
 
+        // }
+      },2000)
+      return ()=>clearInterval(interval)
+    },[value])
     return (
       <div className="w-full h-[400px]  p-5">
         <div className="relative">
           {' '}
           <Picker
             placeholder=""
-            defaultValue={'1'}
+            defaultValue={value}
             showToolbar={false}
             columns={columns}
+            value={value}
             className="h-[220px]"
             onCancel={() => Toast.info('点击取消按钮')}
             swipeDuration={10}

@@ -274,9 +274,76 @@ export default function AddSchedule() {
     });
     const [value, setValue] = useState(new Date());
     const [time, setTime] = useState('12:00');
+    const [endTime, setEndTime] = useState('12:00');
+    const [timetable, setTimetable] = useState({
+      name: '',
+      color: null,
+    });
+    const handleChange = useCallback((val: any, name: string) => {
+      setTimetable((preVal: any) => {
+        return {
+          ...preVal,
+          [name]: val,
+        };
+      });
+    }, []);
+    const submitTime = async (values) => {
+      const { data } = await instance.post('/api/timetable/create', values);
+      return data;
+    };
+    const getYYMMDD = (date: Date) => {
+      // function formatDate(date: string): string {
+      const d = new Date(date);
+      let month = (d.getMonth() + 1).toString();
+      let day = d.getDate().toString();
+      const year = d.getFullYear();
+
+      if (month.length < 2) {
+        month = `0${month}`;
+      }
+      if (day.length < 2) {
+        day = `0${day}`;
+      }
+
+      return `${year}-${month}-${day}`;
+      // }
+    };
+    const submitForm = async (values: any) => {
+      const requestQueen = [0].map(async (item) => {
+        const data = await submitTime({
+          ...values,
+          startTime: `${getYYMMDD(value)} ${time}:00`,
+          endTime: `${getYYMMDD(value)} ${endTime}:00`,
+          // dayOfWeek: Number(item),
+          // time: translateTime(time, endTime),
+        });
+        return data;
+      });
+      Promise.all(requestQueen)
+        .then((res) => {
+          console.log(res, 'res');
+          // if(res.every((item)=>item.code===200))
+          if (res.some((item) => item.message !== 'success')) {
+            Toast.fail('添加失败');
+          } else {
+            Toast.success('添加成功');
+          }
+          // if(res.)
+          // Toast.success('添加成功');
+        })
+        .catch((err) => {
+          Toast.fail('添加失败');
+        });
+    };
     return (
       <div className="w-full space-y-4 youni-form">
-        <CCourseInput title="日程名称" isNess></CCourseInput>
+        <CCourseInput
+          change={(val) => {
+            handleChange(val.label, 'name');
+          }}
+          title="日程名称"
+          isNess
+        ></CCourseInput>
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
             <div className="flex items-center">
@@ -321,7 +388,7 @@ export default function AddSchedule() {
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
             <div className="flex items-center">
-              <div>时间</div>
+              <div>开始时间</div>
             </div>
             <div>
               <DatetimePicker
@@ -331,8 +398,8 @@ export default function AddSchedule() {
                 title=""
                 defaultValue="12:00"
                 type="time"
-                minHour="10"
-                maxHour="20"
+                minHour="7"
+                maxHour="24"
                 value={time}
                 onConfirm={setTime}
               >
@@ -354,15 +421,63 @@ export default function AddSchedule() {
         </div>
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
+            <div className="flex items-center">
+              <div>结束时间</div>
+            </div>
+            <div>
+              <DatetimePicker
+                popup={{
+                  round: true,
+                }}
+                title=""
+                defaultValue="12:00"
+                type="time"
+                minHour="7"
+                maxHour="24"
+                value={endTime}
+                onConfirm={setEndTime}
+              >
+                {(val, _, actions) => {
+                  return (
+                    <Field
+                      readOnly
+                      clickable
+                      label=""
+                      value={val}
+                      placeholder="请选择日期"
+                      onClick={() => actions.open()}
+                    />
+                  );
+                }}
+              </DatetimePicker>
+            </div>
+          </div>
+        </div>
+        <div className="w-full h-12 p-4 bg-white rounded-lg">
+          <div className="flex items-center justify-between h-full space-x-4">
             <div>颜色</div>
-            <CCourseColor setColor={() => {}}></CCourseColor>
+            <CCourseColor
+              setColor={(val) => {
+                handleChange(val, 'color');
+              }}
+            ></CCourseColor>
           </div>
         </div>
         <div className="flex justify-center mx-10 space-x-4">
-          <div className="flex items-center justify-center w-full text-[#FFD036] font-semibold   bg-[#FFFCF3] h-10 rounded-lg">
+          <div
+            onClick={() => {
+              router.back();
+            }}
+            className="flex items-center justify-center w-full text-[#FFD036] font-semibold   bg-[#FFFCF3] h-10 rounded-lg"
+          >
             关闭
           </div>
-          <div className="flex items-center text-[#8C6008] font-semibold justify-center w-full bg-[#FFD036] h-10 rounded-lg">
+          <div
+            onClick={() => {
+              submitForm(timetable);
+            }}
+            className="flex items-center text-[#8C6008] font-semibold justify-center w-full bg-[#FFD036] h-10 rounded-lg"
+          >
             添加日程
           </div>
         </div>
@@ -416,7 +531,7 @@ export default function AddSchedule() {
     };
     const submitForm = async (values: any) => {
       const requestQueen = dayOfWeek.map(async (item) => {
-        const  data  = await submitCourse({
+        const data = await submitCourse({
           ...values,
           dayOfWeek: Number(item),
           time: translateTime(time, endTime),
@@ -427,9 +542,9 @@ export default function AddSchedule() {
         .then((res) => {
           console.log(res, 'res');
           // if(res.every((item)=>item.code===200))
-          if(res.some((item)=>item.message!=="success")){
+          if (res.some((item) => item.message !== 'success')) {
             Toast.fail('添加失败');
-          }else{
+          } else {
             Toast.success('添加成功');
           }
           // if(res.)
@@ -657,7 +772,7 @@ export default function AddSchedule() {
         <div className="flex justify-center mx-10 space-x-4">
           <div
             onClick={() => {
-              router.push('/Schedule');
+              router.back();
             }}
             className="flex items-center
           justify-center w-full text-[#FFD036]
