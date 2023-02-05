@@ -227,9 +227,6 @@ function index(props) {
         </Sticky>
         <div className="w-full bg-white">
           <Setting></Setting>
-          {/* <div className="mt-2 text-center text-[#798195]">
-            <Link href="/Login/signup"> 临时进入登录页面</Link>
-          </div> */}
         </div>
       </div>
     );
@@ -369,17 +366,6 @@ function index(props) {
     useEffect(()=>{
       const interval = setInterval(()=>{
         const _value = Number(value)
-        // if(_value>=3){
-        //   setValue('1')
-        // }else{
-        //   setValue(String(_value + 1))
-        // }
-        // if(_value===1){
-        //   setValue('2')
-        // }
-        // if(_value===2){
-
-        // }
       },2000)
       return ()=>clearInterval(interval)
     },[value])
