@@ -44,15 +44,154 @@ import { Picker, Toast } from 'react-vant';
 import { setOpenLogin } from '@/stores/authSlice';
 import { useDispatch } from 'react-redux';
 import useFetch from '@/hooks/useFetch';
-const PostGroup = () => {
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import { styled } from '@mui/material/styles';
+import { grey } from '@mui/material/colors';
+import Box from '@mui/material/Box';
+// import Waterfall from '@/components/Layout/Waterfall';
+
+const PostGroupDetail = (props) => {
+  const { data } = props;
+  if (!data) return;
   return (
-    <div className="w-full px-5 py-4  rounded-lg border border-[#D9E7FF] bg-PostGroup">
+    <div className="w-full h-screen">
+      <div className="w-full h-[156px] bg-[#F7F8F9] p-5 mb-4">
+        <div className="flex items-center">
+          <div className="grid grid-cols-2 gap-1 grid-rows-2  bg-white p-1 rounded-lg">
+            {data?.posts?.length > 0? data?.posts?.slice(0, 4).map((item) => {
+              return (
+                <div className="overflow-hidden  h-[26px] w-[26px]">
+                  <img
+                    width={'100%'}
+                    style={{ objectFit: 'contain' }}
+                    height={'100%'}
+                    src={`${Cons.BASEURL}${item.preview[0]}`}
+                  ></img>
+                </div>
+              );
+            }):<div className='h-[26px] w-[26px]'></div>}
+          </div>
+          <div className="ml-4 text-[#37455C] font-semibold text-lg">
+            {data?.name}
+          </div>
+        </div>
+        <div className="flex justify-between mt-3">
+          <div>
+            <div className={classnames('flex items-center p-2')}>
+              <div className="avatar placeholder">
+                <div
+                  onClick={() => {
+                    // checkUser(data?.id);
+                  }}
+                  className="w-8 rounded-full bg-neutral-focus text-neutral-content"
+                >
+                  <img src={`${Cons.BASEURL}${data?.student?.avatar}`} />
+                </div>
+              </div>
+              <div
+                onClick={() => {
+                  // checkUser(data?.id);
+                }}
+              >
+                <div className="ml-4 text-sm  font-normal max-w-8 text-[#37455C] ">
+                  {data?.student?.nickName}
+                </div>
+                <div className="ml-4 text-xs text-gray-200">
+                  {data?.student?.education?.year} · {data?.student?.education?.major}
+                  {/* 2022届 · B.Com Accounting */}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex space-x-2">
+            <div className="flex items-center space-x-1">
+              <PostGroupIcon1></PostGroupIcon1>
+              <div className="text-[#798195] text-xs">{data?.postCount}</div>
+            </div>
+            <div className="flex items-center  space-x-1">
+              <PostGroupIcon2></PostGroupIcon2>
+              <div className="text-[#798195] text-xs">{data?.followCount}</div>
+            </div>
+            <div className="flex items-center  space-x-1">
+              <PostGroupIcon3></PostGroupIcon3>
+              <div className="text-[#798195] text-xs">{data?.viewCount}</div>
+            </div>
+          </div>
+        </div>
+        <div>
+        </div>
+      </div>
+      {data?.posts?.length > 0 ?<Waterfall
+            key={data?.id}
+            postData={data?.posts?.map((item) => {
+              return { ...item, student: { nickName: data?.student?.nickName } };
+            })}
+          ></Waterfall>:<div className='text-[#898E97] flex justify-center'>该文集暂时没有内容</div>}
+    </div>
+  );
+};
+
+const PostGroupDrawer = (props) => {
+  const { open }: { open: boolean } = props;
+  const [id, setId] = useState(props?.id);
+  const Puller = styled(Box)(({ theme }) => ({
+    width: 33,
+    height: 4,
+    backgroundColor: theme.palette.mode === 'light' ? grey[300] : grey[900],
+    borderRadius: 3,
+    position: 'absolute',
+    top: 8,
+    left: 'calc(50% - 15px)',
+  }));
+  return (
+    <SwipeableDrawer
+      className="z-20"
+      disableDiscovery={true}
+      disableSwipeToOpen={true}
+      onClose={() => {
+        props.onClose();
+      }}
+      onOpen={() => {
+        props.onOpen();
+      }}
+      open={open}
+      anchor="bottom"
+    >
+      <div className="h-[96vh]">
+        <Puller></Puller>
+        <PostGroupDetail data={props.data}></PostGroupDetail>
+      </div>
+    </SwipeableDrawer>
+  );
+};
+
+const PostGroup = (props) => {
+  const { data } = props;
+  const [id, setId] = useState(data?.id);
+  return (
+    <div
+      onClick={() => {
+        console.log(id, 'data?.id');
+        props.check(id);
+      }}
+      className="w-full px-5 py-4  rounded-lg border border-[#D9E7FF] bg-PostGroup"
+    >
       <div className="flex justify-between">
         {' '}
         <div className="flex items-center space-x-2">
-          <div className="text-blueTitle text-sm font-semibold">测试文集1 </div>
-          <div className="text-[10px] rounded-sm px-2 text-white bg-[#52C41A] flex justify-center items-center">
-            公开
+          <div className="text-blueTitle text-sm font-semibold">
+            {data?.name}
+          </div>
+          <div
+            className={classnames(
+              'text-[10px] rounded-sm px-2  flex justify-center items-center',
+              {
+                'text-white bg-[#52C41A]': data?.isPublic,
+                'text-blueTitle bg-[#D9E7FF]': !data?.isPublic,
+              },
+            )}
+          >
+            {data?.isPublic ? '公开' : '私密'}
           </div>
         </div>
         <div className="rounded-full text-[#A9B0C0] flex justify-center items-center border w-14 bg-white border-[#F3F4F6]">
@@ -60,44 +199,36 @@ const PostGroup = () => {
         </div>
       </div>
       <div className="flex space-x-2">
-        <div className="flex items-center">
+        <div className="flex items-center space-x-2">
           <PostGroupIcon1></PostGroupIcon1>
-          <div className="text-[#798195] text-xs">24</div>
+          <div className="text-[#798195] text-xs">{data?.postCount}</div>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center space-x-2">
           <PostGroupIcon2></PostGroupIcon2>
-          <div className="text-[#798195] text-xs">24</div>
+          <div className="text-[#798195] text-xs">{data?.followCount}</div>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center space-x-2">
           <PostGroupIcon3></PostGroupIcon3>
-          <div className="text-[#798195] text-xs">24</div>
+          <div className="text-[#798195] text-xs">{data?.viewCount}</div>
         </div>
       </div>
       <div className="mt-4 flex justify-between ">
-        <Image
-          width={64}
-          height={64}
-          src="/text.png"
-          className="rounded-xl"
-        ></Image>
-        <Image
-          width={64}
-          height={64}
-          src="/text.png"
-          className="rounded-xl"
-        ></Image>
-        <Image
-          width={64}
-          height={64}
-          src="/text.png"
-          className="rounded-xl"
-        ></Image>
-        <Image
-          width={64}
-          height={64}
-          src="/text.png"
-          className="rounded-xl"
-        ></Image>
+        {
+          data?.posts?.length > 0 ? data?.posts?.slice(0,4).map((item,index)=>{
+            return (
+              <Image
+              width={64}
+              height={64}
+              placeholder="blur"
+              blurDataURL={`${Cons.BASEURL}${item.preview[0]}`}
+              src={`${Cons.BASEURL}${item.preview[0]}`}
+              className="rounded-xl"
+            ></Image>
+            )
+          }): <div className='w-full h-16 text-[#798195] flex justify-center items-center'>
+              去校园广场添加贴文到文集中
+          </div>
+        }
       </div>
     </div>
   );
@@ -184,10 +315,10 @@ const Setting = () => {
             <div className="text-xs text-[#798195]">我的积分</div>
           </div>
           <Link href="/Setting/contact">
-          <div className="flex flex-col items-center space-y-3">
-            <SettingIcon8></SettingIcon8>
-            <div className="text-xs text-[#798195]">联系方式</div>
-          </div>
+            <div className="flex flex-col items-center space-y-3">
+              <SettingIcon8></SettingIcon8>
+              <div className="text-xs text-[#798195]">联系方式</div>
+            </div>
           </Link>
         </div>
         <div className="grid grid-cols-4">
@@ -234,11 +365,42 @@ function index(props) {
   const Profile2 = () => {
     const [menu, setMenu] = useState(1);
     const { data } = useFetch('/post/list', 'get');
+    const [detailId, setDetailId] = useState();
+    const { data: collectionData, mutate } = useFetch(
+      '/collection/detail',
+      'get',
+      {
+        id: detailId,
+      },
+    );
+    useEffect(() => {
+      console.log(detailId, 'detailId');
+      // if(!detailId) return;
+      mutate();
+    }, [detailId]);
+    const { data: PostGroupData } = useFetch('/collection/list', 'get');
+    const [openDetail, setOpenDetail] = useState(false);
+    const checkPostGroupDetail = (id) => {
+      setOpenDetail(true);
+      console.log(id, 'checkPostGroupDetail');
+      setDetailId(id);
+    };
+
     return (
-      <div className="h-full ">
+      <div className="h-full mb-20">
+        <PostGroupDrawer
+          data={collectionData?.data}
+          onOpen={() => {
+            setOpenDetail(true);
+          }}
+          onClose={() => {
+            setOpenDetail(false);
+          }}
+          id={detailId}
+          open={openDetail}
+        ></PostGroupDrawer>
         <div className="w-full px-2">
           <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
-           
             <div
               onClick={() => {
                 setMenu(1);
@@ -268,13 +430,24 @@ function index(props) {
           </div>
         </div>
         {menu === 0 ? (
-          <div className="px-[10px]">
-            <PostGroup></PostGroup>
+          <div className="px-[10px] space-y-3">
+            {PostGroupData?.data.map((item) => {
+              return (
+                <PostGroup
+                  check={(id) => {
+                    checkPostGroupDetail(id);
+                  }}
+                  data={item}
+                ></PostGroup>
+              );
+            })}
           </div>
         ) : (
-          <Waterfall postData={data?.data.map((item) => {
-            return { ...item, student: { nickName: user.nickName } }
-          })}></Waterfall>
+          <Waterfall
+            postData={data?.data.map((item) => {
+              return { ...item, student: { nickName: user.nickName } };
+            })}
+          ></Waterfall>
         )}
       </div>
     );
@@ -284,12 +457,11 @@ function index(props) {
     const [menu, setMenu] = useState(1);
     const { data: liked } = useFetch('/post/liked', 'get');
     const { data: stard } = useFetch('/post/stard', 'get');
-    if(!liked || !stard) return null;
+    if (!liked || !stard) return null;
     return (
       <div className="w-full">
         <div className="w-full px-2">
           <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
-           
             <div
               onClick={() => {
                 setMenu(1);
@@ -313,8 +485,8 @@ function index(props) {
                   'bg-slate-50 text-[#FFD036]': menu === 0,
                 },
               )}
-            >文集
-              
+            >
+              文集
             </div>
           </div>
         </div>
@@ -323,7 +495,9 @@ function index(props) {
             <PostGroup></PostGroup>
           </div>
         ) : (
-          <Waterfall postData={Object.assign(liked?.data, stard?.data )}></Waterfall>
+          <Waterfall
+            postData={Object.assign(liked?.data, stard?.data)}
+          ></Waterfall>
         )}
       </div>
     );
@@ -362,13 +536,13 @@ function index(props) {
       { text: '一键导入大学课表', value: '1' },
       { text: '便捷计算自己的GPA', value: '2' },
     ];
-    const [value,setValue] = useState('1')
-    useEffect(()=>{
-      const interval = setInterval(()=>{
-        const _value = Number(value)
-      },2000)
-      return ()=>clearInterval(interval)
-    },[value])
+    const [value, setValue] = useState('1');
+    useEffect(() => {
+      const interval = setInterval(() => {
+        const _value = Number(value);
+      }, 2000);
+      return () => clearInterval(interval);
+    }, [value]);
     return (
       <div className="w-full h-[400px]  p-5">
         <div className="relative">
@@ -387,7 +561,7 @@ function index(props) {
         </div>
         <button
           onClick={() => {
-            dispatch(setOpenLogin('login'))
+            dispatch(setOpenLogin('login'));
           }}
           className={classnames(
             'w-full text-[#8C6008]  bg-yellow-400 border-0 rounded-full btn hover:bg-yellow-400',
@@ -398,11 +572,11 @@ function index(props) {
       </div>
     );
   };
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   return (
     <div className="w-screen min-h-screen">
-      <ProfileHeader data={{student:user}}></ProfileHeader>
+      <ProfileHeader data={{ student: user }}></ProfileHeader>
       <div className="w-full overflow-hidden rounded-full ">
         {menuVal !== 4 ? (
           <HeaderMenu
