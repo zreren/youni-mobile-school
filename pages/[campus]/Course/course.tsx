@@ -12,7 +12,9 @@ import { Flex, Loading } from 'react-vant';
 
 export default function course() {
   const router = useRouter()
-  const { data, error } = useFetch(`${Cons.API.SUBJECT.QUERY}?campusId=1`,"get");
+  const { data, error } = useFetch(`/subject/query?campusId=1`,"get",{
+    pageSize:6
+  });
   const { data:hotCourseData, error: hotCourseDataError, mutate:hotMutate} = useFetch(`${Cons.API.COURSE.HOT}?campusId=1`,"get");
 
   console.log(data,"data")

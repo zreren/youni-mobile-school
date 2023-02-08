@@ -39,7 +39,7 @@ import PostGroupIcon2 from './post-group/icon2.svg';
 import PostGroupIcon3 from './post-group/icon3.svg';
 import useUser from '@/hooks/useUser';
 import useLocalStorage from '@/hooks/useStore';
-import { Sticky } from 'react-vant';
+import { Input, Sticky } from 'react-vant';
 import { Picker, Toast } from 'react-vant';
 import { setOpenLogin } from '@/stores/authSlice';
 import { useDispatch } from 'react-redux';
@@ -48,16 +48,30 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { styled } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import Box from '@mui/material/Box';
+import { Switch } from 'react-vant';
+import useRequest from "@/libs/request";
 // import Waterfall from '@/components/Layout/Waterfall';
 
 const PostGroupDetail = (props) => {
-  const { data } = props;
+  const { data,isEdit,mutate } = props;
+  const cancelStarPost = async (id)=>{
+    console.log("PostGroupDetail",id,data?.id)
+    await  useRequest.post("/api/post/unstar",{
+      id:id,
+      collectionId:data?.id
+    })
+    Toast.success("移除成功，重新打开文集生效")
+    // mutate()
+  }
+  useEffect(()=>{
+    console.log(isEdit,"isEdit")
+  },[isEdit])
   if (!data) return;
   return (
     <div className="w-full h-screen">
       <div className="w-full h-[156px] bg-[#F7F8F9] p-5 mb-4">
         <div className="flex items-center">
-          <div className="grid grid-cols-2 gap-1 grid-rows-2  bg-white p-1 rounded-lg">
+          <div className="grid grid-cols-2 gap-1 grid-rows-2    bg-white p-1 rounded-lg">
             {data?.posts?.length > 0? data?.posts?.slice(0, 4).map((item) => {
               return (
                 <div className="overflow-hidden  h-[26px] w-[26px]">
@@ -69,11 +83,21 @@ const PostGroupDetail = (props) => {
                   ></img>
                 </div>
               );
-            }):<div className='h-[26px] w-[26px]'></div>}
+            }):<div className='h-[26px] w-[52px]'></div>}
           </div>
-          <div className="ml-4 text-[#37455C] font-semibold text-lg">
+          {
+            isEdit ?
+           <div className='ml-4'>
+            <Input className=" text-[#37455C]  underline  font-semibold text-lg" value={data?.name}></Input>
+            <div className='mt-2 flex items-center'>
+              <div className='mr-4 text-blueTitle'>公开</div>
+              <Switch  size="24px" activeColor="#FED440"></Switch></div>
+           </div>:
+            <div className="ml-4 text-[#37455C] font-semibold text-lg">
             {data?.name}
           </div>
+          }
+          
         </div>
         <div className="flex justify-between mt-3">
           <div>
@@ -122,7 +146,9 @@ const PostGroupDetail = (props) => {
         </div>
       </div>
       {data?.posts?.length > 0 ?<Waterfall
+            isEdit={isEdit}
             key={data?.id}
+            cancelStarPost={(id)=>{cancelStarPost(id)}}
             postData={data?.posts?.map((item) => {
               return { ...item, student: { nickName: data?.student?.nickName } };
             })}
@@ -132,7 +158,7 @@ const PostGroupDetail = (props) => {
 };
 
 const PostGroupDrawer = (props) => {
-  const { open }: { open: boolean } = props;
+  const { open,isEdit,mutate}: { open: boolean,isEdit:boolean,mutate:any} = props;
   const [id, setId] = useState(props?.id);
   const Puller = styled(Box)(({ theme }) => ({
     width: 33,
@@ -159,21 +185,18 @@ const PostGroupDrawer = (props) => {
     >
       <div className="h-[96vh]">
         <Puller></Puller>
-        <PostGroupDetail data={props.data}></PostGroupDetail>
+        <PostGroupDetail mutate={()=>{mutate()}} isEdit={isEdit} data={props.data}></PostGroupDetail>
       </div>
     </SwipeableDrawer>
   );
 };
 
 const PostGroup = (props) => {
-  const { data } = props;
+  const { data,isEdit } = props;
   const [id, setId] = useState(data?.id);
+  const [isEditMethod,setIsEditMethod] = useState(isEdit)
   return (
     <div
-      onClick={() => {
-        console.log(id, 'data?.id');
-        props.check(id);
-      }}
       className="w-full px-5 py-4  rounded-lg border border-[#D9E7FF] bg-PostGroup"
     >
       <div className="flex justify-between">
@@ -194,11 +217,18 @@ const PostGroup = (props) => {
             {data?.isPublic ? '公开' : '私密'}
           </div>
         </div>
-        <div className="rounded-full text-[#A9B0C0] flex justify-center items-center border w-14 bg-white border-[#F3F4F6]">
+        <div onClick={(e)=>{
+          e.preventDefault();
+          props.check(id,true);
+        }} className="rounded-full  text-[#A9B0C0] flex justify-center items-center border w-14 bg-white border-[#F3F4F6]">
           编辑
         </div>
       </div>
-      <div className="flex space-x-2">
+      <div className="flex space-x-2"       onClick={(e) => {
+        e.preventDefault();
+        console.log(id, 'data?.id');
+        props.check(id,false);
+      }}>
         <div className="flex items-center space-x-2">
           <PostGroupIcon1></PostGroupIcon1>
           <div className="text-[#798195] text-xs">{data?.postCount}</div>
@@ -212,7 +242,13 @@ const PostGroup = (props) => {
           <div className="text-[#798195] text-xs">{data?.viewCount}</div>
         </div>
       </div>
-      <div className="mt-4 flex justify-between ">
+      <div className="mt-4 flex "
+            onClick={(e) => {
+              e.preventDefault();
+              console.log(id, 'data?.id');
+              props.check(id,false);
+            }}
+      >
         {
           data?.posts?.length > 0 ? data?.posts?.slice(0,4).map((item,index)=>{
             return (
@@ -226,7 +262,7 @@ const PostGroup = (props) => {
             ></Image>
             )
           }): <div className='w-full h-16 text-[#798195] flex justify-center items-center'>
-              去校园广场添加贴文到文集中
+              在校园广场添加贴文到文集中
           </div>
         }
       </div>
@@ -380,8 +416,11 @@ function index(props) {
     }, [detailId]);
     const { data: PostGroupData } = useFetch('/collection/list', 'get');
     const [openDetail, setOpenDetail] = useState(false);
-    const checkPostGroupDetail = (id) => {
+    const [isEdit,setIsEdit] = useState(false);
+    const checkPostGroupDetail = (id,isEdit?) => {
       setOpenDetail(true);
+      setIsEdit(isEdit);
+      console.log(isEdit,"checkPostGroupDetail")
       console.log(id, 'checkPostGroupDetail');
       setDetailId(id);
     };
@@ -390,12 +429,14 @@ function index(props) {
       <div className="h-full mb-20">
         <PostGroupDrawer
           data={collectionData?.data}
+          mutate={()=>{mutate()}}
           onOpen={() => {
             setOpenDetail(true);
           }}
           onClose={() => {
             setOpenDetail(false);
           }}
+          isEdit={isEdit}
           id={detailId}
           open={openDetail}
         ></PostGroupDrawer>
@@ -434,8 +475,8 @@ function index(props) {
             {PostGroupData?.data.map((item) => {
               return (
                 <PostGroup
-                  check={(id) => {
-                    checkPostGroupDetail(id);
+                  check={(id,isEdit) => {
+                    checkPostGroupDetail(id,isEdit);
                   }}
                   data={item}
                 ></PostGroup>
@@ -445,7 +486,7 @@ function index(props) {
         ) : (
           <Waterfall
             postData={data?.data.map((item) => {
-              return { ...item, student: { nickName: user.nickName } };
+              return { ...item, student: { nickName: user?.nickName } };
             })}
           ></Waterfall>
         )}

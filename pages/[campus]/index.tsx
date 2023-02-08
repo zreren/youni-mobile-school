@@ -357,7 +357,9 @@ function SchoolPage(props) {
         ></HeaderLayout>
         <MenuAtSchool></MenuAtSchool>
         <div className="w-full pl-5 pr-5">
-          <Swiper>
+          <Swiper
+          autoplay={3000}
+          >
             {
               loading ?  <Swiper.Item>
               <Skeleton loading={true} row={1} rowWidth={'100%'} rowHeight={70}>

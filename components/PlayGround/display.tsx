@@ -7,12 +7,14 @@ import TimeIcon from './Time.svg';
 import { Skeleton } from 'react-vant';
 import Liked from './Liked.svg';
 import { width } from '@mui/system';
-import userequest from '@/libs/request'
+import userequest from '@/libs/request';
+import { Minus } from '@react-vant/icons';
+
 export default function Display(props) {
   // if(!props.data) return;
 
-  const { data } = props;
-  console.log(data, "Displayprops")
+  const { data, isEdit } = props;
+  console.log(isEdit, 'Displayprops');
   const router = useRouter();
   const colorMap = {
     idle: 'yellow-gradient',
@@ -109,7 +111,12 @@ export default function Display(props) {
             <div className="bg-gray-500 rounded-full w-px18 h-px18"></div>
             <div className="ext-xs text-priceGray">{data.user}</div>
           </div>
-          <div className="flex items-center text-xs text-priceGray" onClick={() => { like(data?.id) }}>
+          <div
+            className="flex items-center text-xs text-priceGray"
+            onClick={() => {
+              like(data?.id);
+            }}
+          >
             {like ? <Liked></Liked> : <Like></Like>}
             <div>{data.LikeCount}</div>
           </div>
@@ -158,28 +165,28 @@ export default function Display(props) {
     carpool: <Normal />,
     // 推广: <Ad />,
   };
-  const textColorMap = [
-    'tag-red',
-    'tag-blue',
-  ];
+  const textColorMap = ['tag-red', 'tag-blue'];
   const [loading, setLoading] = React.useState(true);
   const [like, setLike] = React.useState(data?.interactInfo.liked);
   const defaultLikeCount = data?.interactInfo.likeCount;
+  const cancelStart = (id: number) => {
+    props.cancelStarPost(id);
+  };
   const LikeCount = React.useMemo(() => {
     if (!defaultLikeCount && like) {
-      return Number(data?.interactInfo.likeCount) + 1
+      return Number(data?.interactInfo.likeCount) + 1;
     }
     if (defaultLikeCount && !like) {
-      return Number(data?.interactInfo.likeCount) - 1
+      return Number(data?.interactInfo.likeCount) - 1;
     }
     return data?.interactInfo.likeCount;
-  }, [like])
+  }, [like]);
   const handleLike = async (id) => {
-    setLike(!like)
+    setLike(!like);
     userequest.post('/api/post/like', {
-      id: id
-    })
-  }
+      id: id,
+    });
+  };
   if (data.type === '推广') {
     return (
       <div className="w-full pl-0.5 pr-0.5">
@@ -226,11 +233,18 @@ export default function Display(props) {
     );
   } else {
     return (
-      <div className="w-full pl-0.5 pr-0.5">
+      <div className="w-full pl-0.5 pr-0.5 relative">
+        {isEdit ? (
+          <div
+            onClick={() => {
+              cancelStart(data?.id);
+            }}
+            className="absolute shadow flex justify-center items-center -right-2 -top-2 z-30 text-white w-6 h-6 bg-red-500 rounded-full"
+          >
+            <Minus></Minus>
+          </div>
+        ) : null}
         <div
-          onClick={() => {
-            props.handleClick(data.id);
-          }}
           style={{ position: 'relative', width: '100%' }}
           className="rounded-xl overflow-hidden"
         >
@@ -253,6 +267,9 @@ export default function Display(props) {
             src={`https://youni-admin.kuizuo.cn${data?.preview[0]}`}
             width={imageSize.width}
             height={imageSize.height}
+            onClick={() => {
+              props.handleClick(data.id);
+            }}
             onLoadingComplete={(target) => {
               setLoading(false);
               setSmageSize({
@@ -306,7 +323,9 @@ export default function Display(props) {
           <div className="flex items-end mt-2 space-x-1 text-sm">
             <div className="text-price"> {data.form.price}</div>
             <div className="text-xs text-price">{data.form.unit}</div>
-            <div className="text-xs text-priceGray dele">{data.form.oldPrice}</div>
+            <div className="text-xs text-priceGray dele">
+              {data.form.oldPrice}
+            </div>
           </div>
         ) : (
           <div className="flex items-end mt-2 space-x-1 text-sm"></div>
@@ -332,11 +351,20 @@ export default function Display(props) {
         <div className="flex items-center justify-between mt-2 mb-2">
           <div className="flex items-center space-x-1">
             <div className="bg-gray-500 rounded-full w-px18 h-px18"></div>
-            <div className="ext-xs text-priceGray">{data?.student?.nickName}</div>
+            <div className="ext-xs text-priceGray">
+              {data?.student?.nickName}
+            </div>
           </div>
-          <div className="flex items-center text-xs text-priceGray" onClick={() => { handleLike(data?.id) }}>
+          <div
+            className="flex items-center text-xs text-priceGray"
+            onClick={() => {
+              handleLike(data?.id);
+            }}
+          >
             {like ? <Liked></Liked> : <Like></Like>}
-            <div className={classnames({ 'text-red-400': like })}>{LikeCount}</div>
+            <div className={classnames({ 'text-red-400': like })}>
+              {LikeCount}
+            </div>
           </div>
         </div>
       </div>

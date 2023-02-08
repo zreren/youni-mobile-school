@@ -119,7 +119,7 @@ const dataList = [
 ];
 
 export default function Waterfall(props) {
-  const { postData } = props;
+  const { postData ,isEdit,cancelStarPost} = props;
   const router = useRouter();
   const campus = router.query.campus;
   console.log(postData, 'postData in waterfull');
@@ -186,7 +186,7 @@ export default function Waterfall(props) {
 
   const CardWithClick = React.useCallback(
     (props) => (
-      <Display {...props} handleClick={(e) => { setId(e); setPostDetailShow(true) }} />
+      <Display {...props} cancelStarPost={(id)=>{cancelStarPost(id)}} isEdit={isEdit} handleClick={(e) => { setId(e); setPostDetailShow(true) }} />
     ),
     [],
   );
@@ -224,6 +224,7 @@ export default function Waterfall(props) {
       <div className="mx-2">
         {data?.length >= 0 && reRender ? (
           <Masonry
+            
             columnCount={2}
             columnGutter={2}
             columnWidth={150}

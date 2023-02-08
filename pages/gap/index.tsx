@@ -100,7 +100,7 @@ export default function index() {
     return (
       <div className="relative" onClick={props.onClick}>
         <div className={`bg-[${color}] rounded-full w-3 h-16`}></div>
-        <div className="w-full  gap-card-shadow absolute top-0  justify-center items-center bg-white left-2 mr-4  h-16 z-30 flex">
+        <div className="w-full  gap-card-shadow absolute top-0  justify-center items-center bg-white left-2 mr-4  h-16  flex">
           <div className="flex rounded-full px-6 py-1  items-center space-x-2 bg-[#F7F8F9]">
             <Session></Session>
             <div className="text-[#798195] font-medium">添加课程</div>
@@ -313,7 +313,7 @@ export default function index() {
         )}
       >
         <div className={`bg-[${color}] rounded-full w-3 h-16`}></div>
-        <div className="w-full gap-card-shadow absolute top-0   items-center bg-white left-2 mr-4  h-16 z-30 flex justify-between">
+        <div className="w-full gap-card-shadow absolute top-0   items-center bg-white left-2 mr-4  h-16   flex justify-between">
           <div className={'mx-4 w-full'}>
             <div className="flex items-center space-x-4 w-full">
               <div className={classnames({ 'w-screen': isFocus })}>
