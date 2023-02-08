@@ -83,7 +83,7 @@ const PostGroupDetail = (props) => {
                   ></img>
                 </div>
               );
-            }):<div className='h-[26px] w-[52px]'></div>}
+            }):<div className='h-[26px] w-[26px]'></div>}
           </div>
           {
             isEdit ?

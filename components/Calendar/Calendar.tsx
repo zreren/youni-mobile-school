@@ -410,7 +410,7 @@ function Calendar(props) {
           <>
             {todayItemCount?.length === 0 && timeTable.length === 0? (
               <div className="w-full text-center bg-white rounded-lg p-4 text-[#A9B0C0] text-sm font-medium">
-                今日暂无课程或日程安排'
+                今日暂无课程或日程安排
               </div>
             ) : null}
             {/* <div className='btn btn-primary w-full '>前往添加</div> */}
