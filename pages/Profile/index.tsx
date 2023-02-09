@@ -60,8 +60,8 @@ const PostGroupDetail = (props) => {
       id:id,
       collectionId:data?.id
     })
-    Toast.success("移除成功，重新打开文集生效")
-    // mutate()
+    Toast.success("移除成功")
+    mutate()
   }
   useEffect(()=>{
     console.log(isEdit,"isEdit")
@@ -147,7 +147,7 @@ const PostGroupDetail = (props) => {
       </div>
       {data?.posts?.length > 0 ?<Waterfall
             isEdit={isEdit}
-            key={data?.id}
+            key={data?.id + data?.posts?.length}
             cancelStarPost={(id)=>{cancelStarPost(id)}}
             postData={data?.posts?.map((item) => {
               return { ...item, student: { nickName: data?.student?.nickName } };
@@ -242,7 +242,7 @@ const PostGroup = (props) => {
           <div className="text-[#798195] text-xs">{data?.viewCount}</div>
         </div>
       </div>
-      <div className="mt-4 flex "
+      <div className="mt-4 flex space-x-4"
             onClick={(e) => {
               e.preventDefault();
               console.log(id, 'data?.id');
@@ -252,7 +252,8 @@ const PostGroup = (props) => {
         {
           data?.posts?.length > 0 ? data?.posts?.slice(0,4).map((item,index)=>{
             return (
-              <Image
+             <div>
+               <Image
               width={64}
               height={64}
               placeholder="blur"
@@ -260,6 +261,7 @@ const PostGroup = (props) => {
               src={`${Cons.BASEURL}${item.preview[0]}`}
               className="rounded-xl"
             ></Image>
+             </div>
             )
           }): <div className='w-full h-16 text-[#798195] flex justify-center items-center'>
               在校园广场添加贴文到文集中
