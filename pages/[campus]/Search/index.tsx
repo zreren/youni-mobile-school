@@ -21,11 +21,11 @@ export default function index() {
   const [value,setValue] = React.useState('');
   const [historyList,setHistoryList] = useState<any []>(history);
   const {data:courseData,error:courseError,mutate} = useFetch(`/course/query`,"get",{
-      name:value,
+      keyword:value,
       campusId:campusId
   });
   const {data:professorList,mutate:professorMutate} =useFetch(`/professor/list`,"get",{
-    name:value,
+    keyword:value,
     campusId:campusId
   })
   const SearchTag = (props)=>{
@@ -53,13 +53,6 @@ export default function index() {
     }
    
   },[value])
-  // const history = [
-  //   'ADMS1000',
-  //   'Natalie Guriel',
-  //   'yorku',
-  //   'Eli Bartner',
-  //   'John Amanatides'
-  // ]
   const headerMenuList = [
     {
       label: '教授',
@@ -94,7 +87,7 @@ export default function index() {
     console.log(menu,"menu")
   },[menu])
   return (
-    <div className="w-screen min-h-screen bg-gray-50">
+    <div className="w-screen min-h-screen bg-gray-50 pb-20">
       <div>
         <CustomizedTabs
           switchMenu={(val) => {setMenu(val)}}
