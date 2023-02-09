@@ -90,7 +90,8 @@ const PostGroupDetail = (props) => {
            <div className='ml-4'>
             <Input className=" text-[#37455C]  underline  font-semibold text-lg" value={data?.name}></Input>
             <div className='mt-2 flex items-center'>
-              <div className='mr-4 text-blueTitle'>公开</div>
+              <div className='w-[4px] h-4 bg-[#FFCE00] mr-2 rounded-full'></div>
+              <div className='mr-4 text-blueTitle'>是否公开</div>
               <Switch  size="24px" activeColor="#FED440"></Switch></div>
            </div>:
             <div className="ml-4 text-[#37455C] font-semibold text-lg">
