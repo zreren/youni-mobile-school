@@ -117,6 +117,10 @@ function index(props) {
     const [comment, setComment] = useState<string>('');
     const { user, id, pid } = props;
     const send = () => {
+      if(comment === ''){
+        Toast.fail('评论不能为空')
+        return
+      };
       props.send(comment, id, pid);
       setComment('');
     };
@@ -130,7 +134,15 @@ function index(props) {
             setComment(e.target.value);
           }}
         ></input>
-
+        <div onClick={()=>{
+          setCommentChild({
+            id: null,
+            user: null,
+            pid: null,
+          })
+        }} className="text-sm text-[#798195] whitespace-nowrap ml-2 mr-2">
+          返回
+        </div>
         <div
           className="text-sm text-[#798195] whitespace-nowrap"
           onClick={() => {
