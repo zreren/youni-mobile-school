@@ -9,7 +9,7 @@ import { debounce } from "lodash";
 export default function AllSubject() {
   const [value,setValue] = React.useState('');
   const { data, error,mutate } = useFetch('/subject/list?campusId=1',"get",{
-    name: value
+    keyword: value
   });
   const randomColor = ['red', 'blue', 'yellow', 'green', 'pink', 'purple']
   const debounceSearch = debounce((value)=>{

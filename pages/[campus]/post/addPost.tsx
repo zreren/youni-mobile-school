@@ -41,6 +41,7 @@ import MediaIcon from './assets/actives/media.svg';
 import SeatIcon from './assets/actives/seat.svg';
 import useLanguage from '@/hooks/useLanguage';
 import IOSSwitch from '@/components/Input/ios';
+import { set } from 'react-hook-form';
 
 export default function addPost() {
   const Footer = () => {
@@ -267,7 +268,7 @@ export default function addPost() {
       // <Input placeholder="请输入"></Input>
       // </Form.Item>
     ),
-    Contact: <div>请选择联系方式</div>,
+    contact: <div>请选择联系方式</div>,
     Switch: <Switch activeColor="#FFD036" size={20} inactiveColor="#dcdee0" />,
   };
   const { data: dynamicForm, mutate } = useFetch('/post/dynamicForm', 'get', {
@@ -418,11 +419,17 @@ export default function addPost() {
   //   top: 8,
   //   left: 'calc(50% - 15px)',
   // }));
-
+  const { data: contactList } = useFetch('/profile/contact', 'get');
+  const [contactListTemp, setContactListTemp] = useState( contactList?.data);
+  useEffect(()=>{
+    setContactListTemp(contactList?.data)
+  },[contactList])
   const [contactVisible, setContactVisible] = useState(false);
   const ContactModel = (props) => {
-    const { visible, open, close, confirm } = props;
-    function Form(props) {
+    const { visible, open, close, confirm ,data} = props;
+    if(!data) return
+    const [_contactListTemp,_setContactListTemp] = useState(form.getFieldValue('contact')?form.getFieldValue('contact') :data);
+    function _Form(props) {
       let { header, List } = props;
       if (!List) {
         List = [
@@ -461,17 +468,21 @@ export default function addPost() {
         </div>
       );
     }
-    const { data: contactList } = useFetch('/profile/contact', 'get');
-    const [contactListTemp,setContactListTemp] = useState(contactList?.data);
+    const onCloseModel =()=>{
+      setContactVisible(_contactListTemp)
+      close();
+    }
     useEffect(()=>{
+      form.setFieldValue('contact',_contactListTemp)
+      // setContactListTemp(_contactListTemp)
       console.log(contactListTemp,"contactListTemp")
-    },[contactListTemp])
+    },[_contactListTemp])
     const PhoneComponent = (props) => {
       const { data, type } = props;
       const dataFetch = React.useMemo(() => {
         if (data) return;
-        if(!contactListTemp) return
-        return contactListTemp?.filter((item, index) => {
+        if(!_contactListTemp) return
+        return _contactListTemp?.filter((item, index) => {
           return item.type === type;
         })[0];
       }, [data]);
@@ -494,13 +505,18 @@ export default function addPost() {
           type: type,
           value: value,
           public: bool !== null ? bool : isPublic,
-          id: data?.id,
+          id: data?.id || dataFetch?.id,
+          createdAt: data?.createdAt || dataFetch?.createdAt,
+          updateAt:data?.updatedAt || dataFetch?.updatedAt,
         }
-        setContactListTemp((pre)=>{
-          return {
-            ...pre,
+        _setContactListTemp((pre)=>{
+          const newPre = pre.filter((item)=>{
+            return item.id !== update.id
+          })
+          return [
+            ...newPre,
             update
-          }
+          ]
         })
         // if (!data && !dataFetch) {
         //   useRequest.post('/api/profile/contact/create', {
@@ -543,7 +559,7 @@ export default function addPost() {
                 : `请输入${type}`
             }
             onBlur={() => {
-              updateContactItem();
+              updateContactItem(isPublic);
             }}
             align="right"
             className="text-blueTitle font-medium"
@@ -566,12 +582,12 @@ export default function addPost() {
       );
     };
     const phoneItem = React.useMemo(() => {
-      return contactListTemp?.filter((item, index) => {
+      return _contactListTemp?.filter((item, index) => {
         return item.type === 'phone';
       })[0];
     }, [contactList]);
     const emailItem = React.useMemo(() => {
-      return contactListTemp?.filter((item, index) => {
+      return _contactListTemp?.filter((item, index) => {
         return item.type === 'email';
       })[0];
     }, [contactList]);
@@ -617,7 +633,9 @@ export default function addPost() {
         className="z-10 "
         disableDiscovery={true}
         disableSwipeToOpen={true}
-        onClose={close}
+        onClose={()=>{
+          onCloseModel()
+        }}
         onOpen={open}
         open={visible}
         anchor="bottom"
@@ -625,7 +643,7 @@ export default function addPost() {
       <div className="w-full h-2/3 bg-white p-4 pb-20">
       <Puller></Puller>
       <div className='text-xs text-[#A9B0C0] pt-3'>此处联系方式仅针对本次推文生效</div>
-      <Form header="" List={List1}></Form>
+      <_Form header="" List={List1}></_Form>
       </div>
       </SwipeableDrawer>
     )
@@ -892,7 +910,9 @@ export default function addPost() {
   return (
     <div className="mb-14">
       {KeyboardShow ? <Keyboard></Keyboard> : null}
-      <ContactModel onClose={() => {
+      <ContactModel 
+      data={contactListTemp}
+      onClose={() => {
           setContactVisible(false)
         }} visible={contactVisible}
         close={() => {setContactVisible(false)}}
