@@ -42,6 +42,7 @@ import CourseIcon4 from './courseIcon4.svg';
 import useRequest from '@/libs/request';
 import {  useSelector } from 'react-redux';
 import { Uploader } from 'react-vant';
+// import { stringify } from 'querystring';
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
   height: 6,
@@ -245,7 +246,7 @@ export default function Schedules() {
                     })}
                 </div>
                 <div className="text-xs text-[#798195]">
-                  {extendedProps?.section?.students?.length > 0? `${extendedProps?.section?.students?.length}名同学`:null} 
+                  {extendedProps?.section?.students?.length > 0? `${extendedProps?.section?.students.length}名同学`:null} 
                 </div>
               </div>
             </div>
@@ -391,38 +392,20 @@ export default function Schedules() {
   //   return termInfo?.data?.filter((item)=>item?.current)
   // },[termInfo])
   const SetSchedule = (props) => {
-    const updateCustomImg = async (file:File)=>{
-      // const upload = async (file: File) => {
-      //   try {
-      //     const body = new FormData()
-      //     body.append('source', file)
-      //     const resp = await fetch(DEMO_UPLOAD_API, {
-      //       method: 'POST',
-      //       body,
-      //     })
-      //     const json = await resp.json()
-      //     // return包含 url 的一个对象 例如: {url:'https://img.yzcdn.cn/vant/sand.jpg'}
-      //     return json.image
-      //   } catch (error) {
-      //     return { url: `demo_path/${file.name}` }
-      //   }
-      // const file2Base64 = (file:File):Promise<string> => {
-        return new Promise<any> ((resolve,reject)=> {
-             const reader = new FileReader();
-             reader.readAsDataURL(file);
-             const res = reader.result?.toString() || ''
-             console.log(res,'updateCustomImgres')
-            //  reader.onload = () => (reader.result?.toString() || '');
-             console.log(reader.result?.toString() || '','reader.result?.toString() || ')
-             resolve({
-                url: ''
-             })
-            //  return ;
-            //  reader.onerror = error => reject(error);
-        //  })
-        })
-        // file2Base64()
+    const [customImg,setCustomImg] = useLocalStorage('customImg','')
+    const updateCustomImg =  (e)=>{
+      console.log(e.target.files,"e")
+      const reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload = function () {
+        const base64 = reader.result;
+        setCustomImg(String(base64))
+        console.log(base64);
+      }
     }
+    useEffect(()=>{
+      console.log(customImg,"customImg")
+    },[customImg])
     const Menu = () => {
       const [menu, setMenu] = useState(defaultScheduleView);
       useEffect(() => {
@@ -545,14 +528,15 @@ export default function Schedules() {
             
             <CCourseInput title="自定义背景" Icon={Icon4}>
               <div className='relative upload-custom-img'>
-              <Uploader  upload={updateCustomImg} className='w-screen bg-transparent h-1 absolute'></Uploader>
+                <input type="file" onChange={updateCustomImg}  className='z-30 w-screen bg-transparent h-2 absolute' />
+              {/* <Uploader  upload={updateCustomImg} className='w-screen bg-transparent h-1 absolute'></Uploader> */}
               </div>
               <RightIcon className="mr-2"></RightIcon>
             </CCourseInput>
             <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
             <CCourseInput title="切换课表" Icon={Icon5}></CCourseInput>
             <div className="flex justify-between pl-4 pr-4 mt-4">
-              <div className="flex flex-col items-center" onClick={()=>{setStudentId(0)}}>
+              <div className="flex flex-col items-center" onClick={()=>{setStudentId(-1)}}>
                 <div className="flex flex-col avatar placeholder">
                   <div className="bg-[#FFD03640] rounded-full text-neutral-content w-14">
                     <span className="text-xs font-medium text-[#FFD036]">
@@ -601,7 +585,7 @@ export default function Schedules() {
   const [addCourse, setAddCourse] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [yearMethod, setYearMethod] = useState(false);
-  const [studentId, setStudentId] = useState(0);
+  const [studentId, setStudentId] = useState(-1);
   const { data, error,mutate } = useFetch(
     `${Cons.API.CURRICULUM.QUERY}`,
     'get',
@@ -609,7 +593,7 @@ export default function Schedules() {
       campusId: campusIdMap
     }
   );
-  const { data:otherStudent,mutate:otherStudentMutate } = useFetch(
+  const { data:otherSchedules,mutate:otherSchedulesMutate } = useFetch(
     `/curriculum/view`,
     'get',
     {
@@ -618,19 +602,14 @@ export default function Schedules() {
       termId: 1
     }
   );
-  useEffect(()=>{
-    if(studentId !== 0){
-      Toast.success('已成功切换到用户Test User的课表')
-    }
-    if(studentId === 0){
-      Toast.success('已成功切换到我的课表')
-    }
-    otherStudentMutate()
-  },[studentId])
   const { data:timeTableData } = useFetch(
     `/timetable/query`,
     'get',
   );
+  useEffect(()=>{
+    otherSchedulesMutate()
+    Toast.success('课表已更新')
+  },[studentId])
   // const []
   // const currentDate = new Date();
   // currentDate.setDate(currentDate.getDate()+7)
@@ -645,7 +624,7 @@ export default function Schedules() {
     return [startDate, endDate];
   }
   const weekDate = getPastWeekDates();
-  if (data?.data && studentId === 0) {
+  if (data?.data && studentId === -1) {
     courseData = getCourses(
       data.data,
       new Date(termInfo?.data?.startDate),
@@ -654,9 +633,9 @@ export default function Schedules() {
     const all = addFullStartDate(courseData, weekDate);
     console.log(courseData, 'courseData');
   }
-  if (otherStudent?.data && studentId !== 0) {
+  if (otherSchedules?.data && studentId !== -1) {
     courseData = getCourses(
-      otherStudent?.data,
+      otherSchedules?.data,
       new Date(termInfo?.data?.startDate),
       new Date(termInfo?.data?.endDate),
     );
@@ -673,11 +652,11 @@ export default function Schedules() {
     }
   },[openLogin])
   React.useEffect(() => {
-    if (!data) return;
-    if (!data?.data) {
+    if (!data && !otherSchedules) return;
+    if (!data?.data && !otherSchedules?.data) {
       setDialogVisible(true);
     }
-    if (data?.data) {
+    if (data?.data || otherSchedules?.data) {
       setDialogVisible(false);
     }
     // if (!data?.data) {

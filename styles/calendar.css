@@ -64,7 +64,8 @@ tbody tr:first-child {
   color: #c3c3c3;
 }
 .fc-scrollgrid {
-  background: white;
+  /* background: white; */
+  background: transparent;
   border: none !important;
 }
 .fc-scrollgrid-sync-inner {
@@ -90,8 +91,10 @@ table tbody:first-child{
   border: none !important;
 }
 .fc-scroller {
-  padding-bottom: 12px;
-  background-color: #FFFFFF !important;
+  /* margin-bottom: 12px; */
+  background-color:transparent !important;
+
+  /* background-color: #FFFFFF !important; */
 } 
 .fc-scroller-harness{
   /* background-color: #F9FAFB; */

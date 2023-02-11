@@ -20,6 +20,8 @@ import Location from './location';
 import TimeIconActive from './icon_time';
 import SaveToLibButton from '@/components/Button/SaveToLibButton';
 import useLanguage from '@/hooks/useLanguage';
+import useLocalStorage from '@/hooks/useStore';
+// import { url } from 'inspector';
 
 function Calendar(props) {
   interface Event {
@@ -426,6 +428,10 @@ function Calendar(props) {
   console.log(getWeekDates(), 'getWeekDates');
   console.log(groupedEvents, 'groupedEventscourseData');
   const [setting, setSetting] = useState(props.setting);
+  const [customImg,setCustomImg] = useLocalStorage('customImg','')
+  useEffect(()=>{
+    console.log(String(customImg),"customImg")
+  },[customImg])
   const viewMap = {
     day: 'timeGridWeek',
     week: 'timeGridWeek',
@@ -501,9 +507,21 @@ function Calendar(props) {
     if (!timeTable && courseData) return courseData;
     return [...courseData, ...timeTable];
   }, [courseData, timeTable]);
+  useEffect(()=>{
+    const el = document.getElementsByClassName('fc-timegrid-slots')[0] as HTMLElement;
+    if(el){
+      const ele = el.getElementsByTagName('table')[0] as HTMLElement;
+      ele.style.backgroundImage = `url(${customImg})`;
+      ele.style.objectFit = 'cover'
+      // ele.style.paddingTop = '20px';
+      ele.style.height = `calc(100vh - 180px)`
+    }
+  },[customImg])
+  // style={{backgroundImage: `url(${customImg})`,objectFit:'cover'}}
   return (
     <div>
-      <div className="h-full w-full  bg-white">
+      <div className="h-full w-full  " >
+        {/* <img src={customImg} className="absolute object-cover" alt="" /> */}
         <FullCalendar
           plugins={[timeGridPlugin, dayGridPlugin]}
           ref={calendarRef}
