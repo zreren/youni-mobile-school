@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, createRef } from 'react';
 import Calendar from '@/components/Calendar/Calendar';
 import Header from '@/components/Header';
 import CButton from '@/components/Button/CButton';
@@ -393,6 +393,8 @@ export default function Schedules() {
   // },[termInfo])
   const SetSchedule = (props) => {
     const [customImg,setCustomImg] = useLocalStorage('customImg','')
+    // const uploadEL = createRef();
+    const uploadEl = useRef(null);
     const updateCustomImg =  (e)=>{
       console.log(e.target.files,"e")
       const reader = new FileReader();
@@ -400,11 +402,16 @@ export default function Schedules() {
       reader.onload = function () {
         const base64 = reader.result;
         setCustomImg(String(base64))
+        Toast.success('设置成功，即将为您重新加载')
+        setTimeout(() => {
+          router.reload()
+        }, 1500);
         console.log(base64);
       }
     }
     useEffect(()=>{
       console.log(customImg,"customImg")
+      // router.reload()
     },[customImg])
     const Menu = () => {
       const [menu, setMenu] = useState(defaultScheduleView);
@@ -526,9 +533,9 @@ export default function Schedules() {
             </CCourseInput>
             <div className="h-1 pl-4 pr-4 m-0 divider opacity-30 relative"></div>
             
-            <CCourseInput title="自定义背景" Icon={Icon4}>
+            <CCourseInput title="自定义背景" Icon={Icon4} onClick={()=>{uploadEl.current.click()}}>
               <div className='relative upload-custom-img'>
-                <input type="file" onChange={updateCustomImg}  className='z-30 w-screen bg-transparent h-2 absolute' />
+                <input ref={uploadEl}  type="file" onChange={updateCustomImg}  className='z-30 hidden w-screen bg-transparent h-2 absolute' />
               {/* <Uploader  upload={updateCustomImg} className='w-screen bg-transparent h-1 absolute'></Uploader> */}
               </div>
               <RightIcon className="mr-2"></RightIcon>
@@ -608,7 +615,12 @@ export default function Schedules() {
   );
   useEffect(()=>{
     otherSchedulesMutate()
-    Toast.success('课表已更新')
+    if(studentId === -1){
+      // Toast.success('课表已切换回我的')
+    }else{
+      Toast.success('课表已切换到Test User')
+    }
+
   },[studentId])
   // const []
   // const currentDate = new Date();
