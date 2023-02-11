@@ -29,8 +29,8 @@ import NoteIcon3 from './note3.svg';
 import Map from './assets/actives/map.svg';
 import Location from './assets/actives/location.svg';
 import Prices from './assets/actives/youniprice.svg';
-import TypeIcon from "./assets/actives/type.svg";
-import HouseTypeIcon from "./assets/actives/houseType.svg";
+import TypeIcon from './assets/actives/type.svg';
+import HouseTypeIcon from './assets/actives/houseType.svg';
 import Contact from './assets/actives/contact.svg';
 import useRequest from '@/libs/request';
 import useFetch from '@/hooks/useFetch';
@@ -39,6 +39,8 @@ import { update } from 'lodash';
 import mapRequest from '@/libs/mapRequest';
 import MediaIcon from './assets/actives/media.svg';
 import SeatIcon from './assets/actives/seat.svg';
+import useLanguage from '@/hooks/useLanguage';
+import IOSSwitch from '@/components/Input/ios';
 
 export default function addPost() {
   const Footer = () => {
@@ -116,14 +118,6 @@ export default function addPost() {
     Icon: null,
     action: <RightIcon></RightIcon>,
   };
-  const defaultValue = [
-    {
-      url: 'https://img.yzcdn.cn/vant/sand.jpg', // 图片文件
-    },
-    {
-      url: 'https://img.yzcdn.cn/vant/sand.jpg', // 其他文件
-    },
-  ];
   const IconList = {
     // "youni:seat": <Seat></Seat>,
     'youni:org': <Org></Org>,
@@ -273,6 +267,7 @@ export default function addPost() {
       // <Input placeholder="请输入"></Input>
       // </Form.Item>
     ),
+    Contact: <div>请选择联系方式</div>,
     Switch: <Switch activeColor="#FFD036" size={20} inactiveColor="#dcdee0" />,
   };
   const { data: dynamicForm, mutate } = useFetch('/post/dynamicForm', 'get', {
@@ -414,18 +409,222 @@ export default function addPost() {
     left: 'calc(50% - 15px)',
   }));
   const [pricesUnit, setPricesUnit] = useState<string>('CAD');
+  // const Puller = styled(Box)(({ theme }) => ({
+  //   width: 30,
+  //   height: 6,
+  //   backgroundColor: theme.palette.mode === 'light' ? grey[300] : grey[900],
+  //   borderRadius: 3,
+  //   position: 'absolute',
+  //   top: 8,
+  //   left: 'calc(50% - 15px)',
+  // }));
+
+  const [contactVisible, setContactVisible] = useState(false);
+  const ContactModel = (props) => {
+    const { visible, open, close, confirm } = props;
+    function Form(props) {
+      let { header, List } = props;
+      if (!List) {
+        List = [
+          {
+            title: '标题',
+            action: 'text',
+            intro: '请输入',
+            Icon: null,
+          },
+        ];
+      }
+      return (
+        <div className="w-full h-full">
+          <div className="mb-4 text-xs text-[#798195]">{header}</div>
+          {List?.map((item, index) => {
+            const Icon = item.Icon;
+            return (
+              <div
+                className="items-start text-sm justify-between mb-4"
+                onClick={item.event}
+              >
+                <div className="flex justify-between">
+                  <div className="flex space-x-2">
+                    {item.Icon ? <Icon className="mt-1"></Icon> : null}
+                    <div className="mb-2 text-sm font-medium  text-[#798195]">
+                      {item.title}
+                    </div>
+                  </div>
+                  <div>{item.action}</div>
+                </div>
+                <div className="text-xs text-[#37455C]">{item.intro}</div>
+              </div>
+            );
+          })}
+          <div className="h-1 m-0 divider opacity-30"></div>
+        </div>
+      );
+    }
+    const { data: contactList } = useFetch('/profile/contact', 'get');
+    const PhoneComponent = (props) => {
+      const { data, type } = props;
+      const dataFetch = React.useMemo(() => {
+        if (data) return;
+        return contactList?.data?.filter((item, index) => {
+          return item.type === type;
+        })[0];
+      }, [data]);
+      const [value, setValue] = useState(data?.value || dataFetch?.value);
+      const [isPublic, setPublic] = useState<boolean>(
+        data?.public || dataFetch?.public,
+      );
+      // useEffect(()=>{
+      //   updateContactItem()
+      // },[isPublic])
+      const updateContactItem = (bool?: boolean) => {
+        console.log(bool, 'bool');
+
+        if (!value) {
+          Toast.fail(`请输入${type}`);
+          setPublic(false);
+          return;
+        }
+        if (!data && !dataFetch) {
+          useRequest.post('/api/profile/contact/create', {
+            type: type,
+            value: value,
+            public: bool !== null ? bool : isPublic,
+          });
+        }
+        if (data && !dataFetch) {
+          useRequest.post('/api/profile/contact/update', {
+            type: type,
+            value: value,
+            public: bool !== null ? bool : isPublic,
+            id: data?.id,
+          });
+        }
+        if (dataFetch && !data) {
+          useRequest.post('/api/profile/contact/update', {
+            type: dataFetch?.type,
+            value: value,
+            public: bool !== null ? bool : isPublic,
+            id: dataFetch?.id,
+          });
+        }
+      };
+      return (
+        <div
+          className={classnames('flex space-x-2 contact', {
+            contact: isPublic,
+            'contact-false': !isPublic,
+          })}
+        >
+          <Input
+            value={value}
+            type="tel"
+            onChange={(tel) => setValue(tel)}
+            placeholder={
+              useLanguage('name') === 'ename'
+                ? `Please enter your ${type}`
+                : `请输入${type}`
+            }
+            onBlur={() => {
+              updateContactItem();
+            }}
+            align="right"
+            className="text-blueTitle font-medium"
+            // className='align-right'
+          />
+          <IOSSwitch
+            onChange={(e) => {
+              // e.preventDefault();
+              if (isPublic) {
+                updateContactItem(false);
+                setPublic(false);
+              } else {
+                updateContactItem(true);
+                setPublic(true);
+              }
+            }}
+            value={isPublic}
+          ></IOSSwitch>
+        </div>
+      );
+    };
+    const phoneItem = React.useMemo(() => {
+      return contactList?.data?.filter((item, index) => {
+        return item.type === 'phone';
+      })[0];
+    }, [contactList]);
+    const emailItem = React.useMemo(() => {
+      return contactList?.data?.filter((item, index) => {
+        return item.type === 'email';
+      })[0];
+    }, [contactList]);
+    const List1 = [
+      {
+        title: '电话',
+        intro: '',
+        action: (
+          <PhoneComponent type={'电话'} data={phoneItem}></PhoneComponent>
+        ),
+      },
+      {
+        title: '短信',
+        intro: '',
+        action: <PhoneComponent type={'短信'}></PhoneComponent>,
+      },
+      {
+        title: '邮箱',
+        intro: '',
+        action: (
+          <PhoneComponent type={'邮箱'} data={emailItem}></PhoneComponent>
+        ),
+      },
+      {
+        title: '微信',
+        action: <PhoneComponent type={'微信'}></PhoneComponent>,
+      },
+      {
+        title: 'WhatsApp',
+        action: <PhoneComponent type={'WhatsApp'}></PhoneComponent>,
+      },
+      {
+        title: 'Discord',
+        action: <PhoneComponent type={'Discord'}></PhoneComponent>,
+      },
+      {
+        title: 'Telegram',
+        action: <PhoneComponent type={'Telegram'}></PhoneComponent>,
+      },
+    ];
+    return (
+      <SwipeableDrawer
+        className="z-10 "
+        disableDiscovery={true}
+        disableSwipeToOpen={true}
+        onClose={close}
+        onOpen={open}
+        open={visible}
+        anchor="bottom"
+      >
+      <div className="w-full h-1/2 bg-white">
+      <Puller></Puller>
+      <Form header="" List={List1}></Form>
+      </div>
+      </SwipeableDrawer>
+    )
+  };
   const PricesModel = (props) => {
     const { visible, open, close, confirm } = props;
     const [currentInPut, setCurrentInPut] = useState<string>();
     const [state, updateState] = hooks.useSetState({
       text: form?.getFieldValue('prices')?.text || '',
-      unit:  form?.getFieldValue('prices')?.unit ||'',
-      oldPrice: form?.getFieldValue('prices')?.oldPrice ||'',
-      showOldPrice: form?.getFieldValue('prices')?.showOldPrice ||  false,
-      service:form?.getFieldValue('prices')?.service ||  [],
+      unit: form?.getFieldValue('prices')?.unit || '',
+      pricesUnit: form?.getFieldValue('prices')?.pricesUnit || pricesUnit,
+      oldPrice: form?.getFieldValue('prices')?.oldPrice || '',
+      showOldPrice: form?.getFieldValue('prices')?.showOldPrice || false,
+      service: form?.getFieldValue('prices')?.service || [],
     });
     useEffect(() => {
-      console.log(form.getFieldValue('prices'),"form")
+      console.log(form.getFieldValue('prices'), 'form');
       // updateState({
       //   text: form.getFieldValue('text'),
       //   unit: form.getFieldValue('unit'),
@@ -435,7 +634,7 @@ export default function addPost() {
       // });
     }, [form]);
     const deleteInput = () => {
-      if(!currentInPut) return
+      if (!currentInPut) return;
       updateState({
         [currentInPut]: state[currentInPut]?.slice(
           0,
@@ -446,10 +645,12 @@ export default function addPost() {
     const onInput = (v) => {
       // Toast.success(v);
       if (v === 'CAD') {
+        updateState({ pricesUnit: 'USD' });
         setPricesUnit('USD');
       }
-      if(v === 'USD') {
+      if (v === 'USD') {
         setPricesUnit('CAD');
+        updateState({ pricesUnit: 'CAD' });
       }
       if (v === '完成') {
         close();
@@ -470,15 +671,15 @@ export default function addPost() {
       { title: '包做饭' },
     ];
     const ServicesItem = (props) => {
-      const { title, defaultSelect,change} = props;
+      const { title, defaultSelect, change } = props;
       const [select, setSelect] = useState(defaultSelect);
       useEffect(() => {
-        if(select) {
-          props.change(title)
-        }else{
-          props.remove(title)
+        if (select) {
+          props.change(title);
+        } else {
+          props.remove(title);
         }
-      },[select])
+      }, [select]);
       return (
         <div
           onClick={() => {
@@ -673,6 +874,7 @@ export default function addPost() {
   return (
     <div className="mb-14">
       {KeyboardShow ? <Keyboard></Keyboard> : null}
+      <ContactModel visible={contactVisible}></ContactModel>
       <PricesModel
         visible={pricesVisible}
         onClose={() => {
@@ -740,9 +942,13 @@ export default function addPost() {
           onChange={setContent}
           autoSize={{ minHeight: 180, maxHeight: 180 }}
         />
-        <div className='flex space-x-[10px] mb-2'>
-          <div className='text-[#B38314] rounded bg-[#FFFBD9] px-2 text-xs py-1'># 话题 </div>
-          <div className='text-[#798195] rounded bg-[#F3F4F6] px-2 text-xs py-1'># 约克大学 </div>
+        <div className="flex space-x-[10px] mb-2">
+          <div className="text-[#B38314] rounded bg-[#FFFBD9] px-2 text-xs py-1">
+            # 话题{' '}
+          </div>
+          <div className="text-[#798195] rounded bg-[#F3F4F6] px-2 text-xs py-1">
+            # 约克大学{' '}
+          </div>
         </div>
       </div>
       <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
@@ -784,6 +990,9 @@ export default function addPost() {
                     : () => {
                         if (item.type === 'prices') {
                           setPricesVisible(true);
+                        }
+                        if(item.dataIndex === 'contact'){
+                          setContactVisible(true);
                         }
                       }
                 }

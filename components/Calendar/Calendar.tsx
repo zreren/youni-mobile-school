@@ -511,12 +511,16 @@ function Calendar(props) {
     const el = document.getElementsByClassName('fc-timegrid-slots')[0] as HTMLElement;
     if(el){
       const ele = el.getElementsByTagName('table')[0] as HTMLElement;
-      ele.style.backgroundImage = `url(${customImg})`;
-      ele.style.objectFit = 'cover'
-      // ele.style.paddingTop = '20px';
-      ele.style.height = `calc(100vh - 180px)`
+      // ele.style.after
+      el.style.paddingTop = '10px'
+      el.style.backgroundImage = `url(${customImg})`;
+      el.style.backgroundSize = 'cover';
+      el.style.objectFit = 'cover'
+      el.style.zIndex = '99'
+      el.style.height = `calc(100vh - 190px)`
+      // ele.style.backgroundo
     }
-  },[customImg])
+  },[customImg,calendarView])
   // style={{backgroundImage: `url(${customImg})`,objectFit:'cover'}}
   return (
     <div>
@@ -775,7 +779,7 @@ function Calendar(props) {
           weekends={setting.isWeekend}
         />
       </div>
-      <div className="bg-gray-50 z-20 relative -translate-y-3">
+      <div className="bg-gray-50 z-20 relative ">
         {!calendarView ? <ListView></ListView> : null}
       </div>
     </div>
