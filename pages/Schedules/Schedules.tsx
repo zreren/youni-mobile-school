@@ -41,7 +41,7 @@ import CourseIcon3 from './courseIcon3.svg';
 import CourseIcon4 from './courseIcon4.svg';
 import useRequest from '@/libs/request';
 import {  useSelector } from 'react-redux';
-
+import { Uploader } from 'react-vant';
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
   height: 6,
@@ -53,9 +53,11 @@ const Puller = styled(Box)(({ theme }) => ({
 }));
 
 const CCourseInput = (props) => {
-  const { title, Icon, children: Children } = props;
+  const { title, Icon, children: Children,onClick } = props;
   return (
-    <div className="w-full h-12 p-4 bg-white rounded-lg">
+    <div className="w-full h-12 p-4 bg-white rounded-lg" onClick={()=>{
+      onClick?onClick():null
+    }}>
       <div className="flex w-full items-center justify-between h-full space-x-4">
         <div className="flex items-center">
           <Icon className="mr-1"></Icon>{' '}
@@ -243,7 +245,7 @@ export default function Schedules() {
                     })}
                 </div>
                 <div className="text-xs text-[#798195]">
-                  {extendedProps?.section?.students.length > 0? `${extendedProps?.section?.students.length}名同学`:null} 
+                  {extendedProps?.section?.students?.length > 0? `${extendedProps?.section?.students?.length}名同学`:null} 
                 </div>
               </div>
             </div>
@@ -389,6 +391,38 @@ export default function Schedules() {
   //   return termInfo?.data?.filter((item)=>item?.current)
   // },[termInfo])
   const SetSchedule = (props) => {
+    const updateCustomImg = async (file:File)=>{
+      // const upload = async (file: File) => {
+      //   try {
+      //     const body = new FormData()
+      //     body.append('source', file)
+      //     const resp = await fetch(DEMO_UPLOAD_API, {
+      //       method: 'POST',
+      //       body,
+      //     })
+      //     const json = await resp.json()
+      //     // return包含 url 的一个对象 例如: {url:'https://img.yzcdn.cn/vant/sand.jpg'}
+      //     return json.image
+      //   } catch (error) {
+      //     return { url: `demo_path/${file.name}` }
+      //   }
+      // const file2Base64 = (file:File):Promise<string> => {
+        return new Promise<any> ((resolve,reject)=> {
+             const reader = new FileReader();
+             reader.readAsDataURL(file);
+             const res = reader.result?.toString() || ''
+             console.log(res,'updateCustomImgres')
+            //  reader.onload = () => (reader.result?.toString() || '');
+             console.log(reader.result?.toString() || '','reader.result?.toString() || ')
+             resolve({
+                url: ''
+             })
+            //  return ;
+            //  reader.onerror = error => reject(error);
+        //  })
+        })
+        // file2Base64()
+    }
     const Menu = () => {
       const [menu, setMenu] = useState(defaultScheduleView);
       useEffect(() => {
@@ -501,18 +535,24 @@ export default function Schedules() {
               </div>
             </CCourseInput>
             <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
-            <CCourseInput title="添加课程/日程" Icon={Icon3}>
+            <CCourseInput onClick={()=>{
+              router.push('/Schedules/AddCourse')
+            }} title="添加课程/日程" Icon={Icon3}>
               {' '}
               <RightIcon className="mr-2"></RightIcon>
             </CCourseInput>
-            <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
+            <div className="h-1 pl-4 pr-4 m-0 divider opacity-30 relative"></div>
+            
             <CCourseInput title="自定义背景" Icon={Icon4}>
+              <div className='relative upload-custom-img'>
+              <Uploader  upload={updateCustomImg} className='w-screen bg-transparent h-1 absolute'></Uploader>
+              </div>
               <RightIcon className="mr-2"></RightIcon>
             </CCourseInput>
             <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
             <CCourseInput title="切换课表" Icon={Icon5}></CCourseInput>
             <div className="flex justify-between pl-4 pr-4 mt-4">
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center" onClick={()=>{setStudentId(0)}}>
                 <div className="flex flex-col avatar placeholder">
                   <div className="bg-[#FFD03640] rounded-full text-neutral-content w-14">
                     <span className="text-xs font-medium text-[#FFD036]">
@@ -522,7 +562,7 @@ export default function Schedules() {
                 </div>
                 {/* <div className="text-xs">我的课表</div> */}
               </div>
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center" onClick={()=>{setStudentId(2)}}>
                 <div className="flex flex-col avatar placeholder">
                   <div className="bg-[#F7F8F9] rounded-full text-neutral-content w-14">
                     <span className="text-xs font-medium text-[#A9B0C0]">
@@ -561,6 +601,7 @@ export default function Schedules() {
   const [addCourse, setAddCourse] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [yearMethod, setYearMethod] = useState(false);
+  const [studentId, setStudentId] = useState(0);
   const { data, error,mutate } = useFetch(
     `${Cons.API.CURRICULUM.QUERY}`,
     'get',
@@ -568,6 +609,24 @@ export default function Schedules() {
       campusId: campusIdMap
     }
   );
+  const { data:otherStudent,mutate:otherStudentMutate } = useFetch(
+    `/curriculum/view`,
+    'get',
+    {
+      campusId: campusIdMap,
+      studentId : studentId,
+      termId: 1
+    }
+  );
+  useEffect(()=>{
+    if(studentId !== 0){
+      Toast.success('已成功切换到用户Test User的课表')
+    }
+    if(studentId === 0){
+      Toast.success('已成功切换到我的课表')
+    }
+    otherStudentMutate()
+  },[studentId])
   const { data:timeTableData } = useFetch(
     `/timetable/query`,
     'get',
@@ -586,9 +645,18 @@ export default function Schedules() {
     return [startDate, endDate];
   }
   const weekDate = getPastWeekDates();
-  if (data?.data) {
+  if (data?.data && studentId === 0) {
     courseData = getCourses(
       data.data,
+      new Date(termInfo?.data?.startDate),
+      new Date(termInfo?.data?.endDate),
+    );
+    const all = addFullStartDate(courseData, weekDate);
+    console.log(courseData, 'courseData');
+  }
+  if (otherStudent?.data && studentId !== 0) {
+    courseData = getCourses(
+      otherStudent?.data,
       new Date(termInfo?.data?.startDate),
       new Date(termInfo?.data?.endDate),
     );

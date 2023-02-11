@@ -319,12 +319,12 @@ export default function Display(props) {
           </div>
           <span className="text-sm text-blueTitle">{data.title}</span>
         </div>
-        {data.form.price ? (
+        {data.form.prices ? (
           <div className="flex items-end mt-2 space-x-1 text-sm">
-            <div className="text-price"> {data.form?.price}</div>
-            <div className="text-xs text-price">{data.form.unit}</div>
+            <div className="text-price"> {data.form?.prices?.text}</div>
+            <div className="text-xs text-price">{data.form?.prices?.unit}</div>
             <div className="text-xs text-priceGray dele">
-              {data.form.oldPrice}
+              {data.form?.prices?.oldPrice}
             </div>
           </div>
         ) : (

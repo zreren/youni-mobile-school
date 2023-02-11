@@ -59,3 +59,27 @@
     color:#A9B0C0 !important;
     font-weight: 500 !important;
 }
+
+.upload-custom-img .rv-uploader__input{
+    width: 100%;
+    height: 16px;
+    position: absolute;
+}
+.upload-custom-img .rv-uploader__upload svg{
+    display: none;    
+}
+.upload-custom-img{
+    position: absolute;
+    left: 0px;
+    /* top: 0px; */
+    /* top: -10px; */
+    height: 38px;
+}
+.upload-custom-img .rv-uploader__upload {
+    width: 100vw;
+    height: 8px;
+    position: absolute;
+    left: 0px;
+    z-index: 99;
+
+}

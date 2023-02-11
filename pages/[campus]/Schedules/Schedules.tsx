@@ -47,9 +47,11 @@ const Puller = styled(Box)(({ theme }) => ({
 }));
 
 const CCourseInput = (props) => {
-  const { title, Icon, children: Children } = props;
+  const { title, Icon, children: Children ,onClick} = props;
   return (
-    <div className="w-full h-12 p-4 bg-white rounded-lg">
+    <div className="w-full h-12 p-4 bg-white rounded-lg" onClick={()=>{
+      onClick?onClick():null
+    }}>
       <div className="flex w-full items-center justify-between h-full space-x-4">
         <div className="flex items-center">
           <Icon className="mr-1"></Icon>{' '}
@@ -129,7 +131,7 @@ const CourseDetailCard = (props) => {
                     );
                   })}
               </div>
-              <div className="text-xs text-[#798195]">{extendedProps?.section?.students.length} 名同学</div>
+              <div className="text-xs text-[#798195]">{extendedProps?.section?.students?.length} 名同学</div>
             </div>
           </div>
           <div className="mt-4 mb-4">
@@ -346,7 +348,11 @@ export default function Schedules() {
               </div>
             </CCourseInput>
             <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
-            <CCourseInput title="添加课程/日程" Icon={Icon3}>
+            <CCourseInput
+            onClick={() => {
+              router.push('/Schedules/AddCourse')
+            }}
+            title="添加课程/日程" Icon={Icon3}>
               {' '}
               <RightIcon className="mr-2"></RightIcon>
             </CCourseInput>
