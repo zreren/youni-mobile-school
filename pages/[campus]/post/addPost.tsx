@@ -462,11 +462,16 @@ export default function addPost() {
       );
     }
     const { data: contactList } = useFetch('/profile/contact', 'get');
+    const [contactListTemp,setContactListTemp] = useState(contactList?.data);
+    useEffect(()=>{
+      console.log(contactListTemp,"contactListTemp")
+    },[contactListTemp])
     const PhoneComponent = (props) => {
       const { data, type } = props;
       const dataFetch = React.useMemo(() => {
         if (data) return;
-        return contactList?.data?.filter((item, index) => {
+        if(!contactListTemp) return
+        return contactListTemp?.filter((item, index) => {
           return item.type === type;
         })[0];
       }, [data]);
@@ -485,29 +490,41 @@ export default function addPost() {
           setPublic(false);
           return;
         }
-        if (!data && !dataFetch) {
-          useRequest.post('/api/profile/contact/create', {
-            type: type,
-            value: value,
-            public: bool !== null ? bool : isPublic,
-          });
+        const update = {
+          type: type,
+          value: value,
+          public: bool !== null ? bool : isPublic,
+          id: data?.id,
         }
-        if (data && !dataFetch) {
-          useRequest.post('/api/profile/contact/update', {
-            type: type,
-            value: value,
-            public: bool !== null ? bool : isPublic,
-            id: data?.id,
-          });
-        }
-        if (dataFetch && !data) {
-          useRequest.post('/api/profile/contact/update', {
-            type: dataFetch?.type,
-            value: value,
-            public: bool !== null ? bool : isPublic,
-            id: dataFetch?.id,
-          });
-        }
+        setContactListTemp((pre)=>{
+          return {
+            ...pre,
+            update
+          }
+        })
+        // if (!data && !dataFetch) {
+        //   useRequest.post('/api/profile/contact/create', {
+        //     type: type,
+        //     value: value,
+        //     public: bool !== null ? bool : isPublic,
+        //   });
+        // }
+        // if (data && !dataFetch) {
+        //   useRequest.post('/api/profile/contact/update', {
+        //     type: type,
+        //     value: value,
+        //     public: bool !== null ? bool : isPublic,
+        //     id: data?.id,
+        //   });
+        // }
+        // if (dataFetch && !data) {
+        //   useRequest.post('/api/profile/contact/update', {
+        //     type: dataFetch?.type,
+        //     value: value,
+        //     public: bool !== null ? bool : isPublic,
+        //     id: dataFetch?.id,
+        //   });
+        // }
       };
       return (
         <div
@@ -549,12 +566,12 @@ export default function addPost() {
       );
     };
     const phoneItem = React.useMemo(() => {
-      return contactList?.data?.filter((item, index) => {
+      return contactListTemp?.filter((item, index) => {
         return item.type === 'phone';
       })[0];
     }, [contactList]);
     const emailItem = React.useMemo(() => {
-      return contactList?.data?.filter((item, index) => {
+      return contactListTemp?.filter((item, index) => {
         return item.type === 'email';
       })[0];
     }, [contactList]);
@@ -605,8 +622,9 @@ export default function addPost() {
         open={visible}
         anchor="bottom"
       >
-      <div className="w-full h-1/2 bg-white">
+      <div className="w-full h-2/3 bg-white p-4 pb-20">
       <Puller></Puller>
+      <div className='text-xs text-[#A9B0C0] pt-3'>此处联系方式仅针对本次推文生效</div>
       <Form header="" List={List1}></Form>
       </div>
       </SwipeableDrawer>
@@ -874,7 +892,11 @@ export default function addPost() {
   return (
     <div className="mb-14">
       {KeyboardShow ? <Keyboard></Keyboard> : null}
-      <ContactModel visible={contactVisible}></ContactModel>
+      <ContactModel onClose={() => {
+          setContactVisible(false)
+        }} visible={contactVisible}
+        close={() => {setContactVisible(false)}}
+        ></ContactModel>
       <PricesModel
         visible={pricesVisible}
         onClose={() => {

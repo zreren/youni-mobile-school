@@ -516,8 +516,15 @@ function Calendar(props) {
       el.style.backgroundImage = `url(${customImg})`;
       el.style.backgroundSize = 'cover';
       el.style.objectFit = 'cover'
-      el.style.zIndex = '99'
+      // el.style.zIndex = '99'
       el.style.height = `calc(100vh - 190px)`
+      // ele.style.paddingTop = '10px'
+      // ele.style.backgroundImage = `url(${customImg})`;
+      // ele.style.backgroundSize = 'cover';
+      // ele.style.objectFit = 'cover'
+      // ele.style.zIndex = '99'
+      // ele.style.height = `calc(100vh - 200px)`
+
       // ele.style.backgroundo
     }
   },[customImg,calendarView])
