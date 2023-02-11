@@ -59,7 +59,7 @@ export default function addPost() {
           </div>
         </div>
         <div
-          onClick={form.submit}
+          onClick={()=>{submitPost(form.getFieldsValue(),false)}}
           className="bg-[#FFD036] cursor-pointer  text-white rounded-full w-full h-10 flex justify-center items-center"
         >
           发布
@@ -338,7 +338,7 @@ export default function addPost() {
     };
   }
   const submitPost = async (form, draft) => {
-    console.log(form, 'form');
+    console.log({...form}, 'form');
     // if (
     //   !Object.keys(form).some((element) => {
     //     if (
@@ -373,6 +373,9 @@ export default function addPost() {
         topic: ['York'],
         preview: previews,
         type: type,
+        contact: form.contact?.filter((item)=>item.public===true)?.map((item)=>{
+          return item.type
+        })
       });
       if (data.message === 'success') {
         Toast.success('发布成功');

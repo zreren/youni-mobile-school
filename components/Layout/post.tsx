@@ -225,7 +225,7 @@ function index(props) {
             }
             </div>
           <div className="text-sm text-price">{!data?.data?.form?.prices?null:data?.data?.form?.prices?.text === "0"?null:
-          data?.data?.form?.prices?.priceUnit
+          data?.data?.form?.prices?.pricesUnit
           }</div>
           <div className="text-sm text-priceGray dele">{!data?.data?.form?.prices?null:data?.data?.form?.prices?.text === "0"?null:data?.data?.form?.prices?.showOldPrice?data?.data?.form?.prices?.oldPrice:null}</div>
         </div>

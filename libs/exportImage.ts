@@ -1,9 +1,11 @@
 import html2canvas from 'html2canvas';
+import domtoimage from 'dom-to-image';
 const exportAsImage = async (element, imageFileName) => {
-  const canvas = await html2canvas(element);
-  const image = canvas.toDataURL('image/png', 1.0);
-  console.log(image);
-  downloadImage(image, imageFileName);
+  // const canvas = await html2canvas(element);
+  const canvas = await domtoimage.toSvg(element);
+  // const image = canvas.toDataURL('image/png', 1.0);
+  // console.log(image);
+  downloadImage(canvas, imageFileName);
 };
 const downloadImage = (blob, fileName) => {
   const fakeLink = window.document.createElement('a');
