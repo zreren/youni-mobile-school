@@ -21,6 +21,7 @@ import TimeIconActive from './icon_time';
 import SaveToLibButton from '@/components/Button/SaveToLibButton';
 import useLanguage from '@/hooks/useLanguage';
 import useLocalStorage from '@/hooks/useStore';
+import type {CourseData} from '@/types/course'
 // import { url } from 'inspector';
 
 function Calendar(props) {
@@ -35,11 +36,23 @@ function Calendar(props) {
       end.getUTCHours() + 8
     }.${end.getUTCMinutes()}`;
   }
+
+  /**
+   * @description 获取星期几
+   * @param date 2023-02-04T01:00:00.000Z
+   * @returns 0-6
+   */
   const getDayOfWeek = (date) => {
     // date是这样的格式，返回对应的星期几，星期日是0，星期一是1，星期六是6
     const day = new Date(date).getUTCDay();
     return day;
   };
+
+  /**
+   * @description 时间格式转换
+   * @param _date 2023-02-04T01:00:00.000Z
+   * @returns '2023-01-29T11:30:00'
+   */
   const translateTimeFormat = (_date) => {
     // "2023-02-04T01:00:00.000Z" to '2023-01-29T11:30:00'
     const date = new Date(_date);
@@ -51,6 +64,12 @@ function Calendar(props) {
     const seconds = date.getSeconds().toString().padStart(2, '0');
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   };
+
+  /**
+   * @description 日程表转课程表数据转换
+   * @param {Array} props.timeTable
+   * @returns {Array}
+   */
   const timeTable = useMemo(() => {
     if (!props.timeTable) return [];
     return props?.timeTable?.slice().map((item) => {
@@ -79,9 +98,7 @@ function Calendar(props) {
       };
     });
   }, [props.timeTable]);
-  useEffect(()=>{
-    console.log(timeTable)
-  },[timeTable])
+
   const days = [
     'sunday',
     'monday',
@@ -190,10 +207,16 @@ function Calendar(props) {
       </div>
     );
   };
+
+  /**
+   * @description 将对象数组根据时间放进timeArray中生成新的数组
+   * @param timeArray {string[]}
+   * @param dataObject {object}
+   * @returns 
+   */
   function generateNewArray(timeArray: string[], dataObject: object) {
     if (!dataObject) return [];
     const newArray = [];
-    console.log(dataObject,"dataObject")
     timeArray.forEach((time) => {
       const children = dataObject[timeArray.indexOf(time)];
       if (children) {
@@ -203,9 +226,13 @@ function Calendar(props) {
         });
       }
     });
-    console.log(newArray, 'newArray');
     return newArray;
   }
+
+  /**
+   * @description 将课程数据按照时间分组
+   * @param timeArray {string[]}
+   */
   const groupedEvents: { [day: string]: Event[] } = props?.courseData?.reduce(
     (acc, event) => {
       const day = event.dayOfWeek;
@@ -217,6 +244,11 @@ function Calendar(props) {
     },
     {},
   );
+
+  /**
+   * @description 将日程数据按照时间分组
+   * @param timeArray {string[]}
+   */
   const dayTimeEvents = timeTable.reduce((acc, event) => {
     const day = event.dayOfWeek;
     if (!acc[day]) {
@@ -225,6 +257,11 @@ function Calendar(props) {
     acc[day].push(event);
     return acc;
   }, {});
+
+  /**
+   * @description 获取本周日期
+   * @returns {string[]} 本周日期
+   */
   const getWeekDates = () => {
     const weekDates = [];
     const currentDate = new Date();
@@ -244,11 +281,22 @@ function Calendar(props) {
     }
     return weekDates2;
   };
+
+  /**
+   * @description 判断日期是否是今天
+   * @param dateString 日期字符串
+   * @returns  {boolean} 是否是今天
+   */
   function isToday(dateString: string) {
     let date = new Date(dateString);
     let today = new Date();
     return date.toDateString() === today.toDateString();
   }
+
+  /**
+   * @description 列表视图
+   * @returns {JSX.Element}
+   */
   const ListView = () => {
     const colorMap = ['#FFD036', '#798195', '#FF7978'];
     const YearCard = (props) => {
@@ -298,8 +346,6 @@ function Calendar(props) {
     };
     const Identify = (props) => {
       const { title, index } = props;
-      // const router = useRouter();
-      // const { t } = useTranslation('translations');
       function getDayOfWeek(dateString: string) {
         const date = new Date(dateString);
         const edays = [
@@ -425,13 +471,8 @@ function Calendar(props) {
     // };
   };
 
-  console.log(getWeekDates(), 'getWeekDates');
-  console.log(groupedEvents, 'groupedEventscourseData');
   const [setting, setSetting] = useState(props.setting);
   const [customImg,setCustomImg] = useLocalStorage('customImg','')
-  useEffect(()=>{
-    console.log(String(customImg),"customImg")
-  },[customImg])
   const viewMap = {
     day: 'timeGridWeek',
     week: 'timeGridWeek',
@@ -465,7 +506,11 @@ function Calendar(props) {
     ],
     cn: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
   };
-  const [calendarView, setView] = useState(true);
+  const [calendarView, setView] = useState<boolean>(true);
+
+  /**
+   * 切换日历视图
+   */
   const changeView = () => {
     // if(typeof window === 'undefined') return;
     const body = document.getElementsByClassName(
@@ -494,41 +539,30 @@ function Calendar(props) {
     }
   }, [calendarView]);
   useEffect(() => {
-    console.log(props.courseData, 'props.courseData');
-  }, []);
-
-  useEffect(() => {
     console.log(timeTable, 'timeTable');
   }, [timeTable]);
-  const { courseData } = props;
+  const { courseData } :{courseData:CourseData[]} = props;
+
+
   const ALLEvents = useMemo(() => {
     // 两个数组合并
     if (!courseData && timeTable) return timeTable;
     if (!timeTable && courseData) return courseData;
     return [...courseData, ...timeTable];
   }, [courseData, timeTable]);
+
+  
   useEffect(()=>{
     const el = document.getElementsByClassName('fc-timegrid-slots')[0] as HTMLElement;
     if(el){
       const ele = el.getElementsByTagName('table')[0] as HTMLElement;
-      // ele.style.after
       el.style.paddingTop = '10px'
       el.style.backgroundImage = `url(${customImg})`;
       el.style.backgroundSize = 'cover';
       el.style.objectFit = 'cover'
-      // el.style.zIndex = '99'
       el.style.height = `calc(100vh - 190px)`
-      // ele.style.paddingTop = '10px'
-      // ele.style.backgroundImage = `url(${customImg})`;
-      // ele.style.backgroundSize = 'cover';
-      // ele.style.objectFit = 'cover'
-      // ele.style.zIndex = '99'
-      // ele.style.height = `calc(100vh - 200px)`
-
-      // ele.style.backgroundo
     }
   },[customImg,calendarView])
-  // style={{backgroundImage: `url(${customImg})`,objectFit:'cover'}}
   return (
     <div>
       <div className="h-full w-full  " >

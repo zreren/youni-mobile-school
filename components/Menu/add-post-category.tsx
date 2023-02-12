@@ -125,7 +125,7 @@ export default function CustomizedTabs(props) {
   }
   const [value, setValue] = React.useState(id);
   const { headerMenuList, className } = props;
-  const handleChange = (newValue: number) => {
+  const handleChange = (newValue: number):void => {
     Dialog.confirm({
       title: '切换分类',
       message: '切换分类将导致部分自定义参数重置，确定要进行分类切换吗？',
@@ -137,8 +137,6 @@ export default function CustomizedTabs(props) {
       .catch(() => {
         console.log('catch');
       });
-   
-
   };
   React.useEffect(() => {
     // props.change(value);

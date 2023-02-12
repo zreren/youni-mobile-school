@@ -144,7 +144,7 @@ export default function Waterfall(props) {
     const stopSwiper = () => {
       // container.current?.anchor = 'bottom';
       // container.current?.style?.pointerEvents = 'none';
-      setAnchor('bottom');
+      // setAnchor('bottom');
       console.log('stop swiper')
 
     }

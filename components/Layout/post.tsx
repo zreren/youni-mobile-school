@@ -54,6 +54,7 @@ function index(props) {
       mutate({}, true);
     }
   };
+
   const Map = () => {
     return (
       <div className="w-full relative h-[185px] bg-white px-5 py-4 rounded-xl overflow-hidden 	">
@@ -76,6 +77,7 @@ function index(props) {
       </div>
     );
   };
+
   const PostTag = (props) => {
     const { tag } = props;
     return <div className="mt-2 text-[#2347D9] text-sm">#{tag}</div>;
@@ -204,7 +206,8 @@ function index(props) {
             return (
               <SwiperSlide>
                 <CImage
-                  onTouchStart={() => {
+                  onTouchStart={(e) => {
+                    e.preventDefault()
                     props.stop();
                   }}
                   item={item}

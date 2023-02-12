@@ -1,5 +1,6 @@
 import html2canvas from 'html2canvas';
 import domtoimage from 'dom-to-image';
+// import { Blob } from 'buffer';
 const exportAsImage = async (element, imageFileName) => {
   // const canvas = await html2canvas(element);
   const canvas = await domtoimage.toPng(element);

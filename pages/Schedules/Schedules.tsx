@@ -393,7 +393,6 @@ export default function Schedules() {
   // },[termInfo])
   const SetSchedule = (props) => {
     const [customImg,setCustomImg] = useLocalStorage('customImg','')
-    // const uploadEL = createRef();
     const uploadEl = useRef(null);
     const updateCustomImg =  (e)=>{
       console.log(e.target.files,"e")

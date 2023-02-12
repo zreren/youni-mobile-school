@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import useFetch from '@/hooks/useFetch';
 import { Flex, Loading } from 'react-vant';
 
-export default function course() {
+export default function course():JSX.Element  {
   const router = useRouter()
   const { data, error } = useFetch(`/subject/query?campusId=1`,"get",{
     pageSize:6

@@ -21,7 +21,7 @@ import classnames from 'classnames';
 import useFetch from '../../hooks/useFetch';
 import useLanguage from '@/hooks/useLanguage';
 
-const CCourseTime = (props) => {
+const CCourseTime = (props:any) => {
   return (
     <div className="w-full text-center rounded-md bg-bg text-blueTitle">
       {props.title}

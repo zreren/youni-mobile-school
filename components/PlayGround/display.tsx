@@ -321,10 +321,14 @@ export default function Display(props) {
         </div>
         {data.form.prices ? (
           <div className="flex items-end mt-2 space-x-1 text-sm">
-            <div className="text-price"> {data.form?.prices?.text}</div>
-            <div className="text-xs text-price">{data.form?.prices?.pricesUnit}</div>
+            <div className="text-price"> {data.form?.prices?.text === "0" ?
+          "免费" :  data.form?.prices?.text 
+          }</div>
+            <div className="text-xs text-price">{
+            data.form?.prices?.text === "0" ? null :
+            data.form?.prices?.pricesUnit}</div>
             <div className="text-xs text-priceGray dele">
-              {data.form?.prices?.oldPrice}
+              {!data.form?.prices?.showOldPrice || data.form?.prices?.text === "0" ? null : data.form?.prices?.oldPrice}
             </div>
           </div>
         ) : (
