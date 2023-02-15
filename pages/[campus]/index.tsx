@@ -297,7 +297,7 @@ function SchoolPage(props) {
                 console.log(item, 'schoolList Item');
                 return (
                   <div
-                    className="h-12 pt-3 pl-4"
+                    className="min-h-[48px] pt-3 pl-4"
                     onClick={() => {
                       router.push({
                         pathname: '/[campus]',
@@ -306,8 +306,8 @@ function SchoolPage(props) {
                       props.setVisible(false);
                     }}
                   >
-                    <div className="flex items-center h-4 space-x-2">
-                      <div> {item[useLanguage('name')]}</div>
+                    <div className="flex items-center min-h-[16px] w-full space-x-2">
+                      <div className=' whitespace-pre-wrap'> {item[useLanguage('name')]}</div>
                       <div className="p-1 text-xs bg-bg">{item.shortName}</div>
                     </div>
                     <div className="text-xs text-lightGray">{item.alias}</div>
@@ -446,6 +446,7 @@ export async function getServerSideProps({ params }) {
       name: params.campus,
     },
   });
+  console.log(data,"data")
   // if(!data?.data[0]){
   //   return {
   //     notFound:true

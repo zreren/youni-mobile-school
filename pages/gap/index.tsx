@@ -117,15 +117,6 @@ export default function index() {
       </div>
     );
   };
-  const top100Films = [
-    { title: 'AMDS', year: 1994 },
-    { title: 'AMDS', year: 1994 },
-    { title: 'AMDS', year: 1994 },
-    { title: 'AMDS', year: 1994 },
-    { title: 'AMDS', year: 1994 },
-    { title: 'AMDS', year: 1994 },
-    { title: '后台抓取校区数据', year: 1994 },
-  ];
   const InputField = (props) => {
     const [value, setValue] = React.useState(props.value);
     return (
@@ -336,7 +327,7 @@ export default function index() {
                       className="w-full"
                     ></AutoInput>
                   ) : (
-                    <div className={'text-sm overflow-x-scroll w-14 whitespace-nowrap'} >{data?.subject?.ename} {data?.code}</div>
+                    <div className={'text-sm overflow-x-scroll w-14 whitespace-nowrap'} >{data?.course?.subject?.ename?.toUpperCase()} {data?.course?.code}</div>
                   )}
                 </div>
               </div>

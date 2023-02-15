@@ -61,7 +61,7 @@ function index(props) {
         <div className="w-full h-full overflow-hidden rounded-xl">
           <img src="/assets/map.png" className="w-full h-full "></img>
         </div>
-        <div className="absolute px-3 items-center  flex justify-between left-0 right-0 mx-auto z-30 w-[80%] h-[48px] bg-white/70 backdrop-blur-sm		 bottom-10 rounded-lg">
+        <div className="absolute px-3 items-center  flex justify-between left-0 right-0 mx-auto z-10 w-[80%] h-[48px] bg-white/70 backdrop-blur-sm		 bottom-10 rounded-lg">
           <div className="flex items-center w-[90%]">
             <div className="mr-2">
               <MapIcon className="w-[14px] h-[14px]"></MapIcon>

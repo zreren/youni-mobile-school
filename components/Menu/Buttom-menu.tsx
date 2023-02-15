@@ -44,7 +44,8 @@ export default function LabelBottomNavigation(props) {
     if(BrowserInfo.isPhone){
       const dom = document.getElementById("bottom-menu");
       if(!dom)return
-      dom.style.paddingBottom = "8px";
+      dom.style.paddingBottom = "12px";
+      dom.style.height = '68px'
     }else{
       const dom = document.getElementById("bottom-menu");
       if(!dom)return

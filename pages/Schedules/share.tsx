@@ -171,9 +171,15 @@ export default function Schedules() {
   const [addCourse, setAddCourse] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [yearMethod, setYearMethod] = useState(false);
+  const studentId = router.query.id;
   const { data, error, mutate } = useFetch(
-    `${Cons.API.CURRICULUM.QUERY}?campusId=1`,
+    `/curriculum/view`,
     'get',
+    {
+      campusId: 1,
+      termId: termInfo?.data?.id,
+      studentId: studentId,
+    }
   );
   let courseData;
   function getPastWeekDates(): [Date, Date] {

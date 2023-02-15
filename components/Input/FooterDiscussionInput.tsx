@@ -28,11 +28,6 @@ const PostGroup = (props) => {
       Toast.success('收藏成功');
       props.star();
     }
-
-    // } else {
-    //   useRequest.post('/api/post/star', { id: id });
-    //   setStar(true);
-    // }
   };
   return (
     <div

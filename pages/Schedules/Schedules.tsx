@@ -501,7 +501,7 @@ export default function Schedules() {
               title="保存到相册"
             ></SaveToLibButton>
             <SaveToLibButton
-              onClick={() => {}}
+              onClick={() => {router.push('/schedule/setting')}}
               color="#FFD036"
               icon="share"
               title="分享课表"
