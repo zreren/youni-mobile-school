@@ -202,8 +202,8 @@ function SchoolPage(props) {
   const { data: postData, error } = useFetch(
     `/post/home_list`,
     'get',{
-      pageSize:10,
-      page:2,
+      pageSize:20,
+      page:1,
       type:category,
     }
   );

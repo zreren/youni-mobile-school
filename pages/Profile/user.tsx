@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Header from '@/components/Header';
 import classnames from 'classnames';
@@ -45,6 +45,8 @@ import { Picker, Toast } from 'react-vant';
 import { setOpenLogin } from '@/stores/authSlice';
 import { useDispatch } from 'react-redux';
 import useFetch from '@/hooks/useFetch';
+import LockIcon from './lock.svg';
+import LockActiveIcon from './lock_active.svg'
 import { use } from 'i18next';
 const PostGroup = () => {
   return (
@@ -109,6 +111,9 @@ function index(props) {
   const { user } = useUser();
   const router = useRouter();
   const userId = Number(router.query.id);
+  const { data } = useFetch('/student/post_stared_list', 'get', {
+    id: userId,
+  });
   const Profile2 = () => {
     const [menu, setMenu] = useState(0);
     const { data, mutate } = useFetch('/student/post_liked_list', 'get', {
@@ -185,13 +190,28 @@ function index(props) {
   const { i18n } = useTranslation('common');
   console.log(i18n, 'i18n');
   const [menuVal, setMenu] = useState(1);
+  const StarIcon = useCallback(()=>{
+    if(menuVal === 2 && !data?.data){
+      return <LockActiveIcon></LockActiveIcon>
+    }
+    if(menuVal === 2 && data?.data){
+      return <Icon2Select></Icon2Select>
+    }
+    if(menuVal !== 2 && !data?.data){
+      return <LockIcon></LockIcon>
+    }
+    if(menuVal !== 2 && data?.data){
+      return <Icon2></Icon2>
+    }
+
+  },[menuVal,data])
   const headerList = [
     {
       icon: menuVal === 1 ? <Icon3Select></Icon3Select> : <Icon3></Icon3>,
       menu: <Profile2></Profile2>,
     },
     {
-      icon: menuVal === 2 ? <Icon2Select></Icon2Select> : <Icon2></Icon2>,
+      icon:  <StarIcon></StarIcon>,
       menu: <Profile3></Profile3>,
     },
   ];
