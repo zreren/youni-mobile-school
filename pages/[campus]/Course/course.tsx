@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Header from '@/components/Header';
 import CategoryButton from '@/components/Button/CategoryButton';
@@ -11,11 +11,28 @@ import useFetch from '@/hooks/useFetch';
 import { Flex, Loading } from 'react-vant';
 
 export default function course():JSX.Element  {
-  const router = useRouter()
-  const { data, error } = useFetch(`/subject/query?campusId=1`,"get",{
+  const router = useRouter();
+  const { data:campusData,mutate:campusDataMutate} = useFetch('/campus/query',"get",{
+    name: router.query.campus,
+  });
+  useEffect(()=>{
+    campusDataMutate()
+  },[router.query.campus])
+  const campusId = useMemo(()=>{
+    return campusData?.data[0]?.id
+  },[campusData?.data[0]?.id])
+  const { data, error,mutate } = useFetch(`/subject/query`,"get",{
+    campusId: campusId,
     pageSize:6
   });
-  const { data:hotCourseData, error: hotCourseDataError, mutate:hotMutate} = useFetch(`${Cons.API.COURSE.HOT}?campusId=1`,"get");
+  useEffect(()=>{
+    mutate()
+    hotMutate()
+  },[campusId])
+  const { data:hotCourseData, error: hotCourseDataError, mutate:hotMutate} = 
+  useFetch(`${Cons.API.COURSE.HOT}`,"get",{
+    campusId : campusId
+  });
 
   console.log(data,"data")
   const randomColor = ['red', 'blue', 'yellow', 'green', 'pink', 'purple']
@@ -42,12 +59,15 @@ export default function course():JSX.Element  {
           }
 
         </div>
-        <button onClick={() => { router.push({pathname:'/[campus]/Course/AllSubject',query:{campus:"York"}}) }} className='btn hover:bg-white border-none btn-sm w-full bg-white text-gray-400'>查看全部</button>
+        <button onClick={() => { router.push({pathname:'/[campus]/Course/AllSubject',query:{campus: router.query.campus,campusId:campusId}}) }} className='btn hover:bg-white border-none btn-sm w-full bg-white text-gray-400'>查看全部</button>
       </div>
       <Title title="热门课程">
         <CButtonNoLine onClick={()=>{hotMutate()}}></CButtonNoLine>
       </Title>
       <div className='space-y-3'>
+        {
+          hotCourseData?.data?.length === 0 ? <div>该课程暂无数据喔~移步其他校区吧！</div> : null
+        }
         {hotCourseData?hotCourseData?.data?.map((item,index) => {
           return (
             <CourseScoreCard data={item}></CourseScoreCard>

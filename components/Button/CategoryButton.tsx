@@ -2,13 +2,16 @@ import React from 'react';
 import classnames from 'classnames';
 import styles from './index.module.css';
 import { useRouter } from 'next/router';
+import { useLocalStorage } from 'react-use';
 export default function CategoryButton(props) {
   const { color,data } = props;
+  const [selectSchool,setSelectSchool] = useLocalStorage('school',null)
+
   const router = useRouter();
   return (
     <div
       onClick={()=>{
-        router.push({pathname:'/[campus]/Course/List',query:{campus:"York",subjectId:data.id}})
+        router.push({pathname:'/[campus]/Course/List',query:{campus: selectSchool || router.query.campus,subjectId:data.id}})
       }
       }
       className={classnames(

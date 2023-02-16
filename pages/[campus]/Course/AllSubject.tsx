@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Header from '@/components/Header';
 import CategoryButton from '@/components/Button/CategoryButton';
 import useFetch from '@/hooks/useFetch';
 import SearchIcon from './search.svg';
 import { debounce } from "lodash";
+import { useRouter } from 'next/router';
 
 export default function AllSubject() {
   const [value,setValue] = React.useState('');
-  const { data, error,mutate } = useFetch('/subject/list?campusId=1',"get",{
-    keyword: value
+  const router = useRouter();
+  const { data, error,mutate } = useFetch('/subject/list',"get",{
+    keyword: value,
+    campusId: router.query.campusId,
   });
+  useEffect(()=>{
+    mutate()
+  },[router.query.campusId])
   const randomColor = ['red', 'blue', 'yellow', 'green', 'pink', 'purple']
   const debounceSearch = debounce((value)=>{
     mutate()

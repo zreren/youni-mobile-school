@@ -7,9 +7,11 @@ import Icon4 from './4.svg';
 import Icon5 from './5.svg';
 import Subtract from './Subtract.svg';
 import { useRouter } from 'next/router';
+import { useLocalStorage } from 'react-use';
 
 export default function index(props) {
   const router = useRouter();
+  const [selectSchool,setSelectSchool] = useLocalStorage('school',null)
   let body = document.body;
   return (
     <div
@@ -58,7 +60,7 @@ export default function index(props) {
           body.style.overflow = 'scroll';
           router.push({
             pathname: '/[campus]/Course/evaluation',
-            query: { campus: 'York' },
+            query: { campus: selectSchool },
           });
         }}
       >
@@ -70,7 +72,7 @@ export default function index(props) {
           body.style.overflow = 'scroll';
           router.push({
             pathname: '/[campus]/post/addPost',
-            query: { campus: 'York' },
+            query: { campus: selectSchool },
           });
         }}
         className={styles.element}
@@ -83,7 +85,7 @@ export default function index(props) {
           body.style.overflow = 'scroll';
           router.push({
             pathname: '/[campus]/post/addPost',
-            query: { campus: 'York' },
+            query: { campus: selectSchool },
           });
         }}
         className={styles.element}

@@ -42,6 +42,7 @@ import CourseIcon4 from './courseIcon4.svg';
 import useRequest from '@/libs/request';
 import {  useSelector } from 'react-redux';
 import { Uploader } from 'react-vant';
+import useUser from '@/hooks/useUser';
 // import { stringify } from 'querystring';
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
@@ -476,6 +477,7 @@ export default function Schedules() {
         </div>
       );
     };
+    const {user} = useUser();
     return (
       <SwipeableDrawer
         anchor="bottom"
@@ -501,7 +503,12 @@ export default function Schedules() {
               title="保存到相册"
             ></SaveToLibButton>
             <SaveToLibButton
-              onClick={() => {router.push('/schedule/setting')}}
+              onClick={() => {router.push({
+                pathname: '/Schedules/share',
+                query:{
+                  id: user?.id
+                }
+              })}}
               color="#FFD036"
               icon="share"
               title="分享课表"

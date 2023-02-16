@@ -9,15 +9,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import UserAddMenu from '@/components/UserAddMenu';
 import { selectAuthState, setAuthState } from '@/stores/authSlice';
 import IconClose from "./close.svg";
+import { useLocalStorage } from 'react-use';
 export default function LabelBottomNavigation(props) {
   const dispatch = useDispatch();
   const router = useRouter();
+  const [selectSchool,setSelectSchool] = useLocalStorage('school',null)
+  React.useEffect(()=>{
+    setSelectSchool(router.query.campus)
+  },[router.query.campus])
+  const campus =  React.useMemo(()=>{
+    return selectSchool
+  },[selectSchool]);
   const routerTable = [
     '///',
-    '/York',
+    '/[campus]',
     '/Schedules/Schedules',
     '/Course/evaluation',
-    '/York/Course/course',
+    '/[campus]/Course/course',
     '/Profile',
   ];
   const [value, setValue] = React.useState(1);
@@ -75,7 +83,6 @@ export default function LabelBottomNavigation(props) {
     }
     setValue(newValue);
     body.style.overflow = 'scroll';
-    const campus = router.query.campus;
     router.push({
       pathname:routerTable[newValue],
       query:{campus:campus}

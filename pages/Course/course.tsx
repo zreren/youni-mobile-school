@@ -10,7 +10,9 @@ import { useRouter } from 'next/router';
 import useFetch from '@/hooks/useFetch';
 export default function course() {
   const router = useRouter()
-  const { data, error } = useFetch(`${Cons.API.SUBJECT.QUERY}?campusId=1`,"get");
+  const { data, error } = useFetch(`${Cons.API.SUBJECT.QUERY}`,"get",{
+    campusId: 1
+  });
   const { data:hotCourseData, error: hotCourseDataError} = useFetch(`${Cons.API.COURSE.HOT}?campusId=1`,"get");
 
   console.log(data,"data")

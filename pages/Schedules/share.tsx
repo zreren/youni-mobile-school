@@ -171,16 +171,22 @@ export default function Schedules() {
   const [addCourse, setAddCourse] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [yearMethod, setYearMethod] = useState(false);
-  const studentId = router.query.id;
+  const [studentId,setStudentId] = useState(router.query.id);
+  useEffect(()=>{
+    setStudentId(router.query.id)
+  },[router.query.id])
   const { data, error, mutate } = useFetch(
     `/curriculum/view`,
     'get',
     {
       campusId: 1,
-      termId: termInfo?.data?.id,
       studentId: studentId,
+      termId: termInfo?.data?.id,
     }
   );
+  useEffect(()=>{
+    mutate()
+  },[studentId])
   let courseData;
   function getPastWeekDates(): [Date, Date] {
     const today = new Date();

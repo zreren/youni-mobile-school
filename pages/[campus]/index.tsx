@@ -222,6 +222,7 @@ function SchoolPage(props) {
   const SchoolList = (props) => {
     const { arg, countryId } = props;
     const [select, setSelect] = useState();
+    const [selectSchool,setSelectSchool] = useLocalStorage('school',null)
     const { data: countryData, mutate } = useFetch('/country/campus', 'get', {
       countryId: countryId,
     });
@@ -307,6 +308,7 @@ function SchoolPage(props) {
                         pathname: '/[campus]',
                         query: { campus: item.alias },
                       });
+                      // setSelectSchool(item.alias)
                       props.setVisible(false);
                     }}
                   >

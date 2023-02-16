@@ -15,7 +15,16 @@ export default function index() {
   const router = useRouter();
   const campus = router.query.campus as string;
   console.log(campus,"campus")
-  const [campusId] = useLocalStorage(campus?.toLowerCase(),1)
+  const { data:campusData,mutate:campusDataMutate} = useFetch('/campus/query',"get",{
+    name: router.query.campus,
+  });
+  const campusId = React.useMemo(()=>{
+    return campusData?.data[0]?.id
+  },[campusData?.data[0]?.id])
+  useEffect(()=>{
+    campusDataMutate()
+  },[router.query.campus])
+  // const [campusId] = useLocalStorage(campus?.toLowerCase(),1)
   const [history,setHistory] = useLocalStorage('history',[]);
   const [menu,setMenu] = useState(0);
   const [value,setValue] = React.useState('');
