@@ -44,6 +44,7 @@ globalAny.Cons = {
       DELETE: '/comment/delete',
     },
   },
+  TOKEN: 'pk.eyJ1IjoieW91bmljbHViIiwiYSI6ImNsY2M5ZHVydDNqdTAzeGxrazJuNzhzbWoifQ.wWLnf7hdCNENhcFEuY3vPw'
 };
 
 export {};

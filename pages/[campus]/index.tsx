@@ -200,8 +200,12 @@ function SchoolPage(props) {
   const [category, setCategory] = useState('idle');
   // useEffect(() => {
   const { data: postData, error } = useFetch(
-    `/post/home_list?type=${category}`,
-    'get',
+    `/post/home_list`,
+    'get',{
+      pageSize:10,
+      page:2,
+      type:category,
+    }
   );
   const { data: carouselData } = useFetch('/campus/carousel', 'get', {
     id: campusIdMap,

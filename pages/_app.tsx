@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import '../styles/calendar.css';
+import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css';
 import '../styles/vant.css';
 // import '../styles/picker.less'
 import '@fullcalendar/common/main.css';

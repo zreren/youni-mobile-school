@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import PostCategory from '@/components/Menu/add-post-category';
 import Header from '@/components/Header';
 import YouniForm from '@/components/Form/Form';
@@ -42,6 +42,7 @@ import SeatIcon from './assets/actives/seat.svg';
 import useLanguage from '@/hooks/useLanguage';
 import IOSSwitch from '@/components/Input/ios';
 import { set } from 'react-hook-form';
+import { json } from 'stream/consumers';
 
 export default function addPost() {
   const Footer = () => {
@@ -59,7 +60,9 @@ export default function addPost() {
           </div>
         </div>
         <div
-          onClick={()=>{submitPost(form.getFieldsValue(),false)}}
+          onClick={() => {
+            submitPost(form.getFieldsValue(), false);
+          }}
           className="bg-[#FFD036] cursor-pointer  text-white rounded-full w-full h-10 flex justify-center items-center"
         >
           发布
@@ -142,47 +145,81 @@ export default function addPost() {
   const [form] = Form.useForm();
   const [type, setType] = React.useState(headerMenuList[0].key);
   const [previews, setPreviews] = React.useState([]);
-  const getCurrentLocation = async () => {
-    const TOKEN =
-      'pk.eyJ1IjoieW91bmljbHViIiwiYSI6ImNsY2M5ZHVydDNqdTAzeGxrazJuNzhzbWoifQ.wWLnf7hdCNENhcFEuY3vPw';
-    let location;
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      console.log(position.coords.latitude, position.coords.longitude);
-      const theLocation = `${position.coords.longitude},${position.coords.latitude}`;
-      // const res = await fetch(`${BASEURL}${theLocation}.json?access_token=${TOKEN}`)
-      const { data } = await mapRequest.get(
-        `geocoding/v5/mapbox.places/${theLocation}.json?access_token=${TOKEN}`,
-      );
-      // console.log(res,"res")
-      form.setFieldValue('location', data?.features[0].text);
-      // setLocalList(data?.features);
-      // return  await fetch(`${BASEURL}${theLocation}.json?access_token=${TOKEN}`)
-    });
-  };
-  useEffect(() => {
-    // if(form.get){
-    getCurrentLocation();
-    // }
-  }, []);
-  const PickLocation = () => {
+  // useEffect(() => {
+  //   // if(form.get){
+  //   getCurrentLocation();
+  //   // }
+  // }, []);
+  // useEffect(() => {
+  //   getCurrentLocation();
+  // }, [content]);
+  const [baseLocation, setBaseLocation] = useState<any>();
+  const PickLocation = (props: any) => {
+    const { data } = props;
     const [localList, setLocalList] = useState([]);
     const [local, setLocal] = useState(false);
+    useEffect(() => {
+      try {
+        const obj = JSON.parse(form.getFieldValue('location'));
+        setPlaceName(obj.placename);
+      } catch (error) {}
+    }, [navigator.geolocation]);
     const getCurrentLocation = async () => {
-      const TOKEN =
-        'pk.eyJ1IjoieW91bmljbHViIiwiYSI6ImNsY2M5ZHVydDNqdTAzeGxrazJuNzhzbWoifQ.wWLnf7hdCNENhcFEuY3vPw';
+      const TOKEN = Cons.TOKEN;
+      let location;
       navigator.geolocation.getCurrentPosition(async (position) => {
         console.log(position.coords.latitude, position.coords.longitude);
         const theLocation = `${position.coords.longitude},${position.coords.latitude}`;
+        // const res = await fetch(`${BASEURL}${theLocation}.json?access_token=${TOKEN}`)
         const { data } = await mapRequest.get(
           `geocoding/v5/mapbox.places/${theLocation}.json?access_token=${TOKEN}`,
         );
-        form.setFieldValue('location', data?.features[0].place_name);
+        // const { data } = await mapRequest.get(
+        //   `matching/v5/mapbox/driving/${theLocation};${theLocation}?access_token=${TOKEN}`,
+        // );
+
+        // console.log(res,"res")
+        // form.setFieldValue('location', JSON.stringify({
+        //   point:item.center,
+        //   placename:item?.place_name
+        // }));
+        console.log(data,"defaultData")
+        const defaultData = JSON.stringify({
+          point: data?.features[0].center,
+          placename: data?.features[0].text,
+        });
+        form.setFieldValue('location', defaultData);
         setLocalList(data?.features);
+        // setPlaceName(data?.features[0].text);
+        // return  await fetch(`${BASEURL}${theLocation}.json?access_token=${TOKEN}`)
       });
     };
+    const selectPoint = (item)=>{
+      console.log('select',item)
+      const obj = JSON.stringify({
+        point: item?.center,
+        placename: item?.place_name,
+      })
+      form.setFieldValue(
+        'location',
+        obj
+      );
+      // setPlaceName(item?.place_name);
+      setLocal(false);
+    }
+    const placeName = useMemo(()=>{
+      try {
+        const res = JSON.parse(form.getFieldValue('location'))
+        return res.placename
+      } catch (error) {
+        return 'Located...'
+      }
+    },[local,localList])
     useEffect(() => {
+      // setBaseLocation(navigator.geolocation);
       getCurrentLocation();
     }, [navigator.geolocation]);
+    // useEffect
     return (
       <div>
         <div
@@ -190,7 +227,8 @@ export default function addPost() {
             setLocal(true);
           }}
         >
-          {form.getFieldValue('location') || 'locate...'}
+          {placeName || 'locate...'}
+          {/* {form.getFieldValue('location').length > 6 ? JSON?.parse(form.getFieldValue('location')).placename : null || 'locate...'} */}
         </div>
         <div>
           <SwipeableDrawer
@@ -225,8 +263,7 @@ export default function addPost() {
                     <div
                       className="w-full flex flex-col justify-center  min-h-[60px]"
                       onClick={() => {
-                        form.setFieldValue('location', item.place_name);
-                        setLocal(false);
+                       selectPoint(item)
                       }}
                     >
                       <div className="text-gray-500 font-semibold text-sm">
@@ -256,7 +293,9 @@ export default function addPost() {
         {(val: Date) => (val ? val.toDateString() : '请选择日期')}
       </DatetimePicker>
     ),
-    location: <PickLocation></PickLocation>,
+    location: (
+      <PickLocation location={form.getFieldValue('location')}></PickLocation>
+    ),
     prices: (
       <div>
         {form.getFieldValue('prices')?.text === 0 ||
@@ -274,6 +313,9 @@ export default function addPost() {
   const { data: dynamicForm, mutate } = useFetch('/post/dynamicForm', 'get', {
     type: type,
   });
+  useEffect(() => {
+    console.log('dynamicForm render ++');
+  }, [dynamicForm]);
   const Keyboard = () => {
     return (
       <div className="bg-[#F9FAFB] text-[#798195] w-screen h-12  z-30 fixed bottom-0 flex justify-around items-center">
@@ -338,7 +380,7 @@ export default function addPost() {
     };
   }
   const submitPost = async (form, draft) => {
-    console.log({...form}, 'form');
+    console.log({ ...form }, 'form');
     // if (
     //   !Object.keys(form).some((element) => {
     //     if (
@@ -373,9 +415,11 @@ export default function addPost() {
         topic: ['York'],
         preview: previews,
         type: type,
-        contact: form.contact?.filter((item)=>item.public===true)?.map((item)=>{
-          return item.type
-        })
+        contact: form.contact
+          ?.filter((item) => item.public === true)
+          ?.map((item) => {
+            return item.type;
+          }),
       });
       if (data.message === 'success') {
         Toast.success('发布成功');
@@ -423,15 +467,17 @@ export default function addPost() {
   //   left: 'calc(50% - 15px)',
   // }));
   const { data: contactList } = useFetch('/profile/contact', 'get');
-  const [contactListTemp, setContactListTemp] = useState( contactList?.data);
-  useEffect(()=>{
-    setContactListTemp(contactList?.data)
-  },[contactList])
+  const [contactListTemp, setContactListTemp] = useState(contactList?.data);
+  useEffect(() => {
+    setContactListTemp(contactList?.data);
+  }, [contactList]);
   const [contactVisible, setContactVisible] = useState(false);
   const ContactModel = (props) => {
-    const { visible, open, close, confirm ,data} = props;
-    if(!data) return
-    const [_contactListTemp,_setContactListTemp] = useState(form.getFieldValue('contact')?form.getFieldValue('contact') :data);
+    const { visible, open, close, confirm, data } = props;
+    if (!data) return;
+    const [_contactListTemp, _setContactListTemp] = useState(
+      form.getFieldValue('contact') ? form.getFieldValue('contact') : data,
+    );
     function _Form(props) {
       let { header, List } = props;
       if (!List) {
@@ -471,20 +517,20 @@ export default function addPost() {
         </div>
       );
     }
-    const onCloseModel =()=>{
-      setContactVisible(_contactListTemp)
+    const onCloseModel = () => {
+      setContactVisible(_contactListTemp);
       close();
-    }
-    useEffect(()=>{
-      form.setFieldValue('contact',_contactListTemp)
+    };
+    useEffect(() => {
+      form.setFieldValue('contact', _contactListTemp);
       // setContactListTemp(_contactListTemp)
-      console.log(contactListTemp,"contactListTemp")
-    },[_contactListTemp])
+      console.log(contactListTemp, 'contactListTemp');
+    }, [_contactListTemp]);
     const PhoneComponent = (props) => {
       const { data, type } = props;
       const dataFetch = React.useMemo(() => {
         if (data) return;
-        if(!_contactListTemp) return
+        if (!_contactListTemp) return;
         return _contactListTemp?.filter((item, index) => {
           return item.type === type;
         })[0];
@@ -510,17 +556,14 @@ export default function addPost() {
           public: bool !== null ? bool : isPublic,
           id: data?.id || dataFetch?.id,
           createdAt: data?.createdAt || dataFetch?.createdAt,
-          updateAt:data?.updatedAt || dataFetch?.updatedAt,
-        }
-        _setContactListTemp((pre)=>{
-          const newPre = pre.filter((item)=>{
-            return item.id !== update.id
-          })
-          return [
-            ...newPre,
-            update
-          ]
-        })
+          updateAt: data?.updatedAt || dataFetch?.updatedAt,
+        };
+        _setContactListTemp((pre) => {
+          const newPre = pre.filter((item) => {
+            return item.id !== update.id;
+          });
+          return [...newPre, update];
+        });
         // if (!data && !dataFetch) {
         //   useRequest.post('/api/profile/contact/create', {
         //     type: type,
@@ -636,20 +679,22 @@ export default function addPost() {
         className="z-10 "
         disableDiscovery={true}
         disableSwipeToOpen={true}
-        onClose={()=>{
-          onCloseModel()
+        onClose={() => {
+          onCloseModel();
         }}
         onOpen={open}
         open={visible}
         anchor="bottom"
       >
-      <div className="w-full h-2/3 bg-white p-4 pb-20">
-      <Puller></Puller>
-      <div className='text-xs text-[#A9B0C0] pt-3'>此处联系方式仅针对本次推文生效</div>
-      <_Form header="" List={List1}></_Form>
-      </div>
+        <div className="w-full h-2/3 bg-white p-4 pb-20">
+          <Puller></Puller>
+          <div className="text-xs text-[#A9B0C0] pt-3">
+            此处联系方式仅针对本次推文生效
+          </div>
+          <_Form header="" List={List1}></_Form>
+        </div>
       </SwipeableDrawer>
-    )
+    );
   };
   const PricesModel = (props) => {
     const { visible, open, close, confirm } = props;
@@ -909,17 +954,124 @@ export default function addPost() {
       </SwipeableDrawer>
     );
   };
+  const [placeName, setPlaceName] = useState();
+  const dynamicFormData = React.useMemo(
+    () => dynamicForm?.data ?? [],
+    [dynamicForm],
+  );
   const [pricesVisible, setPricesVisible] = useState(false);
+  const DynamicForm = React.useCallback(
+    (props: any) => {
+      const data = React.useMemo(
+        () => dynamicForm?.data ?? [],
+        [props.dynamicForm],
+      );
+      useEffect(() => {
+        console.log('DynamicForm render count ++');
+      }, []);
+      return data?.map((item) => {
+        // const Node = React.useCallback(()=>{
+        //   console.log('render count ++')
+        //   return customComponents[item.type]
+        // },[]);
+        useEffect(() => {
+          console.log('data render count ++');
+        }, []);
+        const Label = () => {
+          const Icon = () => {
+            return IconList[item.icon] ? IconList[item.icon] : <div></div>;
+          };
+          return (
+            <div className="flex items-center space-x-4">
+              <Icon></Icon>
+              <div>{item.label}</div>
+            </div>
+          );
+        };
+        return (
+          <Form.Item
+            name={item.dataIndex}
+            label={<Label></Label>}
+            key={item.dataIndex}
+            // children={()=>{
+            //   return <Node></Node>
+            // }}
+            valuePropName="checked"
+            onClick={
+              item.type === 'time'
+                ? (_, action) => {
+                    action.current?.open();
+                  }
+                : () => {
+                    if (item.type === 'prices') {
+                      setPricesVisible(true);
+                    }
+                    if (item.dataIndex === 'contact') {
+                      setContactVisible(true);
+                    }
+                  }
+            }
+          >
+            {item.type === 'location' && (
+              <PickLocation location={''} placeName={placeName}></PickLocation>
+            )}
+            {item.type === 'time' && (
+              <DatetimePicker popup type="datetime">
+                {(val: Date) => (val ? val.toDateString() : '请选择日期')}
+              </DatetimePicker>
+            )}
+            {item.type === 'Switch' && (
+              <Switch
+                onChange={(e) => {
+                  form.setFieldValue(item.dataIndex, e);
+                }}
+                activeColor="#FFD036"
+                size={20}
+                inactiveColor="#dcdee0"
+              />
+            )}
+            {item.type === 'input' && (
+              <Input
+                placeholder="请输入"
+                onChange={(v) => {
+                  form.setFieldValue(item.dataIndex, v);
+                }}
+              ></Input>
+            )}
+            {item.type === 'contact' && <div>请选择联系方式</div>}
+            {item.type === 'prices' && (
+              <div>
+                {form.getFieldValue('prices')?.text === 0 ||
+                form.getFieldValue('prices')?.text === '0'
+                  ? '免费'
+                  : form.getFieldValue('prices')?.text || '点击输入价格信息'}
+              </div>
+            )}
+            {/* {
+            ite
+          } */}
+          </Form.Item>
+        );
+      });
+    },
+    [dynamicForm, placeName, form],
+  );
+  const handleSetTitle = React.useCallback((value) => {
+    setTitle(value);
+  }, []);
   return (
     <div className="mb-14">
       {KeyboardShow ? <Keyboard></Keyboard> : null}
-      <ContactModel 
-      data={contactListTemp}
-      onClose={() => {
-          setContactVisible(false)
-        }} visible={contactVisible}
-        close={() => {setContactVisible(false)}}
-        ></ContactModel>
+      <ContactModel
+        data={contactListTemp}
+        onClose={() => {
+          setContactVisible(false);
+        }}
+        visible={contactVisible}
+        close={() => {
+          setContactVisible(false);
+        }}
+      ></ContactModel>
       <PricesModel
         visible={pricesVisible}
         onClose={() => {
@@ -973,7 +1125,7 @@ export default function addPost() {
         <Input
           placeholder="填写标题获得更多流量～"
           value={title}
-          onChange={setTitle}
+          onChange={handleSetTitle}
           clearable
           clearTrigger="always"
           className="text-2xl font-bold"
@@ -1005,47 +1157,60 @@ export default function addPost() {
             console.log(v);
           }}
         >
-          {dynamicForm?.data?.map((item) => {
-            const Node = customComponents[item.type];
-            const Label = () => {
-              const Icon = () => {
-                return IconList[item.icon] ? IconList[item.icon] : <div></div>;
-              };
-              return (
-                <div className="flex items-center space-x-4">
-                  <Icon></Icon>
-                  <div>{item.label}</div>
-                </div>
-              );
-            };
-            return (
-              <Form.Item
-                name={item.dataIndex}
-                label={<Label></Label>}
-                key={item.dataIndex}
-                // children={()=>{
-                //   return <Node></Node>
-                // }}
-                valuePropName="checked"
-                onClick={
-                  item.type === 'time'
-                    ? (_, action) => {
-                        action.current?.open();
-                      }
-                    : () => {
-                        if (item.type === 'prices') {
-                          setPricesVisible(true);
-                        }
-                        if(item.dataIndex === 'contact'){
-                          setContactVisible(true);
-                        }
-                      }
-                }
-              >
-                {customComponents[item.type]}
-              </Form.Item>
-            );
-          })}
+          {
+            //  dynamicFormData?.map((item) => {
+            //   const Node = ()=>{
+            //     return customComponents[item.type]
+            //   };
+            //   const Label = () => {
+            //     const Icon = () => {
+            //       return IconList[item.icon] ? IconList[item.icon] : <div></div>;
+            //     };
+            //     return (
+            //       <div className="flex items-center space-x-4">
+            //         <Icon></Icon>
+            //         <div>{item.label}</div>
+            //       </div>
+            //     );
+            //   };
+            //   return (
+            //     <Form.Item
+            //       name={item.dataIndex}
+            //       label={<Label></Label>}
+            //       key={item.dataIndex}
+            //       // children={()=>{
+            //       //   return <Node></Node>
+            //       // }}
+            //       valuePropName="checked"
+            //       onClick={
+            //         item.type === 'time'
+            //           ? (_, action) => {
+            //               action.current?.open();
+            //             }
+            //           : () => {
+            //               if (item.type === 'prices') {
+            //                 setPricesVisible(true);
+            //               }
+            //               if (item.dataIndex === 'contact') {
+            //                 setContactVisible(true);
+            //               }
+            //             }
+            //       }
+            //     >
+            //       {/* {item.type === 'location' && (
+            //         <PickLocation location={''} placeName={placeName}></PickLocation>
+            //       )}
+            //       {item.type !== 'location' && customComponents[item.type]} */}
+            //       {customComponents[item.type]}
+            //     </Form.Item>
+            //   );
+            // })
+          }
+          <DynamicForm
+            data={form}
+            placeName={placeName}
+            dynamicForm={dynamicForm}
+          ></DynamicForm>
         </Form>
       </div>
       <Footer></Footer>

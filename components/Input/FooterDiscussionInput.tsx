@@ -96,7 +96,7 @@ const SelectPostGroupItem = (props): JSX.Element => {
 
         <div className="p-4 space-y-3 mt-3 mb-3">
           <div className="text-center">请选择收藏夹</div>
-          {PostGroupData?.data.map((item) => {
+          {PostGroupData?.data?.map((item) => {
             return (
               <PostGroup
                 postId={data?.id}

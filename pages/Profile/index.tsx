@@ -475,7 +475,7 @@ function index(props) {
         </div>
         {menu === 0 ? (
           <div className="px-[10px] space-y-3">
-            {PostGroupData?.data.map((item) => {
+            {PostGroupData?.data?.map((item) => {
               return (
                 <PostGroup
                   check={(id,isEdit) => {
