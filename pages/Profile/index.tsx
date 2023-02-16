@@ -315,7 +315,7 @@ const ProfileMenu = () => {
 const Setting = () => {
   return (
     <div className="w-full rounded-lg card bg-base-100 ">
-      <div className="p-4 pl-0 pr-0 card-body ">
+      <div className="p-4 pl-0 pr-0 card-body space-y-3">
         <div className="grid grid-cols-4 ">
           <Link href="/Setting/account">
             <div className="flex flex-col items-center space-y-3">
@@ -340,7 +340,7 @@ const Setting = () => {
             </Link>
           </div>
         </div>
-        <div className="grid grid-cols-4">
+        <div className="grid grid-cols-4 ">
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon5></SettingIcon5>
             <div className="text-xs text-[#798195]">邀请好友</div>
@@ -360,7 +360,7 @@ const Setting = () => {
             </div>
           </Link>
         </div>
-        <div className="grid grid-cols-4">
+        <div className="grid grid-cols-4 ">
           <div className="flex flex-col items-center space-y-3">
             <SettingIcon9></SettingIcon9>
             <div className="text-xs text-[#798195]">加入有你</div>
@@ -503,7 +503,7 @@ function index(props) {
     const { data: stard } = useFetch('/post/stard', 'get');
     if (!liked || !stard) return null;
     return (
-      <div className="w-full">
+      <div className="w-full ">
         <div className="w-full px-2">
           <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
             <div
@@ -619,7 +619,7 @@ function index(props) {
   const dispatch = useDispatch();
 
   return (
-    <div className="w-screen min-h-screen">
+    <div className="w-screen min-h-screen   pb-36">
       <ProfileHeader data={{ student: user }}></ProfileHeader>
       <div className="w-full overflow-hidden rounded-full ">
         {menuVal !== 4 ? (

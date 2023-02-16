@@ -146,7 +146,10 @@ function index(props) {
       <div className="w-full relative h-[185px] bg-white px-5 py-4 rounded-xl overflow-hidden 	">
         <div className="w-full h-full overflow-hidden rounded-xl">
         <div  />
-          <img src={maoSrc} className="w-full h-full "></img>
+        {
+          maoSrc? <img src={maoSrc} className="w-full h-full "></img>  : <div className='w-full h-full bg-gray-100'></div>
+        }
+         
         </div>
         <div className="absolute px-3 items-center  flex justify-between left-0 right-0 mx-auto z-10 w-[80%] h-[48px] bg-white/70 backdrop-blur-sm		 bottom-10 rounded-lg">
           <div className="flex items-center w-[90%]">
