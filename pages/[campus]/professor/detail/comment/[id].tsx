@@ -307,9 +307,61 @@ export default function userComment() {
   return (
     <>
       <div className="bg-white p-4 rounded-lg  mb-4">
-        <Header></Header>
+        <>
+        <div className={"fixed  inset-0 top-0 z-50 flex items-center   w-full p-5 shadow h-11 bg-gray-50 "}>
+        <div
+          onClick={() => {
+           router.back();
+          }}
+        >
+          <svg
+            width="8"
+            height="12"
+            viewBox="0 0 8 12"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M6.19531 0.328613L7.13812 1.27142L2.42408 5.98547L7.13812 10.6995L6.19531 11.6423L1.0099 6.45691C1.00988 6.45689 1.00986 6.45687 1.48127 5.98547L1.0099 6.45691L0.538458 5.98547L6.19531 0.328613Z"
+              fill="#1D2129"
+            />
+          </svg>
+        </div>
+        <div>
+        <div className="flex items-center  ml-2">
+          <div className="avatar placeholder">
+            <div className="bg-neutral-focus text-neutral-content rounded-full w-6">
+              {data?.data?.student ? (
+                <Image
+                  placeholder="blur"
+                  objectFit="cover"
+                  className="rounded-full"
+                  blurDataURL={`${Cons.BASEURL}${data?.data?.student?.avatar}`}
+                  width={'24px'}
+                  height={'24px'}
+                  src={`${Cons.BASEURL}${data?.data?.student?.avatar}`}
+                />
+              ) : null}
+            </div>
+          </div>
+          <div>
+            <div className="text-sm ml-2 font-medium max-w-8 text-blueTitle">
+              {data?.data?.student?.nickName}
+            </div>
+            <div className="text-gray-200 text-xs ml-2">
+              {data?.data?.student?.education?.year} ·{' '}
+              {data?.data?.student?.education?.major}
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      <div className="mb-11"></div>
+        </>
         {/* {reRender} */}
-        <div className="flex items-center mb-4">
+        {/* <div className="flex items-center mb-4">
           <div className="avatar placeholder">
             <div className="bg-neutral-focus text-neutral-content rounded-full w-14">
               {data?.data?.student ? (
@@ -334,7 +386,7 @@ export default function userComment() {
               {data?.data?.student?.education?.major}
             </div>
           </div>
-        </div>
+        </div> */}
         <div>
           <div className="w-full   rounded-t-xl org-gradient2 relative h-8">
             <Super className="absolute right-1 bottom-0 z-10"></Super>
@@ -347,7 +399,7 @@ export default function userComment() {
                 <div className="flex space-x-2 mb-1 mt-1">
                   <div className="text-gray-300">课程名称:</div>
                   <div className="text-blueTitle">
-                    {data?.data?.course[language]} 1000
+                    {data?.data?.course.ename} {data?.data?.course.code}
                   </div>
                 </div>
                 <div className="flex space-x-2 mb-1 mt-1">
