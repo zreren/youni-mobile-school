@@ -161,6 +161,7 @@ function RGBA2RGB(rgba_color ) {
     );
   }
 function addFullStartDate(array: any[], pastWeekDates: [Date, Date]) {
+  if(!array) return
   for (const item of array) {
     const startTimeRange = item.time;
     const dayOfWeek = item.dayOfWeek;

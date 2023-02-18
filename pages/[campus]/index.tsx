@@ -154,13 +154,17 @@ function SchoolPage(props) {
       label: '新闻',
       value: 'news',
     },
-    // {
-    //   label: '转租',
-    //   value: 're',
-    // },
+    {
+      label: '转租',
+      value: 'sublet',
+    },
     {
       label: '拼车',
       value: 'carpool',
+    },
+    {
+      label: '二手书',
+      value: 'book',
     },
     {
       label: '关注',
@@ -199,14 +203,17 @@ function SchoolPage(props) {
   const router = useRouter();
   const [category, setCategory] = useState('idle');
   // useEffect(() => {
-  const { data: postData, error } = useFetch(
+  const { data: postData, error,mutate } = useFetch(
     `/post/home_list`,
     'get',{
       pageSize:20,
       page:1,
-      type:category,
+      type: category,
     }
   );
+  useEffect(()=>{
+    mutate()
+  },[category])
   const { data: carouselData } = useFetch('/campus/carousel', 'get', {
     id: campusIdMap,
   });
@@ -415,7 +422,7 @@ function SchoolPage(props) {
           {/* {postData?.data? ( */}
           {postData?.data ? (
             <Waterfall
-              key={category}
+              key={category +postData?.data?.length }
               postData={postData?.data}
               show={() => {
                 setPostDetailShow(true);

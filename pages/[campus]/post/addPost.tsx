@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useMemo,
+} from 'react';
 import PostCategory from '@/components/Menu/add-post-category';
 import Header from '@/components/Header';
 import YouniForm from '@/components/Form/Form';
@@ -49,7 +55,7 @@ import { json } from 'stream/consumers';
 export default function addPost() {
   const Footer = () => {
     return (
-      <div className="w-full bg-white h-[60px] space-x-4 flex justify-between fixed bottom-10 px-5 py-2">
+      <div className="w-full bg-white h-[60px] space-x-4 flex justify-between fixed bottom-12 px-5 py-2">
         <div
           className="flex flex-col items-center  w-[40px]"
           onClick={() => {
@@ -115,7 +121,7 @@ export default function addPost() {
     {
       label: '二手书',
       key: 'book',
-    }
+    },
   ];
 
   const item = {
@@ -141,15 +147,13 @@ export default function addPost() {
     'youni:houseType': <HouseTypeIcon></HouseTypeIcon>,
     'youni:discussion': <MediaIcon></MediaIcon>,
     'youni:seat': <SeatIcon></SeatIcon>,
-    'youni:book' : <CourseIcon></CourseIcon>,
+    'youni:book': <CourseIcon></CourseIcon>,
     'youni:swap': <DeliveryRadio></DeliveryRadio>,
-
   };
   const [title, setTitle] = React.useState('');
   const [content, setContent] = React.useState('');
   const [form] = Form.useForm();
   const [type, setType] = React.useState(headerMenuList[0].key);
-
 
   const [previews, setPreviews] = React.useState([]);
   // useEffect(() => {
@@ -169,7 +173,8 @@ export default function addPost() {
       } catch (error) {}
     }, [navigator.geolocation]);
     const getCurrentLocation = async () => {
-      const TOKEN = 'pk.eyJ1IjoieW91bmljbHViIiwiYSI6ImNsY2M5ZHVydDNqdTAzeGxrazJuNzhzbWoifQ.wWLnf7hdCNENhcFEuY3vPw';
+      const TOKEN =
+        'pk.eyJ1IjoieW91bmljbHViIiwiYSI6ImNsY2M5ZHVydDNqdTAzeGxrazJuNzhzbWoifQ.wWLnf7hdCNENhcFEuY3vPw';
       let location;
       navigator.geolocation.getCurrentPosition(async (position) => {
         console.log(position.coords.latitude, position.coords.longitude);
@@ -187,7 +192,7 @@ export default function addPost() {
         //   point:item.center,
         //   placename:item?.place_name
         // }));
-        console.log(data,"defaultData")
+        console.log(data, 'defaultData');
         const defaultData = JSON.stringify({
           point: data?.features[0].center,
           placename: data?.features[0].text,
@@ -198,27 +203,24 @@ export default function addPost() {
         // return  await fetch(`${BASEURL}${theLocation}.json?access_token=${TOKEN}`)
       });
     };
-    const selectPoint = (item)=>{
-      console.log('select',item)
+    const selectPoint = (item) => {
+      console.log('select', item);
       const obj = JSON.stringify({
         point: item?.center,
         placename: item?.place_name,
-      })
-      form.setFieldValue(
-        'location',
-        obj
-      );
+      });
+      form.setFieldValue('location', obj);
       // setPlaceName(item?.place_name);
       setLocal(false);
-    }
-    const placeName = useMemo(()=>{
+    };
+    const placeName = useMemo(() => {
       try {
-        const res = JSON.parse(form.getFieldValue('location'))
-        return res.placename
+        const res = JSON.parse(form.getFieldValue('location'));
+        return res.placename;
       } catch (error) {
-        return 'Located...'
+        return 'Located...';
       }
-    },[local,localList])
+    }, [local, localList]);
     useEffect(() => {
       // setBaseLocation(navigator.geolocation);
       getCurrentLocation();
@@ -267,7 +269,7 @@ export default function addPost() {
                     <div
                       className="w-full flex flex-col justify-center  min-h-[60px]"
                       onClick={() => {
-                       selectPoint(item)
+                        selectPoint(item);
                       }}
                     >
                       <div className="text-gray-500 font-semibold text-sm">
@@ -419,8 +421,7 @@ export default function addPost() {
         topic: ['York'],
         preview: previews,
         type: type,
-        contact: form.contact
-          ?.filter((item) => item.public === true)
+        contact: form.contact?.filter((item) => item.public === true),
       });
       if (data.message === 'success') {
         Toast.success('发布成功');
@@ -472,7 +473,6 @@ export default function addPost() {
   useEffect(() => {
     setContactListTemp(contactList?.data);
   }, [contactList]);
-  const [contactVisible, setContactVisible] = useState(false);
   const ContactModel = (props) => {
     const { visible, open, close, confirm, data } = props;
     if (!data) return;
@@ -955,12 +955,260 @@ export default function addPost() {
       </SwipeableDrawer>
     );
   };
+  const IdeaPricesModel = (props) => {
+    const { visible, open, close, confirm } = props;
+    const [currentInPut, setCurrentInPut] = useState<string>();
+    const [state, updateState] = hooks.useSetState({
+      text: form?.getFieldValue('prices')?.text || '',
+      unit: form?.getFieldValue('prices')?.unit || '',
+      pricesUnit: form?.getFieldValue('prices')?.pricesUnit || pricesUnit,
+      oldPrice: form?.getFieldValue('prices')?.oldPrice || '',
+      showOldPrice: form?.getFieldValue('prices')?.showOldPrice || false,
+      service: form?.getFieldValue('prices')?.service || [],
+    });
+    useEffect(() => {
+      console.log(form.getFieldValue('prices'), 'form');
+      // updateState({
+      //   text: form.getFieldValue('text'),
+      //   unit: form.getFieldValue('unit'),
+      //   oldPrice: form.getFieldValue('oldPrice'),
+      //   showOldPrice: form.getFieldValue('showOldPrice'),
+      //   service: form.getFieldValue('service'),
+      // });
+    }, [form]);
+    const deleteInput = () => {
+      if (!currentInPut) return;
+      updateState({
+        [currentInPut]: state[currentInPut]?.slice(
+          0,
+          state[currentInPut].length - 1,
+        ),
+      });
+    };
+    const onInput = (v) => {
+      // Toast.success(v);
+      if (v === 'CAD') {
+        updateState({ pricesUnit: 'USD' });
+        setPricesUnit('USD');
+      }
+      if (v === 'USD') {
+        setPricesUnit('CAD');
+        updateState({ pricesUnit: 'CAD' });
+      }
+      if (v === '完成') {
+        close();
+      }
+      updateState({
+        [currentInPut]: state[currentInPut] + v,
+      });
+    };
+    const serviceList = [
+      { title: '当面交易' },
+      { title: '包邮' },
+      { title: '快递' },
+    ];
+    const ServicesItem = (props) => {
+      const { title, defaultSelect, change } = props;
+      const [select, setSelect] = useState(defaultSelect);
+      useEffect(() => {
+        if (select) {
+          props.change(title);
+        } else {
+          props.remove(title);
+        }
+      }, [select]);
+      return (
+        <div
+          onClick={() => {
+            setSelect(!select);
+          }}
+          className={classnames(
+            'bg-bg m-1  text-xs font-light h-6 px-1 py-1  rounded',
+            {
+              'text-yellow-500': select,
+              'text-gray-600': !select,
+            },
+          )}
+        >
+          {title}
+        </div>
+      );
+    };
+    const columns = [
+      { text: '日', value: 0 },
+      { text: '周', value: 1 },
+      { text: '月', value: 2 },
+      { text: '季', value: 3 },
+      { text: '年', value: 4 },
+      // { text: '南通', value: 5 },
+      // { text: '宿迁', value: 6 },
+      // { text: '泰州', value: 7 },
+      // { text: '无锡', value: 8 },
+    ];
+    return (
+      <SwipeableDrawer
+        className="z-10 "
+        disableDiscovery={true}
+        disableSwipeToOpen={true}
+        onClose={close}
+        onOpen={open}
+        open={visible}
+        anchor="bottom"
+      >
+        <div className="h-[440px] ">
+          <Puller></Puller>
+          <div className="p-5 mt-2 ">
+            <div className="flex prices">
+              <div className="flex w-full space-x-4 items-center">
+                <div className="whitespace-nowrap text-[#37455C] text-sm">
+                  价格
+                </div>
+                <div className="flex items-end">
+                  <div className="w-[70px]">
+                    <Input
+                      onFocus={() => {
+                        setCurrentInPut('text');
+                      }}
+                      type={'number'}
+                      value={state.text}
+                      readOnly
+                      onChange={(text) => updateState({ text })}
+                      placeholder={currentInPut === 'text' ? '|' : '输入价格'}
+                      className="text-lg"
+                    />
+                  </div>
+                  <div className="text-sm text-[#FF4241]">{pricesUnit}</div>
+                </div>
+              </div>
+            </div>
+            <div className="h-1 m-0 mt-2 mb-2 divider opacity-30"></div>
+            <div className="flex justify-between items-center">
+              <div className="flex w-full space-x-4 items-center">
+                <div className="whitespace-nowrap text-[#37455C] text-sm">
+                  原价
+                </div>
+                <div className="flex items-end">
+                  <div className="w-[70px]">
+                    <Input
+                      onFocus={() => {
+                        setCurrentInPut('oldPrice');
+                      }}
+                      type={'number'}
+                      value={state.oldPrice}
+                      readOnly
+                      onChange={(text) => updateState({ oldPrice: text })}
+                      placeholder={
+                        currentInPut === 'oldPrice' ? '|' : '输入原价'
+                      }
+                      className="text-lg text-[#798195]"
+                    />
+                  </div>
+                  <div className="text-sm text-[#798195]">{pricesUnit}</div>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="whitespace-nowrap text-[#798195] text-sm">
+                  显示原价
+                </div>
+                <Switch
+                  onChange={(val) => {
+                    updateState({ showOldPrice: val });
+                  }}
+                  checked={state.showOldPrice}
+                  activeColor="#FFD036"
+                  size={20}
+                  inactiveColor="#dcdee0"
+                />
+              </div>
+              {/* swith */}
+            </div>
+            <div className="h-1 m-0 mt-2 divider opacity-30"></div>
+            <div className="flex items-center mt-2">
+              <div className="whitespace-nowrap text-[#37455C] text-sm mr-4">
+                方式
+              </div>
+              <div className="flex items-center   h-full space-x-4">
+                {/* <div className="text-sm text-blueTittle]">当面交易</div> */}
+                <div className="ml-8 h-full flex items-center justify-end pr-1 rounded-lg">
+                  <div className="border-[#DCDDE1] border  overflow-hidden  rounded-lg  h-[28px]   flex ">
+                    <div
+                      onClick={() => {
+                        updateState({ service: '当面交易' });
+                      }}
+                      className={classnames(
+                        'w-full whitespace-nowrap flex justify-center px-2 items-center text-center text-[#A9B0C0]',
+                        {
+                          'bg-slate-50 text-[#FFD036]':
+                            state.service === '当面交易',
+                        },
+                      )}
+                    >
+                      当面交易
+                    </div>
+                    <div
+                      onClick={() => {
+                        updateState({ service: '包邮' });
+                      }}
+                      className={classnames(
+                        'w-full  flex justify-center px-2 items-center text-center text-[#A9B0C0]',
+                        {
+                          'bg-slate-50 text-[#FFD036]':
+                            state.service === '包邮',
+                        },
+                      )}
+                    >
+                      包邮
+                    </div>
+                    <div
+                      onClick={() => {
+                        updateState({ service: '快递' });
+                      }}
+                      className={classnames(
+                        'w-full rounded-none flex  px-2 justify-center whitespace-nowrap items-center text-center text-[#A9B0C0]',
+                        {
+                          'bg-slate-50 text-[#FFD036]':
+                            state.service === '快递',
+                        },
+                      )}
+                    >
+                      快递
+                    </div>
+                    <div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <NumberKeyboard
+            theme="custom"
+            onDelete={() => {
+              deleteInput();
+            }}
+            extraKey={[pricesUnit, '.']}
+            closeButtonText="完成"
+            visible={true}
+            onClose={() => {
+              confirm(state);
+              close();
+            }}
+            className="-translate-y-8"
+            // onChange={()=>{close();Toast.success('完成')}}
+            onInput={onInput}
+            // onDelete={onDelete}
+          />
+          {/* <div className='h-[20px]'></div> */}
+        </div>
+      </SwipeableDrawer>
+    );
+  };
   const [placeName, setPlaceName] = useState();
   const dynamicFormData = React.useMemo(
     () => dynamicForm?.data ?? [],
     [dynamicForm],
   );
   const [pricesVisible, setPricesVisible] = useState(false);
+  const [contactVisible, setContactVisible] = useState(false);
+  const [ideaPricesVisible, setIdeaPricesVisible] = useState(false);
   const DynamicForm = React.useCallback(
     (props: any) => {
       const data = React.useMemo(
@@ -1004,11 +1252,13 @@ export default function addPost() {
                     action.current?.open();
                   }
                 : () => {
-                    if (item.type === 'prices') {
+                    if (item.type === 'prices' && type === 'sublet') {
                       setPricesVisible(true);
                     }
-                    if (item.dataIndex === 'contact') {
-                      setContactVisible(true);
+                    if (item.type === 'prices' && type !== 'sublet') {
+                      setIdeaPricesVisible(true);
+                    }
+                    if (item.type === 'contact') {
                     }
                   }
             }
@@ -1039,7 +1289,15 @@ export default function addPost() {
                 }}
               ></Input>
             )}
-            {item.type === 'contact' && <div>请选择联系方式</div>}
+            {item.type === 'contact' && (
+              <div
+                onClick={() => {
+                  setContactVisible(true);
+                }}
+              >
+                请选择联系方式
+              </div>
+            )}
             {item.type === 'prices' && (
               <div>
                 {form.getFieldValue('prices')?.text === 0 ||
@@ -1085,6 +1343,18 @@ export default function addPost() {
           form.setFieldValue('prices', e);
         }}
       ></PricesModel>
+      <IdeaPricesModel
+        visible={ideaPricesVisible}
+        onClose={() => {
+          setIdeaPricesVisible(false);
+        }}
+        close={() => {
+          setIdeaPricesVisible(false);
+        }}
+        confirm={(e) => {
+          form.setFieldValue('prices', e);
+        }}
+      ></IdeaPricesModel>
       {/* <Keyboard></Keyboard> */}
       <Header className="shadow-none"></Header>
       {/* <div>

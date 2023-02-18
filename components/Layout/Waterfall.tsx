@@ -236,6 +236,11 @@ export default function Waterfall(props) {
             <Loading color="#FED64B" />
           </div>
         )}
+        {
+          data?.length === 0 ?  <div className='flex justify-center text-[#929396]'>
+          暂无贴文发布
+         </div>:null
+        }
       </div>
       {/* <InfiniteScroll loadMore={loadMore} hasMore={hasMore} /> */}
     </div>

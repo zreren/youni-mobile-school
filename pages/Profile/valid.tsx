@@ -7,6 +7,7 @@ import { Toast, Uploader } from 'react-vant';
 import { Picker, Field } from 'react-vant';
 import useFetch from '@/hooks/useFetch';
 import useCountDown from '@/hooks/useCountDown';
+import { useRouter } from 'next/router';
 
 // import { demoData, upload } from './utils';
 // import './style.less';
@@ -140,6 +141,7 @@ export default function idValid() {
       const { data: resp } = await useRequest.post('/api/upload', body);
       const json = resp;
       console.log(json?.data, 'json');
+      updateData('fontImg', json?.data?.filename);
       // return包含 url 的一个对象 例如: {url:'https://img.yzcdn.cn/vant/sand.jpg'}
       return {
         url: Cons.BASEURL + json?.data?.filename,
@@ -425,7 +427,7 @@ export default function idValid() {
     );
   };
   const CardValid = () => {
-    const [ValidFormData, setValidFormData] = useState<CardValidForm>({
+    const [ValidFormData, setValidFormData] = useState({
       enrollYear: '',
       major: '',
       degree: '',
@@ -433,6 +435,95 @@ export default function idValid() {
       backImg: '',
       campusId: '',
     });
+    const [mailBack, setMailBack] = useState();
+    const [degree,setDegree] = useState();
+    const [enrollYear,setEnrollYear] = useState<number>()
+    const [frontImg, setFrontImg] = useState();
+    const [backImg, setBackImg] = useState();
+    const router = useRouter();
+    const submitValid = async (ValidFormData: any) => {
+      if(!schoolList.id){
+        Toast('请选择学校')
+        return;
+      }
+      if(!ValidFormData.enrollYear){
+        Toast('请选择入学年份')
+        return;
+      }
+      if(!degree){
+        Toast('请选择学历')
+        return;
+      }
+      if(!ValidFormData.major){
+        Toast('请输入专业')
+        return;
+      }
+      if(!frontImg){
+        Toast('请上传正面照')
+        return;
+      }
+      if(!backImg){
+        Toast('请上传反面照')
+        return;
+      }
+      const {data} = await useRequest.post('/api/profile/education/card_verify', {
+        degree: degree,
+        campusId: schoolList.id,
+        year: Number(ValidFormData.enrollYear),
+        major: ValidFormData.major,
+        cardFront: frontImg,
+        cardBack: backImg,
+      });
+      if(data?.code === 200){
+        Toast('提交成功')
+        setTimeout(() => {
+          router.push({
+            pathname:'/profile',
+            query:{
+              campus:router.query.campus
+            }
+          });
+        }, 1000);
+      }
+    };
+    const uploadCardFront = async (file) => {
+      console.log(file, 'file');
+      try {
+        const body = new FormData();
+        body.append('file', file);
+        const { data: resp } = await useRequest.post('/api/upload', body);
+        const json = resp;
+        console.log(json?.data, 'json');
+        setFrontImg( json?.data?.filename);
+        // return包含 url 的一个对象 例如: {url:'https://img.yzcdn.cn/vant/sand.jpg'}
+        return {
+          url: Cons.BASEURL + json?.data?.filename,
+          name: json?.data?.filename,
+        };
+      } catch (error) {
+        console.log(error, 'error');
+        return { url: `demo_path/${file.name}` };
+      }
+    };
+    const uploadBackImg = async (file) => {
+      console.log(file, 'file');
+      try {
+        const body = new FormData();
+        body.append('file', file);
+        const { data: resp } = await useRequest.post('/api/upload', body);
+        const json = resp;
+        console.log(json?.data, 'json');
+        setBackImg(json?.data?.filename);
+        // return包含 url 的一个对象 例如: {url:'https://img.yzcdn.cn/vant/sand.jpg'}
+        return {
+          url: Cons.BASEURL + json?.data?.filename,
+          name: json?.data?.filename,
+        };
+      } catch (error) {
+        console.log(error, 'error');
+        return { url: `demo_path/${file.name}` };
+      }
+    };
     const [schoolList, setSelectSchool] = useState<{ id: any; mail: any[] }>();
     const form = [
       { label: '学校名称', type: 'input', Value: 1 },
@@ -485,6 +576,31 @@ export default function idValid() {
             ></MailPicker>
           </div>
         </InputComponent>
+
+        <InputComponent label={'学历'}>
+          <div className="w-1/2 flex justify-end text-right cpicker">
+            <MailPicker
+              placeholder="请选择学历"
+              change={(val) => {
+                setDegree(val);
+              }}
+              data={[
+                {
+                  text: '本科',
+                  value: '本科',
+                },
+                {
+                  text: '硕士',
+                  value: '硕士',
+                },
+                {
+                  text: '博士',
+                  value: '博士',
+                },
+              ]}
+            ></MailPicker>
+          </div>
+        </InputComponent>
         <InputComponent label={'专业'}>
           <Input
             align="right"
@@ -504,7 +620,7 @@ export default function idValid() {
             <div className="flex items-center justify-center w-full h-full text-center bg-bg">
               <Uploader
                 multiple
-                upload={upload}
+                upload={uploadCardFront}
                 maxCount={1}
                 className="w-full h-full "
                 maxSize={2500 * 1024}
@@ -514,7 +630,7 @@ export default function idValid() {
             <div className="flex items-center justify-center w-full h-full text-center bg-bg">
               <Uploader
                 multiple
-                upload={upload}
+                upload={uploadBackImg}
                 maxCount={1}
                 className="w-full h-full "
                 maxSize={2500 * 1024}
@@ -523,7 +639,9 @@ export default function idValid() {
             </div>
           </div>
         </div>
-        <button className="w-full border-none rounded-full yellow-gradient btn">
+        <button  onClick={() => {
+            submitValid(ValidFormData);
+          }} className="w-full border-none rounded-full yellow-gradient btn">
           提交
         </button>
       </div>

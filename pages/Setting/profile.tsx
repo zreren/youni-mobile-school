@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef,useState } from 'react';
 import Header from '@/components/Header';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Form from '@/components/Form/Form';
@@ -7,15 +7,47 @@ import RightIcon from '@/public/assets/right.svg';
 import useUser from '@/hooks/useUser';
 import { useTranslation } from 'next-i18next';
 import useRequest from '@/libs/request';
+import { Input, Sticky } from 'react-vant';
 
 export default function account() {
   const { user,mutate } = useUser();
   const { i18n } = useTranslation();
   // const {extraInfo } = user;
   const InputSelect = (props) => {
+    const [isEdit, setIsEdit] = useState(false);
+    const [value, setValue] = useState(props?.label);
+    const updateInfo = async (v, k) => {
+      if (!props.editable) return;
+      if (props.dataIndex === 'nickName') {
+        const { data } = await useRequest.post('/api/profile/update/nickName', {
+          nickName: v,
+        });
+        if (data?.message === 'success') {
+          setIsEdit(false);
+          mutate();
+        }
+      }
+    };
     return (
-      <div className="flex items-center text-gray-400">
-        <div>{props.label ? props.label : i18n.t('get.authentication')}</div>
+      <div  onClick={() => {
+        if (!props.editable) return;
+        setIsEdit(true);
+      }} className="flex items-center text-gray-400">
+        {isEdit ? (
+          <Input
+            align="right"
+            onChange={(e) => {
+              setValue(e);
+            }}
+            onBlur={() => {
+              updateInfo(value, props.dataIndex);
+            }}
+            className=" text-[#37455C]  underline  font-semibold text-xs"
+            value={value}
+          ></Input>
+        ) : (
+          <div>{props?.label ? props?.label : '未设置'}</div>
+        )}
         <RightIcon></RightIcon>
       </div>
     );
@@ -24,7 +56,7 @@ export default function account() {
     {
       title: '账号',
       intro: '',
-      action: <InputSelect label={user?.nickName}></InputSelect>,
+      action: <InputSelect dataIndex="nickName" editable={true} label={user?.nickName}></InputSelect>,
     },
     {
       title: 'YoUni ID',

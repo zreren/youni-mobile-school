@@ -1,16 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '@/components/Header';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Form from '@/components/Form/Form';
 import useUser from '@/hooks/useUser';
 import IOSSwitch from '@/components/Input/ios';
 import RightIcon from '@/public/assets/right.svg';
+import { Input, Sticky } from 'react-vant';
+import useRequest from '@/libs/request';
 export default function account() {
-  const { user } = useUser();
+  const { user, mutate } = useUser();
   const InputSelect = (props) => {
+    const [isEdit, setIsEdit] = useState(false);
+    const [value, setValue] = useState(props?.label);
+    const updateInfo = async (v, k) => {
+      if (!props.editable) return;
+      if (props.dataIndex === 'nickName') {
+        const { data } = await useRequest.post('/api/profile/update/nickName', {
+          nickName: v,
+        });
+        if (data?.message === 'success') {
+          setIsEdit(false);
+          mutate();
+        }
+      }
+    };
     return (
-      <div className="flex items-center text-gray-400">
-        <div>{props?.label?props?.label:"未设置"}</div>
+      <div
+        className="flex items-center text-gray-400"
+        onClick={() => {
+          if (!props.editable) return;
+          setIsEdit(true);
+        }}
+      >
+        {isEdit ? (
+          <Input
+            align="right"
+            onChange={(e) => {
+              setValue(e);
+            }}
+            onBlur={() => {
+              updateInfo(value, props.dataIndex);
+            }}
+            className=" text-[#37455C]  underline  font-semibold text-xs"
+            value={value}
+          ></Input>
+        ) : (
+          <div>{props?.label ? props?.label : '未设置'}</div>
+        )}
         <RightIcon></RightIcon>
       </div>
     );
@@ -19,7 +55,9 @@ export default function account() {
     {
       title: '账号',
       intro: '',
-      action: <InputSelect label={user?.no}></InputSelect>,
+      action: (
+        <InputSelect dataIndex="nickName" editable={true} label={user?.nickName}></InputSelect>
+      ),
     },
     {
       title: 'Email',

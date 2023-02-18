@@ -128,7 +128,7 @@ export default function ProfileHeader(props) {
           <div className="flex flex-col justify-between w-full h-full pt-2">
             <div className="text-lg font-500">{data?.student?.nickName?data?.student?.nickName:"username"}</div>
             <div className="text-xs text-[#798195] font-400">
-              {data?.student?.campus[useLanguage('name')]?data?.student?.campus[useLanguage('name')]:""}
+              {data?.student?.campus?data?.student?.campus[useLanguage('name')]:""}
             </div>
             <div className="text-[10px] text-[#798195] font-400 mb-1">
                {myProfile === false? data?.student?.id?`YoID:${data?.student.id}`:"" :null}
@@ -141,12 +141,13 @@ export default function ProfileHeader(props) {
                 <Subtract></Subtract>
                 <div className="text-xs text-blueTitle font-medium ">学生认证</div>
               </div>
-              <div className="flex items-center p-1 pl-2 pr-2 space-x-1 bg-white rounded-full">
-                <div className='font-medium px-1'>用户</div>
-              </div>
                 </>
               ):null}
-              
+              {
+                data?.student?              <div className="flex items-center p-1 pl-2 pr-2 space-x-1 bg-white rounded-full">
+                <div className='font-medium px-1'>用户</div>
+              </div>:null
+              }
             </div>
           </div>
           <div className="pt-6">

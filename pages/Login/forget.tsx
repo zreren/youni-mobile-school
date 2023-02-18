@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useMemo } from 'react';
 import Header from '@/components/Header';
 import useCountDown from '../../hooks/useCountDown';
 import classNames from 'classnames';
@@ -13,6 +13,9 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import prefixSorted from '../../libs/phone';
+import CheckIcon from './check.svg';
+import CheckedIcon from './checked.svg';
+
 const Password = (props) => {
   interface State {
     amount: string;
@@ -47,7 +50,30 @@ const Password = (props) => {
     event.preventDefault();
   };
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+  const isLength = useMemo(() => {
+    if (values.password.length > 8) {
+      // setCodeInput(true)
+      return true;
+    }
+  }, [values.password]);
 
+  const isLetterAndNumber = useMemo(() => {
+    // 含有任意一个字母并且任意一个数字即可
+    const reg = /[a-zA-Z]/;
+    const reg2 = /[0-9]/;
+    if (reg.test(values.password) && reg2.test(values.password)) {
+      // setCodeInput(true)
+      return true;
+    }
+  }, [values.password]);
+  const isSpecial = useMemo(() => {
+    // 含有一个特殊字符
+    const reg = /[~!@#$%^&*()_+<>?:{},.\/;'[\]]/;
+    if (reg.test(values.password)) {
+      // setCodeInput(true)
+      return true;
+    }
+  }, [values.password]);
   return (
     <div className="z-30 w-full h-full p-8 ">
       <Header className="shadow-none" title=""></Header>
@@ -85,17 +111,27 @@ const Password = (props) => {
         />
       </div>
       <div className="mb-2">Your password must have at least:</div>
-      <div className="flex flex-col items-start -space-y-2">
-        <div className="flex items-center">
-          <Checkbox {...label} defaultChecked color="success" />
+      <div className="flex flex-col items-start space-y-2 mt-4 mb-4">
+      <div className="flex items-center text-xs space-x-2">
+        {isLength ? <CheckedIcon></CheckedIcon> : <CheckIcon></CheckIcon>}
           <div>label="Parent</div>
         </div>
         <div className="flex items-center">
-          <Checkbox {...label} defaultChecked color="success" />
+        {isLetterAndNumber ? (
+              <CheckedIcon></CheckedIcon>
+            ) : (
+              <CheckIcon></CheckIcon>
+            )}
           <div>label="Parent</div>
         </div>
         <div className="flex items-center">
-          <Checkbox {...label} defaultChecked color="success" />
+        {
+              isSpecial ? (
+                <CheckedIcon></CheckedIcon>
+              ) : (
+                <CheckIcon></CheckIcon>
+              )
+            }
           <div>label="Parent</div>
         </div>
       </div>

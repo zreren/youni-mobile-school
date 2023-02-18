@@ -38,6 +38,7 @@ export default function LabelBottomNavigation(props) {
       }
     });
   }, [router]);
+  
   React.useEffect(()=>{
     const BrowserInfo = {      
       isAndroid: Boolean(navigator.userAgent.match(/android/ig)), // 是否是Android浏览器   
@@ -52,14 +53,14 @@ export default function LabelBottomNavigation(props) {
     if(BrowserInfo.isPhone){
       const dom = document.getElementById("bottom-menu");
       if(!dom)return
-      dom.style.paddingBottom = "12px";
-      dom.style.height = '68px'
+      dom.style.paddingBottom = "10px";
+      dom.style.height = '60px'
     }else{
       const dom = document.getElementById("bottom-menu");
       if(!dom)return
       dom.style.paddingBottom = "0px";
     }
-  },[])
+  },[router])
   let body = document.body;
   const overflowState =  body.style.overflow;
   const handleChange = (event: React.SyntheticEvent, newValue: any) => {

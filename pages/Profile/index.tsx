@@ -499,11 +499,42 @@ function index(props) {
 
   const Profile3 = () => {
     const [menu, setMenu] = useState(1);
+    const [detailId, setDetailId] = useState();
     const { data: liked } = useFetch('/post/liked', 'get');
     const { data: stard } = useFetch('/post/stard', 'get');
+    const { data: PostGroupData } = useFetch('/collection/followed', 'get');
     if (!liked || !stard) return null;
+    // const { data: collectionData, mutate } = useFetch(
+    //   '/collection/detail',
+    //   'get',
+    //   {
+    //     id: detailId,
+    //   },
+    // );
+    // useEffect(() => {
+    //   mutate();
+    // }, [detailId]);
+
+
+    // const [openDetail, setOpenDetail] = useState(false);
+    // const checkPostGroupDetail = (id) => {
+    //   setOpenDetail(true);
+    //   setDetailId(id);
+    // };
     return (
       <div className="w-full ">
+        {/* <PostGroupDrawer
+          data={collectionData?.data}
+          mutate={()=>{mutate()}}
+          onOpen={() => {
+            setOpenDetail(true);
+          }}
+          onClose={() => {
+            setOpenDetail(false);
+          }}
+          id={detailId}
+          open={openDetail}
+        ></PostGroupDrawer> */}
         <div className="w-full px-2">
           <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
             <div
@@ -536,7 +567,23 @@ function index(props) {
         </div>
         {menu === 0 ? (
           <div className="px-[10px]">
-            <PostGroup></PostGroup>
+            {PostGroupData?.data?.map((item) => {
+              return (
+                <PostGroup
+                  check={(id) => {
+                    // checkPostGroupDetail(id);
+                  }}
+                  data={item}
+                ></PostGroup>
+              );
+            })} 
+              <>
+             {PostGroupData?.data.length === 0 ?
+             <div className='flex justify-center text-[#929396]'>
+              暂无关注文集
+             </div>:null
+             }
+             </> 
           </div>
         ) : (
           <Waterfall

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import backgroundImage1 from './assets/background2.png';
 import backgroundImage2 from './assets/1.png';
 import Image from 'next/image';
@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectAuthState, setAuthState } from '@/stores/authSlice';
 import prefixSorted from '../../libs/phone';
 import { setOpenLogin } from '../../stores/authSlice';
+import useRequest from '@/libs/request';
 // import { useDispatch } from 'react-redux';
 import SignIn from './signin';
 
@@ -43,58 +44,23 @@ const SignUpButton = (props) => {
   );
 };
 
-const SelectLanguage = (props) => {
-  return (
-    <div className="z-10 flex flex-col w-full h-screen -appear in mt-11">
-      {/* <Image src={Logo} alt=""></Image> */}
-      <div className="z-10 pl-8 pr-8 text-2xl">Select Language</div>
-      <div className="z-10 pl-8 pr-8 mb-20 text-sm text-md text-userColor">
-        Choose the language you speak most often. Changing this selection is
-        possible at any time.
-      </div>
-      <div>
-        <div className="absolute z-0 w-full top-32">
-          {/* <Image
-            className="absolute z-0 w-10 h-10 opacity-80"
-            src={backgroundImage2}
-            alt="Picture of the author"
-          /> */}
-        </div>
-      </div>
-      <div className="w-full h-48"></div>
-      <div
-        className="z-30 h-full p-4 space-y-10 bg-white-mask"
-        onClick={() => {
-          props.setProgress(2);
-        }}
-      >
-        <div className="flex items-center justify-center w-full h-32 text-xl rounded text-userColor flex-2xl bg-bg">
-          EngLish
-        </div>
-        <div
-          onClick={() => {
-            props.setProgress(2);
-          }}
-          className="flex items-center justify-center w-full h-32 text-xl rounded text-userColor flex-2xl bg-bg"
-        >
-          中文
-        </div>
-      </div>
-      {/* <Button variant="outlined" startIcon={<WeChat />}>
-    Delete
-  </Button> */}
-    </div>
-  );
-};
+
 
 export default function SignUp(props) {
   const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
+  const [language,setLanguage] = useState('')
   const ChooseYourRole = (props) => {
     const route = useRouter();
     const MailLabel = () => {
-      const { data: schoolList } = useFetch('/campus/query', 'get');
-      const CPicker = (props) => {
+     
+      const [mail, setMail] = useState('');
+      const [school, setSelectSchool] = useState({
+        id: 1,
+        mail: '',
+      });
+      const CPicker = useCallback((props) => {
+        const { data: schoolList } = useFetch('/campus/query', 'get');
         const [loading, setLoading] = React.useState(false);
         const [value, setValue] = React.useState<string[]>();
         const mailList = React.useMemo(() => {
@@ -114,7 +80,7 @@ export default function SignUp(props) {
               round: true,
             }}
             value={value}
-            title="请选择"
+            title={props.placeholder}
             columns={schoolList?.data}
             onConfirm={setValue}
             visibleItemCount={8}
@@ -139,24 +105,26 @@ export default function SignUp(props) {
                   readOnly
                   clickable
                   value={_?.ename || ''}
-                  placeholder="选择学校"
+                  className="text-lg"
+                  placeholder={props.placeholder}
                   onClick={() => actions.open()}
                 />
               );
             }}
           </Picker>
         );
-      };
-      const [mail, setMail] = useState();
-      const [school, setSelectSchool] = useState({
-        id: 1,
-        mail: '',
-      });
+      },[school])
       const sendCode = () => {
+        useRequest.post('/api/send_email_code', {
+          email: mail,
+        });
         route.push({
           pathname: '/Login/valid',
           query: {
-            mail: mail + school?.mail,
+            mail: mail,
+            campusId: school.id,
+            roleId: role,
+            lang: language,
           },
         });
         dispatch(setOpenLogin('close'));
@@ -165,6 +133,7 @@ export default function SignUp(props) {
         <div className="h-screen space-y-4">
           <div className="flex items-center w-full topIndexPlus">
             <CPicker
+            placeholder="select your university"
               change={(val, mail) => {
                 setSelectSchool({
                   id: val,
@@ -179,8 +148,9 @@ export default function SignUp(props) {
               //   setMail(e.target.value);
               // }}
               value={mail}
+              onChange={(e)=>{setMail(e.target.value)}}
               type="text"
-              placeholder="Type here"
+              placeholder="please enter your email"
               className="w-full input"
             />
           </div>
@@ -188,7 +158,13 @@ export default function SignUp(props) {
             By continuing, you agree to YoUni’s Term of Service and confirm that
             you have read our Privacy Policy.
           </div>
-          <button className="w-full bg-gray-400 border-0 rounded-full btn">
+          <button onClick={()=>{
+            if(!(mail&&school?.id)) return
+            sendCode()
+          }} className={classnames("w-full  border-0 rounded-full btn",{
+            "bg-yellow-400":mail&&school?.id,
+            "bg-gray-400":!(mail&&school?.id)
+          })}>
             Next
           </button>
         </div>
@@ -357,6 +333,51 @@ export default function SignUp(props) {
           </div>
           <Node></Node>
         </div>
+      </div>
+    );
+  };
+  const SelectLanguage = (props) => {
+    return (
+      <div className="z-10 flex flex-col w-full h-screen -appear in mt-11">
+        {/* <Image src={Logo} alt=""></Image> */}
+        <div className="z-10 pl-8 pr-8 text-2xl">Select Language</div>
+        <div className="z-10 pl-8 pr-8 mb-20 text-sm text-md text-userColor">
+          Choose the language you speak most often. Changing this selection is
+          possible at any time.
+        </div>
+        <div>
+          <div className="absolute z-0 w-full top-32">
+            {/* <Image
+              className="absolute z-0 w-10 h-10 opacity-80"
+              src={backgroundImage2}
+              alt="Picture of the author"
+            /> */}
+          </div>
+        </div>
+        <div className="w-full h-48"></div>
+        <div
+          className="z-30 h-full p-4 space-y-10 bg-white-mask"
+          onClick={() => {
+            props.setProgress(2);
+            setLanguage('EN')
+          }}
+        >
+          <div className="flex items-center justify-center w-full h-32 text-xl rounded text-userColor flex-2xl bg-bg">
+            EngLish
+          </div>
+          <div
+            onClick={() => {
+              props.setProgress(2);
+              setLanguage('ZH')
+            }}
+            className="flex items-center justify-center w-full h-32 text-xl rounded text-userColor flex-2xl bg-bg"
+          >
+            中文
+          </div>
+        </div>
+        {/* <Button variant="outlined" startIcon={<WeChat />}>
+      Delete
+    </Button> */}
       </div>
     );
   };

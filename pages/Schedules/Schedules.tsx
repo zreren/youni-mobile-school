@@ -92,6 +92,7 @@ export default function Schedules() {
   const { data: termInfo } = useFetch('/campus/term/current', 'get', {
     campusId: 1,
   });
+
   const CourseDetailCard = (props) => {
     const { event, borderColor } = props;
     const [token, setToken] = useLocalStorage('token', '');
@@ -404,9 +405,7 @@ export default function Schedules() {
     return week;
   };
 
-  // const currenTerm = React.useMemo(()=>{
-  //   return termInfo?.data?.filter((item)=>item?.current)
-  // },[termInfo])
+
   const SetSchedule = (props) => {
     const [customImg, setCustomImg] = useLocalStorage('customImg', '');
     const uploadEl = useRef(null);
@@ -667,7 +666,7 @@ export default function Schedules() {
     }
   }, [studentId]);
   const tempData = React.useMemo(() => {
-    if (!data) return null;
+    if (!data?.data) return null;
     return data?.data[0]?.items.map((item) => {
       return {
         ...item,
