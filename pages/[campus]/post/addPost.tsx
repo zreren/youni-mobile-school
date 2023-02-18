@@ -353,7 +353,7 @@ export default function addPost() {
   type Config = {
     immediate: boolean;
   };
-
+  const [topic, setTopic] = useState<any>();
   function useWatch<T>(
     dep: T,
     callback: Callback<T>,
@@ -418,7 +418,7 @@ export default function addPost() {
         draft: draft,
         title: title,
         body: content,
-        topic: ['York'],
+        topic: topic,
         preview: previews,
         type: type,
         contact: form.contact?.filter((item) => item.public === true),
@@ -1315,12 +1315,116 @@ export default function addPost() {
     },
     [dynamicForm, placeName, form],
   );
+  const [topicVisible, setTopicVisible] = useState(false);
+  const TopicDrawer = useCallback(
+    (props: any) => {
+      const { data, visible } = props;
+      const [local, setLocal] = useState(visible);
+      const [localList, setLocalList] = useState([]);
+      const selectPoint = (item) => {
+        console.log('select', item);
+        // if (topic?.indexOf(item) >= 0) {
+        //   const index = topic?.indexOf(item);
+        //   const res = topic?.slice().splice(index, 1);
+        //   setTopic(res);
+        //   Toast.fail('已移除');
+        //   return;
+        // }
+        setTopic((pre) => {
+          if (!pre) return [item];
+          if(pre.indexOf(item)>=0){
+            Toast.fail('已移除该话题');
+            return pre.filter((value, index, self) => {
+              return value !== item
+            })
+          }
+          // const uniqueArray = pre.filter((value, index, self) => {
+          //   return self.indexOf(value) === index;
+          // });
+          Toast.success(`已加入${item}话题`);
+          return [...pre,item];
+        });
+       
+        // form.setFieldValue('location', obj);
+        // setPlaceName(item?.place_name);
+        setLocal(false);
+      };
+      const topList = ['# 热门话题', '# 最新话题', '# 最热话题', '# 闲置'];
+      const placeName = useMemo(() => {
+        try {
+          const res = JSON.parse(form.getFieldValue('location'));
+          return res.placename;
+        } catch (error) {
+          return 'Located...';
+        }
+      }, [local, localList]);
+      // useEffect
+      return (
+        <div>
+          <div
+            onClick={() => {
+              setLocal(true);
+            }}
+          >
+            {placeName || 'locate...'}
+            {/* {form.getFieldValue('location').length > 6 ? JSON?.parse(form.getFieldValue('location')).placename : null || 'locate...'} */}
+          </div>
+          <div>
+            <SwipeableDrawer
+              className="z-20"
+              disableDiscovery={true}
+              disableSwipeToOpen={true}
+              onClose={() => {
+                props.onClose();
+              }}
+              onOpen={() => {}}
+              open={visible}
+              anchor="bottom"
+            >
+              <div className="h-[60vh]">
+                <Puller></Puller>
+                {/* <SignIn></SignIn> */}
+                <div className="p-5">
+                  <div className="h-1 mt-3 mb-2 divider opacity-30"></div>
+                  {topList?.map((item) => {
+                    return (
+                      <div
+                        className="w-full flex flex-col justify-center "
+                        onClick={() => {
+                          selectPoint(item);
+                        }}
+                      >
+                        <div className="text-gray-500 font-semibold text-sm">
+                          {item}
+                        </div>
+                        {/* <div className="text-gray-400 font-medium text-sm">
+                        {item.place_name}
+                      </div> */}
+                        <div className="h-1 m-0 divider opacity-30 mt-3 mb-3"></div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </SwipeableDrawer>
+          </div>
+        </div>
+      );
+    },
+    [topicVisible],
+  );
   const handleSetTitle = React.useCallback((value) => {
     setTitle(value);
   }, []);
   return (
     <div className="mb-14">
       {KeyboardShow ? <Keyboard></Keyboard> : null}
+      <TopicDrawer
+        visible={topicVisible}
+        onClose={() => {
+          setTopicVisible(false);
+        }}
+      ></TopicDrawer>
       <ContactModel
         data={contactListTemp}
         onClose={() => {
@@ -1410,11 +1514,36 @@ export default function addPost() {
           onChange={setContent}
           autoSize={{ minHeight: 180, maxHeight: 180 }}
         />
-        <div className="flex space-x-[10px] mb-2">
-          <div className="text-[#B38314] rounded bg-[#FFFBD9] px-2 text-xs py-1">
+        <div className="flex items-center my-2 space-x-2">
+          {topic?.map((item) => {
+            return <div className="text-[#2347D9] text-sm">{item}</div>;
+          })}
+        </div>
+        <div className="flex space-x-[10px] mb-2 ">
+          <div
+            onClick={() => {
+              setTopicVisible(true);
+            }}
+            className="text-[#B38314] rounded bg-[#FFFBD9] px-2 text-xs py-1"
+          >
             # 话题{' '}
           </div>
-          <div className="text-[#798195] rounded bg-[#F3F4F6] px-2 text-xs py-1">
+          <div onClick={()=>{
+            setTopic((pre) => {
+              if (!pre) return ['# 约克大学'];
+              if(pre.indexOf('# 约克大学')>=0){
+                Toast.fail('已移除该话题');
+                return pre.filter((value, index, self) => {
+                  return value !== '# 约克大学'
+                })
+              }
+              // const uniqueArray = pre.filter((value, index, self) => {
+              //   return self.indexOf(value) === index;
+              // });
+              Toast.success(`已加入# 约克大学 话题`);
+              return [...pre,'# 约克大学'];
+            })
+          }} className="text-[#798195] rounded bg-[#F3F4F6] px-2 text-xs py-1">
             # 约克大学{' '}
           </div>
         </div>

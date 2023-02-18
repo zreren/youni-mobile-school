@@ -206,9 +206,9 @@ function SchoolPage(props) {
   const { data: postData, error,mutate } = useFetch(
     `/post/home_list`,
     'get',{
+      type: category,
       pageSize:20,
       page:1,
-      type: category,
     }
   );
   useEffect(()=>{
@@ -260,7 +260,7 @@ function SchoolPage(props) {
     // }
     return (
       <div className="">
-        {/* <Popup
+        <Popup
         overlayClass={'Popup'}
         className="z-30 topIndexPlus rounded-full "
         visible={!countryData}
@@ -268,7 +268,7 @@ function SchoolPage(props) {
         <div className="rounded-full w-10 h-10 flex overflow-hidden justify-center items-center">
           <Loading type="spinner" color="#FED64B" />
         </div>
-      </Popup> */}
+      </Popup>
         <SwipeableDrawer
           anchor="left"
           open={props.visible}
@@ -333,10 +333,10 @@ function SchoolPage(props) {
       </div>
     );
   };
-  if (!Post) {
-    return <div>loading</div>;
-  }
-                const [loading, setLoading] = useState(true);
+  // if (!Post) {
+  //   return <div>loading</div>;
+  // }
+  const [loading, setLoading] = useState(true);
   return (
     <div className="w-screen  pb-10">
       <PostDetail

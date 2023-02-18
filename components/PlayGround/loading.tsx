@@ -41,7 +41,7 @@ export default function Display(props) {
             loading={true}
             row={1}
             rowWidth={'100%'}
-            rowHeight={200}
+            rowHeight={'15rem'}
             style={{ width: '100%', padding: 0 }}
             round={false}
             className="rounded-xl w-full p-0 h-full"

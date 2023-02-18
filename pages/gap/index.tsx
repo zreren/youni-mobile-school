@@ -554,7 +554,7 @@ export default function index() {
               ></CScoreCard>
               <CScoreCard
                 label="最近2年GPA"
-                score={total?.data?.gpaAvg}
+                score={total?.data?.gpaAvg || 0}
               ></CScoreCard>
               <CScoreCard
                 label="已完成学分数"
@@ -574,7 +574,7 @@ export default function index() {
             return <GapGroup item={item} index={index}></GapGroup>;
           })}
 
-          <div className={'w-full h-12 '}>
+          <div className={'w-full h-12 mt-4'}>
             <div
               className={
                 'bg-[#F7F8F9] space-x-2 rounded-lg  mx-5 h-12 text-sm text-[#798195] flex justify-center items-center'
