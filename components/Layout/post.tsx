@@ -357,7 +357,7 @@ function index(props) {
       <div className="w-full h-2 bg-bg"></div>
       <div className="p-5 pt-4 pb-2">
         <UserInfo
-          contact={data?.data?.contact}
+          contact={data?.data?.form.contact}
           data={data?.data?.student}
         ></UserInfo>
       </div>

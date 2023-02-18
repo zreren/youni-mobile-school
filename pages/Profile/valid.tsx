@@ -12,7 +12,7 @@ import useCountDown from '@/hooks/useCountDown';
 // import './style.less';
 export default function idValid() {
   interface ValidForm {
-    enrollYear: number | string;
+    year: number;
     major: string;
     email: string;
     code: string;
@@ -132,18 +132,21 @@ export default function idValid() {
       </Picker>
     );
   };
-  const upload = async (file: File) => {
+  const upload = async (file) => {
+    console.log(file, 'file');
     try {
       const body = new FormData();
-      body.append('source', file);
-      const resp = await fetch('', {
-        method: 'POST',
-        body,
-      });
-      const json = await resp.json();
+      body.append('file', file);
+      const { data: resp } = await useRequest.post('/api/upload', body);
+      const json = resp;
+      console.log(json?.data, 'json');
       // return包含 url 的一个对象 例如: {url:'https://img.yzcdn.cn/vant/sand.jpg'}
-      return json.image;
+      return {
+        url: Cons.BASEURL + json?.data?.filename,
+        name: json?.data?.filename,
+      };
     } catch (error) {
+      console.log(error, 'error');
       return { url: `demo_path/${file.name}` };
     }
   };
@@ -259,18 +262,27 @@ export default function idValid() {
 
     const [ValidFormData, setValidFormData] = useState<ValidForm>({
       campusId: '',
-      enrollYear: '',
+      year: 2016,
       degree: '',
       major: '',
       email: '',
       code: '',
     });
     const submitValid = (ValidFormData: ValidForm) => {
-      useRequest.post('/api/profile/verify/email', {
+      useRequest.post('/api/profile/education/email_verify', {
         ...ValidFormData,
+        email: ValidFormData.email + mailBack,
+        degree: degree,
         campusId: schoolList.id,
+        year:enrollYear
       });
     };
+
+    const [degree,setDegree] = useState();
+    const [enrollYear,setEnrollYear] = useState<number>()
+    useEffect(()=>{
+      console.log(degree,"degree")
+    },[degree])
     const updateData = React.useCallback((name: string, val: any) => {
       setValidFormData((preVal: any) => {
         return {
@@ -297,8 +309,9 @@ export default function idValid() {
         <InputComponent label={'学历'}>
           <div className="w-1/2 flex justify-end text-right cpicker">
             <MailPicker
+              placeholder="请选择学历"
               change={(val) => {
-                setMailBack(val);
+                setDegree(val);
               }}
               data={[
                 {
@@ -334,7 +347,7 @@ export default function idValid() {
           <div className="w-1/2 flex justify-end text-right cpicker">
             <MailPicker
               change={(val) => {
-                setMailBack(val);
+                setEnrollYear(Number(val));
               }}
               placeholder="请选择年份"
               data={yearList}

@@ -558,11 +558,11 @@ function index(props) {
       menu: <Profile1></Profile1>,
     },
     {
-      icon: menuVal === 1 ? <Icon2Select></Icon2Select> : <Icon2></Icon2>,
+      icon: menuVal === 1 ?  <Icon3Select></Icon3Select> : <Icon3></Icon3>,
       menu: <Profile2></Profile2>,
     },
     {
-      icon: menuVal === 2 ? <Icon3Select></Icon3Select> : <Icon3></Icon3>,
+      icon: menuVal === 2 ?<Icon2Select></Icon2Select> : <Icon2></Icon2>,
       menu: <Profile3></Profile3>,
     },
   ];

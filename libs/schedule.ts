@@ -165,7 +165,7 @@ function addFullStartDate(array: any[], pastWeekDates: [Date, Date]) {
     const startTimeRange = item.time;
     const dayOfWeek = item.dayOfWeek;
     const startTime = startTimeRange.split('-')[0];
-    console.log(startTime.split('.')[0], 'startTime');
+    // console.log(startTime.split('.')[0], 'startTime');
     const endTime = startTimeRange.split('-')[1];
     const startDate = new Date(pastWeekDates[0]);
     startDate.setDate(startDate.getDate() + dayOfWeek);
@@ -181,6 +181,7 @@ function addFullStartDate(array: any[], pastWeekDates: [Date, Date]) {
       department: '',
       online: true,
     };
+    console.log(endDate,"endDate")
     item.extendedProps.section = item?.section?.name || item?.sectionName;
     item.start = convertISODateString(startDate.toString());
     item.end = convertISODateString(endDate.toString());

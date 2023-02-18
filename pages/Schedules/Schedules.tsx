@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, createRef } from 'react';
+import React, { useEffect, useState, useRef, createRef, useMemo } from 'react';
 import Calendar from '@/components/Calendar/Calendar';
 import Header from '@/components/Header';
 import CButton from '@/components/Button/CButton';
@@ -32,7 +32,7 @@ import { Cell, Dialog } from 'react-vant';
 import { useRouter } from 'next/router';
 import BgSVG from './bg.svg';
 import ArrowRight from './arrow-right.svg';
-import { setOpenLogin ,selectOpen} from '../../stores/authSlice';
+import { setOpenLogin, selectOpen } from '../../stores/authSlice';
 import { useDispatch } from 'react-redux';
 import { Loading } from 'react-vant';
 import CourseIcon1 from './courseIcon1.svg';
@@ -40,7 +40,7 @@ import CourseIcon2 from './courseIcon2.svg';
 import CourseIcon3 from './courseIcon3.svg';
 import CourseIcon4 from './courseIcon4.svg';
 import useRequest from '@/libs/request';
-import {  useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Uploader } from 'react-vant';
 import useUser from '@/hooks/useUser';
 // import { stringify } from 'querystring';
@@ -55,11 +55,14 @@ const Puller = styled(Box)(({ theme }) => ({
 }));
 
 const CCourseInput = (props) => {
-  const { title, Icon, children: Children,onClick } = props;
+  const { title, Icon, children: Children, onClick } = props;
   return (
-    <div className="w-full h-12 p-4 bg-white rounded-lg" onClick={()=>{
-      onClick?onClick():null
-    }}>
+    <div
+      className="w-full h-12 p-4 bg-white rounded-lg"
+      onClick={() => {
+        onClick ? onClick() : null;
+      }}
+    >
       <div className="flex w-full items-center justify-between h-full space-x-4">
         <div className="flex items-center">
           <Icon className="mr-1"></Icon>{' '}
@@ -74,8 +77,14 @@ const CCourseInput = (props) => {
 export default function Schedules() {
   const calendarRef = useRef<any>();
   const router = useRouter();
-  const [campusIdMapSchool, setCampusIdMapSchool] = useLocalStorage('school',null);
-  const [campusIdMap, setCampusIdMap] = useLocalStorage(campusIdMapSchool, null);
+  const [campusIdMapSchool, setCampusIdMapSchool] = useLocalStorage(
+    'school',
+    null,
+  );
+  const [campusIdMap, setCampusIdMap] = useLocalStorage(
+    campusIdMapSchool,
+    null,
+  );
   const [defaultScheduleView, setDefaultScheduleView] = useLocalStorage(
     'defaultScheduleView',
     0,
@@ -109,7 +118,6 @@ export default function Schedules() {
         .catch(() => {
           console.log('catch');
         });
-
     };
     if (!event) return;
     const { title, extendedProps } = event;
@@ -118,82 +126,85 @@ export default function Schedules() {
     // if (!arg) return null;
     const background = `linear-gradient(180deg, ${props.backgroundColor} -117.9%, #FFFFFF 125.31%)`;
     // const darkBackground = props.border
-    if(extendedProps.type === 2){
+    if (extendedProps.type === 2) {
       return (
         <div className="topIndexPlus">
-        {/* <div className='w-4 h-1 bg-gray-400 rounded-xs '></div> */}
-        <SwipeableDrawer
-          anchor="bottom"
-          open={props.visible}
-          onClose={() => {
-            props.setVisible(false);
-          }}
-          onOpen={() => {
-            props.setVisible(true);
-          }}
-          className="h-screen"
-        >
-          <div className="w-full p-4 rounded-full h-72">
-            <Puller></Puller>
-            <div
-              style={{ background: background, borderColor: borderColor }}
-              className="flex justify-between w-full h-20 p-4 border  rounded-2xl"
-            >
-              <div style={{ color: borderColor }}>
-                <div className="flex items-center">
-                  {' '}
-                  <div
-                    style={{ background: borderColor }}
-                    className={classnames(
-                      'w-1 h-4 mr-2 text-lg font-medium  rounded-full',
-                    )}
-                  ></div>
-                  <div>{title}</div>
-                </div>
-              </div>
-            </div>
-            <div className="mt-4 mb-4">
-              <div className="mb-4">
-                <div className="flex items-center">
-                  <TimeIconActive color={borderColor}></TimeIconActive>
-                  <div className="ml-3 text-sm text-gray-400">周{extendedProps.dayOfWeek}</div>
-                  <div className="ml-10 text-sm text-gray-400 ">
-                    {extendedProps.time}
+          {/* <div className='w-4 h-1 bg-gray-400 rounded-xs '></div> */}
+          <SwipeableDrawer
+            anchor="bottom"
+            open={props.visible}
+            onClose={() => {
+              props.setVisible(false);
+            }}
+            onOpen={() => {
+              props.setVisible(true);
+            }}
+            className="h-screen"
+          >
+            <div className="w-full p-4 rounded-full h-72">
+              <Puller></Puller>
+              <div
+                style={{ background: background, borderColor: borderColor }}
+                className="flex justify-between w-full h-20 p-4 border  rounded-2xl"
+              >
+                <div style={{ color: borderColor }}>
+                  <div className="flex items-center">
+                    {' '}
+                    <div
+                      style={{ background: borderColor }}
+                      className={classnames(
+                        'w-1 h-4 mr-2 text-lg font-medium  rounded-full',
+                      )}
+                    ></div>
+                    <div>{title}</div>
                   </div>
                 </div>
               </div>
-              {/* <div className="flex items-center">
+              <div className="mt-4 mb-4">
+                <div className="mb-4">
+                  <div className="flex items-center">
+                    <TimeIconActive color={borderColor}></TimeIconActive>
+                    <div className="ml-3 text-sm text-gray-400">
+                      周{extendedProps.dayOfWeek}
+                    </div>
+                    <div className="ml-10 text-sm text-gray-400 ">
+                      {extendedProps.time}
+                    </div>
+                  </div>
+                </div>
+                {/* <div className="flex items-center">
                 <Location color={borderColor}></Location>
                 <div className="ml-3 text-sm text-gray-400">地点</div>
                 <div className="ml-10 text-sm text-gray-400 ">
                   {extendedProps.classroom}
                 </div>
               </div> */}
-            </div>
-            <div className="flex justify-between space-x-3">
-              <div
-              onClick={()=>{
-                router.push({
-                  pathname: '/Schedules/editDayTime',
-                  query: { id: event.id },
-                })
-              }}
-              className="flex w-full rounded-lg h-10 text-[#fff] items-center bg-[#3665FF] justify-center space-y-2">
-                <div className="text-xs  text-white  ">编辑</div>
               </div>
-              <div
-                className="flex flex-col rounded-lg  bg-[#FF6E69]  items-center justify-center  space-y-2  h-10 w-full"
-                onClick={() => {
-                  deleteCURRICULUM(event.id);
-                }}
-              >
-                <div className="text-xs text-white ">删除</div>
+              <div className="flex justify-between space-x-3">
+                <div
+                  onClick={() => {
+                    router.push({
+                      pathname: '/Schedules/editDayTime',
+                      query: { id: event.id },
+                    });
+                  }}
+                  className="flex w-full rounded-lg h-10 text-[#fff] items-center bg-[#3665FF] justify-center space-y-2"
+                >
+                  <div className="text-xs  text-white  ">编辑</div>
+                </div>
+                <div
+                  className="flex flex-col rounded-lg  bg-[#FF6E69]  items-center justify-center  space-y-2  h-10 w-full"
+                  onClick={() => {
+                    deleteCURRICULUM(event.id);
+                  }}
+                >
+                  <div className="text-xs text-white ">删除</div>
+                </div>
               </div>
             </div>
-          </div>
-        </SwipeableDrawer>
-      </div>
-      )
+          </SwipeableDrawer>
+        </div>
+      );
     }
     return (
       <div className="topIndexPlus">
@@ -247,7 +258,9 @@ export default function Schedules() {
                     })}
                 </div>
                 <div className="text-xs text-[#798195]">
-                  {extendedProps?.section?.students?.length > 0? `${extendedProps?.section?.students.length}名同学`:null} 
+                  {extendedProps?.section?.students?.length > 0
+                    ? `${extendedProps?.section?.students.length}名同学`
+                    : null}
                 </div>
               </div>
             </div>
@@ -274,11 +287,11 @@ export default function Schedules() {
                 className="flex flex-col items-center space-y-2"
                 onClick={() => {
                   const campus = router.query.campus;
-                  if(!extendedProps?.section?.course?.id){
+                  if (!extendedProps?.section?.course?.id) {
                     Dialog.alert({
-                      message:'该课程为自定义课程'
-                    })
-                    return
+                      message: '该课程为自定义课程',
+                    });
+                    return;
                     // Toast.fail('该课程为自定义课程')
                   }
                   console.log(
@@ -301,21 +314,22 @@ export default function Schedules() {
                 </div>
                 <div className="text-xs text-[#798195]">课程详情</div>
               </div>
-              <div 
-              onClick={()=>{
-                if(!extendedProps?.section?.course?.id){
-                  Dialog.alert({
-                    message:'该课程为自定义课程'
-                  })
-                  return
-                  // Toast.fail('该课程为自定义课程')
-                }
-                router.push({
-                  pathname: '/[campus]/Course/evaluation',
-                  query: { campus: 'York' },
-                });
-              }}
-              className="flex flex-col items-center space-y-2">
+              <div
+                onClick={() => {
+                  if (!extendedProps?.section?.course?.id) {
+                    Dialog.alert({
+                      message: '该课程为自定义课程',
+                    });
+                    return;
+                    // Toast.fail('该课程为自定义课程')
+                  }
+                  router.push({
+                    pathname: '/[campus]/Course/evaluation',
+                    query: { campus: 'York' },
+                  });
+                }}
+                className="flex flex-col items-center space-y-2"
+              >
                 <div className="flex flex-col avatar placeholder">
                   <div className="bg-[#F7F8F9]  rounded-full text-neutral-content w-14">
                     <CourseIcon2></CourseIcon2>
@@ -332,13 +346,14 @@ export default function Schedules() {
               {/*   <div className="text-xs text-[#798195]">课程评价</div> */}
               {/* </div> */}
               <div
-              onClick={()=>{
-                router.push({
-                  pathname: '/Schedules/editCourse',
-                  query: { id: event.id },
-                })
-              }}
-              className="flex flex-col items-center space-y-2">
+                onClick={() => {
+                  router.push({
+                    pathname: '/Schedules/editCourse',
+                    query: { id: event.id },
+                  });
+                }}
+                className="flex flex-col items-center space-y-2"
+              >
                 <div className="flex flex-col avatar placeholder">
                   <div className="bg-[#F7F8F9] rounded-full text-neutral-content w-14">
                     <CourseIcon3></CourseIcon3>
@@ -393,26 +408,26 @@ export default function Schedules() {
   //   return termInfo?.data?.filter((item)=>item?.current)
   // },[termInfo])
   const SetSchedule = (props) => {
-    const [customImg,setCustomImg] = useLocalStorage('customImg','')
+    const [customImg, setCustomImg] = useLocalStorage('customImg', '');
     const uploadEl = useRef(null);
-    const updateCustomImg =  (e)=>{
-      console.log(e.target.files,"e")
+    const updateCustomImg = (e) => {
+      console.log(e.target.files, 'e');
       const reader = new FileReader();
       reader.readAsDataURL(e.target.files[0]);
       reader.onload = function () {
         const base64 = reader.result;
-        setCustomImg(String(base64))
-        Toast.success('设置成功，即将为您重新加载')
+        setCustomImg(String(base64));
+        Toast.success('设置成功，即将为您重新加载');
         setTimeout(() => {
-          router.reload()
+          router.reload();
         }, 1500);
         console.log(base64);
-      }
-    }
-    useEffect(()=>{
-      console.log(customImg,"customImg")
+      };
+    };
+    useEffect(() => {
+      console.log(customImg, 'customImg');
       // router.reload()
-    },[customImg])
+    }, [customImg]);
     const Menu = () => {
       const [menu, setMenu] = useState(defaultScheduleView);
       useEffect(() => {
@@ -477,7 +492,7 @@ export default function Schedules() {
         </div>
       );
     };
-    const {user} = useUser();
+    const { user } = useUser();
     return (
       <SwipeableDrawer
         anchor="bottom"
@@ -503,12 +518,14 @@ export default function Schedules() {
               title="保存到相册"
             ></SaveToLibButton>
             <SaveToLibButton
-              onClick={() => {router.push({
-                pathname: '/Schedules/share',
-                query:{
-                  id: user?.id
-                }
-              })}}
+              onClick={() => {
+                router.push({
+                  pathname: '/Schedules/share',
+                  query: {
+                    id: user?.id,
+                  },
+                });
+              }}
               color="#FFD036"
               icon="share"
               title="分享课表"
@@ -531,25 +548,45 @@ export default function Schedules() {
               </div>
             </CCourseInput>
             <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
-            <CCourseInput onClick={()=>{
-              router.push('/Schedules/AddCourse')
-            }} title="添加课程/日程" Icon={Icon3}>
+            <CCourseInput
+              onClick={() => {
+                router.push('/Schedules/AddCourse');
+              }}
+              title="添加课程/日程"
+              Icon={Icon3}
+            >
               {' '}
               <RightIcon className="mr-2"></RightIcon>
             </CCourseInput>
             <div className="h-1 pl-4 pr-4 m-0 divider opacity-30 relative"></div>
-            
-            <CCourseInput title="自定义背景" Icon={Icon4} onClick={()=>{uploadEl.current.click()}}>
-              <div className='relative upload-custom-img'>
-                <input ref={uploadEl}  type="file" onChange={updateCustomImg}  className='z-30 hidden w-screen bg-transparent h-2 absolute' />
-              {/* <Uploader  upload={updateCustomImg} className='w-screen bg-transparent h-1 absolute'></Uploader> */}
+
+            <CCourseInput
+              title="自定义背景"
+              Icon={Icon4}
+              onClick={() => {
+                uploadEl.current.click();
+              }}
+            >
+              <div className="relative upload-custom-img">
+                <input
+                  ref={uploadEl}
+                  type="file"
+                  onChange={updateCustomImg}
+                  className="z-30 hidden w-screen bg-transparent h-2 absolute"
+                />
+                {/* <Uploader  upload={updateCustomImg} className='w-screen bg-transparent h-1 absolute'></Uploader> */}
               </div>
               <RightIcon className="mr-2"></RightIcon>
             </CCourseInput>
             <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
             <CCourseInput title="切换课表" Icon={Icon5}></CCourseInput>
             <div className="flex justify-between pl-4 pr-4 mt-4">
-              <div className="flex flex-col items-center" onClick={()=>{setStudentId(-1)}}>
+              <div
+                className="flex flex-col items-center"
+                onClick={() => {
+                  setStudentId(-1);
+                }}
+              >
                 <div className="flex flex-col avatar placeholder">
                   <div className="bg-[#FFD03640] rounded-full text-neutral-content w-14">
                     <span className="text-xs font-medium text-[#FFD036]">
@@ -559,7 +596,12 @@ export default function Schedules() {
                 </div>
                 {/* <div className="text-xs">我的课表</div> */}
               </div>
-              <div className="flex flex-col items-center" onClick={()=>{setStudentId(2)}}>
+              <div
+                className="flex flex-col items-center"
+                onClick={() => {
+                  setStudentId(2);
+                }}
+              >
                 <div className="flex flex-col avatar placeholder">
                   <div className="bg-[#F7F8F9] rounded-full text-neutral-content w-14">
                     <span className="text-xs font-medium text-[#A9B0C0]">
@@ -599,35 +641,44 @@ export default function Schedules() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [yearMethod, setYearMethod] = useState(false);
   const [studentId, setStudentId] = useState(-1);
-  const { data, error,mutate } = useFetch(
+  const { data, error, mutate } = useFetch(
     `${Cons.API.CURRICULUM.QUERY}`,
     'get',
     {
-      campusId: campusIdMap
-    }
+      campusId: campusIdMap,
+    },
   );
-  const { data:otherSchedules,mutate:otherSchedulesMutate } = useFetch(
+  const { data: otherSchedules, mutate: otherSchedulesMutate } = useFetch(
     `/curriculum/view`,
     'get',
     {
       campusId: campusIdMap,
-      studentId : studentId,
-      termId: 1
-    }
+      studentId: studentId,
+      termId: 1,
+    },
   );
-  const { data:timeTableData } = useFetch(
-    `/timetable/query`,
-    'get',
-  );
-  useEffect(()=>{
-    otherSchedulesMutate()
-    if(studentId === -1){
+  const { data: timeTableData } = useFetch(`/timetable/query`, 'get');
+  useEffect(() => {
+    otherSchedulesMutate();
+    if (studentId === -1) {
       // Toast.success('课表已切换回我的')
-    }else{
-      Toast.success('课表已切换到Test User')
+    } else {
+      Toast.success('课表已切换到Test User');
     }
-
-  },[studentId])
+  }, [studentId]);
+  const tempData = React.useMemo(() => {
+    if (!data) return null;
+    return data?.data[0]?.items.map((item) => {
+      return {
+        ...item,
+        // dayOfWeek: item?.time?.dayOfWeek,
+        time: item?.time?.start + '-' + item?.time?.end,
+      };
+    });
+  }, [data]);
+  useEffect(()=>{
+    console.log(tempData,"tempData courseData")
+  },[tempData])
   // const []
   // const currentDate = new Date();
   // currentDate.setDate(currentDate.getDate()+7)
@@ -642,9 +693,10 @@ export default function Schedules() {
     return [startDate, endDate];
   }
   const weekDate = getPastWeekDates();
-  if (data?.data && studentId === -1) {
+
+  if (data && studentId === -1) {
     courseData = getCourses(
-      data.data,
+      tempData,
       new Date(termInfo?.data?.startDate),
       new Date(termInfo?.data?.endDate),
     );
@@ -661,14 +713,14 @@ export default function Schedules() {
     console.log(courseData, 'courseData');
   }
   const openLogin = useSelector(selectOpen);
-  React.useEffect(()=>{
-    if(openLogin === 'login' || openLogin === 'register'){
-      setDialogVisible(false)
+  React.useEffect(() => {
+    if (openLogin === 'login' || openLogin === 'register') {
+      setDialogVisible(false);
     }
-    if(openLogin === 'close'){
-      setDialogVisible(true)
+    if (openLogin === 'close') {
+      setDialogVisible(true);
     }
-  },[openLogin])
+  }, [openLogin]);
   React.useEffect(() => {
     if (!data && !otherSchedules) return;
     if (!data?.data && !otherSchedules?.data) {

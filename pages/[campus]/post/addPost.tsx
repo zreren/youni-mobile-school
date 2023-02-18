@@ -41,6 +41,8 @@ import MediaIcon from './assets/actives/media.svg';
 import SeatIcon from './assets/actives/seat.svg';
 import useLanguage from '@/hooks/useLanguage';
 import IOSSwitch from '@/components/Input/ios';
+import CourseIcon from './assets/actives/course.svg';
+import DeliveryRadio from './assets/actives/deliveryRadio.svg';
 import { set } from 'react-hook-form';
 import { json } from 'stream/consumers';
 
@@ -98,10 +100,6 @@ export default function addPost() {
       label: '活动',
       key: 'activity',
     },
-    // {
-    //   label: '新闻',
-    //   key: 'news',
-    // },
     {
       label: '转租',
       key: 'sublet',
@@ -114,6 +112,10 @@ export default function addPost() {
       label: '拼车',
       key: 'carpool',
     },
+    {
+      label: '二手书',
+      key: 'book',
+    }
   ];
 
   const item = {
@@ -139,25 +141,27 @@ export default function addPost() {
     'youni:houseType': <HouseTypeIcon></HouseTypeIcon>,
     'youni:discussion': <MediaIcon></MediaIcon>,
     'youni:seat': <SeatIcon></SeatIcon>,
+    'youni:book' : <CourseIcon></CourseIcon>,
+    'youni:swap': <DeliveryRadio></DeliveryRadio>,
+
   };
   const [title, setTitle] = React.useState('');
   const [content, setContent] = React.useState('');
   const [form] = Form.useForm();
   const [type, setType] = React.useState(headerMenuList[0].key);
+
+
   const [previews, setPreviews] = React.useState([]);
   // useEffect(() => {
   //   // if(form.get){
   //   getCurrentLocation();
   //   // }
   // }, []);
-  // useEffect(() => {
-  //   getCurrentLocation();
-  // }, [content]);
   const [baseLocation, setBaseLocation] = useState<any>();
   const PickLocation = (props: any) => {
     const { data } = props;
-    const [localList, setLocalList] = useState([]);
     const [local, setLocal] = useState(false);
+    const [localList, setLocalList] = useState([]);
     useEffect(() => {
       try {
         const obj = JSON.parse(form.getFieldValue('location'));
@@ -165,7 +169,7 @@ export default function addPost() {
       } catch (error) {}
     }, [navigator.geolocation]);
     const getCurrentLocation = async () => {
-      const TOKEN = Cons.TOKEN;
+      const TOKEN = 'pk.eyJ1IjoieW91bmljbHViIiwiYSI6ImNsY2M5ZHVydDNqdTAzeGxrazJuNzhzbWoifQ.wWLnf7hdCNENhcFEuY3vPw';
       let location;
       navigator.geolocation.getCurrentPosition(async (position) => {
         console.log(position.coords.latitude, position.coords.longitude);
@@ -417,9 +421,6 @@ export default function addPost() {
         type: type,
         contact: form.contact
           ?.filter((item) => item.public === true)
-          ?.map((item) => {
-            return item.type;
-          }),
       });
       if (data.message === 'success') {
         Toast.success('发布成功');

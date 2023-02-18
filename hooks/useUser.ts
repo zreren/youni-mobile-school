@@ -12,7 +12,7 @@ export default function useUser() {
   const [token, setToken] = useLocalStorage('token', null);
   const router = useRouter()
   if(token){
-    const { data, error } = useFetch('/profile', 'get')
+    const { data, error,mutate } = useFetch('/profile', 'get')
     const loading = !data?.data && !error;
     const loggedOut = error || data?.code === 1102 || data?.code === 1101 || data?.code === 1103;
     // const loggedOut = false;
@@ -25,6 +25,7 @@ export default function useUser() {
       loading,
       loggedOut,
       user: data?data.data:null,
+      mutate:mutate
     };
   }
   return  {

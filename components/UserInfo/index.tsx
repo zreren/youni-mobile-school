@@ -1,22 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Icon1 from './contact/1.svg';
 import Icon2 from './contact/2.svg';
 import Icon3 from './contact/3.svg';
 import Icon4 from './contact/4.svg';
 
-interface userInfo{
-  data:{
-    nickName:string,
-    education:{
-    year:string,
-    major:string
-  }
-  avatar:string
-  },
-  contact: string []
+interface userInfo {
+  data: {
+    nickName: string;
+    education: {
+      year: string;
+      major: string;
+    };
+    avatar: string;
+  };
+  contact: any[];
 }
-export default function index(props:userInfo) {
-  const {data,contact}= props
+export default function index(props: userInfo) {
+  const { data, contact } = props;
+  useEffect(()=>{
+    console.log(contact,"contact")
+  },[contact])
   return (
     <div className="w-full bg-white py-4">
       <div className="flex items-center">
@@ -35,31 +38,48 @@ export default function index(props:userInfo) {
         </div>
       </div>
       <div className="grid mt-4 grid-cols-2 gap-4">
-        {
-          contact?.indexOf('wechat') > -1? <div className="flex items-center justify-center w-full h-10 space-x-2 text-sm font-semibold text-[#52C41A] rounded-full bg-bg">
-          <Icon3></Icon3>
-          <div>加微信</div>
-        </div>:null
-        }
-       {
-          contact?.indexOf('phone') > -1?  <div className="flex items-center justify-center w-full h-10 space-x-2 text-sm font-semibold text-[#52C41A] rounded-full bg-bg">
-          <Icon2></Icon2>
-          <div>打电话</div>
-        </div>:null
-       }
-        {
-          contact?.indexOf('message') > -1?<div className="flex items-center justify-center w-full h-10 space-x-2 text-sm font-semibold text-[#52C41A] rounded-full bg-bg">
-          <Icon4></Icon4>
-          <div>发短信</div>
-        </div>:null
-        }
-        {
-          contact?.indexOf('email') > -1?  <div className="flex items-center justify-center w-full h-10 space-x-2 text-sm font-semibold text-[#3665FF] rounded-full bg-bg">
-          <Icon1></Icon1>
-          <div>发邮件</div>
-        </div>:null
-        }
-       
+        {contact?.map((item: any) => {
+          if (item.type === '电话') {
+            return (
+              <div className="flex items-center justify-center w-full h-10 space-x-2 text-sm font-semibold text-[#52C41A] rounded-full bg-bg">
+                <Icon2></Icon2>
+                <div>打电话</div>
+              </div>
+            );
+          }
+          if (item.type === '微信') {
+            return (
+              <div className="flex items-center justify-center w-full h-10 space-x-2 text-sm font-semibold text-[#52C41A] rounded-full bg-bg">
+              <Icon3></Icon3>
+              <div>加微信</div>
+            </div>
+            );
+          }
+        })}
+        {contact?.indexOf('wechat') > -1 ? (
+          <div className="flex items-center justify-center w-full h-10 space-x-2 text-sm font-semibold text-[#52C41A] rounded-full bg-bg">
+            <Icon3></Icon3>
+            <div>加微信</div>
+          </div>
+        ) : null}
+        {contact?.indexOf('phone') > -1 ? (
+          <div className="flex items-center justify-center w-full h-10 space-x-2 text-sm font-semibold text-[#52C41A] rounded-full bg-bg">
+            <Icon2></Icon2>
+            <div>打电话</div>
+          </div>
+        ) : null}
+        {contact?.indexOf('message') > -1 ? (
+          <div className="flex items-center justify-center w-full h-10 space-x-2 text-sm font-semibold text-[#52C41A] rounded-full bg-bg">
+            <Icon4></Icon4>
+            <div>发短信</div>
+          </div>
+        ) : null}
+        {contact?.indexOf('email') > -1 ? (
+          <div className="flex items-center justify-center w-full h-10 space-x-2 text-sm font-semibold text-[#3665FF] rounded-full bg-bg">
+            <Icon1></Icon1>
+            <div>发邮件</div>
+          </div>
+        ) : null}
       </div>
     </div>
   );
