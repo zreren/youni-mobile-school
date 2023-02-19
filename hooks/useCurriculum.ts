@@ -14,6 +14,14 @@ export default function useCurriculum() {
   const { data, error, mutate } = useFetch('/curriculum/query', 'get',{
     termId:1
   });
+  if(!data?.data){
+    return {
+        defaultCurriculum: {
+            id: null,
+        },
+        mutate: mutate,
+    }
+  }
   return {
     defaultCurriculum: data ? data?.data[0] : null,
     mutate: mutate,
