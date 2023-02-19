@@ -179,7 +179,7 @@
 .element:nth-child(3){
     /* transform: rotate(-90deg) translateY(50%) translateX(50%) rotate(90deg); */
     position: absolute;
-    bottom: 120px;
+    bottom: 7.5rem;
     left: calc(50% - 25px);
     -webkit-transition-delay: 0.24s, 0.48s;
     transition-delay: 0.24s, 0.48s;

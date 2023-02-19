@@ -103,7 +103,7 @@ export default function Schedules() {
       })
         .then(async () => {
           const { data } = await useRequest.post(
-            `/api${Cons.API.CURRICULUM.DELETE}`,
+            `/api/curriculum/item/delete`,
             {
               id: Number(id),
             },
@@ -681,7 +681,7 @@ export default function Schedules() {
   // const []
   // const currentDate = new Date();
   // currentDate.setDate(currentDate.getDate()+7)
-  let courseData;
+  // let courseData;
   function getPastWeekDates(): [Date, Date] {
     const today = new Date();
     const startDate = new Date();
@@ -693,24 +693,32 @@ export default function Schedules() {
   }
   const weekDate = getPastWeekDates();
 
-  if (data && studentId === -1) {
-    courseData = getCourses(
-      tempData,
-      new Date(termInfo?.data?.startDate),
-      new Date(termInfo?.data?.endDate),
-    );
-    const all = addFullStartDate(courseData, weekDate);
-    console.log(courseData, 'courseData');
-  }
-  if (otherSchedules?.data && studentId !== -1) {
-    courseData = getCourses(
-      otherSchedules?.data,
-      new Date(termInfo?.data?.startDate),
-      new Date(termInfo?.data?.endDate),
-    );
-    const all = addFullStartDate(courseData, weekDate);
-    console.log(courseData, 'courseData');
-  }
+
+  const courseData = useMemo(() => {
+    if (data && studentId === -1) {
+      const res =  getCourses(
+        tempData,
+        new Date(termInfo?.data?.startDate),
+        new Date(termInfo?.data?.endDate),
+      );
+      return addFullStartDate(res, weekDate)
+      // const all = addFullStartDate(courseData, weekDate);
+      console.log(courseData, 'courseData');
+    }
+    if (otherSchedules?.data && studentId !== -1) {
+      const res =  getCourses(
+        otherSchedules?.data,
+        new Date(termInfo?.data?.startDate),
+        new Date(termInfo?.data?.endDate),
+      );
+      return addFullStartDate(res, weekDate)
+      const all = addFullStartDate(courseData, weekDate);
+      console.log(courseData, 'courseData');
+    }
+  },[data,otherSchedules,studentId,termInfo,weekDate])
+  useEffect(()=>{
+    console.log(courseData,'courseData')
+  },[courseData])
   const openLogin = useSelector(selectOpen);
   React.useEffect(() => {
     if (openLogin === 'login' || openLogin === 'register') {

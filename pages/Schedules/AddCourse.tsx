@@ -119,8 +119,10 @@ export default function AddSchedule() {
     setCourseId(e);
   };
   const submitCourse = async (values: any) => {
-    const { data } = await instance.post('/api/curriculum/create', values);
-    return data;
+
+      const { data } = await instance.post('/api/curriculum/item/create', values);
+      return data;
+    
   };
   interface ChangeType {
     id: number;
@@ -273,7 +275,7 @@ export default function AddSchedule() {
       shouldUseNativeValidation: true,
     });
     const [value, setValue] = useState(new Date());
-    const [time, setTime] = useState('12:00');
+    const [time, setTime] = useState('10:00');
     const [endTime, setEndTime] = useState('12:00');
     const [timetable, setTimetable] = useState({
       name: '',
@@ -288,8 +290,15 @@ export default function AddSchedule() {
       });
     }, []);
     const submitTime = async (values) => {
-      const { data } = await instance.post('/api/timetable/create', values);
-      return data;
+      if(values.all((item)=>{
+        item !== undefined || item !== null
+      })){
+        const { data } = await instance.post('/api/timetable/create', values);
+        return data;
+      }else{
+        Toast.fail('请填写完整信息')
+      }
+
     };
     const getYYMMDD = (date: Date) => {
       // function formatDate(date: string): string {
@@ -396,7 +405,7 @@ export default function AddSchedule() {
                   round: true,
                 }}
                 title=""
-                defaultValue="12:00"
+                defaultValue="10:00"
                 type="time"
                 minHour="7"
                 maxHour="24"
@@ -530,11 +539,23 @@ export default function AddSchedule() {
       return `${timeStr}-${endTimeStr}`;
     };
     const submitForm = async (values: any) => {
+      if(!values || !values.name || !values.color || !dayOfWeek){
+        Toast.fail('请填写完整信息');
+        return;
+      }
+      if(time === endTime){
+        Toast.fail('开始时间和结束时间不能相同');
+        return;
+      }
       const requestQueen = dayOfWeek.map(async (item) => {
         const data = await submitCourse({
           ...values,
           dayOfWeek: Number(item),
-          time: translateTime(time, endTime),
+          time: {
+            start: time,
+            end: endTime,
+          }
+          // translateTime(time, endTime),
         });
         return data;
       });
@@ -610,7 +631,7 @@ export default function AddSchedule() {
                   round: true,
                 }}
                 title=""
-                defaultValue="12:00"
+                defaultValue="10:00"
                 type="time"
                 minHour="10"
                 maxHour="20"
@@ -686,7 +707,7 @@ export default function AddSchedule() {
         <CCourseInput
           title="课程形式"
           change={(val) => {
-            handleChange(val.label, 'name');
+            handleChange(val.label, 'mode');
           }}
           data={courseFormat?.mode}
           renderData={courseFormat?.mode?.map(

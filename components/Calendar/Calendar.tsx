@@ -21,7 +21,7 @@ import TimeIconActive from './icon_time';
 import SaveToLibButton from '@/components/Button/SaveToLibButton';
 import useLanguage from '@/hooks/useLanguage';
 import useLocalStorage from '@/hooks/useStore';
-import type {CourseData} from '@/types/course'
+import type { CourseData } from '@/types/course';
 // import { url } from 'inspector';
 
 function Calendar(props) {
@@ -212,7 +212,7 @@ function Calendar(props) {
    * @description 将对象数组根据时间放进timeArray中生成新的数组
    * @param timeArray {string[]}
    * @param dataObject {object}
-   * @returns 
+   * @returns
    */
   function generateNewArray(timeArray: string[], dataObject: object) {
     if (!dataObject) return [];
@@ -408,7 +408,7 @@ function Calendar(props) {
     type ObjectType = { [key: string]: any };
     function mergeObjects(objects: ObjectType[]): ObjectType {
       return objects.reduce((prev, curr) => {
-        Object.keys(curr).forEach(key => {
+        Object.keys(curr).forEach((key) => {
           if (Array.isArray(prev[key]) && Array.isArray(curr[key])) {
             prev[key] = prev[key].concat(curr[key]);
           } else if (prev[key] && typeof prev[key] === 'object') {
@@ -456,7 +456,7 @@ function Calendar(props) {
         })}
         {
           <>
-            {todayItemCount?.length === 0 && timeTable.length === 0? (
+            {todayItemCount?.length === 0 && timeTable.length === 0 ? (
               <div className="w-full text-center bg-white rounded-lg p-4 text-[#A9B0C0] text-sm font-medium">
                 今日暂无课程或日程安排
               </div>
@@ -472,7 +472,7 @@ function Calendar(props) {
   };
 
   const [setting, setSetting] = useState(props.setting);
-  const [customImg,setCustomImg] = useLocalStorage('customImg','')
+  const [customImg, setCustomImg] = useLocalStorage('customImg', '');
   const viewMap = {
     day: 'timeGridWeek',
     week: 'timeGridWeek',
@@ -541,8 +541,7 @@ function Calendar(props) {
   useEffect(() => {
     console.log(timeTable, 'timeTable');
   }, [timeTable]);
-  const { courseData } :{courseData:CourseData[]} = props;
-
+  const { courseData }: { courseData: CourseData[] } = props;
 
   const ALLEvents = useMemo(() => {
     // 两个数组合并
@@ -551,21 +550,263 @@ function Calendar(props) {
     return [...courseData, ...timeTable];
   }, [courseData, timeTable]);
 
-  
-  useEffect(()=>{
-    const el = document.getElementsByClassName('fc-timegrid-slots')[0] as HTMLElement;
-    if(el){
+  const TimeTableEvent = (props) => {
+    const { arg } = props;
+    return (
+      <div
+        onClick={() => {
+          props.clickEvent(arg);
+        }}
+        className="flex flex-col overflow-hidden justify-center h-full w-full items-center"
+      >
+        <svg
+          height={'14px'}
+          width={'100%'}
+          className="z-30 relative"
+          xmlns="http://www.w3.org/2000/svg"
+          version="1.1"
+        >
+          <text
+            font-size="10px"
+            x="50%"
+            text-anchor="middle"
+            y="10"
+            fill={arg.textColor}
+          >
+            {arg.event.title}
+          </text>
+        </svg>
+      </div>
+    );
+  };
+  const CourseEvent = (props) => {
+    const { arg } = props;
+    const timeGap = useMemo(() => {
+      const [start, end] = arg.event.extendedProps.time.split('-');
+      const startDate = new Date();
+      startDate.setHours(start.split(':')[0], start.split(':')[1]);
+      const endDate = new Date();
+      endDate.setHours(end.split(':')[0], end.split(':')[1]);
+      const diff = endDate.getTime() - startDate.getTime();
+      const diffHours = diff / (1000 * 60 * 60);
+      return diffHours;
+    }, [arg]);
+    return (
+      <div
+        onClick={() => {
+          props.clickEvent(arg);
+        }}
+        className="flex overflow-hidden flex-col justify-center h-full w-full items-center"
+      >
+        <svg
+          height={'12px'}
+          width={'100%'}
+          className="z-30 relative"
+          xmlns="http://www.w3.org/2000/svg"
+          version="1.1"
+        >
+          <text
+            font-size="6px"
+            x="50%"
+            className="font-bold "
+            text-anchor="middle"
+            y="10"
+            fill={arg.textColor}
+          >
+            {arg.event.title}
+          </text>
+        </svg>
+        {timeGap >= 1 ? (
+          <svg
+            height={'14px'}
+            width={'100%'}
+            className="z-30 relative"
+            xmlns="http://www.w3.org/2000/svg"
+            version="1.1"
+          >
+            <text
+              className="font-bold  leading-none truncate"
+              font-size="7px"
+              x="50%"
+              text-anchor="middle"
+              y="10"
+              fill={arg.textColor}
+            >
+              Section {arg.event.extendedProps?.section?.name}
+            </text>
+          </svg>
+        ) : null}
+
+        {timeGap >= 1.2 ? (
+          <svg
+            height={'14px'}
+            width={'100%'}
+            className="z-30 relative"
+            xmlns="http://www.w3.org/2000/svg"
+            version="1.1"
+          >
+            <text
+              className="font-bold  leading-none truncate"
+              font-size="7px"
+              x="50%"
+              text-anchor="middle"
+              y="10"
+              fill={arg.textColor}
+            >
+              {arg.event.extendedProps.classroom}
+            </text>
+          </svg>
+        ) : (
+          // <div className="font-bold leading-none truncate	whitespace-nowrap scale-[0.7]		text-10 ">
+          //   {arg.event.extendedProps.classroom}
+          // </div>
+          ''
+        )}
+        {/* {} */}
+        {timeGap >= 1.5 ? (
+          <div className="font-light leading-none	 scale-90	  ">
+            {arg.event.extendedProps.online ? '线上' : '线下'}
+          </div>
+        ) : null}
+      </div>
+    );
+  };
+  const DayCourseEvent = (props) => {
+    const { arg } = props;
+    const timeGap = useMemo(() => {
+      const [start, end] = arg.event.extendedProps.time.split('-');
+      const startDate = new Date();
+      startDate.setHours(start.split(':')[0], start.split(':')[1]);
+      const endDate = new Date();
+      endDate.setHours(end.split(':')[0], end.split(':')[1]);
+      const diff = endDate.getTime() - startDate.getTime();
+      const diffHours = diff / (1000 * 60 * 60);
+      return diffHours;
+    }, [arg]);
+    return (
+      <div
+        onClick={() => {
+          props.clickEvent(arg);
+        }}
+        className="flex flex-col overflow-hidden justify-center h-full w-full items-center"
+      >
+        <svg
+          height={'14px'}
+          width={'100%'}
+          className="z-30 relative"
+          xmlns="http://www.w3.org/2000/svg"
+          version="1.1"
+        >
+          <text
+            font-size="10px"
+            x="50%"
+            text-anchor="middle"
+            y="10"
+            fill={arg.textColor}
+          >
+            {arg.event.title}
+          </text>
+        </svg>
+        {
+          timeGap >= 1 ? (
+            <svg
+          height={'14px'}
+          width={'100%'}
+          className="z-30 relative"
+          xmlns="http://www.w3.org/2000/svg"
+          version="1.1"
+        >
+          <text
+            className="font-light leading-none	text-10  truncate"
+            font-size="10px"
+            x="50%"
+            text-anchor="middle"
+            y="10"
+            fill={arg.textColor}
+          >
+            Section {arg.event.extendedProps?.section?.name}
+          </text>
+        </svg>
+          ):null
+        }
+        
+        {
+          timeGap >= 1.2 ? (
+            <svg
+          height={'14px'}
+          width={'100%'}
+          className="z-30 relative"
+          xmlns="http://www.w3.org/2000/svg"
+          version="1.1"
+        >
+          <text
+            font-size="10px"
+            x="50%"
+            text-anchor="middle"
+            y="10"
+            fill={arg.textColor}
+            className="font-light text-ellipsis	truncate whitespace-nowrap leading-none	 "
+          >
+            {arg.event.extendedProps.classroom}
+          </text>
+        </svg>
+          ):null
+        }
+        {
+          timeGap >= 1.5 ? (
+            <svg
+            height={'14px'}
+            width={'100%'}
+            className="z-30 relative"
+            xmlns="http://www.w3.org/2000/svg"
+            version="1.1"
+          >
+            <text
+              font-size="10px"
+              x="50%"
+              text-anchor="middle"
+              y="10"
+              fill={arg.textColor}
+              className="font-light leading-none	text-10	  "
+            >
+              {arg.event.extendedProps.online ? '线上课程' : '线下课程'}
+            </text>
+          </svg>
+          ):null
+        }
+       
+        {/*  
+    <div className="font-bold	 scale-75 text-xs text-center  whitespace-nowrap">
+      {arg.event.title}
+    </div> */}
+        {/* <div  className="font-light leading-none	text-10  truncate">
+      Section {arg.event.extendedProps.section.name}
+    </div> */}
+        {/* <div className="font-light text-ellipsis	truncate whitespace-nowrap leading-none	 scale-90	  ">
+      {arg.event.extendedProps.classroom}
+    </div> */}
+        {/* <div className="font-light leading-none	text-10	  ">
+      {arg.event.extendedProps.online ? '线上课程' : '线下课程'}
+    </div> */}
+      </div>
+    );
+  };
+  useEffect(() => {
+    const el = document.getElementsByClassName(
+      'fc-timegrid-slots',
+    )[0] as HTMLElement;
+    if (el) {
       const ele = el.getElementsByTagName('table')[0] as HTMLElement;
-      el.style.paddingTop = '10px'
+      el.style.paddingTop = '10px';
       el.style.backgroundImage = `url(${customImg})`;
       el.style.backgroundSize = 'cover';
-      el.style.objectFit = 'cover'
-      el.style.height = `calc(100vh - 190px)`
+      el.style.objectFit = 'cover';
+      el.style.height = `calc(100vh - 190px)`;
     }
-  },[customImg,calendarView])
+  }, [customImg, calendarView]);
   return (
     <div>
-      <div className="h-full w-full  " >
+      <div className="h-full w-full  ">
         {/* <img src={customImg} className="absolute object-cover" alt="" /> */}
         <FullCalendar
           plugins={[timeGridPlugin, dayGridPlugin]}
@@ -624,175 +865,18 @@ function Calendar(props) {
           eventContent={(arg: any) => {
             console.log(arg, 'course arg');
             if (arg.event.extendedProps.type === 2) {
-              return (
-                <div
-                  onClick={() => {
-                    props.clickEvent(arg);
-                  }}
-                  className="flex flex-col overflow-hidden justify-center h-full w-full items-center"
-                >
-                  <svg
-                    height={'14px'}
-                    width={'100%'}
-                    className="z-30 relative"
-                    xmlns="http://www.w3.org/2000/svg"
-                    version="1.1"
-                  >
-                    <text
-                      font-size="10px"
-                      x="50%"
-                      text-anchor="middle"
-                      y="10"
-                      fill={arg.textColor}
-                    >
-                      {arg.event.title}
-                    </text>
-                  </svg>
-                </div>
-              );
+              return <TimeTableEvent arg={arg}></TimeTableEvent>;
             }
             return setting.view === 'day' ? (
-              <div
-                onClick={() => {
-                  props.clickEvent(arg);
-                }}
-                className="flex flex-col overflow-hidden justify-center h-full w-full items-center"
-              >
-                <svg
-                  height={'14px'}
-                  width={'100%'}
-                  className="z-30 relative"
-                  xmlns="http://www.w3.org/2000/svg"
-                  version="1.1"
-                >
-                  <text
-                    font-size="10px"
-                    x="50%"
-                    text-anchor="middle"
-                    y="10"
-                    fill={arg.textColor}
-                  >
-                    {arg.event.title}
-                  </text>
-                </svg>
-                <svg
-                  height={'14px'}
-                  width={'100%'}
-                  className="z-30 relative"
-                  xmlns="http://www.w3.org/2000/svg"
-                  version="1.1"
-                >
-                  <text
-                    className="font-light leading-none	text-10  truncate"
-                    font-size="10px"
-                    x="50%"
-                    text-anchor="middle"
-                    y="10"
-                    fill={arg.textColor}
-                  >
-                    Section {arg.event.extendedProps?.section?.name}
-                  </text>
-                </svg>
-                <svg
-                  height={'14px'}
-                  width={'100%'}
-                  className="z-30 relative"
-                  xmlns="http://www.w3.org/2000/svg"
-                  version="1.1"
-                >
-                  <text
-                    font-size="10px"
-                    x="50%"
-                    text-anchor="middle"
-                    y="10"
-                    fill={arg.textColor}
-                    className="font-light text-ellipsis	truncate whitespace-nowrap leading-none	 "
-                  >
-                    {arg.event.extendedProps.classroom}
-                  </text>
-                </svg>
-                <svg
-                  height={'14px'}
-                  width={'100%'}
-                  className="z-30 relative"
-                  xmlns="http://www.w3.org/2000/svg"
-                  version="1.1"
-                >
-                  <text
-                    font-size="10px"
-                    x="50%"
-                    text-anchor="middle"
-                    y="10"
-                    fill={arg.textColor}
-                    className="font-light leading-none	text-10	  "
-                  >
-                    {arg.event.extendedProps.online ? '线上课程' : '线下课程'}
-                  </text>
-                </svg>
-                {/*  
-                <div className="font-bold	 scale-75 text-xs text-center  whitespace-nowrap">
-                  {arg.event.title}
-                </div> */}
-                {/* <div  className="font-light leading-none	text-10  truncate">
-                  Section {arg.event.extendedProps.section.name}
-                </div> */}
-                {/* <div className="font-light text-ellipsis	truncate whitespace-nowrap leading-none	 scale-90	  ">
-                  {arg.event.extendedProps.classroom}
-                </div> */}
-                {/* <div className="font-light leading-none	text-10	  ">
-                  {arg.event.extendedProps.online ? '线上课程' : '线下课程'}
-                </div> */}
-              </div>
+              <DayCourseEvent
+                clickEvent={props.clickEvent}
+                arg={arg}
+              ></DayCourseEvent>
             ) : (
-              <div
-                onClick={() => {
-                  props.clickEvent(arg);
-                }}
-                className="flex overflow-hidden flex-col justify-center h-full w-full items-center"
-              >
-                <svg
-                  height={'14px'}
-                  width={'100%'}
-                  className="z-30 relative"
-                  xmlns="http://www.w3.org/2000/svg"
-                  version="1.1"
-                >
-                  <text
-                    font-size="6px"
-                    x="50%"
-                    className="font-bold "
-                    text-anchor="middle"
-                    y="10"
-                    fill={arg.textColor}
-                  >
-                    {arg.event.title}
-                  </text>
-                </svg>
-                <svg
-                  height={'14px'}
-                  width={'100%'}
-                  className="z-30 relative"
-                  xmlns="http://www.w3.org/2000/svg"
-                  version="1.1"
-                >
-                  <text
-                    className="font-bold  leading-none truncate"
-                    font-size="7px"
-                    x="50%"
-                    text-anchor="middle"
-                    y="10"
-                    fill={arg.textColor}
-                  >
-                    Section {arg.event.extendedProps?.section?.name}
-                  </text>
-                </svg>
-                <div className="font-bold leading-none truncate	whitespace-nowrap scale-[0.7]		text-10 ">
-                  {arg.event.extendedProps.classroom}
-                </div>
-                <div className="font-light leading-none	 scale-90	  ">
-                  {arg.event.extendedProps.online ? '线上' : '线下'}
-                </div>
-              </div>
+              <CourseEvent
+                clickEvent={props.clickEvent}
+                arg={arg}
+              ></CourseEvent>
             );
           }}
           // eventBackgroundColor="#EBE5FE"

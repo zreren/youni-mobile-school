@@ -162,19 +162,20 @@ function RGBA2RGB(rgba_color ) {
   }
 function addFullStartDate(array: any[], pastWeekDates: [Date, Date]) {
   if(!array) return
+  const newArray = [];
   for (const item of array) {
     const startTimeRange = item.time;
     const dayOfWeek = item.dayOfWeek;
     const startTime = startTimeRange.split('-')[0];
-    // console.log(startTime.split('.')[0], 'startTime');
+    console.log(startTime.split('.')[0], 'startTime');
     const endTime = startTimeRange.split('-')[1];
     const startDate = new Date(pastWeekDates[0]);
     startDate.setDate(startDate.getDate() + dayOfWeek);
-    startDate.setHours(startTime.split('.')[0], startTime.split('.')[1]);
+    startDate.setHours(startTime.split(':')[0], startTime.split(':')[1]);
     // startDate.setMinutes(startTime.split(":")[1]);
     const endDate = new Date(pastWeekDates[0]);
     endDate.setDate(endDate.getDate() + dayOfWeek);
-    endDate.setHours(endTime.split('.')[0], endTime.split('.')[1]);
+    endDate.setHours(endTime.split(':')[0], endTime.split(':')[1]);
     // endDate.setMinutes(endTime.split(":")[1])
     item.title = item.name;
     item.extendedProps = {
@@ -191,18 +192,13 @@ function addFullStartDate(array: any[], pastWeekDates: [Date, Date]) {
     item.borderColor = adjustTransparency(getOtherColor(item.color), 1);
     item.textColor = adjustTransparency(getOtherColor(item.color), 1);
     item.backgroundColor = RGBA2RGB(adjustTransparency(getOtherColor(item.color), 0.9));
+    newArray.push(item)
     // item.color = adjustTransparency(getOtherColor(item.color), 0.1);
     // item.borderColor = getOtherColor(item.color)
     // item.textColor = getOtherColor(item.color)
-    console.log(
-      item.color,
-      'color',
-      item.borderColor,
-      'borderColor',
-      item.textColor,
-      'textColor',
-    );
+
     // delete item.color
   }
+  if(newArray.length === array.length) return newArray
 }
 export { getCourses, getWeekNum, addFullStartDate };

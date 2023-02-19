@@ -26,8 +26,9 @@ export default function index(props) {
         e.stopPropagation();
         e.preventDefault();
       }}
-      className="fixed bottom-0 z-30  w-screen h-screen backdrop-filter backdrop-blur-2xl"
+      className="fixed bottom-0 z-30 justify-center flex  w-screen h-screen backdrop-filter backdrop-blur-2xl"
     >
+      <div className='w-[360px] fixed bottom-0 '>
       <div
         onClick={() => {
           body.style.overflow = 'scroll';
@@ -93,7 +94,8 @@ export default function index(props) {
         <Icon3></Icon3>
         <div className='text-[#8C6008] text-xs font-medium'>转闲置</div>
       </div>
-      <Subtract className="absolute bottom-0 w-screen -z-30"></Subtract>
+      </div>
+      <Subtract className="absolute bottom-0 w-screen -z-30 object-cover"></Subtract>
     </div>
   );
 }
