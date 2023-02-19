@@ -28,7 +28,7 @@ export default function index(props) {
       }}
       className="fixed bottom-0 z-30 justify-center flex  w-screen h-screen backdrop-filter backdrop-blur-2xl"
     >
-      <div className='w-[360px] fixed bottom-0 '>
+      <div className='max-w-[380px] min-w-[380px] fixed bottom-0 '>
       <div
         onClick={() => {
           body.style.overflow = 'scroll';
