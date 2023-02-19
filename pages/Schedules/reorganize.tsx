@@ -251,7 +251,7 @@ export default function reorganize() {
         Toast.fail('识别失败')
         // return;
       }
-      const result = data?.data?.curriculums?.slice()?.filter((item)=>{
+      const result = data?.data?.items?.slice()?.filter((item)=>{
         return item?.name.indexOf("undefined") < 0 
       }).map((item,index)=>{
         return {
@@ -266,25 +266,20 @@ export default function reorganize() {
   const AddCourse = (props) => {
     const { data } = props;
     const { name, dayOfWeek: dayOfWeeksItem,sectionName,mode,classroom,time:courseTime,id} = data;
-    const timeSpirit = useMemo(()=>{
-      console.log(courseTime,"courseTime")
-        const pattern =  /^(\d{1,2}:\d{2})-(\d{1,2}:\d{2})$/;
-        const match = courseTime?.match(pattern);
-        console.log(match,"match")
-        if (!match) return;
-        return [match[1], match[2]];
-    },[courseTime])
+    // const timeSpirit = useMemo(()=>{
+    //   console.log(courseTime,"courseTime")
+    //     // const pattern =  /^(\d{1,2}:\d{2})-(\d{1,2}:\d{2})$/;
+    //     // const match = courseTime?.match(pattern);
+    //     // console.log(match,"match")
+    //     // if (!match) return;
+    //     return [CURRICULUM.time.start, CURRICULUM.time.end];
+    // },[courseTime])
     useEffect(()=>{
-      console.log(timeSpirit,"timeSpirit")
-      setTime(timeSpirit?.[0])
-      setEndTime(timeSpirit?.[1])
-    },[timeSpirit])
+      // console.log(timeSpirit,"timeSpirit")
+      setTime(courseTime?.start)
+      setEndTime(courseTime?.end)
+    },[courseTime])
     const [dayOfWeek, setDayOfWeek] = useState([String(dayOfWeeksItem)]);
-    useEffect(() => {
-      // setDayOfWeek([String])
-      // console.log(dayOfWeeksItem,"AddCourse")
-      console.log(dayOfWeek, 'dayOfWeek');
-    }, [dayOfWeek]);
     const [time, setTime] = useState();
     const [endTime, setEndTime] = useState();
     const [CURRICULUM, setCURRICULUM] = useState({
@@ -349,7 +344,7 @@ export default function reorganize() {
       return `${timeStr}-${endTimeStr}`;
     };
     const submitCourse = async (values: any) => {
-      const { data } = await instance.post('/api/curriculum/create', values);
+      const { data } = await instance.post('/api/curriculum/item/create', values);
       return data;
     };
 
@@ -360,7 +355,11 @@ export default function reorganize() {
           ...values,
           dayOfWeek: Number(item),
           termId:termId,
-          time: translateTime(time, endTime),
+          // time: translateTime(time, endTime),
+          time: {
+            start: time,
+            end: endTime,
+          },
           mode:mode
         });
         return data;
@@ -457,7 +456,7 @@ export default function reorganize() {
                   round: true,
                 }}
                 title=""
-                defaultValue={timeSpirit[0]}
+                defaultValue={courseTime.start}
                 type="time"
                 minHour="7"
                 maxHour="24"
@@ -494,7 +493,7 @@ export default function reorganize() {
                   round: true,
                 }}
                 title=""
-                defaultValue={timeSpirit[1]}
+                defaultValue={courseTime.end}
                 type="time"
                 minHour="7"
                 maxHour="24"
@@ -656,7 +655,7 @@ export default function reorganize() {
             className="absolute z-0 w-40 h-[140px] -top-0 -right-12"
           ></img>
         </div>
-        {reorganizeData.curriculums.map((item, index) => {
+        {reorganizeData?.curriculums?.map((item, index) => {
           return (
             <ResultItemComponent data={item} key={index}></ResultItemComponent>
           );
@@ -673,12 +672,13 @@ export default function reorganize() {
     null,
   );
   const { data: termList } = useFetch('/campus/term/list', 'get', {
-    campusId: campusId,
+    campusId: campusId || 1,
   });
   const [termId, setTermIdValue] = React.useState<any>();
   const CPicker = (props) => {
     const [loading, setLoading] = React.useState(false);
     const [value, setValue] = useState(termId);
+    if(!termList?.data) return
     return (
       <Picker
         popup={{

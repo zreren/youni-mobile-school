@@ -119,10 +119,17 @@ const StyledTab = styled((props: StyledTabProps) => (
 }));
 
 export default function CustomizedTabs(props) {
-  let { id } = props;
+  let { id,type } = props;
   if (!id) {
     id = 0;
   }
+  React.useEffect(()=>{
+    console.log(id,"id")
+  },[id])
+  React.useEffect(()=>{
+    console.log(type,"type")
+    setValue(id)
+  },[id])
   const [value, setValue] = React.useState(id);
   const { headerMenuList, className } = props;
   const handleChange = (newValue: number):void => {

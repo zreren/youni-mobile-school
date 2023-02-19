@@ -172,7 +172,7 @@ function index(props) {
 
   const PostTag = (props) => {
     const { tag } = props;
-    return <div className="mt-2 text-[#2347D9] text-sm">#{tag}</div>;
+    return <div className="mt-2 text-[#2347D9] text-sm">{tag}</div>;
   };
 
   const CImage = (props) => {
@@ -337,12 +337,12 @@ function index(props) {
               : data?.data?.form?.prices?.text === '0'
               ? null
               : data?.data?.form?.prices?.showOldPrice
-              ? data?.data?.form?.prices?.oldPrice
+              ? data?.data?.form?.prices?.oldPrice + data?.data?.form?.prices?.pricesUnit
               : null}
           </div>
         </div>
         <div className="mt-4 post-content">{data?.data?.body}</div>
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center space-x-2">
           {data?.data?.topic?.map((item, index) => {
             return <PostTag key={index} tag={item}></PostTag>;
           })}

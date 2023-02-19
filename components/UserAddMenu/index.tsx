@@ -73,7 +73,7 @@ export default function index(props) {
           body.style.overflow = 'scroll';
           router.push({
             pathname: '/[campus]/post/addPost',
-            query: { campus: selectSchool },
+            query: { campus: selectSchool ,type:'book'},
           });
         }}
         className={styles.element}
@@ -86,7 +86,7 @@ export default function index(props) {
           body.style.overflow = 'scroll';
           router.push({
             pathname: '/[campus]/post/addPost',
-            query: { campus: selectSchool },
+            query: { campus: selectSchool ,type:'idle'},
           });
         }}
         className={styles.element}

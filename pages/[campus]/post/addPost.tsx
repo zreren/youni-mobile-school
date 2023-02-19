@@ -51,6 +51,7 @@ import CourseIcon from './assets/actives/course.svg';
 import DeliveryRadio from './assets/actives/deliveryRadio.svg';
 import { set } from 'react-hook-form';
 import { json } from 'stream/consumers';
+import { useRouter } from 'next/router';
 
 export default function addPost() {
   const Footer = () => {
@@ -154,6 +155,13 @@ export default function addPost() {
   const [content, setContent] = React.useState('');
   const [form] = Form.useForm();
   const [type, setType] = React.useState(headerMenuList[0].key);
+  const router = useRouter();
+  useEffect(() => {
+    console.log(router, 'router');
+    if (router.query.type) {
+      setType(router.query.type as string);
+    }
+  },[router])
 
   const [previews, setPreviews] = React.useState([]);
   // useEffect(() => {
@@ -1201,6 +1209,47 @@ export default function addPost() {
       </SwipeableDrawer>
     );
   };
+  const DeliveryRadioMenu = ()=>{
+    const [state, setState] = useState('实体书')
+    useEffect(()=>{
+      form.setFieldValue('delivery',state)
+    },[state])
+    return (
+      <div className="ml-8 h-full flex items-center justify-end pr-1 rounded-lg">
+      <div className="border-[#DCDDE1] border  overflow-hidden  rounded-lg  h-[28px]   flex ">
+        <div
+          onClick={() => {
+            setState( '实体书' );
+          }}
+          className={classnames(
+            'w-full whitespace-nowrap flex justify-center px-2 items-center text-center text-[#A9B0C0]',
+            {
+              'bg-slate-50 text-[#FFD036]':
+                state === '实体书',
+            },
+          )}
+        >
+          实体书
+        </div>
+        <div
+          onClick={() => {
+            setState(  '电子书' );
+          }}
+          className={classnames(
+            'w-full  flex justify-center px-2 items-center text-center text-[#A9B0C0]',
+            {
+              'bg-slate-50 text-[#FFD036]':
+                state === '电子书',
+            },
+          )}
+        >
+          电子书
+        </div>
+        <div></div>
+      </div>
+    </div>
+    )
+  }
   const [placeName, setPlaceName] = useState();
   const dynamicFormData = React.useMemo(
     () => dynamicForm?.data ?? [],
@@ -1331,6 +1380,11 @@ export default function addPost() {
                   : form.getFieldValue('prices')?.text || '点击输入价格信息'}
               </div>
             )}
+            {
+              item.type === 'deliveryRadio' && (
+                <DeliveryRadioMenu></DeliveryRadioMenu>
+              )
+            }
             {/* {
             ite
           } */}
@@ -1507,6 +1561,12 @@ export default function addPost() {
           change={(e) => {
             changeCategory(headerMenuList[e].key);
           }}
+          id={headerMenuList.map((item,index) => {
+            if(item.key === type){
+              return index
+            }
+          }).filter((item)=> item !== undefined)[0]}
+          // value={type}
           headerMenuList={headerMenuList}
           className="mt-0"
         ></PostCategory>
@@ -1638,6 +1698,7 @@ export default function addPost() {
             dynamicForm={dynamicForm}
           ></DynamicForm>
         </Form>
+        <div className='mb-8'></div>
       </div>
       <Footer></Footer>
     </div>

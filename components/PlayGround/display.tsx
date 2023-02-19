@@ -23,6 +23,7 @@ export default function Display(props) {
     activity: 'pink-gradient',
     group: 'green-gradient',
     carpool: 'carpool-gradient',
+    book: 'yellow-gradient',
   };
   interface imageSize {
     width: string | number;

@@ -131,7 +131,7 @@ export default function AddSchedule(props) {
   const fetchData = (e) => {
     setCourseId(e);
   };
-  const { data: courseData, mutate } = useFetch('/curriculum/detail', 'get', {
+  const { data: courseData, mutate } = useFetch('/curriculum/item/detail', 'get', {
     id: router.query.id,
   });
   const submitCourse = async (values: any) => {
@@ -311,17 +311,24 @@ export default function AddSchedule(props) {
       sectionId: null,
       sectionName: null,
       professorName: '',
-      time:''
+      time:{
+        start:'',
+        end:''
+      }
+      // time:''
     });
     const [dayOfWeek, setDayOfWeek] = useState([String(data?.dayOfWeek)]);
+    const timeStr = useMemo(()=>{
+      return CURRICULUM.time.start + '-' + CURRICULUM.time.end
+    },[CURRICULUM])
     const timeSpirit = useMemo(()=>{
       console.log(CURRICULUM.time,"courseTime")
       if(!CURRICULUM.time) return ["7:00","7:00"];
-        const pattern =  /^(\d{1,2}.\d{2})-(\d{1,2}.\d{2})$/;
-        const match = CURRICULUM.time?.match(pattern);
+        const pattern =  /^(\d{1,2}:\d{2})-(\d{1,2}:\d{2})$/;
+        const match = timeStr?.match(pattern);
         console.log(match,"match")
         if (!match) return ["7:00","7:00"];
-        return [match[1].replace('.',':'), match[2].replace('.',':')];
+        return [match[1], match[2]];
     },[CURRICULUM])
     useEffect(()=>{
       console.log(timeSpirit,"timeSpirit")
