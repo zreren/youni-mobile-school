@@ -1209,6 +1209,9 @@ export default function addPost() {
   const [pricesVisible, setPricesVisible] = useState(false);
   const [contactVisible, setContactVisible] = useState(false);
   const [ideaPricesVisible, setIdeaPricesVisible] = useState(false);
+  const StartTimeData = React.useMemo(() => {
+    console.log('StartTime render count ++');
+  },[form])
   const DynamicForm = React.useCallback(
     (props: any) => {
       const data = React.useMemo(
@@ -1219,6 +1222,7 @@ export default function addPost() {
         console.log('DynamicForm render count ++');
       }, []);
       return data?.map((item) => {
+       const [state,setState] = useState(form.getFieldValue(item.dataIndex))
         // const Node = React.useCallback(()=>{
         //   console.log('render count ++')
         //   return customComponents[item.type]
@@ -1245,10 +1249,12 @@ export default function addPost() {
             // children={()=>{
             //   return <Node></Node>
             // }}
+            trigger='onConfirm'
             valuePropName="checked"
             onClick={
               item.type === 'time'
                 ? (_, action) => {
+                    console.log(_,"action")
                     action.current?.open();
                   }
                 : () => {
@@ -1267,8 +1273,17 @@ export default function addPost() {
               <PickLocation location={''} placeName={placeName}></PickLocation>
             )}
             {item.type === 'time' && (
-              <DatetimePicker popup type="datetime">
-                {(val: Date) => (val ? val.toDateString() : '请选择日期')}
+              <DatetimePicker
+              minDate={new Date()}
+              onChange={(data)=>{
+                console.log(data,"DatetimePicker")
+                setState(data)
+              }} value={state} popup type="datetime">
+                {(val: Date,_,actions) => (val ? val.toDateString() : <div onClick={()=>{
+                    actions.open()
+                }}>
+                {"请选择日期" || val.toDateString()}
+                </div>)}
               </DatetimePicker>
             )}
             {item.type === 'Switch' && (
@@ -1289,6 +1304,16 @@ export default function addPost() {
                 }}
               ></Input>
             )}
+            {
+              item.type === 'type' && (
+                <Input
+                placeholder="请输入"
+                onChange={(v) => {
+                  form.setFieldValue(item.dataIndex, v);
+                }}
+              ></Input>
+              )
+            }
             {item.type === 'contact' && (
               <div
                 onClick={() => {
@@ -1312,8 +1337,9 @@ export default function addPost() {
           </Form.Item>
         );
       });
-    },
-    [dynamicForm, placeName, form],
+    }
+    // (pre) => {if(form.validateFields)}
+    ,[dynamicForm, placeName, form,form.getFieldValue('startTime')],
   );
   const [topicVisible, setTopicVisible] = useState(false);
   const TopicDrawer = useCallback(
