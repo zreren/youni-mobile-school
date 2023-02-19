@@ -503,7 +503,6 @@ function index(props) {
     const { data: liked } = useFetch('/post/liked', 'get');
     const { data: stard } = useFetch('/post/stard', 'get');
     const { data: PostGroupData } = useFetch('/collection/followed', 'get');
-    if (!liked || !stard) return null;
     const postData = React.useMemo(() => {
       if(liked?.data && stard?.data){
         return (
@@ -517,6 +516,8 @@ function index(props) {
         return stard?.data
       }
     }, [liked,stard]);
+    if (!liked || !stard) return null;
+
     // const { data: collectionData, mutate } = useFetch(
     //   '/collection/detail',
     //   'get',

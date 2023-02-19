@@ -679,7 +679,7 @@ export default function reorganize() {
   const campus = router.query.campus;
   const [school] = useLocalStorage('school', null);
   const [campusId] = useLocalStorage(
-    (campus as string) || school?.toLocaleLowerCase(),
+    (campus as string) || school?.toLocaleLowerCase() || 1,
     null,
   );
   const { data: termList } = useFetch('/campus/term/list', 'get', {

@@ -41,6 +41,11 @@ import CourseIcon3 from './courseIcon3.svg';
 import CourseIcon4 from './courseIcon4.svg';
 import useRequest from '@/libs/request';
 import { useSelector } from 'react-redux';
+import useUser from '@/hooks/useUser';
+import SchedulesIcon from './schedulesIcon.svg';
+import LoveIcon from './heart.svg';
+// import classnames from 'classnames';
+import LovedIcon from './hearted.svg';
 
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
@@ -71,7 +76,70 @@ export default function Schedules() {
   const calendarRef = useRef<any>();
   const router = useRouter();
   const [menu, setMenu] = useState(0);
+  const [isStart,setIsStart] = useState(false)
+  const starCurriculum = async (id)=>{
+    setIsStart(!isStart);
+    return;
+    const {data} = await useRequest.post('/api/curriculum/starCurriculum',{
+      curriculumId:id,
+    });
+    if(data?.message === 'success'){
+      Toast.success('收藏成功');
+    }
+  }
   const Footer = (props) => {
+    if(isOwner){
+      return (
+       <div className='fixed bottom-0 shadow z-30 h-20 w-full bg-white px-4 flex justify-center '>
+         <div className='w-full font-semibold space-x-2 h-10 mt-2 flex justify-center items-center  text-[#8C6008]  bg-[#FFD036]'>
+            <SchedulesIcon></SchedulesIcon>
+            <div className='text-sm' onClick={()=>{
+              router.push({
+                pathname: '/Schedules/Schedules',
+                query: {
+                  campus: router.query.campus,
+                },
+              })
+            }}>返回我的课表</div>
+        </div>
+       </div>
+      )
+    }else{
+
+      return (
+        <div className='fixed space-x-2 bottom-0 shadow z-30 h-20 w-full bg-white px-4 flex justify-center '>
+        <div className='w-full font-semibold space-x-2 h-10 mt-2 flex justify-center items-center  text-[#8C6008]  bg-[#FFD036]'>
+           <SchedulesIcon></SchedulesIcon>
+           <div className='text-sm' onClick={()=>{
+             router.push({
+               pathname: '/Schedules/Schedules',
+               query: {
+                 campus: router.query.campus,
+               },
+             })
+           }}>返回我的课表</div>
+       </div>
+       {/* 255,235,235 */}
+       <div className={
+          classnames('w-full font-semibold space-x-2 h-10 mt-2 flex justify-center items-center  bg-[#FFD036]',{
+            'bg-[#FF6E69] text-white':isStart,
+            'bg-[#FFEBEB] text-[#FF6E69]':!isStart,
+          })
+       } 
+       onClick={()=>{
+        if(!isStart){
+        starCurriculum(router.query.curriculumId)
+       }}}
+       >
+        {isStart?<LovedIcon></LovedIcon>:<LoveIcon></LoveIcon>}
+           <div className='text-sm' onClick={()=>{
+           }}>
+            {isStart?'已收藏课表':'收藏课表'}
+           </div>
+       </div>
+      </div>
+      )
+    }
     return (
       <div className="w-full items-center space-x-2 flex h-20 bg-white z-30 px-2 fixed bottom-0 ">
         <div className="border-[#DCDDE1] border rounded-lg overflow-hidden w-full h-[32px]  flex ">
@@ -172,6 +240,7 @@ export default function Schedules() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [yearMethod, setYearMethod] = useState(false);
   const [studentId,setStudentId] = useState(router.query.id);
+  const [curriculumId,setCurriculumId] = useState(router.query.curriculumId);
   useEffect(()=>{
     setStudentId(router.query.id)
   },[router.query.id])
@@ -179,9 +248,10 @@ export default function Schedules() {
     `/curriculum/view`,
     'get',
     {
-      campusId: 1,
-      studentId: studentId,
-      termId: termInfo?.data?.id,
+      curriculumId:curriculumId
+      // campusId: 1,
+      // studentId: studentId,
+      // termId: termInfo?.data?.id,
     }
   );
   useEffect(()=>{
@@ -197,10 +267,19 @@ export default function Schedules() {
     endDate.setDate(today.getDate() - dayOfWeek + 6);
     return [startDate, endDate];
   }
+  const {user} = useUser();
+
+  const isOwner = React.useMemo(() => {
+    return user?.id === Number(router.query.id);
+  }, [user, router.query.id])
+
+  useEffect(()=>{
+    console.log(isOwner,"isOwner")
+  },[isOwner])
   const weekDate = getPastWeekDates();
   if (data?.data) {
     courseData = getCourses(
-      data.data,
+      data?.data?.item,
       new Date(termInfo?.data?.startDate),
       new Date(termInfo?.data?.endDate),
     );

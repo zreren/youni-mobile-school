@@ -440,7 +440,9 @@ export default function userComment() {
         </div>
       </div>
      <div className='fixed bottom-12 w-full'>
-     <FooterDiscussionInput method={'course'} send={()=>{}} data={data?.data}></FooterDiscussionInput>
+     <FooterDiscussionInput method={'course'} send={()=>{
+      
+     }} data={data?.data}></FooterDiscussionInput>
      </div>
     </>
   );

@@ -244,7 +244,7 @@ export default function Valid() {
           <div className="text-2xl font-medium">Email Verification</div>
           <div>
             Enter the 6-digit verification code you received at
-            {mail}. The code are valid for 30 minutes
+            {globalMail}. The code are valid for 30 minutes
           </div>
           <div className="mt-6 mb-6">
             <input

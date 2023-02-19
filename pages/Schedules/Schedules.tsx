@@ -43,6 +43,7 @@ import useRequest from '@/libs/request';
 import { useSelector } from 'react-redux';
 import { Uploader } from 'react-vant';
 import useUser from '@/hooks/useUser';
+import useCurriculum from '@/hooks/useCurriculum';
 // import { stringify } from 'querystring';
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
@@ -492,6 +493,7 @@ export default function Schedules() {
       );
     };
     const { user } = useUser();
+    const {defaultCurriculum} = useCurriculum();
     return (
       <SwipeableDrawer
         anchor="bottom"
@@ -522,6 +524,8 @@ export default function Schedules() {
                   pathname: '/Schedules/share',
                   query: {
                     id: user?.id,
+                    curriculumId : defaultCurriculum.id,
+                    campus: router.query.campus,
                   },
                 });
               }}
