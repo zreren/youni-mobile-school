@@ -133,25 +133,7 @@ export default function idValid() {
       </Picker>
     );
   };
-  const upload = async (file) => {
-    console.log(file, 'file');
-    try {
-      const body = new FormData();
-      body.append('file', file);
-      const { data: resp } = await useRequest.post('/api/upload', body);
-      const json = resp;
-      console.log(json?.data, 'json');
-      updateData('fontImg', json?.data?.filename);
-      // return包含 url 的一个对象 例如: {url:'https://img.yzcdn.cn/vant/sand.jpg'}
-      return {
-        url: Cons.BASEURL + json?.data?.filename,
-        name: json?.data?.filename,
-      };
-    } catch (error) {
-      console.log(error, 'error');
-      return { url: `demo_path/${file.name}` };
-    }
-  };
+
 
   const InputComponent = (props) => {
     let { label, type, dataIndex, children } = props;
