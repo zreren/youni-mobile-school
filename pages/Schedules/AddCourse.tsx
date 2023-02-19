@@ -20,6 +20,7 @@ import instance from '@/libs/request';
 import classnames from 'classnames';
 import useFetch from '../../hooks/useFetch';
 import useLanguage from '@/hooks/useLanguage';
+import useCurriculum from '@/hooks/useCurriculum';
 
 const CCourseTime = (props) => {
   return (
@@ -493,7 +494,7 @@ export default function AddSchedule() {
       </div>
     );
   };
-
+  const {defaultCurriculum} = useCurriculum();
   const AddCourse = (props) => {
     const [dayOfWeek, setDayOfWeek] = useState([]);
     const [time, setTime] = useState();
@@ -554,7 +555,8 @@ export default function AddSchedule() {
           time: {
             start: time,
             end: endTime,
-          }
+          },
+          curriculumId:defaultCurriculum.id,
           // translateTime(time, endTime),
         });
         return data;

@@ -11,6 +11,8 @@ import UserComment from './user-comment';
 import { useRouter } from 'next/router';
 import useFetch from '@/hooks/useFetch';
 import { Loading } from 'react-vant';
+import FooterDiscussionInput from '@/components/Input/FooterDiscussionInput';
+
 export default function ProfessorDetail() {
   const [currentSelectId, setCurrentSelectId] = useState<null|number>(0);
   // const [CourseID, setCourseID] = useState<null|number>(null);
@@ -112,6 +114,11 @@ export default function ProfessorDetail() {
           <UserComment  data={item} key={index}></UserComment>
         )
       }): <Loading type="spinner" color="#FED64B" />}
+       <div className='fixed bottom-12 w-full'>
+     {/* <FooterDiscussionInput method={'course'} send={()=>{
+      
+     }} data={data?.data}></FooterDiscussionInput> */}
+     </div>
       {/* <UserComment></UserComment> */}
     </CommonLayout>
   );

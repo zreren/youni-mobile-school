@@ -158,7 +158,7 @@ export default function FooterDiscussionInput(props: FooterType) {
         }}
         open={openList}
       ></SelectPostGroupItem>
-      <div className="sticky  z-30 bottom-0 flex   items-center w-full p-5 bg-white h-[60px]">
+      <div className="sticky  z-30 topIndexPlus bottom-0 flex   items-center w-full p-5 bg-white h-[60px]">
         <div className="absolute flex  items-center font-medium left-7 text-sm text-[#798195]">
           <DiscussionIcon></DiscussionIcon>
           {data?.comments?.length}
@@ -175,6 +175,7 @@ export default function FooterDiscussionInput(props: FooterType) {
           <div
             className="flex items-center ml-4 space-x-1"
             onClick={() => {
+              if(props.method === 'course') return
               setOpenList(true);
               // starPost(data?.id);
             }}

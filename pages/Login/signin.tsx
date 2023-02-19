@@ -32,6 +32,7 @@ import useRequest from '@/libs/request';
 import { Popup, Toast } from 'react-vant';
 import { setOpenLogin } from '../../stores/authSlice';
 import SignUp from './signup';
+import ReSetPasswordEmail from './reSetPasswordEmail';
 // import { useDispatch } from 'react-redux';
 
 export default function SignIn(props) {
@@ -138,7 +139,7 @@ export default function SignIn(props) {
               <div className='pt-4  pb-4 text-[#37455C] '>Reset password with</div>
               {/* <div> */}
               <div onClick={()=>{ setProgress(2);}} className='py-4 text-[#798195]'>Phone number</div>
-              <div className='py-4 text-[#798195]'>Email</div>
+              <div onClick={()=>{ setProgress(3);}}  className='py-4 text-[#798195]'>Email</div>
               <div onClick={() => setVisible(false)} className='py-4 text-[#A9B0C0]'>Cancel</div>
               {/* </div> */}
             </div>
@@ -451,7 +452,7 @@ export default function SignIn(props) {
   };
   const [progress, setProgress] = useState(0);
   const [role, selectRole] = useState('Student');
-  const ProgressList = [SelectSignUpWay, ChooseYourRole, Forget];
+  const ProgressList = [SelectSignUpWay, ChooseYourRole, Forget,ReSetPasswordEmail];
   const Node = ProgressList[progress];
   React.useEffect(() => {
     dispatch(setAuthState(false));

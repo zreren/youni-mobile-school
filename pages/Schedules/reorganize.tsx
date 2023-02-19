@@ -20,6 +20,7 @@ import ConfirmIcon from './confirmicon.svg';
 import TextField from '@mui/material/TextField';
 import DeleteIcon from './deleteicon.svg';
 import { useLocalStorage } from 'react-use';
+import useCurriculum from '@/hooks/useCurriculum';
 
 interface ChangeType {
   id: number;
@@ -224,6 +225,8 @@ export default function reorganize() {
       </div>
     );
   };
+  const {defaultCurriculum} = useCurriculum();
+
   const [reorganizeData, setReorganizeData] = React.useState<any>([]);
   // const upload = async (file: File) => {
   //   console.log(file)
@@ -348,8 +351,15 @@ export default function reorganize() {
       return data;
     };
 
+    useEffect(()=>{
+      console.log(defaultCurriculum,"defaultCurriculum")
+    },[defaultCurriculum])
     const submitForm = async (values: any) => {
       // return;
+      if(!defaultCurriculum){
+        Toast.fail('请先创建课程表')
+        return;
+      }
       const requestQueen = dayOfWeek.map(async (item) => {
         const data = await submitCourse({
           ...values,
@@ -360,6 +370,7 @@ export default function reorganize() {
             start: time,
             end: endTime,
           },
+          curriculumId:defaultCurriculum.id,
           mode:mode
         });
         return data;
