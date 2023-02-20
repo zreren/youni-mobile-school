@@ -524,7 +524,7 @@ export default function Schedules() {
                   pathname: '/Schedules/share',
                   query: {
                     id: user?.id,
-                    curriculumId : defaultCurriculum.id,
+                    curriculumId : defaultCurriculum?.id,
                     campus: router.query.campus,
                   },
                 });

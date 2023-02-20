@@ -370,7 +370,7 @@ export default function reorganize() {
             start: time,
             end: endTime,
           },
-          curriculumId:defaultCurriculum.id,
+          curriculumId:defaultCurriculum?.id,
           mode:mode
         });
         return data;

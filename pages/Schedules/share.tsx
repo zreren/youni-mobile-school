@@ -240,7 +240,7 @@ export default function Schedules() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [yearMethod, setYearMethod] = useState(false);
   const [studentId,setStudentId] = useState(router.query.id);
-  const [curriculumId,setCurriculumId] = useState(router.query.curriculumId);
+  const curriculumId = React.useMemo(() => router.query.curriculumId, [router.query.curriculumId])
   useEffect(()=>{
     setStudentId(router.query.id)
   },[router.query.id])
@@ -256,8 +256,38 @@ export default function Schedules() {
   );
   useEffect(()=>{
     mutate()
-  },[studentId])
-  let courseData;
+  },[studentId,curriculumId])
+  const tempData = React.useMemo(() => {
+    if (!data?.data) return null;
+    return data?.data?.items.map((item) => {
+      return {
+        ...item,
+        // dayOfWeek: item?.time?.dayOfWeek,
+        time: item?.time?.start + '-' + item?.time?.end,
+      };
+    });
+  }, [data]);
+  const weekDate = getPastWeekDates();
+
+  const courseData = React.useMemo(() => {
+      const res =  getCourses(
+        tempData,
+        new Date(termInfo?.data?.startDate),
+        new Date(termInfo?.data?.endDate),
+      );
+      return addFullStartDate(res, weekDate)
+      // const all = addFullStartDate(courseData, weekDate);
+      console.log(courseData, 'courseData');
+  },[data,,studentId,termInfo,weekDate,curriculumId])
+
+  useEffect(()=>{
+    console.log(tempData,'tempData')
+  },[tempData])
+  useEffect(()=>{
+    console.log(courseData,"courseData")
+  },[courseData])
+
+
   function getPastWeekDates(): [Date, Date] {
     const today = new Date();
     const startDate = new Date();
@@ -276,16 +306,15 @@ export default function Schedules() {
   useEffect(()=>{
     console.log(isOwner,"isOwner")
   },[isOwner])
-  const weekDate = getPastWeekDates();
-  if (data?.data) {
-    courseData = getCourses(
-      data?.data?.item,
-      new Date(termInfo?.data?.startDate),
-      new Date(termInfo?.data?.endDate),
-    );
-    const all = addFullStartDate(courseData, weekDate);
-    console.log(all, 'courseData');
-  }
+  // if (data?.data) {
+  //   courseData = getCourses(
+  //     data?.data?.item,
+  //     new Date(termInfo?.data?.startDate),
+  //     new Date(termInfo?.data?.endDate),
+  //   );
+  //   const all = addFullStartDate(courseData, weekDate);
+  //   console.log(all, 'courseData');
+  // }
   const openLogin = useSelector(selectOpen);
   React.useEffect(() => {
     if (!data) return;

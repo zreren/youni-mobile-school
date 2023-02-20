@@ -407,6 +407,7 @@ function Calendar(props) {
     }, [todayItemCount]);
     type ObjectType = { [key: string]: any };
     function mergeObjects(objects: ObjectType[]): ObjectType {
+      if(!objects[1].length || !objects[0].length) return {}
       return objects.reduce((prev, curr) => {
         Object.keys(curr).forEach((key) => {
           if (Array.isArray(prev[key]) && Array.isArray(curr[key])) {
@@ -429,6 +430,7 @@ function Calendar(props) {
           console.log(item, 'item');
           if (setting.view === 'today' && !isToday(item.time)) return null;
           const color = colorMap[index % 3];
+          if(!item) return;
           return (
             <>
               <Identify title={item.time} index={index}></Identify>
