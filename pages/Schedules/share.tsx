@@ -76,16 +76,45 @@ export default function Schedules() {
   const calendarRef = useRef<any>();
   const router = useRouter();
   const [menu, setMenu] = useState(0);
-  const [isStart,setIsStart] = useState(false)
-  const starCurriculum = async (id)=>{
-    setIsStart(!isStart);
-    return;
-    const {data} = await useRequest.post('/api/curriculum/starCurriculum',{
-      curriculumId:id,
-    });
-    if(data?.message === 'success'){
-      Toast.success('收藏成功');
+  const curriculumId = React.useMemo(() => router.query.curriculumId, [router.query.curriculumId])
+  useEffect(()=>{
+    setStudentId(router.query.id)
+  },[router.query.id])
+  const { data, error, mutate } = useFetch(
+    `/curriculum/view`,
+    'get',
+    {
+      id:curriculumId
+      // campusId: 1,
+      // studentId: studentId,
+      // termId: termInfo?.data?.id,
     }
+  );
+  const [isStart,setIsStart] = useState(data?.data?.interactInfo?.shared || false);
+  const starCurriculum = async (id)=>{
+    if(!isStart){
+      setIsStart(true);
+      // return;
+      const {data} = await useRequest.get('/api/curriculum/star',{
+        params:{
+          id
+        }
+      });
+      if(data?.message === 'success'){
+        Toast.success('收藏成功');
+      }
+    }else{
+      setIsStart(false);
+      const {data} = await useRequest.get('/api/curriculum/unstar',{
+        params:{
+          id
+        }
+      });
+      if(data?.message === 'success'){
+        Toast.success('取消收藏成功');
+      }
+    }
+    
   }
   const Footer = (props) => {
     if(isOwner){
@@ -127,9 +156,10 @@ export default function Schedules() {
           })
        } 
        onClick={()=>{
-        if(!isStart){
+        // if(!isStart){
         starCurriculum(router.query.curriculumId)
-       }}}
+      //  }}}
+       }}
        >
         {isStart?<LovedIcon></LovedIcon>:<LoveIcon></LoveIcon>}
            <div className='text-sm' onClick={()=>{
@@ -240,20 +270,8 @@ export default function Schedules() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [yearMethod, setYearMethod] = useState(false);
   const [studentId,setStudentId] = useState(router.query.id);
-  const curriculumId = React.useMemo(() => router.query.curriculumId, [router.query.curriculumId])
-  useEffect(()=>{
-    setStudentId(router.query.id)
-  },[router.query.id])
-  const { data, error, mutate } = useFetch(
-    `/curriculum/view`,
-    'get',
-    {
-      curriculumId:curriculumId
-      // campusId: 1,
-      // studentId: studentId,
-      // termId: termInfo?.data?.id,
-    }
-  );
+
+
   useEffect(()=>{
     mutate()
   },[studentId,curriculumId])

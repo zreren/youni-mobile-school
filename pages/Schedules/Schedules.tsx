@@ -406,6 +406,8 @@ export default function Schedules() {
     return week;
   };
 
+  const { data: curriculumStar } = useFetch('/curriculum/stared', 'get');
+  const { data: curriculumHistory } = useFetch('/curriculum/history', 'get');
 
   const SetSchedule = (props) => {
     const [customImg, setCustomImg] = useLocalStorage('customImg', '');
@@ -493,7 +495,25 @@ export default function Schedules() {
       );
     };
     const { user } = useUser();
-    const {defaultCurriculum} = useCurriculum();
+    const { defaultCurriculum } = useCurriculum();
+    const [historyMode,setHistory] = useState(false)
+    useEffect(()=>{
+      console.log(curriculumId,"curriculumId")
+      otherSchedulesMutate();
+    },[curriculumId])
+    const switchCurriculum = (id) => {
+      if (id === -1) {
+        setStudentId(-1);
+        Toast.success('切换课表为本人');
+        otherSchedulesMutate();
+        return;
+      } else {
+        setStudentId(id?.student?.id);
+        Toast.success('切换课表到用户' + id?.student?.nickName);
+        setCurriculumId(id?.id)
+        return;
+      }
+    };
     return (
       <SwipeableDrawer
         anchor="bottom"
@@ -524,7 +544,7 @@ export default function Schedules() {
                   pathname: '/Schedules/share',
                   query: {
                     id: user?.id,
-                    curriculumId : defaultCurriculum?.id,
+                    curriculumId: defaultCurriculum?.id,
                     campus: router.query.campus,
                   },
                 });
@@ -583,54 +603,107 @@ export default function Schedules() {
             </CCourseInput>
             <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
             <CCourseInput title="切换课表" Icon={Icon5}></CCourseInput>
-            <div className="flex justify-between pl-4 pr-4 mt-4">
+           <div className='flex items-center'>
+           <div className="flex space-x-8 justify-between w-1/2 pl-4 pr-4 mt-4 overflow-x-scroll">
               <div
                 className="flex flex-col items-center"
                 onClick={() => {
-                  setStudentId(-1);
+                  setHistory(false)
+                  switchCurriculum(-1);
                 }}
               >
                 <div className="flex flex-col avatar placeholder">
-                  <div className="bg-[#FFD03640] rounded-full text-neutral-content w-14">
-                    <span className="text-xs font-medium text-[#FFD036]">
+                  <div
+                    className={classnames(
+                      ' rounded-full text-neutral-content w-14',
+                      {
+                        'bg-[#FFD03640]': studentId === -1,
+                        'bg-[#F7F8F9]' : studentId !== -1
+                      },
+                    )}
+                  >
+                    <span
+                      className={classnames('text-xs font-medium ', {
+                        'text-[#FFD036]': studentId === -1,
+                        'text-[#A9B0C0]': studentId !== -1
+                      })}
+                    >
                       我的
                     </span>
                   </div>
                 </div>
                 {/* <div className="text-xs">我的课表</div> */}
               </div>
-              <div
-                className="flex flex-col items-center"
-                onClick={() => {
-                  setStudentId(2);
-                }}
-              >
-                <div className="flex flex-col avatar placeholder">
-                  <div className="bg-[#F7F8F9] rounded-full text-neutral-content w-14">
-                    <span className="text-xs font-medium text-[#A9B0C0]">
-                      Test User
-                    </span>
+              {curriculumStar?.data?.map((item) => {
+                return (
+                  <div
+                    className="flex flex-col items-center"
+                    onClick={() => {
+                      switchCurriculum(item);
+                      setHistory(false)
+                    }}
+                  >
+                    <div className="flex flex-col avatar placeholder">
+                      <div
+                        className={classnames(
+                          'rounded-full text-neutral-content w-14',
+                          {
+                            'bg-[#FFD03640]': studentId === item?.student?.id  && !historyMode,
+                            'bg-[#F7F8F9]' : studentId !== item?.student?.id
+                          },
+                        )}
+                      >
+                        <span
+                          className={classnames('text-xs font-medium ', {
+                            'text-[#FFD036]': studentId === item?.student?.id && !historyMode,
+                            'text-[#A9B0C0]': studentId !== item?.student?.id
+                          })}
+                        >
+                          {item?.student?.nickName}
+                        </span>
+                      </div>
+                    </div>
+                    {/* <div className="text-xs">课表1</div> */}
                   </div>
-                </div>
-                {/* <div className="text-xs">课表1</div> */}
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="flex flex-col avatar placeholder">
-                  <div className="bg-gray-300 rounded-full text-neutral-content w-14">
-                    <span className="text-3xl"></span>
-                  </div>
-                </div>
-                {/* <div className="text-xs">课表2</div> */}
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="flex flex-col avatar placeholder">
-                  <div className="bg-gray-300 rounded-full text-neutral-content w-14">
-                    <span className="text-3xl"></span>
-                  </div>
-                </div>
-                {/* <div className="text-xs">课表3</div> */}
-              </div>
+                );
+              })}
             </div>
+            <div className="flex space-x-8 justify-between w-1/2 pl-4 pr-4 mt-4 overflow-x-scroll">
+              {curriculumHistory?.data?.map((item) => {
+                return (
+                  <div
+                    className="flex flex-col items-center"
+                    onClick={() => {
+                      setHistory(true)
+                      switchCurriculum(item);
+                    }}
+                  >
+                    <div className="flex flex-col avatar placeholder">
+                    <div
+                        className={classnames(
+                          ' rounded-full text-neutral-content w-14',
+                          {
+                            'bg-[#FFD03640]': studentId === item?.student?.id && historyMode,
+                            'bg-[#FBFCFC]' : studentId !== item?.student?.id || !historyMode
+                          },
+                        )}
+                      >
+                        <span
+                          className={classnames('text-xs font-medium ', {
+                            'text-[#FFD036]': studentId === item?.student?.id && historyMode,
+                            'text-[#D4D8E0]': studentId !== item?.student?.id|| !historyMode
+                          })}
+                        >
+                          {item?.student?.nickName}
+                        </span>
+                      </div>
+                    </div>
+                    {/* <div className="text-xs">课表1</div> */}
+                  </div>
+                );
+              })}
+            </div>
+           </div>
           </div>
         </div>
       </SwipeableDrawer>
@@ -644,6 +717,7 @@ export default function Schedules() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [yearMethod, setYearMethod] = useState(false);
   const [studentId, setStudentId] = useState(-1);
+  const [curriculumId,setCurriculumId] = useState()
   const { data, error, mutate } = useFetch(
     `${Cons.API.CURRICULUM.QUERY}`,
     'get',
@@ -655,20 +729,13 @@ export default function Schedules() {
     `/curriculum/view`,
     'get',
     {
-      campusId: campusIdMap,
-      studentId: studentId,
-      termId: 1,
+      id: curriculumId,
+      // campusId: campusIdMap,
+      // studentId: studentId,
+      // termId: 1,
     },
   );
   const { data: timeTableData } = useFetch(`/timetable/query`, 'get');
-  useEffect(() => {
-    otherSchedulesMutate();
-    if (studentId === -1) {
-      // Toast.success('课表已切换回我的')
-    } else {
-      Toast.success('课表已切换到Test User');
-    }
-  }, [studentId]);
   const tempData = React.useMemo(() => {
     if (!data?.data) return null;
     return data?.data[0]?.items.map((item) => {
@@ -679,9 +746,19 @@ export default function Schedules() {
       };
     });
   }, [data]);
-  useEffect(()=>{
-    console.log(tempData,"tempData courseData")
-  },[tempData])
+  const otherTemData = React.useMemo(()=>{
+    if (!otherSchedules?.data) return null;
+    return otherSchedules?.data?.items.map((item) => {
+      return {
+        ...item,
+        // dayOfWeek: item?.time?.dayOfWeek,
+        time: item?.time?.start + '-' + item?.time?.end,
+      };
+    });
+  },[otherSchedules,curriculumId,studentId])
+  useEffect(() => {
+    console.log(tempData, 'tempData courseData');
+  }, [tempData]);
   // const []
   // const currentDate = new Date();
   // currentDate.setDate(currentDate.getDate()+7)
@@ -697,32 +774,31 @@ export default function Schedules() {
   }
   const weekDate = getPastWeekDates();
 
-
   const courseData = useMemo(() => {
     if (data && studentId === -1) {
-      const res =  getCourses(
+      const res = getCourses(
         tempData,
         new Date(termInfo?.data?.startDate),
         new Date(termInfo?.data?.endDate),
       );
-      return addFullStartDate(res, weekDate)
+      return addFullStartDate(res, weekDate);
       // const all = addFullStartDate(courseData, weekDate);
       console.log(courseData, 'courseData');
     }
     if (otherSchedules?.data && studentId !== -1) {
-      const res =  getCourses(
-        otherSchedules?.data,
+      const res = getCourses(
+        otherTemData,
         new Date(termInfo?.data?.startDate),
         new Date(termInfo?.data?.endDate),
       );
-      return addFullStartDate(res, weekDate)
+      return addFullStartDate(res, weekDate);
       const all = addFullStartDate(courseData, weekDate);
       console.log(courseData, 'courseData');
     }
-  },[data,otherSchedules,studentId,termInfo,weekDate])
-  useEffect(()=>{
-    console.log(courseData,'courseData')
-  },[courseData])
+  }, [data, otherSchedules, curriculumId,studentId, termInfo, weekDate]);
+  useEffect(() => {
+    console.log(courseData, 'courseData');
+  }, [courseData]);
   const openLogin = useSelector(selectOpen);
   React.useEffect(() => {
     if (openLogin === 'login' || openLogin === 'register') {
