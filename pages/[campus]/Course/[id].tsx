@@ -21,6 +21,7 @@ import { Loading } from 'react-vant';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import useLanguage from '@/hooks/useLanguage';
 import EmptyProfessorIcon from './emptyProfessor.svg';
+import EmptyCourseIcon from './emptyCourse.svg';
 // import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function courseEvaluation() {
@@ -64,10 +65,26 @@ export default function courseEvaluation() {
   };
   const EmptyProfessor = () => {
     return (
-      <div className="flex w-full bg-white flex-col justify-center items-center py-8 rounded-lg">
+      <div className="flex w-full bg-white flex-col justify-center items-center py-8 h-[100vh-200px] rounded-lg">
         <EmptyProfessorIcon></EmptyProfessorIcon>
         <div className="flex text-xs mt-6 justify-center items-center text-[#A9B0C0]">
-          {useLanguage('') === 'e' ? 'There are no professors yet' : '目前还没有教授'}
+          {useLanguage('') === 'e' ? '目前还没有教授' : '目前还没有教授'}
+        </div>
+      </div>
+    );
+  };
+  const EmptyCourse= () => {
+    return (
+      <div className="flex w-full bg-white flex-col justify-center items-center py-8  h-[100vh-200px]  rounded-lg">
+        <EmptyCourseIcon></EmptyCourseIcon>
+        <div className="flex text-xs mt-6 justify-center items-center text-[#A9B0C0]">
+          <span>{useLanguage('') === 'e' ? '目前还没有课评，' : '目前还没有课评，'}</span>
+          <span onClick={()=>{
+            router.push({
+              pathname: `/[campus]/course/evaluation`,
+              query: { campus: router.query.campus ,id:CourseId},
+            })
+          }} className='text-[#3665FF]'>点击评价课程</span>
         </div>
       </div>
     );
@@ -250,13 +267,7 @@ export default function courseEvaluation() {
               return <UserComment data={item} key={item.id}></UserComment>;
             })
           ) : (
-            <div>
-              <div className="flex justify-center items-center text-gray-300">
-                {useLanguage('') === 'e'
-                  ? 'waiting for evaluation'
-                  : '暂无评价'}
-              </div>
-            </div>
+            <EmptyCourse></EmptyCourse>
           )}
         </div>
       </div>
