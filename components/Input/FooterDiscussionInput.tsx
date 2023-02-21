@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState,useImperativeHandle,forwardRef } from 'react';
 import StarIcon from './star.svg';
 import DiscussionIcon from './DiscussionIcon.svg';
 import useRequest from '@/libs/request';
@@ -118,7 +118,7 @@ const SelectPostGroupItem = (props): JSX.Element => {
  * @param props
  * @returns
  */
-export default function FooterDiscussionInput(props: FooterType) {
+ const  FooterDiscussionInput = forwardRef((props: FooterType,ref) =>{
   const [comment, setComment] = useState<string>('');
   const { data } = props;
   const [star, setStar] = useState<boolean>(data?.interactInfo?.stared);
@@ -128,6 +128,12 @@ export default function FooterDiscussionInput(props: FooterType) {
     setComment('');
   };
   const inputRef = useRef(null);
+  useImperativeHandle(ref, () => ({ // 暴露给父组件的方法
+     focus: () => {
+      inputRef?.current?.focus()
+    },
+
+ }))
   const focus = ()=>{
     inputRef.current.focus()
   }
@@ -166,14 +172,14 @@ export default function FooterDiscussionInput(props: FooterType) {
         }}
         open={openList}
       ></SelectPostGroupItem>
-      <div className="sticky  z-30 topIndexPlus bottom-0 flex   items-center w-full p-5 bg-white h-[60px]">
+      <div className="sticky  z-30 topIndexPlus bottom-10 flex   items-center w-full p-5 bg-white h-[60px]">
         <div className="absolute flex  items-center font-medium left-7 text-sm text-[#798195]">
           <DiscussionIcon></DiscussionIcon>
           {data?.comments?.length}
         </div>
         <input
           placeholder="说点什么"
-          ref={props.ref}
+          ref={inputRef}
           value={comment}
           className="px-4 pl-12 w-full   h-9 bg-[#F7F8F9] rounded-full"
           onChange={(e) => {
@@ -213,4 +219,7 @@ export default function FooterDiscussionInput(props: FooterType) {
       </div>
     </>
   );
-}
+})
+
+// const child = forwardRef(FooterDiscussionInput)
+export default FooterDiscussionInput

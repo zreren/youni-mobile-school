@@ -252,9 +252,9 @@ function index(props) {
       </div>
     );
   }
-  // const inputRef = React.useRef(null);
+  const inputRef = React.useRef(null);
   const focusInput = () => {
-    // inputRef.current.focus();
+    inputRef.current.focus();
   }
   return (
     <div className="mb-10">
@@ -396,6 +396,7 @@ function index(props) {
           send={(e) => {
             sendComment(e);
           }}
+          ref={inputRef}
           data={data?.data}
         ></FooterDiscussionInput>
       )}

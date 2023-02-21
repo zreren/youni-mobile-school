@@ -416,8 +416,8 @@ export default function index(props) {
           <EmptyIcon></EmptyIcon>
           <div className="mt-8">
             {' '}
-            <span className="text-[#A9B0C0]">目前还没有评论，</span>
-            <span className="text-[#3665FF]">点击评论</span>
+            <span className="text-[#A9B0C0] text-xs">目前还没有评论，</span>
+            <span className="text-[#3665FF] text-xs">点击评论</span>
           </div>
         </div>
       ) : (

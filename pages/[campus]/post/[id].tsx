@@ -237,7 +237,10 @@ function index(props) {
       </div>
     );
   }
-  const inputRef = React.createRef();
+  const inputRef = React.useRef(null);
+  const focusInput = () => {
+    inputRef.current.focus();
+  }
   return (
     <div className="mb-10 w-full h-full">
       <Popup
@@ -334,10 +337,10 @@ function index(props) {
       <div className="w-full h-2 bg-bg"></div>
       <div className="p-5">
         <PostDiscussionInput
-          callDiscussion={()=>{}}
+         callDiscussion={focusInput}
         ></PostDiscussionInput>
         <Discussion
-        callDiscussion={()=>{}}
+        callDiscussion={focusInput}
           commentComment={(e) => {
             commentComment(e);
           }}

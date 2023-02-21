@@ -432,3 +432,7 @@
 .bottom-theTop{
   z-index: 999999999 !important;
 }
+
+.bottom-footer-theTop{
+  z-index: 9999999999 !important;
+}
