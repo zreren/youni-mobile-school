@@ -22,6 +22,94 @@ import { Toast } from 'react-vant';
 import { areOptionsEqual } from '@mui/base';
 import mapRequest from '@/libs/mapRequest';
 import Link from 'next/link';
+import { styled } from '@mui/material/styles';
+import { grey } from '@mui/material/colors';
+import Box from '@mui/material/Box';
+import { Switch } from 'react-vant';
+// import useRequest from "@/libs/request";
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import classnames from 'classnames';
+import Waterfall from '@/components/Layout/Waterfall';
+import TopicIcon from './topic.svg';
+
+
+const PostGroupDetail = (props) => {
+  const { data,isEdit,mutate } = props;
+  const cancelStarPost = async (id)=>{
+    console.log("PostGroupDetail",id,data?.id)
+    await  useRequest.post("/api/post/unstar",{
+      id:id,
+      collectionId:data?.id
+    })
+    Toast.success("移除成功")
+    mutate()
+  }
+  useEffect(()=>{
+    console.log(isEdit,"isEdit")
+  },[isEdit])
+  if (!data) return;
+  return (
+    <div className="w-full h-screen">
+      <div className="w-full h-[126px] bg-[#F7F8F9] p-5 pt-6 mb-2">
+        <div className="flex items-center">
+         
+            <div className=' '>
+              <TopicIcon></TopicIcon>
+            </div>
+           
+          {
+          <div className="ml-4 text-[#37455C] font-semibold text-lg">
+            {props?.topicName}
+          </div>
+          }          
+        </div>
+        <div>
+        </div>
+      </div>
+      {data?.posts?.length > 0 ?<Waterfall
+            key={data?.id + data?.posts?.length}
+            cancelStarPost={(id)=>{cancelStarPost(id)}}
+            postData={data?.posts?.map((item) => {
+              return { ...item, student: { nickName: data?.student?.nickName } };
+            })}
+          ></Waterfall>:<div className='text-[#898E97] flex justify-center'>该文集暂时没有内容</div>}
+    </div>
+  );
+};
+
+const PostGroupDrawer = (props) => {
+  const { open,isEdit,mutate}: { open: boolean,isEdit:boolean,mutate:any} = props;
+  const [id, setId] = useState(props?.id);
+  const Puller = styled(Box)(({ theme }) => ({
+    width: 33,
+    height: 4,
+    backgroundColor: theme.palette.mode === 'light' ? grey[300] : grey[900],
+    borderRadius: 3,
+    position: 'absolute',
+    top: 8,
+    left: 'calc(50% - 15px)',
+  }));
+  return (
+    <SwipeableDrawer
+      className="z-20 bottom-footer-theTop"
+      disableDiscovery={true}
+      disableSwipeToOpen={true}
+      onClose={() => {
+        props.onClose();
+      }}
+      onOpen={() => {
+        props.onOpen();
+      }}
+      open={open}
+      anchor="bottom"
+    >
+      <div className="h-[96vh]">
+        <Puller></Puller>
+        <PostGroupDetail topicName={props.topicName} mutate={()=>{mutate()}} isEdit={isEdit} data={props.data}></PostGroupDetail>
+      </div>
+    </SwipeableDrawer>
+  );
+};
 
 function index(props) {
   const { id } = props;
@@ -173,7 +261,7 @@ function index(props) {
 
   const PostTag = (props) => {
     const { tag } = props;
-    return <div className="mt-2 text-[#2347D9] text-sm">{tag}</div>;
+    return <div onClick={()=>{props.check(tag)}}  className="mt-2 text-[#2347D9] text-sm">{tag}</div>;
   };
 
   const CImage = (props) => {
@@ -256,8 +344,29 @@ function index(props) {
   const focusInput = () => {
     inputRef.current.focus();
   }
+  const [openDetail, setOpenDetail] = useState(false);
+  const [topicName,setTopicName] = useState()
+  const [detailId, setDetailId] = useState(1);
+  const { data: collectionData } = useFetch(
+    '/collection/detail',
+    'get',
+    {
+      id: detailId,
+    },
+  );
   return (
     <div className="mb-10">
+      <PostGroupDrawer
+      topicName={topicName}
+      onOpen={() => {
+        setOpenDetail(true);
+      }}
+      onClose={() => {
+        setOpenDetail(false);
+      }}
+      data={collectionData?.data}
+      open={openDetail}
+      ></PostGroupDrawer>
       <Popup
         overlayClass={'Popup'}
         className="z-30 topIndexPlus rounded-full "
@@ -350,10 +459,12 @@ function index(props) {
         <div className="mt-4 post-content">{data?.data?.body}</div>
         <div className="flex items-center space-x-2">
           {data?.data?.topic?.map((item, index) => {
-            return <PostTag key={index} tag={item}></PostTag>;
+            return <PostTag check={(item)=>{
+              setOpenDetail(true);
+              setTopicName(item);
+            }} key={index} tag={item}></PostTag>;
           })}
         </div>
-
         <div className="flex justify-end">
           <div className="mt-2 border border-[#DCDDE1] w-14 h-6 text-xs rounded-full text-[#A9B0C0] whitespace-nowrap	flex justify-center items-center">
             举报
