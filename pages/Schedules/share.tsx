@@ -32,7 +32,7 @@ import { Cell, Dialog } from 'react-vant';
 import { useRouter } from 'next/router';
 import BgSVG from './bg.svg';
 import ArrowRight from './arrow-right.svg';
-import { setOpenLogin, selectOpen } from '../../stores/authSlice';
+import { setOpenLogin, selectOpen ,setAuthState} from '../../stores/authSlice';
 import { useDispatch } from 'react-redux';
 import { Loading } from 'react-vant';
 import CourseIcon1 from './courseIcon1.svg';
@@ -263,7 +263,7 @@ export default function Schedules() {
     console.log(week);
     return week;
   };
-
+  const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const [scheduleVisible, setScheduleVisible] = useState(false);
   const [addCourse, setAddCourse] = useState(false);
@@ -271,7 +271,12 @@ export default function Schedules() {
   const [yearMethod, setYearMethod] = useState(false);
   const [studentId,setStudentId] = useState(router.query.id);
 
-
+  useEffect(() => {
+    dispatch(setAuthState(false));
+    return ()=>{
+      dispatch(setAuthState(true));
+    }
+  })
   useEffect(()=>{
     mutate()
   },[studentId,curriculumId])
