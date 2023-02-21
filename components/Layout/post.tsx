@@ -75,6 +75,7 @@ function index(props) {
     },[props.data])
     const point = useMemo(()=>{
       console.log(Location,'Location')
+      if(!Location) return null
       const point = Location?.point;
       const bbox_width = 0.005;
       const bbox_height = 0.005;

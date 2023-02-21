@@ -433,7 +433,7 @@ export default function SignUp(props) {
               </Link>{' '}
               to learn how we collect, use and share your data.
             </div>
-            <div className="h-24 pt-8 space-x-2 text-sm text-center bg-bg">
+            <div className="h-20 pt-8 space-x-2 text-sm text-center bg-bg">
               <span className="text-blueTitle">Already have an account? </span>
               <span
                 onClick={() => {
@@ -462,7 +462,7 @@ export default function SignUp(props) {
   }, []);
 
   return (
-    <div>
+    <div className='h-full'>
       {isLogin ? (
         <SignIn
           isLogin={() => {
@@ -470,7 +470,7 @@ export default function SignUp(props) {
           }}
         ></SignIn>
       ) : (
-        <div className="relative w-full h-screen overflow-hidden bg-fixed">
+        <div className="relative w-full h-full overflow-hidden bg-fixed">
           <div className="absolute inset-0 z-0 w-full -top-24">
             <Image
               className="z-0 h-full"

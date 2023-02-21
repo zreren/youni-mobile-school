@@ -121,7 +121,7 @@ export default function LabelBottomNavigation(props) {
         <div className='bg-transparent'>
           <UserAddMenu close={()=>{setValue(0)}}></UserAddMenu>
           <BottomNavigation
-            className="fixed -bottom-1 left-0 z-30 w-full text-sm transition-all bg-transparent"
+            className="fixed -bottom-1 left-0 z-30 bottom-theTop w-full text-sm transition-all bg-transparent"
             value={value}
             showLabels={true}
             onChange={handleChange}
@@ -142,7 +142,7 @@ export default function LabelBottomNavigation(props) {
         </div>
       ) : (
         <BottomNavigation
-          className="fixed -bottom-1 left-0 z-30 w-full  text-sm transition-all "
+          className="fixed -bottom-1 left-0 z-30 bottom-theTop w-full  text-sm transition-all "
           value={value}
           id="bottom-menu"
           showLabels={true}

@@ -26,7 +26,7 @@ export default function index(props) {
         e.stopPropagation();
         e.preventDefault();
       }}
-      className="fixed bottom-0 z-30 justify-center flex  w-screen h-screen backdrop-filter backdrop-blur-2xl"
+      className="fixed bottom-theTop bottom-0 z-30 justify-center flex  w-screen h-screen backdrop-filter backdrop-blur-2xl"
     >
       <div className='max-w-[380px] min-w-[380px] fixed bottom-0 '>
       <div
