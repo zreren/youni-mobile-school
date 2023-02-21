@@ -20,6 +20,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { Loading } from 'react-vant';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import useLanguage from '@/hooks/useLanguage';
+import EmptyProfessorIcon from './emptyProfessor.svg';
 // import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function courseEvaluation() {
@@ -31,7 +32,7 @@ export default function courseEvaluation() {
     `${Cons.API.COURSE.DETAIL}?id=${CourseId}`,
     'get',
   );
-  const [orderState, setOrderState] = React.useState<undefined | string >();
+  const [orderState, setOrderState] = React.useState<undefined | string>();
   const handleChangeOrder = (event: SelectChangeEvent) => {
     console.log(event.target.value, 'event.target.value');
     setOrderState(event.target.value as string);
@@ -61,6 +62,16 @@ export default function courseEvaluation() {
       </div>
     );
   };
+  const EmptyProfessor = () => {
+    return (
+      <div className="flex w-full bg-white flex-col justify-center items-center py-8 rounded-lg">
+        <EmptyProfessorIcon></EmptyProfessorIcon>
+        <div className="flex text-xs mt-6 justify-center items-center text-[#A9B0C0]">
+          {useLanguage('') === 'e' ? 'There are no professors yet' : '目前还没有教授'}
+        </div>
+      </div>
+    );
+  };
   function CustomIconWrapper(props) {
     return <FilterIcon {...props} style={{ transform: 'rotate(0deg)' }} />;
   }
@@ -71,7 +82,7 @@ export default function courseEvaluation() {
         <Search></Search>
         <Title title="热门教授"></Title>
         <HotProfessorCar professorList={professorRankList}></HotProfessorCar>
-        <Title title="教授列表" customClick={() => { }}>
+        <Title title="教授列表" customClick={() => {}}>
           {/* <FilterIcon></FilterIcon> */}
           <Select
             labelId="demo-simple-select-label"
@@ -98,23 +109,25 @@ export default function courseEvaluation() {
           </Select>
         </Title>
         <div className="space-y-4">
-          {props?.length > 0 ?props?.map((item, index) => {
-            return (
-              <ProfessorCard
-                data={item}
-                key={index}
-                onClick={() => {
-                  const campusId = router.query.campus;
-                  router.push({
-                    pathname: `/[campus]/professor/detail/${item.id}`,
-                    query: { campus: CampusId },
-                  });
-                }}
-              ></ProfessorCard>
-            );
-          }):<div>
-          <div className="flex justify-center items-center text-gray-300">{useLanguage('')==='e'?'waiting for adding':'暂无教授'}</div>
-        </div>}
+          {props?.length > 0 ? (
+            props?.map((item, index) => {
+              return (
+                <ProfessorCard
+                  data={item}
+                  key={index}
+                  onClick={() => {
+                    const campusId = router.query.campus;
+                    router.push({
+                      pathname: `/[campus]/professor/detail/${item.id}`,
+                      query: { campus: CampusId },
+                    });
+                  }}
+                ></ProfessorCard>
+              );
+            })
+          ) : (
+            <EmptyProfessor></EmptyProfessor>
+          )}
         </div>
       </CommonLayout>
     );
@@ -140,13 +153,14 @@ export default function courseEvaluation() {
   const [isFilteringOut, setisFilteringOut] = React.useState(true);
 
   const CourseEva = (props) => {
-    type order = 'default' | 'positive' | 'negative'
-    const [evaluationOrder, setEvaluationOrder] = React.useState<order>('default');
+    type order = 'default' | 'positive' | 'negative';
+    const [evaluationOrder, setEvaluationOrder] =
+      React.useState<order>('default');
     const handleChangeEvaluationOrder = (event: SelectChangeEvent) => {
       setEvaluationOrder(event.target.value as order);
       console.log(event.target.value, 'event.target.value');
       const sortFunction = (a, b) => {
-        console.log(a, b, "sortFunction")
+        console.log(a, b, 'sortFunction');
         if (event.target.value === 'positive')
           return b.professorRating - a.professorRating;
         if (event.target.value === 'negative')
@@ -204,7 +218,7 @@ export default function courseEvaluation() {
       <div className="p-4">
         <Title title="数据概览"></Title>
         <CDataGrip data={rating}></CDataGrip>
-        <Title title="课程点评" customClick={() => { }}>
+        <Title title="课程点评" customClick={() => {}}>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
@@ -230,23 +244,32 @@ export default function courseEvaluation() {
           </Select>
         </Title>
         <div>
-          {
-             evaluationData?.data?.length > 0?evaluationData?.data?.map((item, index) => {
+          {evaluationData?.data?.length > 0 ? (
+            evaluationData?.data?.map((item, index) => {
               console.log(item, evaluationOrder, 'item');
               return <UserComment data={item} key={item.id}></UserComment>;
-            }):<div>
-              <div className="flex justify-center items-center text-gray-300">{useLanguage('')==='e'?'waiting for evaluation':'暂无评价'}</div>
+            })
+          ) : (
+            <div>
+              <div className="flex justify-center items-center text-gray-300">
+                {useLanguage('') === 'e'
+                  ? 'waiting for evaluation'
+                  : '暂无评价'}
+              </div>
             </div>
-          }
+          )}
         </div>
       </div>
     );
   };
-  const { data: groupData, error: groupError } = useFetch(`/post/home_list?type=group`, 'get')
+  const { data: groupData, error: groupError } = useFetch(
+    `/post/home_list?type=group`,
+    'get',
+  );
 
   const GroupChat = () => {
     return (
-      <div className='mt-2'>
+      <div className="mt-2">
         <Waterfall postData={groupData?.data}></Waterfall>
       </div>
     );
@@ -285,7 +308,10 @@ export default function courseEvaluation() {
   return (
     <div className="w-screen min-h-screen bg-bg pb-2">
       <Header
-        title={`${courseEvaluation?.data?.subject[useLanguage('name')]?.toUpperCase() || ''} ${courseEvaluation?.data?.code ||'loading...'}`}
+        title={`${
+          courseEvaluation?.data?.subject[useLanguage('name')]?.toUpperCase() ||
+          ''
+        } ${courseEvaluation?.data?.code || 'loading...'}`}
       ></Header>
       <HeaderMenu
         headerMenuList={headerMenuList}
@@ -296,21 +322,12 @@ export default function courseEvaluation() {
 
       {/* <div className='mt-6'></div> */}
       {/* {!Menu ? <Menu></Menu> : null} */}
-      {/* {Menu} */}{
-        Menu === 0 ? Introduce(MyIntroduce) : null
-      }
-      {
-        Menu === 1 ? Evaluation(evaluationData?.data) : null
-      }
-      {
-        Menu === 2 ? <CourseEva {...courseEvaluation?.data} /> : null
-      }
-      {
-        Menu === 3 ? GroupChat() : null
-      }
-      {
-        Menu === 4 ? Pending() : null
-      }
+      {/* {Menu} */}
+      {Menu === 0 ? Introduce(MyIntroduce) : null}
+      {Menu === 1 ? Evaluation(evaluationData?.data) : null}
+      {Menu === 2 ? <CourseEva {...courseEvaluation?.data} /> : null}
+      {Menu === 3 ? GroupChat() : null}
+      {Menu === 4 ? Pending() : null}
     </div>
   );
 }
