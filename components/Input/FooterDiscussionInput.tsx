@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import StarIcon from './star.svg';
 import DiscussionIcon from './DiscussionIcon.svg';
 import useRequest from '@/libs/request';
@@ -127,6 +127,13 @@ export default function FooterDiscussionInput(props: FooterType) {
     props.send(comment);
     setComment('');
   };
+  const inputRef = useRef(null);
+  const focus = ()=>{
+    inputRef.current.focus()
+  }
+  const focusInput = () => {
+    props.ref.current.focus()
+  }
   const starCount = React.useMemo(() => {
     if (defaultStar && !star) {
       return data?.interactInfo?.starCount - 1;
@@ -146,6 +153,7 @@ export default function FooterDiscussionInput(props: FooterType) {
       setStar(true);
     }
   };
+
   return (
     <>
       <SelectPostGroupItem
@@ -165,6 +173,7 @@ export default function FooterDiscussionInput(props: FooterType) {
         </div>
         <input
           placeholder="说点什么"
+          ref={props.ref}
           value={comment}
           className="px-4 pl-12 w-full   h-9 bg-[#F7F8F9] rounded-full"
           onChange={(e) => {

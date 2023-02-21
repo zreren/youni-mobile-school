@@ -150,7 +150,9 @@ export default function Waterfall(props) {
     }
     const PostMemo = useMemo(() => {
       return (
-        <Post stop={() => { stopSwiper() }} start={() => { setAnchor('right') }} id={props.id}></Post>
+        <Post returnClick={()=>{
+          props.setVisible(false);
+        }} stop={() => { stopSwiper() }} start={() => { setAnchor('right') }} id={props.id}></Post>
       )
     }, [id])
     return (

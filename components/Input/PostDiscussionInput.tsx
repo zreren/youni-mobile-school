@@ -4,12 +4,14 @@ import useUser from '@/hooks/useUser';
 import { useDispatch } from 'react-redux';
 import { setOpenLogin } from '../../stores/authSlice';
 
-export default function PostDiscussionInput() {
+export default function PostDiscussionInput(props) {
   const dispatch = useDispatch()
   const { user,loggedOut} = useUser();
   const callLogin =()=>{
     if(loggedOut){
       dispatch(setOpenLogin('login'))
+    }else{
+      props.callDiscussion()
     }
   }
   return (

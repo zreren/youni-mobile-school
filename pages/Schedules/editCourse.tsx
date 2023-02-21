@@ -616,7 +616,7 @@ export default function AddSchedule(props) {
         <div className="flex justify-center mx-10 space-x-4">
           <div
             onClick={() => {
-              router.push('/Schedule');
+              router.back();
             }}
             className="flex items-center
           justify-center w-full text-[#FFD036]

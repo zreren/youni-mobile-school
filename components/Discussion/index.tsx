@@ -410,7 +410,9 @@ export default function index(props) {
       </div>
       <div className="w-full mb-3 bg-border h-px1"></div>
       {comments?.length === 0 ? (
-        <div className="w-full h-[300px] flex flex-col justify-center items-center">
+        <div onClick={()=>{
+          props.callDiscussion()
+        }} className="w-full h-[300px] flex flex-col justify-center items-center">
           <EmptyIcon></EmptyIcon>
           <div className="mt-8">
             {' '}

@@ -1,6 +1,6 @@
 import React from 'react';
 import UserHeader from '@/components/UserHeader';
-import { useRef, useState } from 'react';
+import { useRef, useState ,useEffect,useMemo} from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper';
@@ -21,6 +21,8 @@ import useFetch from '@/hooks/useFetch';
 import { Toast } from 'react-vant';
 import { areOptionsEqual } from '@mui/base';
 import { useRouter } from 'next/router';
+import mapRequest from '@/libs/mapRequest';
+
 function index(props) {
   const router = useRouter()
   // const { id } = props;
@@ -57,28 +59,118 @@ function index(props) {
       mutate({}, true);
     }
   };
-  const Map = () => {
+  interface MapLocation  {
+    point: number[];
+    placename: string;
+  }
+  const Map = React.memo((props:any) => {
+    if(!props?.data?.map) return;
+    const TOKEN = Cons.TOKEN;
+    const [maoSrc,setMapSrc] = React.useState<any>()
+    const Location:MapLocation = React.useMemo(()=>{
+       try {
+        return JSON.parse(props?.data?.location)
+       } catch (error) {
+          return false
+       }
+    },[props.data])
+    const point = useMemo(()=>{
+      console.log(Location,'Location')
+      if(!Location?.point) return null
+      const point = Location?.point;
+      const bbox_width = 0.005;
+      const bbox_height = 0.005;
+      const longitude1 = point[0] - (bbox_width / 2)
+      const latitude1 = point[1] - (bbox_height / 2)
+      const longitude2 = point[0] + (bbox_width / 2)
+      const latitude2 = point[1] + (bbox_height / 2)
+      if(!point) return null
+      return [longitude1,latitude1,longitude2,latitude2]
+    },[Location])
+    if(!Location.point) return
+    if(!point) return
+
+    useEffect(()=>{
+      // if(!point) return
+      // if(!Location?.point) return
+      if(Location?.point){
+        mapRequest.get(
+          `styles/v1/mapbox/streets-v12/static/[${point}]/400x180?access_token=${TOKEN}`,
+          {
+            responseType: 'blob'
+          }
+        )?.then(async(res)=>{
+          // const blob = await res.data.blob()
+          const url = URL.createObjectURL(res.data);
+          setMapSrc(url);
+          console.log(url,'Map')
+          // setMapSrc(res.config.url)
+        })
+      }
+    },[Location?.point])
+    function openMaps(point:number[]) {
+      var lat = point[1]; // 目标地点的纬度
+      var lon = point[0]; // 目标地点的经度
+      var isWeixinBrowser = /MicroMessenger/i.test(navigator.userAgent);
+      if(isWeixinBrowser){
+        Toast.fail('当前在微信中，打开浏览器获得完全体验')
+        return;
+      }
+      var isIOS = /iP(ad|hone|od)/.test(navigator.userAgent); // 检测设备是否为iOS
+      Toast.success('正在打开地图应用')
+      if (isIOS) {
+        // 如果是iOS设备，则打开iOS自带地图应用程序
+        window.location.href = "http://maps.apple.com/?ll=" + lat + "," + lon;
+      } else {
+        // 如果是Android设备，则尝试打开谷歌地图应用程序
+        window.location.href = "comgooglemaps://?q=" + lat + "," + lon;
+        setTimeout(() => {
+          window.location.href = "androidamap://viewMap?sourceApplication=myapp&lat=" + lat + "&lon=" + lon;
+        }, 500);
+        // try {
+        //   window.location.href = "comgooglemaps://?q=" + lat + "," + lon;
+        // } catch (error) {
+        //   try {
+        //     window.location.href = "baidumap://map/geocoder?location=" + lat + "," + lon;
+        //   } catch (error) {
+        //    try {
+        //     window.location.href = "iosamap://viewMap?sourceApplication=myapp&lat=" + lat + "&lon=" + lon;
+        //    } catch (error) {
+        //     Toast.fail('你的手机没有地图应用,无法导航')
+        //    }
+        //   }
+        // }
+        
+      }
+    }
+    // if(!mapContainer.current) return;
     return (
       <div className="w-full relative h-[185px] bg-white px-5 py-4 rounded-xl overflow-hidden 	">
         <div className="w-full h-full overflow-hidden rounded-xl">
-          <img src="/assets/map.png" className="w-full h-full "></img>
+        <div  />
+        {
+          maoSrc? <img src={maoSrc} className="w-full h-full "></img>  : <div className='w-full h-full bg-gray-100'></div>
+        }
+         
         </div>
-        <div className="absolute px-3 items-center  flex justify-between left-0 right-0 mx-auto z-30 w-[80%] h-[48px] bg-white/70 backdrop-blur-sm		 bottom-10 rounded-lg">
+        <div className="absolute px-3 items-center  flex justify-between left-0 right-0 mx-auto z-1 w-[80%] h-[48px] bg-white/70 backdrop-blur-sm		 bottom-10 rounded-lg">
           <div className="flex items-center w-[90%]">
             <div className="mr-2">
               <MapIcon className="w-[14px] h-[14px]"></MapIcon>
             </div>
             <div className="text-xs text-[#798195]">
-              8 Northtown Way, Toronto, Ontario M2N 7A1, Canada
+              {Location?.placename}
             </div>
           </div>
-          <div className="bg-[#FFD036] w-12 h-6 text-xs rounded-full text-[#8C6008] whitespace-nowrap	flex justify-center items-center">
+          {/* <a href={`comgooglemaps://?q=40.7127,-74.0059`}> */}
+          <div onClick={()=>{openMaps(Location?.point)}} className="bg-[#FFD036] w-12 h-6 text-xs rounded-full text-[#8C6008] whitespace-nowrap	flex justify-center items-center">
             导航
           </div>
+         {/* </a> */}
         </div>
       </div>
     );
-  };
+  });
   const PostTag = (props) => {
     const { tag } = props;
     return <div className="mt-2 text-[#2347D9] text-sm">#{tag}</div>;
@@ -145,7 +237,7 @@ function index(props) {
       </div>
     );
   }
-
+  const inputRef = React.createRef();
   return (
     <div className="mb-10 w-full h-full">
       <Popup
@@ -158,7 +250,7 @@ function index(props) {
         </div>
       </Popup>
       <UserHeader
-        className="fixed z-30 bg-white top-0 w-full"
+        className="fixed z-10 bg-white top-0 w-full"
         data={data?.data?.student}
       ></UserHeader>
       <div className="min-h-[380px]">
@@ -237,12 +329,15 @@ function index(props) {
       </div>
       <div className="w-full h-2 bg-bg"></div>
       <div>
-        <Map></Map>
+      <Map data={data?.data?.form}></Map>
       </div>
       <div className="w-full h-2 bg-bg"></div>
       <div className="p-5">
-        <PostDiscussionInput></PostDiscussionInput>
+        <PostDiscussionInput
+          callDiscussion={()=>{}}
+        ></PostDiscussionInput>
         <Discussion
+        callDiscussion={()=>{}}
           commentComment={(e) => {
             commentComment(e);
           }}
@@ -257,12 +352,15 @@ function index(props) {
           {...commentChild}
         ></FooterDiscussionInputChild>
       ) : (
+        <div className='fixed bottom-12 w-full'>
         <FooterDiscussionInput
+         ref={inputRef}
           send={(e) => {
             sendComment(e);
           }}
           data={data?.data}
         ></FooterDiscussionInput>
+        </div>
       )}
     </div>
   );

@@ -81,7 +81,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         open={openLogin!=='close'}
         anchor="bottom"
       >
-        <div className="h-[96vh]">
+        <div className="h-[100vh]">
           <Puller></Puller>
           {openLogin === 'login' ? <SignIn></SignIn> : null}
           {openLogin === 'register' ? <SignUp></SignUp> : null}

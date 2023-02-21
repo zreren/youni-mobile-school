@@ -403,7 +403,7 @@ export default function SignUp(props) {
         <div className="w-full h-44"></div>
         <div className="absolute bottom-0">
           <div
-            className="z-20 h-[300px]  pt-4 pl-8 pr-8 space-y-4 bg-white-mask"
+            className="z-20 h-[290px]  pt-4 pl-8 pr-8 space-y-4 bg-white-mask"
             onClick={() => {
               props.setProgress(1);
             }}
