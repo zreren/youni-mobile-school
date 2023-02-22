@@ -528,7 +528,7 @@ export default function Schedules() {
         }}
         className="h-screen"
       >
-        <div className="w-full p-4 bg-white h-96 mb-14">
+        <div className="w-full p-4 bg-white h-[410px] mb-14 ">
           <div className="flex w-full space-x-2">
             <SaveToLibButton
               onClick={() => {
@@ -603,7 +603,7 @@ export default function Schedules() {
             </CCourseInput>
             <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
             <CCourseInput title="切换课表" Icon={Icon5}></CCourseInput>
-           <div className='flex items-center'>
+           <div className='flex items-center pb-6'>
            <div className="flex space-x-8 justify-between w-1/2 pl-4 pr-4 mt-4 overflow-x-scroll">
               <div
                 className="flex flex-col items-center"
