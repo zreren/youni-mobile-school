@@ -37,7 +37,7 @@
     background: #E1E3E7;
 }
 .Popup {
-    z-index: 99999  !important;
+    z-index: 999 !important;
     backdrop-filter: none;
     background: rgba(0, 0, 0, 0.15);
 }

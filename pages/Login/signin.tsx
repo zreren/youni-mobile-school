@@ -133,8 +133,8 @@ export default function SignIn(props) {
         });
       }, []);
       return (
-        <div className="h-screen space-y-4">
-          <Popup overlayClass={"Popup"} overlay={true} className='z-30 topIndexPlus w-4/5 rounded-2xl shadow' visible={visible} onClose={() => setVisible(false)}>
+        <div className="h-screen space-y-4 bottom-footer-theTop ">
+          <Popup overlayClass={"Popup"} overlay={true} className='z-30 bottom-footer-theTop w-4/5 rounded-2xl shadow' visible={visible} onClose={() => setVisible(false)}>
             <div className='h-[232px] flex flex-col  items-center' >
               <div className='pt-4  pb-4 text-[#37455C] '>Reset password with</div>
               {/* <div> */}

@@ -430,9 +430,10 @@
 }
 
 .bottom-theTop{
-  z-index: 999999999 !important;
+  z-index: 2000 !important;
 }
 
 .bottom-footer-theTop{
-  z-index: 9999999999 !important;
+  z-index: 2000 !important;
 }
+

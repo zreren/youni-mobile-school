@@ -216,7 +216,7 @@ function index(props) {
       setComment('');
     };
     return (
-      <div className="sticky  z-30 bottom-0 flex   items-center w-full p-5 bg-white h-[60px]">
+      <div className="sticky  z-30 bottom-10 flex   items-center w-full p-5 bg-white h-[60px]">
         <input
           placeholder={`回复${user?.nickName}`}
           value={comment}
@@ -242,7 +242,7 @@ function index(props) {
     inputRef.current.focus();
   }
   return (
-    <div className="mb-10 w-full h-full">
+    <div className="mb-10 w-full h-full pb-10">
       <Popup
         overlayClass={'Popup'}
         className="z-30 topIndexPlus rounded-full "
@@ -348,12 +348,14 @@ function index(props) {
         ></Discussion>
       </div>
       {commentChild?.id ? (
+         <div className='fixed bottom-12 w-full'>
         <FooterDiscussionInputChild
           send={(comment, id, pid) => {
             sendChild(comment, id, pid);
           }}
           {...commentChild}
         ></FooterDiscussionInputChild>
+        </div>
       ) : (
         <div className='fixed bottom-12 w-full'>
         <FooterDiscussionInput

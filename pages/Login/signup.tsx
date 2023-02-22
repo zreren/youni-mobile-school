@@ -44,76 +44,78 @@ const SignUpButton = (props) => {
   );
 };
 
-
-
 export default function SignUp(props) {
   const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
-  const [language,setLanguage] = useState('')
+  const [language, setLanguage] = useState('');
   const ChooseYourRole = (props) => {
     const route = useRouter();
     const MailLabel = () => {
-     
       const [mail, setMail] = useState('');
       const [school, setSelectSchool] = useState({
         id: 1,
         mail: '',
       });
-      const CPicker = useCallback((props) => {
-        const { data: schoolList } = useFetch('/campus/query', 'get');
-        const [loading, setLoading] = React.useState(false);
-        const [value, setValue] = React.useState<string[]>();
-        const mailList = React.useMemo(() => {
-          return schoolList?.data.filter((item) => {
-            return item.id === value;
-          })[0];
-        }, [value]);
+      const CPicker = useCallback(
+        (props) => {
+          const { data: schoolList } = useFetch('/campus/query', 'get');
+          const [loading, setLoading] = React.useState(false);
+          const [value, setValue] = React.useState<string[]>();
+          const mailList = React.useMemo(() => {
+            return schoolList?.data.filter((item) => {
+              return item.id === value;
+            })[0];
+          }, [value]);
 
-        // React.useEffect(() => {
-        //   console.log(value, 'value');
-        //   if (!props) return;
-        //   props?.change(value, mailList?.email);
-        // }, [value]);
-        return (
-          <Picker
-            popup={{
-              round: true,
-            }}
-            value={value}
-            title={props.placeholder}
-            columns={schoolList?.data}
-            onConfirm={setValue}
-            visibleItemCount={8}
-            onChange={setValue}
-            columnsFieldNames={{ text: 'ename', value: 'id' }}
-            optionRender={(option: any) => {
-              // console.log(option,"option")
-              if (!option.alias) return null;
-              return (
-                <div className="flex space-x-1">
-                  <div>{option.cname}</div>
-                  <div>|</div>
-                  <div>{option.ename}</div>
-                </div>
-              );
-            }}
-          >
-            {(val: string, _: any, actions) => {
-              console.log(_, val, 'select');
-              return (
-                <Field
-                  readOnly
-                  clickable
-                  value={_?.ename || ''}
-                  className="text-lg"
-                  placeholder={props.placeholder}
-                  onClick={() => actions.open()}
-                />
-              );
-            }}
-          </Picker>
-        );
-      },[school])
+          // React.useEffect(() => {
+          //   console.log(value, 'value');
+          //   if (!props) return;
+          //   props?.change(value, mailList?.email);
+          // }, [value]);
+          return (
+            <div className="bottom-footer-theTop2">
+              <Picker
+                popup={{
+                  round: true,
+                }}
+                value={value}
+                title={props.placeholder}
+                columns={schoolList?.data}
+                onConfirm={setValue}
+                visibleItemCount={8}
+                onChange={setValue}
+                columnsFieldNames={{ text: 'ename', value: 'id' }}
+                optionRender={(option: any) => {
+                  // console.log(option,"option")
+                  if (!option.alias) return null;
+                  return (
+                    <div className="flex space-x-1">
+                      <div>{option.cname}</div>
+                      <div>|</div>
+                      <div>{option.ename}</div>
+                    </div>
+                  );
+                }}
+              >
+                {(val: string, _: any, actions) => {
+                  console.log(_, val, 'select');
+                  return (
+                    <Field
+                      readOnly
+                      clickable
+                      value={_?.ename || ''}
+                      className="text-lg"
+                      placeholder={props.placeholder}
+                      onClick={() => actions.open()}
+                    />
+                  );
+                }}
+              </Picker>
+            </div>
+          );
+        },
+        [school],
+      );
       const sendCode = () => {
         useRequest.post('/api/send_email_code', {
           email: mail,
@@ -133,7 +135,7 @@ export default function SignUp(props) {
         <div className="h-screen space-y-4">
           <div className="flex items-center w-full topIndexPlus">
             <CPicker
-            placeholder="select your university"
+              placeholder="select your university"
               change={(val, mail) => {
                 setSelectSchool({
                   id: val,
@@ -148,7 +150,9 @@ export default function SignUp(props) {
               //   setMail(e.target.value);
               // }}
               value={mail}
-              onChange={(e)=>{setMail(e.target.value)}}
+              onChange={(e) => {
+                setMail(e.target.value);
+              }}
               type="text"
               placeholder="please enter your email"
               className="w-full input"
@@ -158,13 +162,16 @@ export default function SignUp(props) {
             By continuing, you agree to YoUni’s Term of Service and confirm that
             you have read our Privacy Policy.
           </div>
-          <button onClick={()=>{
-            if(!(mail&&school?.id)) return
-            sendCode()
-          }} className={classnames("w-full  border-0 rounded-full btn",{
-            "bg-yellow-400":mail&&school?.id,
-            "bg-gray-400":!(mail&&school?.id)
-          })}>
+          <button
+            onClick={() => {
+              if (!(mail && school?.id)) return;
+              sendCode();
+            }}
+            className={classnames('w-full  border-0 rounded-full btn', {
+              'bg-yellow-400': mail && school?.id,
+              'bg-gray-400': !(mail && school?.id),
+            })}
+          >
             Next
           </button>
         </div>
@@ -359,7 +366,7 @@ export default function SignUp(props) {
           className="z-30 h-full p-4 space-y-10 bg-white-mask"
           onClick={() => {
             props.setProgress(2);
-            setLanguage('EN')
+            setLanguage('EN');
           }}
         >
           <div className="flex items-center justify-center w-full h-32 text-xl rounded text-userColor flex-2xl bg-bg">
@@ -368,7 +375,7 @@ export default function SignUp(props) {
           <div
             onClick={() => {
               props.setProgress(2);
-              setLanguage('ZH')
+              setLanguage('ZH');
             }}
             className="flex items-center justify-center w-full h-32 text-xl rounded text-userColor flex-2xl bg-bg"
           >
@@ -462,7 +469,7 @@ export default function SignUp(props) {
   }, []);
 
   return (
-    <div className='h-full'>
+    <div className="h-full">
       {isLogin ? (
         <SignIn
           isLogin={() => {
