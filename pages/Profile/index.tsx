@@ -50,6 +50,7 @@ import { grey } from '@mui/material/colors';
 import Box from '@mui/material/Box';
 import { Switch } from 'react-vant';
 import useRequest from "@/libs/request";
+import EmptyPostIcon from  './emptyPost.svg';
 // import Waterfall from '@/components/Layout/Waterfall';
 
 const PostGroupDetail = (props) => {
@@ -593,9 +594,10 @@ function index(props) {
             })} 
               <>
              {PostGroupData?.data.length === 0 ?
-             <div className='flex justify-center text-[#929396]'>
-              暂无关注文集
-             </div>:null
+             <div className='flex mt-10 flex-col space-y-4 items-center justify-center '>
+             <EmptyPostIcon></EmptyPostIcon>
+           <div className='text-xs text-[#A9B0C0]'>暂无关注文集</div>
+          </div>:null
              }
              </> 
           </div>
