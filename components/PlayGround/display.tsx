@@ -125,38 +125,6 @@ export default function Display(props) {
       </div>
     );
   };
-  const Ad = () => {
-    return (
-      <div className="w-full pl-0.5 pr-0.5">
-        <div
-          onClick={() => {
-            props.handleClick();
-          }}
-          style={{ position: 'relative', width: '100%' }}
-        >
-          <div className="border border-gray-400 rounded-sm text-white absolute top-2 left-2 z-30">
-            推广
-          </div>
-          <Image
-            layout="responsive"
-            objectFit="cover"
-            blurDataURL={data.img}
-            placeholder="blur"
-            src={data.img}
-            width={imageSize.width}
-            height={imageSize.height}
-            onLoadingComplete={(target) => {
-              setSmageSize({
-                width: target.naturalWidth,
-                height: target.naturalHeight,
-              });
-            }}
-            className="rounded-xl bg-gray-400"
-          />
-        </div>
-      </div>
-    );
-  };
   const componentsMap = {
     idle: <Normal />,
     news: <Normal />,
@@ -356,7 +324,7 @@ export default function Display(props) {
         <div className="flex items-center justify-between mt-2 mb-2">
           <div className="flex items-center space-x-1">
             <div className="bg-gray-500 rounded-full w-px18 h-px18"></div>
-            <div className="ext-xs text-priceGray">
+            <div className="text-xs text-priceGray">
               {data?.student?.nickName}
             </div>
           </div>
