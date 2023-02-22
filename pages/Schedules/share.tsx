@@ -438,7 +438,7 @@ export default function Schedules() {
     );
   };
   return (
-    <div className="relative bg-bg schedule">
+    <div className="relative bg-bg schedule min-h-[840px]">
       <Footer></Footer>
       <Popup
         overlayClass={'Popup'}
