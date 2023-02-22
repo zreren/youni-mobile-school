@@ -253,7 +253,7 @@ function index(props) {
         </div>
       </Popup>
       <UserHeader
-        className="fixed z-10 bg-white top-0 w-full"
+        className="fixed z-10   top-0 w-full"
         data={data?.data?.student}
       ></UserHeader>
       <div className="min-h-[380px]">
