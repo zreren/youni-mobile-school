@@ -803,7 +803,7 @@ function Calendar(props) {
       el.style.backgroundImage = `url(${customImg})`;
       el.style.backgroundSize = 'cover';
       el.style.objectFit = 'cover';
-      el.style.height = `calc(100vh - 190px)`;
+      // el.style.height = `calc(100vh - 190px)`;
     }
   }, [customImg, calendarView]);
   return (

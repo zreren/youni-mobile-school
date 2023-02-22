@@ -908,7 +908,7 @@ export default function Schedules() {
     );
   };
   return (
-    <div className="space-y-1 bg-bg schedule">
+    <div className="space-y-1 bg-bg schedule min-h-[840px]">
       {/* div className="mb-10"> */}
       <Popup
         overlayClass={'Popup'}
