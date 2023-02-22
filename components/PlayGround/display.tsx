@@ -84,7 +84,7 @@ export default function Display(props) {
           <div className="flex items-end mt-2 space-x-1 text-sm">
             <div className="text-price"> {data.price}</div>
             <div className="text-xs text-price">{data.unit}</div>
-            <div className="text-xs text-priceGray dele">{data.oldPrice}</div>
+            <div className="text-xs text-priceGray dele line-through">{data.oldPrice}</div>
           </div>
         ) : (
           <div className="flex items-end mt-2 space-x-1 text-sm"></div>
@@ -296,8 +296,8 @@ export default function Display(props) {
             <div className="text-xs text-price">{
             data.form?.prices?.text === "0" ? null :
             data.form?.prices?.pricesUnit}</div>
-            <div className="text-xs text-priceGray dele">
-              {!data.form?.prices?.showOldPrice || data.form?.prices?.text === "0" ? null : data.form?.prices?.oldPrice}
+            <div className="text-xs text-priceGray dele line-through">
+              {!data.form?.prices?.showOldPrice || data.form?.prices?.text === "0" ? null : data.form?.prices?.oldPrice + ' ' +  data.form?.prices?.pricesUnit}
             </div>
           </div>
         ) : (
@@ -323,7 +323,9 @@ export default function Display(props) {
         )}
         <div className="flex items-center justify-between mt-2 mb-2">
           <div className="flex items-center space-x-1">
-            <div className="bg-gray-500 rounded-full w-px18 h-px18"></div>
+            <div className="overflow-hidden w-[18px] h-[18px] rounded-full bg-neutral-focus text-neutral-content">
+            <img src={`${Cons.BASEURL}${data?.student?.avatar}`} />
+            </div>
             <div className="text-xs text-priceGray">
               {data?.student?.nickName}
             </div>

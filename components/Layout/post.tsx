@@ -446,7 +446,7 @@ function index(props) {
               ? null
               : data?.data?.form?.prices?.pricesUnit}
           </div>
-          <div className="text-sm text-priceGray dele">
+          <div className="text-sm text-priceGray dele line-through">
             {!data?.data?.form?.prices
               ? null
               : data?.data?.form?.prices?.text === '0'

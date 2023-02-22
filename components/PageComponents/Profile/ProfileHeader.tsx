@@ -12,12 +12,14 @@ import useRequest from '@/libs/request';
 import { useRouter } from 'next/router';
 import { Toast } from 'react-vant';
 import classnames from "classnames";
+import useUser from '@/hooks/useUser';
 export default function ProfileHeader(props) {
   const {data,myProfile,mutate} = props;
   // const data = {
   //   student: props.data,
   // }
   const router = useRouter();
+  const {loggedOut} = useUser();
   const UserData = (props) => {
     // const {data} = props;
     const data = props.data
@@ -109,7 +111,7 @@ export default function ProfileHeader(props) {
             'bg-[#FFD036] text-[#8C6008]': !isFollow,
             'bg-[#E5E5E5] text-[#808080]': isFollow,
             })
-        }>{isFollow?'已关注':'关注'}</div> :<Link href="/Setting/profile"><Button></Button></Link>}
+        }>{isFollow?'已关注':'关注'}</div> : !loggedOut && <Link href="/Setting/profile"><Button></Button></Link>}
       </div>
     );
   };
