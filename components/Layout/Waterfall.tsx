@@ -10,6 +10,7 @@ import MasonryLayout from 'react-fast-masonry';
 // import { Masonry } from "masonic";
 import { Flex, Loading } from 'react-vant';
 import { useRouter } from 'next/router';
+import EmptyPostIcon from  './emptyPost.svg';
 
 const Masonry = dynamic(
   () => import('masonic').then((module) => module.Masonry),
@@ -239,8 +240,9 @@ export default function Waterfall(props) {
           </div>
         )}
         {
-          data?.length === 0 ?  <div className='flex justify-center text-[#929396]'>
-          暂无贴文发布
+          data?.length === 0 ?  <div className='flex mt-10 flex-col space-y-4 items-center justify-center '>
+            <EmptyPostIcon></EmptyPostIcon>
+          <div className='text-xs text-[#A9B0C0]'>暂无贴文发布</div>
          </div>:null
         }
       </div>
