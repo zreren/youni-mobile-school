@@ -81,7 +81,7 @@ export default function courseEvaluation() {
           <span>{useLanguage('') === 'e' ? '目前还没有课评，' : '目前还没有课评，'}</span>
           <span onClick={()=>{
             router.push({
-              pathname: `/[campus]/course/evaluation`,
+              pathname: `/[campus]/Course/evaluation`,
               query: { campus: router.query.campus ,id:CourseId},
             })
           }} className='text-[#3665FF]'>点击评价课程</span>
