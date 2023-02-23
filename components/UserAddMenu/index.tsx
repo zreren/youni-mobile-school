@@ -95,7 +95,7 @@ export default function index(props) {
         <div className='text-[#8C6008] text-xs font-medium'>转闲置</div>
       </div>
       </div>
-      <Subtract className="absolute -bottom-4 w-screen -z-30 object-cover"></Subtract>
+      <Subtract className="absolute -bottom-4 w-screen -z-30  min-w-[380px] object-cover"></Subtract>
     </div>
   );
 }
