@@ -47,7 +47,7 @@ export default function AllSubject() {
         </div>
         <div className="grid grid-cols-2 gap-x-2 gap-y-1">
           {
-            data?.data?.items?.map((item,index) => {
+            data?.data?.map((item,index) => {
               return (
                 <CategoryButton data={item} key={item.id} color={randomColor[index%6]}>
                 </CategoryButton>

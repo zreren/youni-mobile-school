@@ -53,7 +53,7 @@ export default function course(): JSX.Element {
           <div className="space-y-2 mt-4">
             <div className="grid grid-cols-2 gap-x-2 gap-y-1">
               {data ? (
-                data?.data?.items?.slice(0, 6)?.map((item, index) => {
+                data?.data?.slice(0, 6)?.map((item, index) => {
                   return (
                     <CategoryButton
                       data={item}
