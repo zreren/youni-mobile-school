@@ -100,12 +100,6 @@ export default function course(): JSX.Element {
           <div className="space-y-3">
             {hotCourseData?.data?.length === 0 ? (
               <div className="artboard phone-1">
-                {/* <label className="swap swap-flip text-9xl">
-                  <input type="checkbox" />
-
-                  <div className="swap-on">😈</div>
-                  <div className="swap-off">😇</div>
-                </label> */}
                 <div className="text-gray-500">
                   该课程暂无数据喔~移步其他校区吧！
                 </div>
