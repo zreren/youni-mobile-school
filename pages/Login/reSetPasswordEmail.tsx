@@ -406,7 +406,7 @@ export default function Valid() {
     const dispatch = useDispatch();
     const submitCreate = async () => {
       if (isLetterAndNumber && isLength && isSpecial) {
-        const { data } = await useRequest.post('/api/auth/student/reset_password', {
+        const { data } = await useRequest.post('/api/student/reset_password', {
           password: values.password,
           accessToken: accessToken,
         });

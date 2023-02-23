@@ -42,7 +42,7 @@ export default function SignIn(props) {
   const dispatch = useDispatch();
   const login = async (way: string, form: any) => {
     try {
-      const { data } = await useRequest.post(`/api/auth/student/password_login`, {
+      const { data } = await useRequest.post(`/api/student/password_login`, {
         account: form.mail,
         password: form.password,
       });

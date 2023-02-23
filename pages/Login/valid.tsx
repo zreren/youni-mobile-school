@@ -341,7 +341,7 @@ export default function Valid() {
     const dispatch = useDispatch();
     const submitCreate = async ()=>{
       if( isLetterAndNumber && isLength && isSpecial){
-       const {data} = await useRequest.post('/api/auth/student/email_register',{
+       const {data} = await useRequest.post('/api/student/email_register',{
           password:values.password,
           roleId:roleId,
           lang: lang,
