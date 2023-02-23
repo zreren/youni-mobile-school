@@ -33,6 +33,7 @@ import { Popup, Toast } from 'react-vant';
 import { setOpenLogin } from '../../stores/authSlice';
 import SignUp from './signup';
 import ReSetPasswordEmail from './reSetPasswordEmail';
+import ReturnBackIcon from './returnBack.svg';
 // import { useDispatch } from 'react-redux';
 
 export default function SignIn(props) {
@@ -49,19 +50,18 @@ export default function SignIn(props) {
       console.log(data, 'data');
       if (data.code === 200) {
         if (data.data.token) {
-          Toast.success('登录成功')
+          Toast.success('登录成功');
           setMyItem(data.data.token);
           route.push('/Profile', undefined, { shallow: true });
           route.reload();
           dispatch(setOpenLogin('close'));
         }
-      }else{
-        Toast.fail(`登录失败${data.message}`)
+      } else {
+        Toast.fail(`登录失败${data.message}`);
       }
     } catch (error) {
-      Toast.fail(`登录失败${error}`)
+      Toast.fail(`登录失败${error}`);
     }
-   
   };
 
   const SignUpButton = (props) => {
@@ -134,13 +134,40 @@ export default function SignIn(props) {
       }, []);
       return (
         <div className="h-screen space-y-4 bottom-footer-theTop ">
-          <Popup overlayClass={"Popup"} overlay={true} className='z-30 bottom-footer-theTop w-4/5 rounded-2xl shadow' visible={visible} onClose={() => setVisible(false)}>
-            <div className='h-[232px] flex flex-col  items-center' >
-              <div className='pt-4  pb-4 text-[#37455C] '>Reset password with</div>
+          <Popup
+            overlayClass={'Popup'}
+            overlay={true}
+            className="z-30 bottom-footer-theTop w-4/5 rounded-2xl shadow"
+            visible={visible}
+            onClose={() => setVisible(false)}
+          >
+            <div className="h-[232px] flex flex-col  items-center">
+              <div className="pt-4  pb-4 text-[#37455C] ">
+                Reset password with
+              </div>
               {/* <div> */}
-              <div onClick={()=>{ setProgress(2);}} className='py-4 text-[#798195]'>Phone number</div>
-              <div onClick={()=>{ setProgress(3);}}  className='py-4 text-[#798195]'>Email</div>
-              <div onClick={() => setVisible(false)} className='py-4 text-[#A9B0C0]'>Cancel</div>
+              <div
+                onClick={() => {
+                  setProgress(2);
+                }}
+                className="py-4 text-[#798195]"
+              >
+                Phone number
+              </div>
+              <div
+                onClick={() => {
+                  setProgress(3);
+                }}
+                className="py-4 text-[#798195]"
+              >
+                Email
+              </div>
+              <div
+                onClick={() => setVisible(false)}
+                className="py-4 text-[#A9B0C0]"
+              >
+                Cancel
+              </div>
               {/* </div> */}
             </div>
           </Popup>
@@ -184,9 +211,11 @@ export default function SignIn(props) {
               {
                 'bg-yellow-400 hover:bg-yellow-400 text-[#8C6008]':
                   form.mail.length > 1 && form.password.length > 1,
-              },{
-                'bg-[#F7F8F9] hover:bg-[#F7F8F9] text-[#798195]':  form.mail.length <= 1 && form.password.length <= 1,
-              }
+              },
+              {
+                'bg-[#F7F8F9] hover:bg-[#F7F8F9] text-[#798195]':
+                  form.mail.length <= 1 && form.password.length <= 1,
+              },
             )}
           >
             Log in
@@ -302,7 +331,15 @@ export default function SignIn(props) {
     const [label, setLabel] = useState(0);
     const Node = list[label];
     return (
-      <div className="z-10 flex flex-col w-full h-full overflow-hidden transition mt-11">
+      <div className="z-10 flex flex-col w-full h-full overflow-hidden transition mt-5">
+        <div
+          onClick={() => {
+            props.setProgress(0);
+          }}
+          className="pl-4 mb-6"
+        >
+          <ReturnBackIcon className=''></ReturnBackIcon>
+        </div>
         {/* <Image src={Logo} alt=""></Image> */}
         {/* <CSSTransition classNames="title" timeout={1000}> */}
         <div className="z-10 h-20">
@@ -452,14 +489,19 @@ export default function SignIn(props) {
   };
   const [progress, setProgress] = useState(0);
   const [role, selectRole] = useState('Student');
-  const ProgressList = [SelectSignUpWay, ChooseYourRole, Forget,ReSetPasswordEmail];
+  const ProgressList = [
+    SelectSignUpWay,
+    ChooseYourRole,
+    Forget,
+    ReSetPasswordEmail,
+  ];
   const Node = ProgressList[progress];
   React.useEffect(() => {
     dispatch(setAuthState(false));
   }, []);
 
   return (
-    <div className='w-full h-full'>
+    <div className="w-full h-full">
       {isLogin ? (
         <SignUp
           isLogin={() => {
@@ -476,7 +518,7 @@ export default function SignIn(props) {
               alt="Picture of the author"
             />
           </div>
-          <div className='z-30 w-full'>
+          <div className="z-30 w-full">
             <SwitchTransition mode="out-in">
               <CSSTransition classNames="btn" timeout={260} key={progress}>
                 {
@@ -486,7 +528,9 @@ export default function SignIn(props) {
                     }}
                     role={role}
                     selectRole={selectRole}
-                    returnClick={()=>{setProgress(progress - 1)}}
+                    returnClick={() => {
+                      setProgress(progress - 1);
+                    }}
                   ></Node>
                 }
               </CSSTransition>

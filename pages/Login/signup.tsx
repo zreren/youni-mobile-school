@@ -28,6 +28,8 @@ import { setOpenLogin } from '../../stores/authSlice';
 import useRequest from '@/libs/request';
 // import { useDispatch } from 'react-redux';
 import SignIn from './signin';
+import ReturnBackIcon from './returnBack.svg';
+
 
 const SignUpButton = (props) => {
   const { title, icon: Icon, label } = props;
@@ -262,6 +264,14 @@ export default function SignUp(props) {
     const Node = React.useMemo(() => list[label], [label]);
     return (
       <div className="z-10 flex flex-col w-full h-full overflow-hidden transition mt-11">
+         <div
+          onClick={() => {
+            props.setProgress(1);
+          }}
+          className="pl-4 z-30 mb-6"
+        >
+          <ReturnBackIcon className=''></ReturnBackIcon>
+        </div>
         {/* <Image src={Logo} alt=""></Image> */}
         {/* <CSSTransition classNames="title" timeout={1000}> */}
         <div className="z-10 pl-8 pr-8 text-2xl title">Choose your role</div>
@@ -346,6 +356,14 @@ export default function SignUp(props) {
   const SelectLanguage = (props) => {
     return (
       <div className="z-10 flex flex-col w-full h-screen -appear in mt-11">
+       <div
+          onClick={() => {
+            props.setProgress(0);
+          }}
+          className="pl-4 mb-6 z-30"
+        >
+          <ReturnBackIcon className=''></ReturnBackIcon>
+        </div>
         {/* <Image src={Logo} alt=""></Image> */}
         <div className="z-10 pl-8 pr-8 text-2xl">Select Language</div>
         <div className="z-10 pl-8 pr-8 mb-20 text-sm text-md text-userColor">
