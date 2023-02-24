@@ -10,7 +10,6 @@ import useFetch from '@/hooks/useFetch';
 import ProfessorCard from '@/components/ProfessorListItem';
 import useLocalStorage from '@/hooks/useStore';
 import Head from 'next/head';
-import { disableZoom } from '@/libs/disableZoom';
 export default function index() {
   // const router = useRouter();
   const router = useRouter();
@@ -63,11 +62,6 @@ export default function index() {
       </div>
     );
   };
-  useEffect(()=>{
-    disableZoom()
-
-    // setHistoryList(history)
-  },[])
   useEffect(() => {
     setHistoryList(history);
   }, [history]);
@@ -114,12 +108,6 @@ export default function index() {
   }, [menu]);
   return (
     <div className="w-screen min-h-screen bg-gray-50 pb-20">
-      <Head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"
-        />
-      </Head>
       <div>
         <CustomizedTabs
           switchMenu={(val) => {

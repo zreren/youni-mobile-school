@@ -44,15 +44,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   const openLogin = useSelector(selectOpen);
   const [stopScroll, setStopScroll] = useState(false);
   const router = useRouter();
-  const routerTable = [
-    '/School/',
-    '/[campus]/Schedules/Schedules',
-    '/Course/evaluation',
-    '/York/Course/course',
-    '/Profile',
-    'Schedules',
-    'evaluation'
-  ];
   const { i18n } = useTranslation();
   console.log(i18n);
   useEffect(() => {
@@ -74,7 +65,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     top: 8,
     left: 'calc(50% - 15px)',
   }));
-  const LoginModel = () => {
+  const LoginModel = ():JSX.Element => {
     return (
       <SwipeableDrawer
         className="z-20 bottom-footer-theTop"
