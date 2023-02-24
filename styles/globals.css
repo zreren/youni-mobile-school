@@ -443,3 +443,6 @@
   background-color: rgba(255, 255, 255, 0.6); 
   backdrop-filter: blur(10px);
 }
+.bottomPlus{
+  z-index: 99999999 !important;
+}

@@ -88,7 +88,8 @@ export default function Introduce(props: Course) {
   const { ename, code, sections, subject, type, rating, cname } =
     porpsIntroduce;
   const Section = (props) => {
-    const { name, startTime, endTime } = props.data;
+    const { name, startTime, endTime, professors,mode } = props.data;
+    console.log(props.data, 'props.data Section');
     return (
       <Accordion className="rounded-lg">
         <AccordionSummary
@@ -104,13 +105,13 @@ export default function Introduce(props: Course) {
               >
                 {name.slice(0, 1)}
               </div>
-              <div>Indira Somwaru</div>
-              <CScanRating score={4.5}></CScanRating>
+              <div>{professors[0]?.name || '教授'}</div>
+              <CScanRating score={professors[0]?.rating || 0}></CScanRating>
             </div>
           </div>
         </AccordionSummary>
         <AccordionDetails>
-          <div className="text-gray-300">线下课程 ACE 036</div>
+          <div className="text-gray-300">{mode[0]?.ename || 'unaligned'}</div>
         </AccordionDetails>
       </Accordion>
     );

@@ -142,7 +142,7 @@ export default function LabelBottomNavigation(props) {
         </div>
       ) : (
         <BottomNavigation
-          className="fixed -bottom-1 left-0 z-30 bottom-theTop w-full  text-sm transition-all "
+          className="fixed bottomPlus -bottom-1 left-0 z-30 bottom-theTop w-full  text-sm transition-all "
           value={value}
           id="bottom-menu"
           showLabels={true}

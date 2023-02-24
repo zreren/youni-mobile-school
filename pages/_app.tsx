@@ -32,6 +32,7 @@ import '../cons';
 import { styled } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import Box from '@mui/material/Box';
+import Head from 'next/head';
 import useLocalStorage from '../hooks/useStore';
 function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useDispatch();
@@ -92,6 +93,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   };
   return (
     <div className="overflow-hidden">
+
       <SwitchTransition mode="out-in">
         <CSSTransition
           in={openLogin !== 'close'}

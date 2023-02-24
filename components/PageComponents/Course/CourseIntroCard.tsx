@@ -1,8 +1,20 @@
 import React from 'react';
+import EmptyCourseIcon from './emptyCourse.svg';
+import useLanguage from '@/hooks/useLanguage';
 
 export default function CourseIntroCard(props) {
   const { content} = props;
   const [expand,setExpand] = React.useState(false)
+  const EmptyCourse= () => {
+    return (
+      <div className="flex w-full bg-white flex-col justify-center items-center py-8  h-[100vh-300px]  rounded-lg">
+        <EmptyCourseIcon></EmptyCourseIcon>
+        <div className="flex text-xs mt-6 justify-center items-center text-[#A9B0C0]">
+          <span>{useLanguage('') === 'e' ? '目前还没有简介' : '目前还没有简介'}</span>
+        </div>
+      </div>
+    );
+  };
   return (
     <div className="card rounded-lg w-full bg-base-100 ">
       <div className="card-body p-4">
@@ -14,6 +26,9 @@ export default function CourseIntroCard(props) {
           ">{expand?'收起':'阅读全部'}</button>
         </div>:null
         } 
+        {
+          content.length === 0 ? <EmptyCourse></EmptyCourse> :null
+        }
       </div>
     </div>
   );

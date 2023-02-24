@@ -150,21 +150,21 @@ export default function courseEvaluation() {
     );
   };
   const professorRankList = [
-    {
-      id: 1,
-      name: 'Leonard Eli Karakowsky',
-      score: 4.5,
-    },
-    {
-      id: 2,
-      name: 'Test Professor 1',
-      score: 3.2,
-    },
-    {
-      id: 3,
-      name: 'Test Professor 2',
-      score: 1.7,
-    },
+    // {
+    //   id: 1,
+    //   name: 'Leonard Eli Karakowsky',
+    //   score: 4.5,
+    // },
+    // {
+    //   id: 2,
+    //   name: 'Test Professor 1',
+    //   score: 3.2,
+    // },
+    // {
+    //   id: 3,
+    //   name: 'Test Professor 2',
+    //   score: 1.7,
+    // },
   ];
 
   const [isFilteringOut, setisFilteringOut] = React.useState(true);
