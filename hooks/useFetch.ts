@@ -5,7 +5,7 @@ import useLocalStorage from '@/hooks/useStore';
 import { useRouter } from 'next/router';
 import instance from '@/libs/request';
 export const API = Object.freeze({
-  BASE_URL: config.api.baseUrl,
+  BASE_URL: `${process.env.BASEURL}/api`,
   STUDENT: {
     PATH: '/student',
     COURSES: '/courses',
@@ -47,7 +47,7 @@ function useFetch(path, method, body?) {
     code: number;
     message: string;
   }
-  const { data, error,mutate  } = useSWR(`${API.BASE_URL}${path}`, (url) => {
+  const { data, error,mutate  } = useSWR(`${'http://124.221.59.33:3301/api'}${path}`, (url) => {
     return instance({
       method,
       url,

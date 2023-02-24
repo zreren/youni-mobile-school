@@ -2,8 +2,12 @@
 const globalAny: any = global;
 
 globalAny.Cons = {
-  BASEURL: 'https://youni-admin.kuizuo.cn',
-  LANGUAGE: typeof window !== 'undefined'?localStorage.getItem('language')?.replace("\"","")?.replace("\"",""):null,
+  // BASEURL: 'https://youni-admin.kuizuo.cn',
+  BASEURL: process.env.BASEURL,
+  LANGUAGE:
+    typeof window !== 'undefined'
+      ? localStorage.getItem('language')?.replace('"', '')?.replace('"', '')
+      : null,
   API: {
     STUDENT: {
       PATH: '/student',
@@ -32,7 +36,7 @@ globalAny.Cons = {
     CURRICULUM: {
       QUERY: '/curriculum/query',
       DETAIL: '/curriculum/detail',
-      DELETE:"/curriculum/delete",
+      DELETE: '/curriculum/delete',
       CREATE: '/curriculum/create',
       UPDATE: '/curriculum/update',
     },
@@ -44,7 +48,8 @@ globalAny.Cons = {
       DELETE: '/comment/delete',
     },
   },
-  TOKEN: 'pk.eyJ1IjoieW91bmljbHViIiwiYSI6ImNsY2M5ZHVydDNqdTAzeGxrazJuNzhzbWoifQ.wWLnf7hdCNENhcFEuY3vPw'
+  TOKEN:
+    'pk.eyJ1IjoieW91bmljbHViIiwiYSI6ImNsY2M5ZHVydDNqdTAzeGxrazJuNzhzbWoifQ.wWLnf7hdCNENhcFEuY3vPw',
 };
 
 export {};
