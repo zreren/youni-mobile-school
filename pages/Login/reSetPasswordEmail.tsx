@@ -295,6 +295,21 @@ export default function Valid() {
       // if
     };
     const [code, setCode] = useState('');
+    const resendCode = async ()=>{
+      if(count !== 0){
+        Toast.fail('60s内只能发送一次')
+        return
+      }
+      const {data} =  await useRequest.post('/api/send_email_code',{
+        email:globalMail,
+      })
+      if(data.message === 'success'){
+        Toast.success('重新发送成功')
+        setTime(60)
+        }else{
+        Toast.fail(data.message)
+    }
+    }
     return (
       <div className="z-30 w-full h-full p-8 bg-white">
         <Header className="shadow-none" title=""></Header>
@@ -317,7 +332,7 @@ export default function Valid() {
             }}
           />
           <div className="w-full text-xs text-right">
-            {count === 0 ? <ReSentCode /> : `Code sent (${count}s)`}
+            {count === 0 ? `Code sent (${count}s)` : `Code sent (${count}s)`}
           </div>
         </div>
         <button
@@ -333,7 +348,7 @@ export default function Valid() {
         >
           Next
         </button>
-        <div className="w-full mt-8 text-xs text-left text-darkYellow">
+        <div onClick={()=>{resendCode()}} className="w-full mt-8 text-xs text-left text-darkYellow">
           No code?
         </div>
       </div>

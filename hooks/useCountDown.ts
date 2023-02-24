@@ -11,21 +11,31 @@ const useCountDown = (props: IProps) => {
   const [time, setTime] = useState(mss || 0);
 
   useEffect(() => {
-    const timerId = setInterval(() => {
-      setTime(currentTime => {
-        if (currentTime > 0) {
-          return currentTime - 1;
-        }
-        if(currentTime === 0){
-          clearInterval(timerId);
-          return 0
-        }
-        return currentTime;
-      });
-    }, 1000);
-
-    return () => clearInterval(timerId);
-  }, []);
+    let timerId: number | undefined | any;
+    if (time > 0) {
+      timerId = setInterval(() => {
+        setTime(currentTime => {
+          if (currentTime > 0) {
+            return currentTime - 1;
+          }
+          return 0;
+        });
+      }, 1000);
+    }else{
+      setTime(0);
+      if (timerId) {
+        clearInterval(timerId);
+      }
+    }
+    console.log(time,'use count down time out')
+    return () => {
+      // setTime(0);
+      console.log(time,'use count down time return')
+      if (timerId) {
+        clearInterval(timerId);
+      }
+    };
+  }, [time]);
 
   return [time, setTime];
 };
