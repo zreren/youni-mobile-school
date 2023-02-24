@@ -34,6 +34,9 @@ import { grey } from '@mui/material/colors';
 import Box from '@mui/material/Box';
 import Head from 'next/head';
 import useLocalStorage from '../hooks/useStore';
+import { disableZoom } from '@/libs/disableZoom';
+
+
 function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useDispatch();
   // const [language,setLanguage] = useLocalStorage('language','ename')
@@ -59,6 +62,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       dispatch(setAuthState(true));
     // }
   }, [router.pathname]);
+  useEffect(()=>{
+    disableZoom()
+  },[])
   const Puller = styled(Box)(({ theme }) => ({
     width: 33,
     height: 4,
