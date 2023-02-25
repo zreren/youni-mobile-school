@@ -4,7 +4,7 @@ import useLocalStorage from '@/hooks/useStore';
 // const token = localStorage.getItem('token')
 // const [token, setToken] = useLocalStorage('token', null);
 const instance = axios.create({
-  baseURL:  process.env.BASEURL,
+  baseURL: 'https://youni-admin.kuizuo.cn',
   timeout: 10000,
   headers:{
     "authorization":typeof window !== 'undefined'?localStorage.getItem('token')?.replace("\"","")?.replace("\"",""):null

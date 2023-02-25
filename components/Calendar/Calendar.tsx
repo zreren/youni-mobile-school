@@ -392,9 +392,10 @@ function Calendar(props) {
       );
     };
     const todayItemCount = useMemo(() => {
+      console.log(groupedEvents,"groupedEvents")
       return generateNewArray(getWeekDates(), groupedEvents)?.filter(
         (item, index) => {
-          console.log(item, 'item');
+          console.log(item, 'generateNewArray list item');
           if (setting.view === 'today' && !isToday(item.time)) {
             return;
           }
@@ -403,11 +404,12 @@ function Calendar(props) {
       );
     }, [groupedEvents]);
     useEffect(() => {
-      console.log(todayItemCount, 'todayItemCount');
-    }, [todayItemCount]);
+      console.log(groupedEvents,dayTimeEvents,mergeObjects([groupedEvents, dayTimeEvents]), 'dayTimeEvents');
+    }, [groupedEvents]);
     type ObjectType = { [key: string]: any };
     function mergeObjects(objects: ObjectType[]): ObjectType {
-      if(!objects[1].length || !objects[0].length) return {}
+      console.log(objects,"objects,dayTimeEvents")
+      if(!objects[1] || !objects[0]) return {}
       return objects.reduce((prev, curr) => {
         Object.keys(curr).forEach((key) => {
           if (Array.isArray(prev[key]) && Array.isArray(curr[key])) {
@@ -422,12 +424,12 @@ function Calendar(props) {
       }, {});
     }
     return (
-      <div className="w-full pb-10  min-h-screen p-5 ">
+      <div className="w-full pb-10  min-h-screen p-5 z-30">
         {generateNewArray(
           getWeekDates(),
           mergeObjects([groupedEvents, dayTimeEvents]),
         ).map((item, index) => {
-          console.log(item, 'item');
+          console.log(item, 'list item');
           if (setting.view === 'today' && !isToday(item.time)) return null;
           const color = colorMap[index % 3];
           if(!item) return;
@@ -442,7 +444,7 @@ function Calendar(props) {
                   <Card
                     color={color}
                     title={item?.name}
-                    students={item?.section?.students}
+                    students={item?.section?.user}
                     dayOfWeek={item?.dayOfWeek}
                     extendedProps={{
                       section: { name: item.section?.name },

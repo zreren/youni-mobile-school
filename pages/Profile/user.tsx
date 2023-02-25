@@ -56,64 +56,7 @@ import Box from '@mui/material/Box';
 import { use } from 'i18next';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 
-const PostGroup = () => {
-  return (
-    <div className="w-full px-5 py-4  rounded-lg border border-[#D9E7FF] bg-PostGroup">
-      <div className="flex justify-between">
-        {' '}
-        <div className="flex items-center space-x-2">
-          <div className="text-blueTitle text-sm font-semibold">测试文集1 </div>
-          <div className="text-[10px] rounded-sm px-2 text-white bg-[#52C41A] flex justify-center items-center">
-            公开
-          </div>
-        </div>
-        <div className="rounded-full text-[#A9B0C0] flex justify-center items-center border w-14 bg-white border-[#F3F4F6]">
-          编辑
-        </div>
-      </div>
-      <div className="flex space-x-2">
-        <div className="flex items-center">
-          <PostGroupIcon1></PostGroupIcon1>
-          <div className="text-[#798195] text-xs">24</div>
-        </div>
-        <div className="flex items-center">
-          <PostGroupIcon2></PostGroupIcon2>
-          <div className="text-[#798195] text-xs">24</div>
-        </div>
-        <div className="flex items-center">
-          <PostGroupIcon3></PostGroupIcon3>
-          <div className="text-[#798195] text-xs">24</div>
-        </div>
-      </div>
-      <div className="mt-4 flex justify-between ">
-        <Image
-          width={64}
-          height={64}
-          src="/text.png"
-          className="rounded-xl"
-        ></Image>
-        <Image
-          width={64}
-          height={64}
-          src="/text.png"
-          className="rounded-xl"
-        ></Image>
-        <Image
-          width={64}
-          height={64}
-          src="/text.png"
-          className="rounded-xl"
-        ></Image>
-        <Image
-          width={64}
-          height={64}
-          src="/text.png"
-          className="rounded-xl"
-        ></Image>
-      </div>
-    </div>
-  );
-};
+
 const PostGroupItem = (props):JSX.Element =>{
   const {title,id} = props;
   return <div onClick={()=>{props.selectPostGroup()}} className='bg-[#F7F8F9] h-12 py-2 px-1 flex items-center rounded space-x-2'>
@@ -128,7 +71,7 @@ function index(props) {
   const { user } = useUser();
   const router = useRouter();
   const userId = Number(router.query.id);
-  const { data } = useFetch('/student/post_stared_list', 'get', {
+  const { data } = useFetch('/user/post_stared_list', 'get', {
     id: userId,
   });
   const PostGroupDetail = (props) => {
@@ -163,7 +106,7 @@ function index(props) {
                     }}
                     className="w-8 rounded-full bg-neutral-focus text-neutral-content"
                   >
-                    <img src={`${Cons.BASEURL}${data?.student?.avatar}`} />
+                    <img src={`${Cons.BASEURL}${data?.user?.avatar}`} />
                   </div>
                 </div>
                 <div
@@ -172,10 +115,10 @@ function index(props) {
                   }}
                 >
                   <div className="ml-4 text-sm  font-normal max-w-8 text-[#37455C] ">
-                    {data?.student?.nickName}
+                    {data?.user?.nickName}
                   </div>
                   <div className="ml-4 text-xs text-gray-200">
-                    {data?.student?.education?.year} · {data?.student?.education?.major}
+                    {data?.user?.education?.year} · {data?.user?.education?.major}
                     {/* 2022届 · B.Com Accounting */}
                   </div>
                 </div>
@@ -202,7 +145,7 @@ function index(props) {
         {data?.posts?.length > 0 ?<Waterfall
               key={data?.id + data?.posts?.length}
               postData={data?.posts?.map((item) => {
-                return { ...item, student: { nickName: data?.student?.nickName } };
+                return { ...item, user: { nickName: data?.user?.nickName } };
               })}
             ></Waterfall>:<div className='text-[#898E97] flex justify-center'>该文集暂时没有内容</div>}
       </div>
@@ -244,10 +187,10 @@ function index(props) {
   };
   const Profile2 = () => {
     const [menu, setMenu] = useState(0);
-    const { data, mutate } = useFetch('/student/post_liked_list', 'get', {
+    const { data, mutate } = useFetch('/user/post_liked_list', 'get', {
       id: userId,
     });
-    const {data:postGroup,mutate:groupMutate} = useFetch('/student/collection','get',{
+    const {data:postGroup,mutate:groupMutate} = useFetch('/user/collection','get',{
       id:userId
     })
 
@@ -310,24 +253,16 @@ function index(props) {
     );
   };
 
-  const { data: UserData, mutate } = useFetch('/student/info', 'get', {
+  const { data: UserData, mutate } = useFetch('/user/info', 'get', {
     id: router.query.id,
   });
   useEffect(() => {
-    if (user?.student?.id === Number(router.query.id)) {
+    if (user?.user?.id === Number(router.query.id)) {
       router.push('/Profile');
     } else {
       mutate();
     }
   }, [router.query.id]);
-  // useEffect(()=>{
-  //   console.log(user?.student?.id,"user?.student?.id",router.query.id)
-  //   if(user?.student?.id === router.query.id){
-  //     router.push('/Profile')
-  //   }else{
-  //     mutate();
-  //   }
-
   // },[])
   const [school, setSchool] = useLocalStorage('school', 'York');
   const { i18n } = useTranslation('common');
@@ -392,7 +327,7 @@ function index(props) {
           mutate();
         }}
         myProfile={(UserData?.data?.id !== user?.id)}
-        data={{ student: UserData?.data }}
+        data={{ user: UserData?.data }}
       ></ProfileHeader>
       <div className="w-full header-shadow overflow-hidden rounded-t-2xl -translate-y-[6px]">
         {menuVal !== 4 ? (

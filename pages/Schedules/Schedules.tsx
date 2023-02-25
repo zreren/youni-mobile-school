@@ -78,6 +78,7 @@ const CCourseInput = (props) => {
 export default function Schedules() {
   const calendarRef = useRef<any>();
   const router = useRouter();
+  const {defaultCurriculum} = useCurriculum();
   const [campusIdMapSchool, setCampusIdMapSchool] = useLocalStorage(
     'school',
     null,
@@ -247,7 +248,7 @@ export default function Schedules() {
               </div>
               <div className="flex flex-col items-end w-1/2">
                 <div className="-space-x-2 avatar-group">
-                  {extendedProps?.section?.students
+                  {extendedProps?.section?.user
                     ?.slice(0, 3)
                     .map((item, index) => {
                       return (
@@ -260,8 +261,8 @@ export default function Schedules() {
                     })}
                 </div>
                 <div className="text-xs text-[#798195]">
-                  {extendedProps?.section?.students?.length > 0
-                    ? `${extendedProps?.section?.students.length}名同学`
+                  {extendedProps?.section?.user?.length > 0
+                    ? `${extendedProps?.section?.user.length}名同学`
                     : null}
                 </div>
               </div>
@@ -508,7 +509,7 @@ export default function Schedules() {
         otherSchedulesMutate();
         return;
       } else {
-        setStudentId(id?.student?.id);
+        setStudentId(id?.user?.id);
         Toast.success('切换课表到用户' + id?.student?.nickName);
         setCurriculumId(id?.id)
         return;
@@ -648,18 +649,18 @@ export default function Schedules() {
                         className={classnames(
                           'rounded-full text-neutral-content w-14',
                           {
-                            'bg-[#FFD03640]': studentId === item?.student?.id  && !historyMode,
-                            'bg-[#F7F8F9]' : studentId !== item?.student?.id
+                            'bg-[#FFD03640]': studentId === item?.user?.id  && !historyMode,
+                            'bg-[#F7F8F9]' : studentId !== item?.user?.id
                           },
                         )}
                       >
                         <span
                           className={classnames('text-xs font-medium ', {
-                            'text-[#FFD036]': studentId === item?.student?.id && !historyMode,
-                            'text-[#A9B0C0]': studentId !== item?.student?.id
+                            'text-[#FFD036]': studentId === item?.user?.id && !historyMode,
+                            'text-[#A9B0C0]': studentId !== item?.user?.id
                           })}
                         >
-                          {item?.student?.nickName}
+                          {item?.user?.nickName}
                         </span>
                       </div>
                     </div>
@@ -683,18 +684,18 @@ export default function Schedules() {
                         className={classnames(
                           ' rounded-full text-neutral-content w-14',
                           {
-                            'bg-[#FFD03640]': studentId === item?.student?.id && historyMode,
-                            'bg-[#FBFCFC]' : studentId !== item?.student?.id || !historyMode
+                            'bg-[#FFD03640]': studentId === item?.user?.id && historyMode,
+                            'bg-[#FBFCFC]' : studentId !== item?.user?.id || !historyMode
                           },
                         )}
                       >
                         <span
                           className={classnames('text-xs font-medium ', {
-                            'text-[#FFD036]': studentId === item?.student?.id && historyMode,
-                            'text-[#D4D8E0]': studentId !== item?.student?.id|| !historyMode
+                            'text-[#FFD036]': studentId === item?.user?.id && historyMode,
+                            'text-[#D4D8E0]': studentId !== item?.user?.id|| !historyMode
                           })}
                         >
-                          {item?.student?.nickName}
+                          {item?.user?.nickName}
                         </span>
                       </div>
                     </div>
@@ -717,12 +718,13 @@ export default function Schedules() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [yearMethod, setYearMethod] = useState(false);
   const [studentId, setStudentId] = useState(-1);
-  const [curriculumId,setCurriculumId] = useState()
+  const [curriculumId,setCurriculumId] = useState();
   const { data, error, mutate } = useFetch(
-    `${Cons.API.CURRICULUM.QUERY}`,
+    `/curriculum/query`,
     'get',
     {
-      campusId: campusIdMap,
+      campusId:campusIdMap
+      // id: defaultCurriculum?.id,
     },
   );
   const { data: otherSchedules, mutate: otherSchedulesMutate } = useFetch(
@@ -730,9 +732,6 @@ export default function Schedules() {
     'get',
     {
       id: curriculumId,
-      // campusId: campusIdMap,
-      // studentId: studentId,
-      // termId: 1,
     },
   );
   const { data: timeTableData } = useFetch(`/timetable/query`, 'get');
@@ -756,13 +755,8 @@ export default function Schedules() {
       };
     });
   },[otherSchedules,curriculumId,studentId])
-  useEffect(() => {
-    console.log(tempData, 'tempData courseData');
-  }, [tempData]);
-  // const []
-  // const currentDate = new Date();
-  // currentDate.setDate(currentDate.getDate()+7)
-  // let courseData;
+
+
   function getPastWeekDates(): [Date, Date] {
     const today = new Date();
     const startDate = new Date();
@@ -772,6 +766,7 @@ export default function Schedules() {
     endDate.setDate(today.getDate() - dayOfWeek + 6);
     return [startDate, endDate];
   }
+  
   const weekDate = getPastWeekDates();
 
   const courseData = useMemo(() => {
@@ -1052,6 +1047,7 @@ export default function Schedules() {
           ></Calendar>
         </div>
       )}
+      <div className='pb-10 bg-white w-full -translate-y-2 topIndex'></div>
     </div>
   );
 }

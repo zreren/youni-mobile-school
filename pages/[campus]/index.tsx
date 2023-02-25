@@ -7,7 +7,7 @@ import { useState } from 'react';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { styled } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
-import { Swiper } from 'react-vant';
+import { Swiper, Toast } from 'react-vant';
 import classnames from 'classnames';
 import Header from '@/components/Header';
 import { useDispatch, useSelector } from 'react-redux';
@@ -139,9 +139,28 @@ function SchoolPage(props) {
     props?.post?.alias,
     props?.post?.id,
   );
-  // const [postData, setPostData] = useState({});
+  const [category, setCategory] = useState('idle');
+  const { data: _postData, error,mutate ,isLoading} = useFetch(
+    `/post/home_list`,
+    'page',{
+      type: category,
+      pageSize:20,
+    }
+  );
+  const postData = useMemo(() => {
+    return _postData ? [].concat(..._postData) : [];
+  }, [_postData]);
+  useEffect(()=>{
+    console.log(postData,"postData")
+  },[postData])
   const dispatch = useDispatch();
   const headerMenuList = [
+    {
+      label: '关注',
+    },
+    {
+      label: '推荐',
+    },
     {
       label: '闲置',
       value: 'idle',
@@ -166,22 +185,15 @@ function SchoolPage(props) {
       label: '二手书',
       value: 'book',
     },
-    {
-      label: '关注',
-    },
-    {
-      label: '推荐',
-    },
   ];
   const [reRender, setreRender] = useState(1);
   const onRefresh = (showToast) => {
     return new Promise((resolve) => {
       setTimeout(() => {
         if (showToast) {
-          // Toast.info('刷新成功')
+          mutate()
+          Toast.info('刷新成功')
         }
-        // setreRender(reRender+1)
-        // setCount(count + 1)
         resolve(true);
       }, 1000);
     });
@@ -201,28 +213,15 @@ function SchoolPage(props) {
   });
 
   const router = useRouter();
-  const [category, setCategory] = useState('idle');
   // useEffect(() => {
-  const { data: postData, error,mutate } = useFetch(
-    `/post/home_list`,
-    'get',{
-      type: category,
-      pageSize:20,
-      page:1,
-    }
-  );
   useEffect(()=>{
     mutate()
   },[category])
   const { data: carouselData } = useFetch('/campus/carousel', 'get', {
     id: campusIdMap,
   });
-
   React.useEffect(() => {
     setCampusIdMap(props?.post?.id);
-    // setCampusIdMap([...campusIdMap, {
-    //   [props?.post?.alias]: props?.post?.id
-    // }])
     dispatch(setAuthState(true));
   }, []);
   const [countryId, setCountryId] = useState();
@@ -249,15 +248,6 @@ function SchoolPage(props) {
       mutate();
     }, [countryId]);
     console.log(schoolList, 'schoolList');
-    const countryList = [
-      { label: '中国', value: 'Canada' },
-      { label: '中国', value: 'China' },
-    ];
-    // if(countryData?.data?.length === 0){
-    //   return (
-    //     // <div>No</div>
-    //   )
-    // }
     return (
       <div className="">
         <Popup
@@ -333,9 +323,9 @@ function SchoolPage(props) {
       </div>
     );
   };
-  // if (!Post) {
-  //   return <div>loading</div>;
-  // }
+  useEffect(()=>{
+    setPostDetailShow(false)
+  },[router.pathname])
   const [loading, setLoading] = useState(true);
   return (
     <div className="w-screen  pb-10">
@@ -381,7 +371,6 @@ function SchoolPage(props) {
             </Swiper.Item>:null
             }
             {carouselData?.data.map((item, index) => {
-              // if (index !== 0) return;
               return (
                 <Swiper.Item>
                   <Image
@@ -420,22 +409,22 @@ function SchoolPage(props) {
         </div>
         <div className="mb-10">
           {/* {postData?.data? ( */}
-          {postData?.data ? (
+          {postData? (
             <Waterfall
-              key={category +postData?.data?.length }
-              postData={postData?.data}
+              key={category +postData?.length }
+              postData={postData}
               show={() => {
                 setPostDetailShow(true);
               }}
               onClick={() => {}}
             ></Waterfall>
           ) : null}
-          {!postData?.data && postData?.code === 1102 ? (
+          {!postData ? (
             <div className="text-[#A9B0C0] mt-10 flex justify-center items-center w-full">
               暂无内容
             </div>
           ) : null}
-          {!postData?.data && postData?.code !== 1102 ? (
+          {isLoading ? (
             <LoadingWaterfall
               key={category}
               show={() => {
@@ -460,11 +449,6 @@ export async function getServerSideProps({ params }) {
     },
   });
   console.log(data,"data")
-  // if(!data?.data[0]){
-  //   return {
-  //     notFound:true
-  //   }
-  // }
   return {
     props: {
       post: data?.data[0],

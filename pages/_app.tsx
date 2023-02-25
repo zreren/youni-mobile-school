@@ -54,7 +54,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     // }
   }, [router.pathname]);
   useEffect(()=>{
-    disableZoom()
+    // disableZoom()
   },[])
   const Puller = styled(Box)(({ theme }) => ({
     width: 33,

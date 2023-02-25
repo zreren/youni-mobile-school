@@ -2,8 +2,8 @@
 const globalAny: any = global;
 
 globalAny.Cons = {
-  // BASEURL: 'https://youni-admin.kuizuo.cn',
-  BASEURL: process.env.BASEURL,
+  BASEURL: 'https://youni-admin.kuizuo.cn',
+  // BASEURL: process.env.BASEURL,
   LANGUAGE:
     typeof window !== 'undefined'
       ? localStorage.getItem('language')?.replace('"', '')?.replace('"', '')

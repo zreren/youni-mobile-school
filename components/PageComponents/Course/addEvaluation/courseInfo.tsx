@@ -223,7 +223,7 @@ function courseInfo(props) {
           }}
           data={subjectData}
           renderData={subjectData?.map((item) => {
-            return item.ename;
+            return item?.ename;
           })}
         ></CCourseInput>
         {/* <select onChange={(val)=>{

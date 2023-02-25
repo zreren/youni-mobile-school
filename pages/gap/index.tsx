@@ -172,9 +172,14 @@ export default function index() {
     );
   };
   const AutoInput = (props) => {
-    const { data: courseData } = useFetch('/course/query?campusId=1', 'get');
+    const { data: _courseData } = useFetch('/course/query', 'page',{
+      campusId:1,
+      pageSize: 100
+    });
+    const courseData = useMemo(() => _courseData ? courseData ? [...courseData].concat(..._courseData):[].concat(..._courseData):null, [_courseData])
+
     const changeValue = (name) =>{
-      Object.values(courseData?.data).some((value:any)=>{
+      Object.values(courseData).some((value:any)=>{
         if(value.ename === name){
           props.onChange({
             id:value.id,
@@ -215,7 +220,7 @@ export default function index() {
             padding: 0,
           },
         }}
-        options={courseData?.data?.map((option) => option.ename)}
+        options={courseData?.map((option) => option.ename)}
         renderInput={(params) => (
           <TextField
             placeholder="请输入"

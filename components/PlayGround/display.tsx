@@ -324,10 +324,10 @@ export default function Display(props) {
         <div className="flex items-center justify-between mt-2 mb-2">
           <div className="flex items-center space-x-1">
             <div className="overflow-hidden w-[18px] h-[18px] rounded-full bg-neutral-focus text-neutral-content">
-            <img src={`${Cons.BASEURL}${data?.student?.avatar}`} />
+            <img src={`${Cons.BASEURL}${data?.user?.avatar}`} />
             </div>
             <div className="text-xs text-priceGray">
-              {data?.student?.nickName}
+              {data?.user?.nickName}
             </div>
           </div>
           <div

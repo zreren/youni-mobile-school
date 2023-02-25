@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Header from '@/components/Header';
 import CategoryButton from '@/components/Button/CategoryButton';
@@ -9,36 +9,68 @@ import CourseScoreCard from '@/components/CourseScoreCard';
 import { useRouter } from 'next/router';
 import useFetch from '@/hooks/useFetch';
 import useRequest from '@/libs/request';
+import { InfiniteScroll, List } from 'antd-mobile';
 
 export default function course() {
-  const router = useRouter()
-  const subjectId = router.query.subjectId
-  console.log(subjectId,"subjectId")
-  const [hotCourseData,setHotCourseData] =  useState(null)
-  const { data, error } = useFetch(`${Cons.API.SUBJECT.QUERY}?campusId=1`,"get");
-  const { data:courseData,error:courseError } = useFetch(`/subject/course?id=${subjectId}`,"get");
-  // useEffect(()=>{
-  //  useRequest().post(`/api/subject/course`,{id:subjectId})
-  // },[router.query.subjectId])  
+  const router = useRouter();
+  const subjectId = useMemo(
+    () => router.query.subjectId,
+    [router.query.subjectId],
+  );
+  console.log(subjectId, 'subjectId');
+  const [hotCourseData, setHotCourseData] = useState(null);
+  // const { data, error } = useFetch(
+  //   `${Cons.API.SUBJECT.QUERY}?campusId=1`,
+  //   'get',
+  // );
+  const {
+    data: _courseData,
+    error: courseError,
+    mutate,
+    setSize,
+    isLoading,
+    size,
+  } = useFetch(`/subject/course`, 'page', {
+    id: subjectId,
+    pageSize: 20,
+  });
+  const isEmpty = useMemo(() => _courseData?.[0]?.length === 0, [_courseData]);
+  const isReachingEnd = useMemo(() => isEmpty || (_courseData && _courseData[_courseData.length - 1]?.length < 10), [_courseData,isEmpty])
+  useEffect(() => {
+    mutate();
+  }, [subjectId]);
 
-  console.log(data,"data")
-  const randomColor = ['red', 'blue', 'yellow', 'green', 'pink', 'purple']
+  const courseData = useMemo(
+    () => (_courseData ? courseData? [...courseData].concat(..._courseData) : [].concat(..._courseData) : null),
+    [_courseData,size,isLoading,subjectId],
+  );
+  useEffect(() => {
+    console.log(courseData, 'courseData');
+  }, [courseData]);
+  const [isLoadingMoreState, setIsLoadingMore] = useState(false);
+
   return (
     <CommonLayout isBottom={true}>
       <Header title="课程评价" />
       <Title title="按学科查询"></Title>
       <Search placeholder="搜索课程"></Search>
-      <div className='space-y-3 mt-4'>
-        {courseData?.data?.map((item,index) => {
-          return (
-            <CourseScoreCard data={item}></CourseScoreCard>
-          )
+      <div className="space-y-3 mt-4">
+        {courseData?.map((item, index) => {
+          return <CourseScoreCard data={item}></CourseScoreCard>;
         })}
-
-        {/* <CourseScoreCard data={{ score: 0.8 }}></CourseScoreCard>
-        <CourseScoreCard data={{ score: 0.8 }}></CourseScoreCard>
-        <CourseScoreCard data={{ score: 0.8 }}></CourseScoreCard> */}
       </div>
+      <InfiniteScroll
+        threshold={50}
+        loadMore={async () => {
+          if (isLoadingMoreState) {
+            return;
+          }
+          setIsLoadingMore(true);
+          await setSize(size + 1);
+          setIsLoadingMore(false);
+        }}
+        hasMore={!isReachingEnd && !isLoading}
+      />
     </CommonLayout>
   );
 }

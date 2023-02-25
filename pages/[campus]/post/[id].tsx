@@ -39,7 +39,7 @@ function index(props) {
     });
     if (data?.message) {
       Toast.success('评论成功');
-      mutate({}, true);
+      mutate();
     }
   };
   /**
@@ -56,7 +56,7 @@ function index(props) {
     });
     if (data?.message) {
       Toast.success('评论成功');
-      mutate({}, true);
+      mutate();
     }
   };
   interface MapLocation  {
@@ -254,7 +254,7 @@ function index(props) {
       </Popup>
       <UserHeader
         className="fixed z-10   top-0 w-full"
-        data={data?.data?.student}
+        data={data?.data?.user}
       ></UserHeader>
       <div className="min-h-[380px]">
         <Swiper
@@ -327,7 +327,7 @@ function index(props) {
       <div className="p-5 pt-4 pb-2">
         <UserInfo
           contact={data?.data?.form?.contact}
-          data={data?.data?.student}
+          data={data?.data?.user}
         ></UserInfo>
       </div>
       <div className="w-full h-2 bg-bg"></div>

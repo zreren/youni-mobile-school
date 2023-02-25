@@ -111,7 +111,7 @@ const PostGroupDetail = (props) => {
                   }}
                   className="w-8 rounded-full bg-neutral-focus text-neutral-content"
                 >
-                  <img src={`${Cons.BASEURL}${data?.student?.avatar}`} />
+                  <img src={`${Cons.BASEURL}${data?.user?.avatar}`} />
                 </div>
               </div>
               <div
@@ -120,10 +120,10 @@ const PostGroupDetail = (props) => {
                 }}
               >
                 <div className="ml-4 text-sm  font-normal max-w-8 text-[#37455C] ">
-                  {data?.student?.nickName}
+                  {data?.user?.nickName}
                 </div>
                 <div className="ml-4 text-xs text-gray-200">
-                  {data?.student?.education?.year} · {data?.student?.education?.major}
+                  {data?.user?.education?.year} · {data?.user?.education?.major}
                   {/* 2022届 · B.Com Accounting */}
                 </div>
               </div>
@@ -152,7 +152,7 @@ const PostGroupDetail = (props) => {
             key={data?.id + data?.posts?.length}
             cancelStarPost={(id)=>{cancelStarPost(id)}}
             postData={data?.posts?.map((item) => {
-              return { ...item, student: { nickName: data?.student?.nickName } };
+              return { ...item, student: { nickName: data?.user?.nickName } };
             })}
           ></Waterfall>:<div className='text-[#898E97] flex justify-center'>该文集暂时没有内容</div>}
     </div>
@@ -285,7 +285,6 @@ const Identify = () => {
     >
       <div className="flex items-center space-x-2">
         <ValidIcon className="absolute left-0"></ValidIcon>
-        {/* <div>{t("profile.identify.student.certification")}</div> */}
         <div className="pl-10 font-bold text-brown">学生认证</div>
       </div>
       <div className="flex flex-col items-center text-xs text-brown">
@@ -489,8 +488,8 @@ function index(props) {
           </div>
         ) : (
           <Waterfall
-            postData={data?.data.map((item) => {
-              return { ...item, student: { nickName: user?.nickName } };
+            postData={data?.data?.map((item) => {
+              return { ...item, user: { nickName: user?.nickName } };
             })}
           ></Waterfall>
         )}
@@ -504,6 +503,7 @@ function index(props) {
     const { data: liked } = useFetch('/post/liked', 'get');
     const { data: stard } = useFetch('/post/stard', 'get');
     const { data: PostGroupData } = useFetch('/collection/followed', 'get');
+    
     const postData = React.useMemo(() => {
       if(liked?.data && stard?.data){
         return (
@@ -683,7 +683,7 @@ function index(props) {
 
   return (
     <div className="w-screen min-h-screen   pb-36">
-      <ProfileHeader data={{ student: user }}></ProfileHeader>
+      <ProfileHeader data={{ user: user }}></ProfileHeader>
       <div className="w-full overflow-hidden rounded-full ">
         {menuVal !== 4 ? (
           <HeaderMenu
