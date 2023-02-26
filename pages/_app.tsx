@@ -36,7 +36,6 @@ import Head from 'next/head';
 import useLocalStorage from '../hooks/useStore';
 import { disableZoom } from '@/libs/disableZoom';
 
-
 function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useDispatch();
   // const [language,setLanguage] = useLocalStorage('language','ename')
@@ -44,27 +43,44 @@ function MyApp({ Component, pageProps }: AppProps) {
   const openLogin = useSelector(selectOpen);
   const [stopScroll, setStopScroll] = useState(false);
   const router = useRouter();
-  const routerTable = [
-    '/School/',
-    '/[campus]/Schedules/Schedules',
-    '/Course/evaluation',
-    '/York/Course/course',
-    '/Profile',
-    'Schedules',
-    'evaluation'
-  ];
   const { i18n } = useTranslation();
   console.log(i18n);
   useEffect(() => {
     console.log(router.pathname);
     // setLanguage('ename')
     // if (routerTable.indexOf(router.pathname) > -1) {
-      dispatch(setAuthState(true));
+    dispatch(setAuthState(true));
     // }
   }, [router.pathname]);
-  useEffect(()=>{
-    disableZoom()
-  },[])
+  let lastTouchEnd = 0;
+  const touchEnd = (event) => {
+    const now = new Date().getTime();
+    if (now - lastTouchEnd <= 300) {
+      if (
+        openLogin === 'login' ||
+        openLogin === 'register' ||
+        router.pathname.indexOf('Search') > -1
+      ) {
+        event.preventDefault();
+      }
+    }
+    lastTouchEnd = now;
+  };
+  const touchStart = (event) => {
+    const touchEvent = event as TouchEvent & { scale: number };
+    if (touchEvent.scale !== 1) {
+      if (
+        openLogin === 'login' ||
+        openLogin === 'register' ||
+        router.pathname.indexOf('Search') > -1
+      ) {
+        event.preventDefault();
+      }
+    }
+  };
+  useEffect(() => {
+    // disableZoom()
+  }, []);
   const Puller = styled(Box)(({ theme }) => ({
     width: 33,
     height: 4,
@@ -74,7 +90,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     top: 8,
     left: 'calc(50% - 15px)',
   }));
-  const LoginModel = () => {
+  const LoginModel = (): JSX.Element => {
     return (
       <SwipeableDrawer
         className="z-20 bottom-footer-theTop"
@@ -85,7 +101,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           dispatch(setAuthState(true));
         }}
         onOpen={() => {}}
-        open={openLogin!=='close'}
+        open={openLogin !== 'close'}
         anchor="bottom"
       >
         <div className="h-screen">
@@ -99,7 +115,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   };
   return (
     <div className="overflow-hidden">
-
       <SwitchTransition mode="out-in">
         <CSSTransition
           in={openLogin !== 'close'}
@@ -107,7 +122,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           timeout={60}
           key={openLogin}
         >
-          <div className={classnames({ 'hidden': openLogin !== 'close' })}>
+          <div className={classnames({ hidden: openLogin !== 'close' })}>
             <LoginModel />
           </div>
         </CSSTransition>

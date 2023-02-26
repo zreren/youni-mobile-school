@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{useMemo,useEffect}from 'react';
 import Header from '@/components/Header';
 import ProfessorCard from '@/components/ProfessorListItem';
 // import { professorList } from '@/mock/data';
@@ -9,14 +9,22 @@ import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import useFetch from '../../../hooks/useFetch';
 import { Flex, Loading } from 'react-vant';
-
 // import CourseScoreCard from '../components/CourseScoreCard'
 export default function professorEvaluation() {
   const router = useRouter();
-  const { data: professorList, error } = useFetch(
-    `/professor/list?campusId=${1}`,
-    'get',
+  const { data: _professorList, error } = useFetch(
+    `/professor/list`,
+    'page',
+    {
+      campusId: 1,
+      pageSize: 20,
+    }
   );
+  const professorList = useMemo(() => _professorList? professorList?[...professorList].concat(..._professorList):[].concat(..._professorList) : [] , [_professorList])
+  useEffect(() => {
+    console.log(professorList,"professorList")
+  }, [professorList])
+  
   // const { data, error } = useSWR(API_KEY.USER.get.list,fetcher);
   return (
     <CommonLayout isBottom={true}>
@@ -26,7 +34,7 @@ export default function professorEvaluation() {
       <div className="space-y-4">
         <>
           {professorList ? (
-            professorList?.data?.map((item) => {
+            professorList?.map((item) => {
               return (
                 <ProfessorCard
                   data={item}

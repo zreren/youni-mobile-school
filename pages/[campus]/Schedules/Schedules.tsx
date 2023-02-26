@@ -119,7 +119,7 @@ const CourseDetailCard = (props) => {
             </div>
             <div className="flex flex-col items-end w-1/2">
               <div className="-space-x-2 avatar-group">
-                {extendedProps?.section?.students
+                {extendedProps?.section?.user
                   ?.slice(0, 3)
                   .map((item, index) => {
                     return (
@@ -131,7 +131,7 @@ const CourseDetailCard = (props) => {
                     );
                   })}
               </div>
-              <div className="text-xs text-[#798195]">{extendedProps?.section?.students?.length} 名同学</div>
+              <div className="text-xs text-[#798195]">{extendedProps?.section?.user?.length} 名同学</div>
             </div>
           </div>
           <div className="mt-4 mb-4">
@@ -413,7 +413,7 @@ export default function Schedules() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [yearMethod, setYearMethod] = useState(false);
   const { data, error } = useFetch(
-    `${Cons.API.CURRICULUM.QUERY}?campusId=1`,
+    `/curriculum/query?campusId=1`,
     'get',
   );
   // const []

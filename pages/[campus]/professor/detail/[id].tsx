@@ -23,7 +23,17 @@ export default function ProfessorDetail() {
     `/professor/course?id=${Id}`,
     'get',
   );
-  const {data:professorCommentList,error:professorCommentError} = useFetch(`/professor/evaluation?id=${Id}${currentSelectId !== 0?`&courseId=${currentSelectId}`:''}`,'get')
+  const {data:_professorCommentList,error:professorCommentError} = useFetch(`/professor/evaluation`,'page',{
+    id: Id,
+    courseId: currentSelectId,
+    pageSize:100,
+  })
+  const professorCommentList = useMemo(()=>{
+    return _professorCommentList? [].concat(..._professorCommentList):[]
+  },[_professorCommentList])
+  useEffect(()=>{
+    console.log(professorCommentList,"professorCommentList")
+  },[professorCommentList])
   const professorListCopy = useMemo(() => {
     if (!professorDataList?.data) return [{ id: 0, ename: '查看全部' }];
     const newval = professorDataList?.data.slice()
@@ -32,10 +42,6 @@ export default function ProfessorDetail() {
   useEffect(()=>{
     console.log(professorListCopy,"professorListCopy")
   },[professorListCopy])
-  // professorListCopy?.unshift({
-  //   id: 0,
-  //   ename: '查看全部',
-  // });
   interface ScoreDistribution {
     [key: string]: number;
   }
@@ -51,28 +57,28 @@ export default function ProfessorDetail() {
   const scoreDistribution = [
     {
       item: '非常糟糕',
-      value: data?.data.scoreDistribution[1],
-      percent: data?.data.scoreDistribution[1] / total,
+      value: data?.data?.scoreDistribution[1],
+      percent: data?.data?.scoreDistribution[1] / total,
     },
     {
       item: '勉勉强强',
-      value: data?.data.scoreDistribution[2],
-      percent: data?.data.scoreDistribution[2] / total,
+      value: data?.data?.scoreDistribution[2],
+      percent: data?.data?.scoreDistribution[2] / total,
     },
     {
       item: '感觉还行',
-      value: data?.data.scoreDistribution[3],
-      percent: data?.data.scoreDistribution[3] / total,
+      value: data?.data?.scoreDistribution[3],
+      percent: data?.data?.scoreDistribution[3] / total,
     },
     {
       item: '感觉不错',
-      value: data?.data.scoreDistribution[4],
-      percent: data?.data.scoreDistribution[4] / total,
+      value: data?.data?.scoreDistribution[4],
+      percent: data?.data?.scoreDistribution[4] / total,
     },
     {
       item: '强烈推荐',
-      value: data?.data.scoreDistribution[5],
-      percent: data?.data.scoreDistribution[5] / total,
+      value: data?.data?.scoreDistribution[5],
+      percent: data?.data?.scoreDistribution[5] / total,
     },
   ];
   return (
@@ -109,7 +115,7 @@ export default function ProfessorDetail() {
         })}
       </div>
       <div className="mb-4"></div>
-      {professorCommentList?.data?professorCommentList?.data.map((item,index) => {
+      {professorCommentList?professorCommentList?.map((item,index) => {
         return (
           <UserComment  data={item} key={index}></UserComment>
         )

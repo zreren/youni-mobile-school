@@ -52,11 +52,9 @@ const PostGroupDetail = (props) => {
     <div className="w-full h-screen">
       <div className="w-full h-[126px] bg-[#F7F8F9] p-5 pt-6 mb-2">
         <div className="flex items-center">
-         
             <div className=' '>
               <TopicIcon></TopicIcon>
             </div>
-           
           {
           <div className="ml-4 text-[#37455C] font-semibold text-lg">
             {props?.topicName}
@@ -70,7 +68,7 @@ const PostGroupDetail = (props) => {
             key={data?.id + data?.posts?.length}
             cancelStarPost={(id)=>{cancelStarPost(id)}}
             postData={data?.posts?.map((item) => {
-              return { ...item, student: { nickName: data?.student?.nickName } };
+              return { ...item, user: { nickName: data?.user?.nickName } };
             })}
           ></Waterfall>:<div className='text-[#898E97] flex justify-center'>该文集暂时没有内容</div>}
     </div>
@@ -114,6 +112,23 @@ const PostGroupDrawer = (props) => {
 function index(props) {
   const { id } = props;
   const { data, mutate } = useFetch(`/post/detail?id=${id}`, 'get');
+
+
+  const {data:_commentData,mutate:mutateComment} = useFetch('/comment/list','page',{
+    id: id,
+    pageSize : 10,
+    type :  2
+  })
+  const commentData = useMemo(() => 
+  _commentData? commentData?
+   [...commentData].concat(_commentData).filter((item)=>item !== undefined):[].concat(..._commentData).filter((item)=>item !== undefined): null
+   ,[_commentData,data])
+   useEffect(()=>{
+    console.log(commentData,"commentData")
+   },[commentData])
+
+
+
   /**
    * @description 发送评论
    * @param e 评论内容
@@ -125,7 +140,7 @@ function index(props) {
     });
     if (data?.message) {
       Toast.success('评论成功');
-      mutate({}, true);
+      mutateComment();
     }
   };
   /**
@@ -142,7 +157,7 @@ function index(props) {
     });
     if (data?.message) {
       Toast.success('评论成功');
-      mutate({}, true);
+      mutateComment();
     }
   };
 
@@ -162,16 +177,16 @@ function index(props) {
        }
     },[props.data])
     const point = useMemo(()=>{
-      console.log(Location,'Location')
-      if(!Location) return null
+      if(!props?.data?.map) return;
+      if(!Location) return
       const point = Location?.point;
+      if(!point) return
       const bbox_width = 0.005;
       const bbox_height = 0.005;
       const longitude1 = point[0] - (bbox_width / 2)
       const latitude1 = point[1] - (bbox_height / 2)
       const longitude2 = point[0] + (bbox_width / 2)
       const latitude2 = point[1] + (bbox_height / 2)
-      if(!point) return null
       return [longitude1,latitude1,longitude2,latitude2]
     },[Location])
     if(!Location.point) return
@@ -308,7 +323,7 @@ function index(props) {
       setComment('');
     };
     return (
-      <div className="sticky  z-30 bottom-0 flex   items-center w-full p-5 bg-white h-[60px]">
+      <div className="sticky  z-30   bottom-10 flex   items-center w-full p-5 bg-white h-[60px]">
         <input
           placeholder={`回复${user?.nickName}`}
           value={comment}
@@ -354,8 +369,9 @@ function index(props) {
       id: detailId,
     },
   );
+
   return (
-    <div className="mb-10">
+    <div className="mb-10 ">
       <PostGroupDrawer
       topicName={topicName}
       onOpen={() => {
@@ -379,7 +395,7 @@ function index(props) {
       <UserHeader
        returnClick={()=>{props.returnClick()}}
         className="sticky z-30 bg-white top-0"
-        data={data?.data?.student}
+        data={data?.data?.user}
       ></UserHeader>
       <div className="min-h-[380px]">
         <Swiper
@@ -475,7 +491,7 @@ function index(props) {
       <div className="p-5 pt-4 pb-2">
         <UserInfo
           contact={data?.data?.form.contact}
-          data={data?.data?.student}
+          data={data?.data?.user}
         ></UserInfo>
       </div>
       <div className="w-full h-2 bg-bg"></div>
@@ -492,7 +508,7 @@ function index(props) {
           commentComment={(e) => {
             commentComment(e);
           }}
-          comments={data?.data?.comments}
+          comments={commentData}
         ></Discussion>
       </div>
       {commentChild?.id ? (

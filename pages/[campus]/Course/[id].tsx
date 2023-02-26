@@ -27,7 +27,14 @@ import EmptyCourseIcon from './emptyCourse.svg';
 export default function courseEvaluation() {
   const router = useRouter();
   const CourseId = router.query.id;
-  const CampusId = router.query.campus;
+  const CAMPUS = router.query.campus;
+
+  const {data:campusData} = useFetch('/campus/query','get',{
+    name: router.query.campus,
+  })
+  const campusId = useMemo(()=>{
+    return campusData?.data?.[0]?.id
+  },[campusData])
   // const router =useRouter();
   const { data: courseEvaluation, error } = useFetch(
     `${Cons.API.COURSE.DETAIL}?id=${CourseId}`,
@@ -92,13 +99,20 @@ export default function courseEvaluation() {
   function CustomIconWrapper(props) {
     return <FilterIcon {...props} style={{ transform: 'rotate(0deg)' }} />;
   }
+  const {data:professorRankList} = useFetch('/professor/hot','get',{
+    campusId:campusId
+  })
+  useEffect(()=>{
+    console.log(professorRankList,"professorRankList")
+  },[professorRankList])
+
   const Evaluation = (props) => {
     console.log(props, 'Evaluation props');
     return (
       <CommonLayout>
         <Search></Search>
         <Title title="热门教授"></Title>
-        <HotProfessorCar professorList={professorRankList}></HotProfessorCar>
+        <HotProfessorCar professorList={professorRankList?.data}></HotProfessorCar>
         <Title title="教授列表" customClick={() => {}}>
           {/* <FilterIcon></FilterIcon> */}
           <Select
@@ -136,7 +150,7 @@ export default function courseEvaluation() {
                     const campusId = router.query.campus;
                     router.push({
                       pathname: `/[campus]/professor/detail/${item.id}`,
-                      query: { campus: CampusId },
+                      query: { campus: router.query.campus },
                     });
                   }}
                 ></ProfessorCard>
@@ -149,23 +163,6 @@ export default function courseEvaluation() {
       </CommonLayout>
     );
   };
-  const professorRankList = [
-    // {
-    //   id: 1,
-    //   name: 'Leonard Eli Karakowsky',
-    //   score: 4.5,
-    // },
-    // {
-    //   id: 2,
-    //   name: 'Test Professor 1',
-    //   score: 3.2,
-    // },
-    // {
-    //   id: 3,
-    //   name: 'Test Professor 2',
-    //   score: 1.7,
-    // },
-  ];
 
   const [isFilteringOut, setisFilteringOut] = React.useState(true);
 

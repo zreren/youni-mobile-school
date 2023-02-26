@@ -446,3 +446,8 @@
 .bottomPlus{
   z-index: 99999999 !important;
 }
+
+.gray-pulse{
+  background: linear-gradient(260.85deg, #F2F2F2 -1.17%, #F2F2F2 94.12%);
+
+}

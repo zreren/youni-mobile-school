@@ -169,19 +169,19 @@ export default function index(props) {
           onClick={() => {
             router.push({
               pathname: '/Profile/user',
-              query: { id: data?.student?.id },
+              query: { id: data?.user?.id },
             });
           }}
         >
-          {data?.student?.avatar ? (
+          {data?.user?.avatar ? (
             <Image
               placeholder="blur"
               objectFit="cover"
-              blurDataURL={`${Cons.BASEURL}${data?.student.avatar}`}
+              blurDataURL={`${Cons.BASEURL}${data?.user.avatar}`}
               width={'24px'}
               height={'24px'}
               className="rounded-full"
-              src={`${Cons.BASEURL}${data?.student?.avatar}`}
+              src={`${Cons.BASEURL}${data?.user?.avatar}`}
             />
           ) : (
             <span className="text-3xl"></span>
@@ -193,20 +193,20 @@ export default function index(props) {
             onClick={() => {
               router.push({
                 pathname: '/Profile/user',
-                query: { id: data?.student?.id },
+                query: { id: data?.user?.id },
               });
             }}
           >
-            {data?.student.nickName}
+            {data?.user.nickName}
           </div>
           <div className="text-xs text-secondGray mt-1">
-            {data?.student?.education?.year} · {data?.student?.education?.major}
+            {data?.user?.education?.year} · {data?.user?.education?.major}
           </div>
           <div className="text-sm mt-1">{data?.content}</div>
           <DiscussionComponentFooter
             id={data?.id}
             data={data?.interactInfo}
-            user={data?.student}
+            user={data?.user}
             parent={data?.parent}
             time={data?.createdAt}
           ></DiscussionComponentFooter>
@@ -233,19 +233,19 @@ export default function index(props) {
                               onClick={() => {
                                 router.push({
                                   pathname: '/Profile/user',
-                                  query: { id: item?.student?.id },
+                                  query: { id: item?.user?.id },
                                 });
                               }}
                             >
-                              {item?.student?.avatar ? (
+                              {item?.user?.avatar ? (
                                 <Image
                                   placeholder="blur"
                                   objectFit="cover"
-                                  blurDataURL={`${Cons.BASEURL}${item?.student.avatar}`}
+                                  blurDataURL={`${Cons.BASEURL}${item?.user.avatar}`}
                                   width={'24px'}
                                   height={'24px'}
                                   className="rounded-full"
-                                  src={`${Cons.BASEURL}${item?.student?.avatar}`}
+                                  src={`${Cons.BASEURL}${item?.user?.avatar}`}
                                 />
                               ) : (
                                 <span className="text-3xl">K</span>
@@ -257,15 +257,15 @@ export default function index(props) {
                                 onClick={() => {
                                   router.push({
                                     pathname: '/Profile/user',
-                                    query: { id: item?.student?.id },
+                                    query: { id: item?.user?.id },
                                   });
                                 }}
                               >
-                                {item.student.nickName}
+                                {item.user.nickName}
                               </div>
                               <div className="text-xs text-secondGray mt-1">
-                                {item?.student?.education?.year || '未认证'} ·{' '}
-                                {item.student?.education?.major || '未认证'}
+                                {item?.user?.education?.year || '未认证'} ·{' '}
+                                {item.user?.education?.major || '未认证'}
                               </div>
                               <div className=" items-center space-x-1">
                                 {item?.reply ? (
@@ -275,7 +275,7 @@ export default function index(props) {
                                 ) : null}
                                 <span className="text-sm mt-1 whitespace-nowrap font-medium">
                                   {item?.reply
-                                    ? `@${item?.reply?.student?.nickName}`
+                                    ? `@${item?.reply?.user?.nickName}`
                                     : null}
                                 </span>
                                 <span className="text-sm mt-1 w-full">
@@ -286,7 +286,7 @@ export default function index(props) {
                               <DiscussionComponentFooter
                                 id={item?.id}
                                 data={item?.interactInfo}
-                                user={item?.student}
+                                user={item?.user}
                                 parent={item?.parent}
                                 time={item?.createdAt}
                               ></DiscussionComponentFooter>
@@ -302,19 +302,19 @@ export default function index(props) {
                               onClick={() => {
                                 router.push({
                                   pathname: '/Profile/user',
-                                  query: { id: item?.student?.id },
+                                  query: { id: item?.user?.id },
                                 });
                               }}
                             >
-                              {item?.student?.avatar ? (
+                              {item?.user?.avatar ? (
                                 <Image
                                   placeholder="blur"
                                   objectFit="cover"
-                                  blurDataURL={`${Cons.BASEURL}${item?.student.avatar}`}
+                                  blurDataURL={`${Cons.BASEURL}${item?.user.avatar}`}
                                   width={'24px'}
                                   height={'24px'}
                                   className="rounded-full"
-                                  src={`${Cons.BASEURL}${item?.student?.avatar}`}
+                                  src={`${Cons.BASEURL}${item?.user?.avatar}`}
                                 />
                               ) : (
                                 <span className="text-3xl"></span>
@@ -326,15 +326,15 @@ export default function index(props) {
                                 onClick={() => {
                                   router.push({
                                     pathname: '/Profile/user',
-                                    query: { id: item?.student?.id },
+                                    query: { id: item?.user?.id },
                                   });
                                 }}
                               >
-                                {item?.student?.nickName}
+                                {item?.user?.nickName}
                               </div>
                               <div className="text-xs text-secondGray mt-1">
-                                {item.student?.education?.year} ·{' '}
-                                {item?.student?.education?.major || '未认证'}
+                                {item.user?.education?.year} ·{' '}
+                                {item?.user?.education?.major || '未认证'}
                               </div>
                               <div className=" items-center space-x-1">
                                 {item?.reply ? (
@@ -345,7 +345,7 @@ export default function index(props) {
 
                                 <span className="text-sm mt-1 whitespace-nowrap font-medium">
                                   {item?.reply
-                                    ? `@${item?.reply?.student?.nickName}`
+                                    ? `@${item?.reply?.user?.nickName}`
                                     : null}
                                 </span>
                                 <span className="text-sm mt-1 w-full">
@@ -355,7 +355,7 @@ export default function index(props) {
                               <DiscussionComponentFooter
                                 id={item?.id}
                                 data={item?.interactInfo}
-                                user={item?.student}
+                                user={item?.user}
                                 parent={item?.parent}
                                 time={item?.createdAt}
                               ></DiscussionComponentFooter>
@@ -379,22 +379,6 @@ export default function index(props) {
                     </div>
                   ) : null}
                 </div>
-                {/* <div className="w-full">
-                              <div className="font-medium">
-                                {item?.student?.nickName}
-                              </div>
-                              <div className="text-xs text-secondGray mt-1">
-                                {item.student?.education?.year} ·{' '}
-                                {item?.student?.education?.major || '未认证'}
-                              </div>
-                              <div className="text-sm mt-1 w-full">
-                                {item?.content}
-                              </div>
-                              <DiscussionComponentFooter
-                                id={item?.id}
-                                data={item?.interactInfo}
-                              ></DiscussionComponentFooter>
-                            </div> */}
               </DiscussionComponent>
             </div>
           );

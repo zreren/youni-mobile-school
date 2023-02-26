@@ -230,10 +230,13 @@ export default function evaluation() {
 
   const [campusId, setCampusId] = useState<Number>();
   const {
-    data: subjectData,
+    data: _subjectData,
     error,
     mutate: mutateSubject,
-  } = useFetch(`${Cons.API.SUBJECT.QUERY}?campusId=${campusId}`, 'get');
+  } = useFetch(`/subject/list`, 'page',{
+    campusId:campusId,
+    pagesize: 100,
+  });
 
   useEffect(() => {
     console.log(router.query, 'campus?.toLowerCase()');
@@ -312,6 +315,15 @@ export default function evaluation() {
   // const CourseInfoMemo = useMemo(</CourseInfo>,
   //   [subjectData],
   // );
+  useEffect(()=>{
+    mutateSubject()
+  },[campusId])
+  const subjectData = useMemo(()=>{
+      return _subjectData ? subjectData? [...subjectData].concat(..._subjectData) : [].concat(..._subjectData) : null
+  },[_subjectData,campusId])
+  useEffect(()=>{
+    console.log(subjectData,"subjectData")
+  },[subjectData])
   return (
     <CommonLayout className="p-0 pb-14">
       <Header title="添加新评价">
@@ -325,7 +337,7 @@ export default function evaluation() {
         </CButton>
       </Header>
       <EvaluationForm.Provider value={{ data, setData }}>
-        <CCourseInputMemo subjectData={subjectData?.data} />
+        <CCourseInputMemo subjectData={subjectData} />
         <CourseData></CourseData>
         <TextEvaluation></TextEvaluation>
         <ResultAndTagEvaluation data={tagList?.data}></ResultAndTagEvaluation>

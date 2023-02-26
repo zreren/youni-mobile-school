@@ -150,10 +150,19 @@ function courseInfo(props) {
   };
   const [subjectId, setSubjectId] = useState();
   const {
-    data: courseData,
+    data: _courseData,
     error,
     mutate: mutateSubject,
-  } = useFetch(`/subject/course?id=${data?.data?.subject?.id}`, 'get');
+  } = useFetch(`/subject/course`, 'page',{
+    id : data?.data?.subject?.id,
+    pageSize : 100
+  });
+  useEffect(()=>{
+    mutateSubject()
+  },[ data?.data?.subject?.id])
+  const courseData = useMemo(()=>{
+    return _courseData ? courseData ? [...courseData].concat(..._courseData) : [].concat(..._courseData) : null
+  },[_courseData,data?.data?.subject?.id])
   const { data: courseDetail, mutate: mutateCourse } = useFetch(
     `/course/detail?id=${data?.data?.course?.id}`,
     'get',
@@ -223,7 +232,7 @@ function courseInfo(props) {
           }}
           data={subjectData}
           renderData={subjectData?.map((item) => {
-            return item.ename;
+            return item?.ename;
           })}
         ></CCourseInput>
         {/* <select onChange={(val)=>{
@@ -254,9 +263,9 @@ function courseInfo(props) {
               value: val,
             });
           }}
-          data={courseData?.data}
-          renderData={courseData?.data?.map((item) => {
-            return item.ename;
+          data={courseData}
+          renderData={courseData?.map((item) => {
+            return item?.ename;
           })}
         ></CCourseInput>
       </label>

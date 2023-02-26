@@ -49,109 +49,61 @@ import LockIcon from './lock.svg';
 import LockActiveIcon from './lock_active.svg';
 import StarGroup from './stargroup.svg';
 import RightIcon from './right.svg';
-import useRequest from "@/libs/request";
+import useRequest from '@/libs/request';
 import { styled } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import Box from '@mui/material/Box';
 import { use } from 'i18next';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import ReturnBackIcon from './returnBack.svg';
 
-const PostGroup = () => {
+const PostGroupItem = (props): JSX.Element => {
+  const { title, id } = props;
   return (
-    <div className="w-full px-5 py-4  rounded-lg border border-[#D9E7FF] bg-PostGroup">
-      <div className="flex justify-between">
-        {' '}
-        <div className="flex items-center space-x-2">
-          <div className="text-blueTitle text-sm font-semibold">测试文集1 </div>
-          <div className="text-[10px] rounded-sm px-2 text-white bg-[#52C41A] flex justify-center items-center">
-            公开
-          </div>
-        </div>
-        <div className="rounded-full text-[#A9B0C0] flex justify-center items-center border w-14 bg-white border-[#F3F4F6]">
-          编辑
-        </div>
-      </div>
-      <div className="flex space-x-2">
-        <div className="flex items-center">
-          <PostGroupIcon1></PostGroupIcon1>
-          <div className="text-[#798195] text-xs">24</div>
-        </div>
-        <div className="flex items-center">
-          <PostGroupIcon2></PostGroupIcon2>
-          <div className="text-[#798195] text-xs">24</div>
-        </div>
-        <div className="flex items-center">
-          <PostGroupIcon3></PostGroupIcon3>
-          <div className="text-[#798195] text-xs">24</div>
-        </div>
-      </div>
-      <div className="mt-4 flex justify-between ">
-        <Image
-          width={64}
-          height={64}
-          src="/text.png"
-          className="rounded-xl"
-        ></Image>
-        <Image
-          width={64}
-          height={64}
-          src="/text.png"
-          className="rounded-xl"
-        ></Image>
-        <Image
-          width={64}
-          height={64}
-          src="/text.png"
-          className="rounded-xl"
-        ></Image>
-        <Image
-          width={64}
-          height={64}
-          src="/text.png"
-          className="rounded-xl"
-        ></Image>
-      </div>
+    <div
+      onClick={() => {
+        props.selectPostGroup();
+      }}
+      className="bg-[#F7F8F9] h-12 py-2 px-1 flex items-center rounded space-x-2"
+    >
+      <StarGroup></StarGroup>
+      <div className="text-[#6D7486] text-xs">{title}</div>
+      <RightIcon></RightIcon>
     </div>
   );
 };
-const PostGroupItem = (props):JSX.Element =>{
-  const {title,id} = props;
-  return <div onClick={()=>{props.selectPostGroup()}} className='bg-[#F7F8F9] h-12 py-2 px-1 flex items-center rounded space-x-2'>
-      <StarGroup></StarGroup>
-      <div className='text-[#6D7486] text-xs'>
-        {title}
-      </div>
-      <RightIcon></RightIcon>
-  </div>
-}
 function index(props) {
   const { user } = useUser();
   const router = useRouter();
   const userId = Number(router.query.id);
-  const { data } = useFetch('/student/post_stared_list', 'get', {
+  const { data } = useFetch('/user/post_stared_list', 'get', {
     id: userId,
   });
   const PostGroupDetail = (props) => {
-    const { data,isEdit,mutate } = props;
+    const { data, isEdit, mutate } = props;
     if (!data) return;
     return (
       <div className="w-full h-screen">
         <div className="w-full h-[156px] bg-[#F7F8F9] p-5 mb-4">
           <div className="flex items-center">
             <div className="grid grid-cols-2 gap-1 grid-rows-2    bg-white p-1 rounded-lg">
-              {data?.posts?.length > 0? data?.posts?.slice(0, 4).map((item) => {
-                return (
-                  <div className="overflow-hidden  h-[26px] w-[26px]">
-                    <img
-                      width={'100%'}
-                      style={{ objectFit: 'contain' }}
-                      height={'100%'}
-                      src={`${Cons.BASEURL}${item.preview[0]}`}
-                    ></img>
-                  </div>
-                );
-              }):<div className='h-[26px] w-[26px]'></div>}
-            </div>         
+              {data?.posts?.length > 0 ? (
+                data?.posts?.slice(0, 4).map((item) => {
+                  return (
+                    <div className="overflow-hidden  h-[26px] w-[26px]">
+                      <img
+                        width={'100%'}
+                        style={{ objectFit: 'contain' }}
+                        height={'100%'}
+                        src={`${Cons.BASEURL}${item.preview[0]}`}
+                      ></img>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="h-[26px] w-[26px]"></div>
+              )}
+            </div>
           </div>
           <div className="flex justify-between mt-3">
             <div>
@@ -163,7 +115,7 @@ function index(props) {
                     }}
                     className="w-8 rounded-full bg-neutral-focus text-neutral-content"
                   >
-                    <img src={`${Cons.BASEURL}${data?.student?.avatar}`} />
+                    <img src={`${Cons.BASEURL}${data?.user?.avatar}`} />
                   </div>
                 </div>
                 <div
@@ -172,10 +124,11 @@ function index(props) {
                   }}
                 >
                   <div className="ml-4 text-sm  font-normal max-w-8 text-[#37455C] ">
-                    {data?.student?.nickName}
+                    {data?.user?.nickName}
                   </div>
                   <div className="ml-4 text-xs text-gray-200">
-                    {data?.student?.education?.year} · {data?.student?.education?.major}
+                    {data?.user?.education?.year} ·{' '}
+                    {data?.user?.education?.major}
                     {/* 2022届 · B.Com Accounting */}
                   </div>
                 </div>
@@ -188,7 +141,9 @@ function index(props) {
               </div>
               <div className="flex items-center  space-x-1">
                 <PostGroupIcon2></PostGroupIcon2>
-                <div className="text-[#798195] text-xs">{data?.followCount}</div>
+                <div className="text-[#798195] text-xs">
+                  {data?.followCount}
+                </div>
               </div>
               <div className="flex items-center  space-x-1">
                 <PostGroupIcon3></PostGroupIcon3>
@@ -196,21 +151,30 @@ function index(props) {
               </div>
             </div>
           </div>
-          <div>
-          </div>
+          <div></div>
         </div>
-        {data?.posts?.length > 0 ?<Waterfall
-              key={data?.id + data?.posts?.length}
-              postData={data?.posts?.map((item) => {
-                return { ...item, student: { nickName: data?.student?.nickName } };
-              })}
-            ></Waterfall>:<div className='text-[#898E97] flex justify-center'>该文集暂时没有内容</div>}
+        {data?.posts?.length > 0 ? (
+          <Waterfall
+            key={data?.id + data?.posts?.length}
+            postData={data?.posts?.map((item) => {
+              return { ...item, user: { nickName: data?.user?.nickName } };
+            })}
+          ></Waterfall>
+        ) : (
+          <div className="text-[#898E97] flex justify-center">
+            该文集暂时没有内容
+          </div>
+        )}
       </div>
     );
   };
-  
+
   const PostGroupDrawer = (props) => {
-    const { open,isEdit,mutate}: { open: boolean,isEdit:boolean,mutate:any} = props;
+    const {
+      open,
+      isEdit,
+      mutate,
+    }: { open: boolean; isEdit: boolean; mutate: any } = props;
     const [id, setId] = useState(props?.id);
     const Puller = styled(Box)(({ theme }) => ({
       width: 33,
@@ -237,39 +201,53 @@ function index(props) {
       >
         <div className="h-[96vh]">
           <Puller></Puller>
-          <PostGroupDetail mutate={()=>{mutate()}} isEdit={isEdit} data={props.data}></PostGroupDetail>
+          <PostGroupDetail
+            mutate={() => {
+              mutate();
+            }}
+            isEdit={isEdit}
+            data={props.data}
+          ></PostGroupDetail>
         </div>
       </SwipeableDrawer>
     );
   };
   const Profile2 = () => {
     const [menu, setMenu] = useState(0);
-    const { data, mutate } = useFetch('/student/post_liked_list', 'get', {
+    const { data, mutate } = useFetch('/user/post_liked_list', 'get', {
       id: userId,
     });
-    const {data:postGroup,mutate:groupMutate} = useFetch('/student/collection','get',{
-      id:userId
-    })
+    const { data: postGroup, mutate: groupMutate } = useFetch(
+      '/user/collection',
+      'get',
+      {
+        id: userId,
+      },
+    );
 
     useEffect(() => {
       mutate();
-      groupMutate()
+      groupMutate();
     }, [userId]);
     return (
       <div className="h-full ">
-        <div className='flex p-2'>
-          {
-            postGroup?.data?.map((item)=>{
-              return <PostGroupItem selectPostGroup={()=>{
-                setDetailId(item.id);
-                setOpenDetail(true);
-              }} id={item.id} title={item.name}></PostGroupItem>
-            })
-          }
+        <div className="flex p-2">
+          {postGroup?.data?.map((item) => {
+            return (
+              <PostGroupItem
+                selectPostGroup={() => {
+                  setDetailId(item.id);
+                  setOpenDetail(true);
+                }}
+                id={item.id}
+                title={item.name}
+              ></PostGroupItem>
+            );
+          })}
         </div>
         <Waterfall
           postData={data?.data?.map((item) => {
-            return { ...item,  nickName: user.nickName  };
+            return { ...item, nickName: user.nickName };
           })}
         ></Waterfall>
       </div>
@@ -310,51 +288,42 @@ function index(props) {
     );
   };
 
-  const { data: UserData, mutate } = useFetch('/student/info', 'get', {
+  const { data: UserData, mutate } = useFetch('/user/info', 'get', {
     id: router.query.id,
   });
   useEffect(() => {
-    if (user?.student?.id === Number(router.query.id)) {
+    if (user?.user?.id === Number(router.query.id)) {
       router.push('/Profile');
     } else {
       mutate();
     }
   }, [router.query.id]);
-  // useEffect(()=>{
-  //   console.log(user?.student?.id,"user?.student?.id",router.query.id)
-  //   if(user?.student?.id === router.query.id){
-  //     router.push('/Profile')
-  //   }else{
-  //     mutate();
-  //   }
-
   // },[])
   const [school, setSchool] = useLocalStorage('school', 'York');
   const { i18n } = useTranslation('common');
   console.log(i18n, 'i18n');
   const [menuVal, setMenu] = useState(1);
-  const StarIcon = useCallback(()=>{
-    if(menuVal === 2 && !data?.data){
-      return <LockActiveIcon></LockActiveIcon>
+  const StarIcon = useCallback(() => {
+    if (menuVal === 2 && !data?.data) {
+      return <LockActiveIcon></LockActiveIcon>;
     }
-    if(menuVal === 2 && data?.data){
-      return <Icon2Select></Icon2Select>
+    if (menuVal === 2 && data?.data) {
+      return <Icon2Select></Icon2Select>;
     }
-    if(menuVal !== 2 && !data?.data){
-      return <LockIcon></LockIcon>
+    if (menuVal !== 2 && !data?.data) {
+      return <LockIcon></LockIcon>;
     }
-    if(menuVal !== 2 && data?.data){
-      return <Icon2></Icon2>
+    if (menuVal !== 2 && data?.data) {
+      return <Icon2></Icon2>;
     }
-
-  },[menuVal,data])
+  }, [menuVal, data]);
   const headerList = [
     {
       icon: menuVal === 1 ? <Icon3Select></Icon3Select> : <Icon3></Icon3>,
       menu: <Profile2></Profile2>,
     },
     {
-      icon:  <StarIcon></StarIcon>,
+      icon: <StarIcon></StarIcon>,
       menu: <Profile3></Profile3>,
     },
   ];
@@ -363,36 +332,49 @@ function index(props) {
   const dispatch = useDispatch();
   const [openDetail, setOpenDetail] = useState(false);
   const [detailId, setDetailId] = useState();
-  const { data: collectionData, mutate:collectionDataMutate } = useFetch(
+  const { data: collectionData, mutate: collectionDataMutate } = useFetch(
     '/collection/detail',
     'get',
     {
       id: detailId,
     },
   );
-  useEffect(()=>{
+  useEffect(() => {
     collectionDataMutate();
-  },[detailId])
+  }, [detailId]);
   return (
     <div className="w-screen min-h-screen">
+      <div
+        onClick={() => {
+          window.history.back()
+          setTimeout(() => {
+            router.reload() 
+          }, 10);
+        }}
+        className="pl-4 absolute mb-6 z-30 top-6"
+      >
+        <ReturnBackIcon className=""></ReturnBackIcon>
+      </div>
       <PostGroupDrawer
-          data={collectionData?.data}
-          mutate={()=>{collectionDataMutate()}}
-          onOpen={() => {
-            setOpenDetail(true);
-          }}
-          onClose={() => {
-            setOpenDetail(false);
-          }}
-          open={openDetail}
-        ></PostGroupDrawer> 
+        data={collectionData?.data}
+        mutate={() => {
+          collectionDataMutate();
+        }}
+        onOpen={() => {
+          setOpenDetail(true);
+        }}
+        onClose={() => {
+          setOpenDetail(false);
+        }}
+        open={openDetail}
+      ></PostGroupDrawer>
       {/* <div className=''> */}
       <ProfileHeader
         mutate={() => {
           mutate();
         }}
-        myProfile={(UserData?.data?.id !== user?.id)}
-        data={{ student: UserData?.data }}
+        myProfile={UserData?.data?.id !== user?.id}
+        data={{ user: UserData?.data }}
       ></ProfileHeader>
       <div className="w-full header-shadow overflow-hidden rounded-t-2xl -translate-y-[6px]">
         {menuVal !== 4 ? (
