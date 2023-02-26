@@ -130,10 +130,12 @@ export default function ProfileHeader(props) {
           <div className="flex flex-col justify-between w-full h-full pt-2">
             <div className="text-lg font-500">{data?.user?.nickName?data?.user?.nickName:"username"}</div>
             <div className="text-xs text-[#798195] font-400">
-              {data?.user?.campus?data?.user?.campus[useLanguage('name')]:""}
+              {data?.user?.campus ?data?.user?.campus[useLanguage('name')]:!loggedOut ?<div className='w-10 h-2 rounded-lg bg-bg animate-pulse'></div>:null}
             </div>
             <div className="text-[10px] text-[#798195] font-400 mb-1">
-               {myProfile === false? data?.user?.id?`YoID:${data?.user.id}`:"" :null}
+               {myProfile? data?.user?.id?`YoID:${data?.user.id}`: !loggedOut?
+               <div className='w-10 h-2 rounded-lg bg-bg animate-pulse'></div> :"":""
+               }
              {/* {'约克大学 (加拿大)'} */}
             </div>
             <div className="flex flex-shrink space-x-2 text-xs rounded-full font-500">
@@ -146,7 +148,7 @@ export default function ProfileHeader(props) {
                 </>
               ):null}
               {
-                data?.user?              <div className="flex items-center p-1 pl-2 pr-2 space-x-1 bg-white rounded-full">
+                data?.user?  <div className="flex items-center p-1 pl-2 pr-2 space-x-1 bg-white rounded-full">
                 <div className='font-medium px-1'>用户</div>
               </div>:null
               }
