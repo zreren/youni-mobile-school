@@ -69,7 +69,7 @@ export default function course() {
           await setSize(size + 1);
           setIsLoadingMore(false);
         }}
-        hasMore={!isReachingEnd && !isLoading}
+        hasMore={!isReachingEnd}
       />
     </CommonLayout>
   );

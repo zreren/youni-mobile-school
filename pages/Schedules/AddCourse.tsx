@@ -521,7 +521,13 @@ export default function AddSchedule() {
     }, [CURRICULUM.sectionId]);
 
     const [value, setValue] = React.useState<Dayjs | null>(null);
-    const { data: courseData } = useFetch('/course/query?campusId=1', 'get');
+    const { data: _courseData } = useFetch('/course/query', 'page',{
+      campusId:1,
+      pageSize: 100,
+    });
+    const courseData = useMemo(() => {
+      return _courseData ? courseData? [...courseData].concat(..._courseData) : [].concat(..._courseData) : [];
+    },[_courseData]);
     const handleChange = useCallback((val: any, name: string) => {
       setCURRICULUM((preVal: any) => {
         return {
@@ -586,8 +592,8 @@ export default function AddSchedule() {
             handleChange(val.label, 'name');
             handleChange(val.id, 'courseId');
           }}
-          renderData={courseData?.data?.map((item) => item.ename)}
-          data={courseData?.data}
+          renderData={courseData?.map((item) => item.ename)}
+          data={courseData}
         ></CCourseInput>
         <div>{CourseId}</div>
         <div className="w-full pl-2 pr-2 bg-white rounded-lg">
