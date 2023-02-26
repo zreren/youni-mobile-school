@@ -552,14 +552,6 @@ function index(props) {
           id={detailId}
           open={openDetail}
         ></PostGroupDrawer> */}
-        <div
-          onClick={() => {
-            props.setProgress(0);
-          }}
-          className="pl-4 mb-6 z-30"
-        >
-          <ReturnBackIcon className=''></ReturnBackIcon>
-        </div>
         <div className="w-full px-2">
           <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
             <div

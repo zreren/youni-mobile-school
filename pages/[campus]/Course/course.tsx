@@ -59,6 +59,7 @@ export default function course(): JSX.Element {
           addEndListener={(done) => {
             nodeRef?.current?.addEventListener("transitionend", done, false);
           }}
+
         >
           <div ref={nodeRef}>
             {data?.data ? (

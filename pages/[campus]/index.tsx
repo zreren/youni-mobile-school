@@ -28,7 +28,7 @@ import { Popup } from 'react-vant';
 import { useRouter } from 'next/router';
 import { enableZoom } from '@/libs/enableZoom';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
-
+import useUser from '@/hooks/useUser';
 const PostDetail = (props) => {
   return (
     <SwipeableDrawer
@@ -142,7 +142,9 @@ function SchoolPage(props) {
     props?.post?.alias,
     props?.post?.id,
   );
-  const [category, setCategory] = useState('idle');
+  const { user ,loggedOut} = useUser();
+
+  const [category, setCategory] = useState(loggedOut?'idle':'recommend_list');
   const pathname = useMemo(() => {
     const follow_list = '/post/follow_list';
     const home_list = '/post/home_list';
@@ -175,40 +177,81 @@ function SchoolPage(props) {
     console.log(postData, 'postData');
   }, [postData]);
   const dispatch = useDispatch();
-  const headerMenuList = [
-    {
-      label: '推荐',
-      value: 'recommend_list',
-    },
-    {
-      label: '关注',
-      value: 'follow_list',
-    },
-    {
-      label: '闲置',
-      value: 'idle',
-    },
-    {
-      label: '活动',
-      value: 'activity',
-    },
-    {
-      label: '新闻',
-      value: 'news',
-    },
-    {
-      label: '转租',
-      value: 'sublet',
-    },
-    {
-      label: '拼车',
-      value: 'carpool',
-    },
-    {
-      label: '二手书',
-      value: 'book',
-    },
-  ];
+  // ()=>{
+  //   if(loggedOut){
+  //     return (
+  //       {
+  //         label: '关注',
+  //         value: 'follow_list',
+  //       }
+  //     )
+  //   }
+  // },
+  const headerMenuList = useMemo(()=>{
+    if(loggedOut){
+      return [
+          {
+            label: '闲置',
+            value: 'idle',
+          },
+          {
+            label: '活动',
+            value: 'activity',
+          },
+          {
+            label: '新闻',
+            value: 'news',
+          },
+          {
+            label: '转租',
+            value: 'sublet',
+          },
+          {
+            label: '拼车',
+            value: 'carpool',
+          },
+          {
+            label: '二手书',
+            value: 'book',
+          },
+        ]
+      }else{
+        return [
+          {
+            label: '推荐',
+            value: 'recommend_list',
+          },
+          {
+            label: '关注',
+            value: 'follow_list',
+          },
+          {
+            label: '闲置',
+            value: 'idle',
+          },
+          {
+            label: '活动',
+            value: 'activity',
+          },
+          {
+            label: '新闻',
+            value: 'news',
+          },
+          {
+            label: '转租',
+            value: 'sublet',
+          },
+          {
+            label: '拼车',
+            value: 'carpool',
+          },
+          {
+            label: '二手书',
+            value: 'book',
+          },
+        ]
+      }
+  },[loggedOut])
   const [reRender, setreRender] = useState(1);
   const onRefresh = (showToast) => {
     return new Promise((resolve) => {

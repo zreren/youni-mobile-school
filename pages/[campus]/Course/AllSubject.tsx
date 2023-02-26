@@ -16,7 +16,7 @@ export default function AllSubject() {
     {
       keyword: value,
       campusId: router.query.campusId,
-      pageSize: 20,
+      pageSize: 30,
     },
   );
   const [isLoadingMoreState, setIsLoadingMore] = useState(false);
