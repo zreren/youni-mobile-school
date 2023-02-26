@@ -27,6 +27,8 @@ import { useLocalStorage } from 'react-use';
 import { Popup } from 'react-vant';
 import { useRouter } from 'next/router';
 import { enableZoom } from '@/libs/enableZoom';
+import { SwitchTransition, CSSTransition } from 'react-transition-group';
+
 const PostDetail = (props) => {
   return (
     <SwipeableDrawer
@@ -141,18 +143,18 @@ function SchoolPage(props) {
     props?.post?.id,
   );
   const [category, setCategory] = useState('idle');
-  const pathname =  useMemo(()=>{
+  const pathname = useMemo(() => {
     const follow_list = '/post/follow_list';
     const home_list = '/post/home_list';
     const recommend_list = '/post/recommend_list';
-    if(category === 'follow_list'){
-      return follow_list
+    if (category === 'follow_list') {
+      return follow_list;
     }
-    if(category === 'recommend_list'){
-      return recommend_list
+    if (category === 'recommend_list') {
+      return recommend_list;
     }
-    return home_list
-  },[category])
+    return home_list;
+  }, [category]);
   const {
     data: _postData,
     error,
@@ -168,7 +170,7 @@ function SchoolPage(props) {
   // },[])
   const postData = useMemo(() => {
     return _postData ? [].concat(..._postData) : [];
-  }, [_postData,category]);
+  }, [_postData, category]);
   useEffect(() => {
     console.log(postData, 'postData');
   }, [postData]);
@@ -176,11 +178,11 @@ function SchoolPage(props) {
   const headerMenuList = [
     {
       label: '推荐',
-      value:'recommend_list',
+      value: 'recommend_list',
     },
     {
       label: '关注',
-      value:'follow_list'
+      value: 'follow_list',
     },
     {
       label: '闲置',
@@ -351,6 +353,16 @@ function SchoolPage(props) {
     setPostDetailShow(false);
   }, [router.pathname]);
   const [loading, setLoading] = useState(true);
+  const helloRef = React.useRef(null);
+  const goodbyeRef = React.useRef(null);
+  const nodeRef = postData ? helloRef : goodbyeRef;
+  const [loadingState,setLoadingState] = useState(false)
+  useEffect(()=>{
+    setLoadingState(true);
+    setTimeout(() => {
+      setLoadingState(false)
+    }, 1000);
+  },[category,postData])
   return (
     <div className="w-screen  pb-10">
       <PostDetail
@@ -435,33 +447,42 @@ function SchoolPage(props) {
           ></PostCategory>
         </div>
         <div className="mb-10">
-          {/* {postData?.data? ( */}
-          {postData ? (
-            <Waterfall
-              key={category + postData?.length}
-              postData={postData}
-              show={() => {
-                setPostDetailShow(true);
-              }}
-              onClick={() => {}}
-            ></Waterfall>
-          ) : null}
-          {!postData && !isLoading ? (
-            <div className="text-[#A9B0C0] mt-10 flex justify-center items-center w-full">
-              暂无内容
-            </div>
-          ) : null}
-          {isLoading || !postData ? (
-            <LoadingWaterfall
+          <SwitchTransition mode="out-in">
+            <CSSTransition
+              in={isLoading}
+              classNames="fade"
+              timeout={60}
               key={category}
-              show={() => {
-                setPostDetailShow(true);
+              addEndListener={(done) => {
+                nodeRef?.current?.addEventListener("transitionend", done, false);
               }}
-              onClick={() => {}}
-            ></LoadingWaterfall>
-          ) : null}
-          {error ? 'error' : null}
-          {/* ):null} */}
+            >
+              <div ref={nodeRef}>
+                {/* {postData?.data? ( */}
+                {postData && !isLoading && !loadingState ? (
+                  <Waterfall
+                    key={category + postData?.length}
+                    postData={postData}
+                    show={() => {
+                      setPostDetailShow(true);
+                    }}
+                    onClick={() => {}}
+                  ></Waterfall>
+                ) : <LoadingWaterfall
+                key={category}
+                show={() => {
+                  setPostDetailShow(true);
+                }}
+                onClick={() => {}}
+              ></LoadingWaterfall>}
+                {!postData && !isLoading ? (
+                  <div className="text-[#A9B0C0] mt-10 flex justify-center items-center w-full">
+                    暂无内容
+                  </div>
+                ) : null}
+              </div>
+            </CSSTransition>
+          </SwitchTransition>
         </div>
       </PullRefresh>
     </div>
