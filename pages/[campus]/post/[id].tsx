@@ -59,6 +59,24 @@ function index(props) {
       mutate();
     }
   };
+
+  const {data:_commentData,mutate:mutateComment} = useFetch('/comment/list','page',{
+    id: id,
+    pageSize : 10,
+    type :  2
+  })
+  useEffect(()=>{
+    mutateComment()
+  },[id])
+  const commentData = useMemo(() => 
+  _commentData? commentData?
+   [...commentData].concat(_commentData).filter((item)=>item !== undefined):[].concat(..._commentData).filter((item)=>item !== undefined): null
+   ,[_commentData,data])
+   useEffect(()=>{
+    console.log(commentData,"commentData")
+   },[commentData])
+
+
   interface MapLocation  {
     point: number[];
     placename: string;
@@ -78,6 +96,7 @@ function index(props) {
       console.log(Location,'Location')
       if(!Location?.point) return null
       const point = Location?.point;
+      if(!point) return
       const bbox_width = 0.005;
       const bbox_height = 0.005;
       const longitude1 = point[0] - (bbox_width / 2)
@@ -339,12 +358,12 @@ function index(props) {
         <PostDiscussionInput
          callDiscussion={focusInput}
         ></PostDiscussionInput>
-        <Discussion
-        callDiscussion={focusInput}
+       <Discussion
+          callDiscussion={focusInput}
           commentComment={(e) => {
             commentComment(e);
           }}
-          comments={data?.data?.comments}
+          comments={commentData}
         ></Discussion>
       </div>
       {commentChild?.id ? (
