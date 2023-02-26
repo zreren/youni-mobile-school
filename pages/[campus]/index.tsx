@@ -26,6 +26,7 @@ import useFetch from '../../hooks/useFetch';
 import { useLocalStorage } from 'react-use';
 import { Popup } from 'react-vant';
 import { useRouter } from 'next/router';
+import { enableZoom } from '@/libs/enableZoom';
 const PostDetail = (props) => {
   return (
     <SwipeableDrawer
@@ -140,26 +141,46 @@ function SchoolPage(props) {
     props?.post?.id,
   );
   const [category, setCategory] = useState('idle');
-  const { data: _postData, error,mutate ,isLoading} = useFetch(
-    `/post/home_list`,
-    'page',{
-      type: category,
-      pageSize:20,
+  const pathname =  useMemo(()=>{
+    const follow_list = '/post/follow_list';
+    const home_list = '/post/home_list';
+    const recommend_list = '/post/recommend_list';
+    if(category === 'follow_list'){
+      return follow_list
     }
-  );
+    if(category === 'recommend_list'){
+      return recommend_list
+    }
+    return home_list
+  },[category])
+  const {
+    data: _postData,
+    error,
+    mutate,
+    isLoading,
+  } = useFetch(pathname, 'page', {
+    type: pathname === '/post/home_list' ? category : null,
+    pageSize: 20,
+  });
+
+  // useEffect(()=>{
+  //   enableZoom()
+  // },[])
   const postData = useMemo(() => {
     return _postData ? [].concat(..._postData) : [];
-  }, [_postData]);
-  useEffect(()=>{
-    console.log(postData,"postData")
-  },[postData])
+  }, [_postData,category]);
+  useEffect(() => {
+    console.log(postData, 'postData');
+  }, [postData]);
   const dispatch = useDispatch();
   const headerMenuList = [
     {
-      label: '关注',
+      label: '推荐',
+      value:'recommend_list',
     },
     {
-      label: '推荐',
+      label: '关注',
+      value:'follow_list'
     },
     {
       label: '闲置',
@@ -191,8 +212,8 @@ function SchoolPage(props) {
     return new Promise((resolve) => {
       setTimeout(() => {
         if (showToast) {
-          mutate()
-          Toast.info('刷新成功')
+          mutate();
+          Toast.info('刷新成功');
         }
         resolve(true);
       }, 1000);
@@ -214,9 +235,9 @@ function SchoolPage(props) {
 
   const router = useRouter();
   // useEffect(() => {
-  useEffect(()=>{
-    mutate()
-  },[category])
+  useEffect(() => {
+    mutate();
+  }, [category]);
   const { data: carouselData } = useFetch('/campus/carousel', 'get', {
     id: campusIdMap,
   });
@@ -228,7 +249,7 @@ function SchoolPage(props) {
   const SchoolList = (props) => {
     const { arg, countryId } = props;
     const [select, setSelect] = useState();
-    const [selectSchool,setSelectSchool] = useLocalStorage('school',null)
+    const [selectSchool, setSelectSchool] = useLocalStorage('school', null);
     const { data: countryData, mutate } = useFetch('/country/campus', 'get', {
       countryId: countryId,
     });
@@ -251,14 +272,14 @@ function SchoolPage(props) {
     return (
       <div className="">
         <Popup
-        overlayClass={'Popup'}
-        className="z-30 topIndexPlus rounded-full "
-        visible={!countryData}
-      >
-        <div className="rounded-full w-10 h-10 flex overflow-hidden justify-center items-center">
-          <Loading type="spinner" color="#FED64B" />
-        </div>
-      </Popup>
+          overlayClass={'Popup'}
+          className="z-30 topIndexPlus rounded-full "
+          visible={!countryData}
+        >
+          <div className="rounded-full w-10 h-10 flex overflow-hidden justify-center items-center">
+            <Loading type="spinner" color="#FED64B" />
+          </div>
+        </Popup>
         <SwipeableDrawer
           anchor="left"
           open={props.visible}
@@ -310,7 +331,10 @@ function SchoolPage(props) {
                     }}
                   >
                     <div className="flex items-center min-h-[16px] w-full space-x-2">
-                      <div className=' whitespace-pre-wrap'> {item[useLanguage('name')]}</div>
+                      <div className=" whitespace-pre-wrap">
+                        {' '}
+                        {item[useLanguage('name')]}
+                      </div>
                       <div className="p-1 text-xs bg-bg">{item.shortName}</div>
                     </div>
                     <div className="text-xs text-lightGray">{item.alias}</div>
@@ -323,9 +347,9 @@ function SchoolPage(props) {
       </div>
     );
   };
-  useEffect(()=>{
-    setPostDetailShow(false)
-  },[router.pathname])
+  useEffect(() => {
+    setPostDetailShow(false);
+  }, [router.pathname]);
   const [loading, setLoading] = useState(true);
   return (
     <div className="w-screen  pb-10">
@@ -360,16 +384,19 @@ function SchoolPage(props) {
         ></HeaderLayout>
         <MenuAtSchool></MenuAtSchool>
         <div className="w-full pl-5 pr-5">
-          <Swiper
-          autoplay={3000}
-          >
-            {
-              loading ?  <Swiper.Item>
-              <Skeleton loading={true} row={1} rowWidth={'100%'} rowHeight={70}>
-                {' '}
-              </Skeleton>
-            </Swiper.Item>:null
-            }
+          <Swiper autoplay={3000}>
+            {loading ? (
+              <Swiper.Item>
+                <Skeleton
+                  loading={true}
+                  row={1}
+                  rowWidth={'100%'}
+                  rowHeight={70}
+                >
+                  {' '}
+                </Skeleton>
+              </Swiper.Item>
+            ) : null}
             {carouselData?.data.map((item, index) => {
               return (
                 <Swiper.Item>
@@ -388,8 +415,8 @@ function SchoolPage(props) {
                         width: '100%',
                         height: '20rem',
                       });
-                      if(index === 0){
-                      setLoading(false);
+                      if (index === 0) {
+                        setLoading(false);
                       }
                     }}
                     objectFit="contain"
@@ -409,9 +436,9 @@ function SchoolPage(props) {
         </div>
         <div className="mb-10">
           {/* {postData?.data? ( */}
-          {postData? (
+          {postData ? (
             <Waterfall
-              key={category +postData?.length }
+              key={category + postData?.length}
               postData={postData}
               show={() => {
                 setPostDetailShow(true);
@@ -419,12 +446,12 @@ function SchoolPage(props) {
               onClick={() => {}}
             ></Waterfall>
           ) : null}
-          {!postData ? (
+          {!postData && !isLoading ? (
             <div className="text-[#A9B0C0] mt-10 flex justify-center items-center w-full">
               暂无内容
             </div>
           ) : null}
-          {isLoading ? (
+          {isLoading || !postData ? (
             <LoadingWaterfall
               key={category}
               show={() => {
@@ -448,7 +475,7 @@ export async function getServerSideProps({ params }) {
       name: params.campus,
     },
   });
-  console.log(data,"data")
+  console.log(data, 'data');
   return {
     props: {
       post: data?.data[0],

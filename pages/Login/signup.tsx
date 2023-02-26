@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import backgroundImage1 from './assets/background2.png';
 import backgroundImage2 from './assets/1.png';
 import Image from 'next/image';
@@ -29,6 +29,8 @@ import useRequest from '@/libs/request';
 // import { useDispatch } from 'react-redux';
 import SignIn from './signin';
 import ReturnBackIcon from './returnBack.svg';
+import { disableZoom } from '@/libs/disableZoom';
+import { enableZoom } from '@/libs/enableZoom';
 
 
 const SignUpButton = (props) => {
@@ -50,6 +52,12 @@ export default function SignUp(props) {
   const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
   const [language, setLanguage] = useState('');
+  useEffect(()=>{
+    disableZoom()
+    return ()=>{
+      enableZoom()
+    }
+  },[])
   const ChooseYourRole = (props) => {
     const route = useRouter();
     const MailLabel = () => {

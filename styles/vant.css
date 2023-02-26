@@ -83,3 +83,6 @@
     z-index: 99;
 
 }
+.waterfall .rv-skeleton__row {
+    border-radius: 8px !important;
+}

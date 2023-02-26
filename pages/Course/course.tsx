@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import useFetch from '@/hooks/useFetch';
 export default function course() {
   const router = useRouter()
-  const { data, error } = useFetch(`${Cons.API.SUBJECT.QUERY}`,"get",{
+  const { data, error,isLoading } = useFetch(`${Cons.API.SUBJECT.QUERY}`,"get",{
     campusId: 1
   });
   const { data:hotCourseData, error: hotCourseDataError} = useFetch(`${Cons.API.COURSE.HOT}?campusId=1`,"get");
@@ -24,17 +24,17 @@ export default function course() {
       <Search placeholder="搜索课程"></Search>
       <div className="space-y-2 mt-4">
         <div className="grid grid-cols-2 gap-x-2 gap-y-1">
-          {data?data.data.slice(0,6).map((item,index) => {
+          { !data?.data ? data.data.slice(0,6).map((item,index) => {
             return (
               <CategoryButton data={item} key={item.id} color={randomColor[index%6]}>
               </CategoryButton>
             );
-          }): <><CategoryButton color="red"></CategoryButton>
-          <CategoryButton color="blue"></CategoryButton>
-          <CategoryButton color="yellow"></CategoryButton>
-          <CategoryButton color="green"></CategoryButton>
-          <CategoryButton color="pink"></CategoryButton>
-          <CategoryButton color="purple"></CategoryButton></>
+          }): <><CategoryButton color="gray"></CategoryButton>
+          <CategoryButton color="gray"></CategoryButton>
+          <CategoryButton color="gray"></CategoryButton>
+          <CategoryButton color="gray"></CategoryButton>
+          <CategoryButton color="gray"></CategoryButton>
+          <CategoryButton color="gray"></CategoryButton></>
           }
           
         </div>

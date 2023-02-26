@@ -315,10 +315,12 @@ export default function evaluation() {
   // const CourseInfoMemo = useMemo(</CourseInfo>,
   //   [subjectData],
   // );
-
+  useEffect(()=>{
+    mutateSubject()
+  },[campusId])
   const subjectData = useMemo(()=>{
-      return _subjectData ? [].concat(_subjectData) : []
-  },[_subjectData])
+      return _subjectData ? subjectData? [...subjectData].concat(..._subjectData) : [].concat(..._subjectData) : null
+  },[_subjectData,campusId])
   useEffect(()=>{
     console.log(subjectData,"subjectData")
   },[subjectData])
@@ -335,7 +337,7 @@ export default function evaluation() {
         </CButton>
       </Header>
       <EvaluationForm.Provider value={{ data, setData }}>
-        <CCourseInputMemo subjectData={[].concat(subjectData)} />
+        <CCourseInputMemo subjectData={subjectData} />
         <CourseData></CourseData>
         <TextEvaluation></TextEvaluation>
         <ResultAndTagEvaluation data={tagList?.data}></ResultAndTagEvaluation>

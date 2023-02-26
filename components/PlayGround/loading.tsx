@@ -32,7 +32,7 @@ export default function Display(props) {
 
 
     return (
-      <div className="w-full pl-0.5 pr-0.5 mb-2">
+      <div className="w-full pl-0.5 pr-0.5 mb-2 waterfall">
         <div
           style={{ position: 'relative', width: '100%' }}
           className="overflow-hidden"

@@ -4,7 +4,7 @@ import React from 'react';
 import useLocalStorage from '../hooks/useStore';
 import CCircleRanking from './Rating/CCircleRanking';
 interface ICourseScoreCard {
-  data: {
+  data?: {
     score: number;
     ename?: string;
     cname?: string;
@@ -17,7 +17,13 @@ interface ICourseScoreCard {
   };
 }
 export default function CourseScoreCard(props: ICourseScoreCard) {
-  if(!props.data) return null
+  if(!props.data)  {
+    return (
+      <div className="flex p-6 h-[128px] animate-pulse  items-align gray-pulse justify-between rounded-xl">
+
+      </div>
+    )
+  }
 
   const { id } = props.data;
   const [school,setSchool ] = useLocalStorage('school','')
