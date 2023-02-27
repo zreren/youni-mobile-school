@@ -20,10 +20,10 @@ export default function ProfessorDetail() {
   const Id = router.query.id;
   const { data, error } = useFetch(`/professor/detail?id=${Id}`, 'get');
   const { data: professorDataList, error: professorError } = useFetch(
-    `/professor/course?id=${Id}`,
+    `/professor/courses?id=${Id}`,
     'get',
   );
-  const {data:_professorCommentList,error:professorCommentError} = useFetch(`/professor/evaluation`,'page',{
+  const {data:_professorCommentList,error:professorCommentError} = useFetch(`/professor/evaluations`,'page',{
     id: Id,
     courseId: currentSelectId,
     pageSize:100,

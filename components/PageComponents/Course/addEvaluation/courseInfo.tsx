@@ -153,7 +153,7 @@ function courseInfo(props) {
     data: _courseData,
     error,
     mutate: mutateSubject,
-  } = useFetch(`/subject/course`, 'page',{
+  } = useFetch(`/subject/courses`, 'page',{
     id : data?.data?.subject?.id,
     pageSize : 100
   });

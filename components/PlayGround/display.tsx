@@ -228,12 +228,13 @@ export default function Display(props) {
           >
             {' '}
           </Skeleton>
-          <Image
+          {
+            data?.preview? <Image
             layout="responsive"
             objectFit="cover"
-            blurDataURL={`${Cons.BASEURL}${data?.preview[0]}`}
+            blurDataURL={`${Cons.BASEURL}${data?.preview?.[0]}`}
             placeholder="blur"
-            src={`${Cons.BASEURL}${data?.preview[0]}`}
+            src={`${Cons.BASEURL}${data?.preview?.[0]}`}
             width={imageSize.width}
             height={imageSize.height}
             onClick={() => {
@@ -247,7 +248,9 @@ export default function Display(props) {
               });
             }}
             className=""
-          />
+          /> : null
+          }
+         
           {data.type === 'activity' ? (
             <div className="bg-[#F7F8F9] text-[#798195] bottom-0 h-16 w-[100%] z-30 px-2 flex justify-center items-center">
               <div>

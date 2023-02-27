@@ -220,7 +220,7 @@ export default function index() {
             padding: 0,
           },
         }}
-        options={courseData?.map((option) => option.ename)}
+        options={courseData?.map((option) => option?.ename)}
         renderInput={(params) => (
           <TextField
             placeholder="请输入"

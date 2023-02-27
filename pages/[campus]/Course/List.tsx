@@ -30,7 +30,7 @@ export default function course() {
     setSize,
     isLoading,
     size,
-  } = useFetch(`/subject/course`, 'page', {
+  } = useFetch(`/subject/courses`, 'page', {
     id: subjectId,
     pageSize: 20,
   });

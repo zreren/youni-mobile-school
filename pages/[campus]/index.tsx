@@ -283,7 +283,7 @@ function SchoolPage(props) {
   useEffect(() => {
     mutate();
   }, [category]);
-  const { data: carouselData } = useFetch('/campus/carousel', 'get', {
+  const { data: carouselData } = useFetch('/campus/carousels', 'get', {
     id: campusIdMap,
   });
   React.useEffect(() => {
@@ -295,7 +295,7 @@ function SchoolPage(props) {
     const { arg, countryId } = props;
     const [select, setSelect] = useState();
     const [selectSchool, setSelectSchool] = useLocalStorage('school', null);
-    const { data: countryData, mutate } = useFetch('/country/campus', 'get', {
+    const { data: countryData, mutate } = useFetch('/country/campuses', 'get', {
       countryId: countryId,
     });
     useEffect(() => {

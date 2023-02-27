@@ -78,12 +78,15 @@ const PostGroupDetail = (props) => {
             {data?.posts?.length > 0? data?.posts?.slice(0, 4).map((item) => {
               return (
                 <div className="overflow-hidden  h-[26px] w-[26px]">
-                  <img
+                  {
+                    item.preview?  <img
                     width={'100%'}
                     style={{ objectFit: 'contain' }}
                     height={'100%'}
                     src={`${Cons.BASEURL}${item.preview[0]}`}
-                  ></img>
+                  ></img>:null
+                  }
+                
                 </div>
               );
             }):<div className='h-[26px] w-[26px]'></div>}
@@ -257,14 +260,17 @@ const PostGroup = (props) => {
           data?.posts?.length > 0 ? data?.posts?.slice(0,4).map((item,index)=>{
             return (
              <div>
-               <Image
-              width={64}
-              height={64}
-              placeholder="blur"
-              blurDataURL={`${Cons.BASEURL}${item.preview[0]}`}
-              src={`${Cons.BASEURL}${item.preview[0]}`}
-              className="rounded-xl"
-            ></Image>
+              {
+                item.preview?<Image
+                width={64}
+                height={64}
+                placeholder="blur"
+                blurDataURL={`${Cons.BASEURL}${item.preview[0]}`}
+                src={`${Cons.BASEURL}${item.preview[0]}`}
+                className="rounded-xl"
+              ></Image>:null
+              }
+               
              </div>
             )
           }): <div className='w-full h-16 text-[#798195] flex justify-center items-center'>
