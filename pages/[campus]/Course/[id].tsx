@@ -283,7 +283,7 @@ export default function courseEvaluation() {
     );
   };
   const { data: evaluationData } = useFetch(
-    `${Cons.API.PROFESSOR.QUERY}?id=${CourseId}`,
+    `/course/professors?id=${CourseId}`,
     'get',
   );
   const MyIntroduce = React.useMemo(() => {
@@ -316,10 +316,7 @@ export default function courseEvaluation() {
   return (
     <div className="w-screen min-h-screen bg-bg pb-2">
       <Header
-        title={`${
-          courseEvaluation?.data?.subject[useLanguage('name')]?.toUpperCase() ||
-          ''
-        } ${courseEvaluation?.data?.code || 'loading...'}`}
+        title={`${courseEvaluation?.data?.code || 'loading...'}`}
       ></Header>
       <HeaderMenu
         headerMenuList={headerMenuList}

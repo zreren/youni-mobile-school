@@ -299,7 +299,7 @@ export default function userComment() {
                 <div className="flex space-x-2 mb-1 mt-1">
                   <div className="text-gray-300">课程名称:</div>
                   <div className="text-blueTitle">
-                    {data?.data?.course.ename} {data?.data?.course.code}
+                     {data?.data?.course.code}
                   </div>
                 </div>
                 <div className="flex space-x-2 mb-1 mt-1">

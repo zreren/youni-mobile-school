@@ -332,7 +332,7 @@ export default function index() {
                       className="w-full"
                     ></AutoInput>
                   ) : (
-                    <div className={'text-sm overflow-x-scroll w-14 whitespace-nowrap'} >{data?.course?.subject?.ename?.toUpperCase()} {data?.course?.code}</div>
+                    <div className={'text-sm overflow-x-scroll w-14 whitespace-nowrap'} >  {data?.course?.code}</div>
                   )}
                 </div>
               </div>

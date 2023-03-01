@@ -21,7 +21,7 @@ export default function recommend() {
       >
         <div
           className={classnames(
-            'border-[#FFDEAD] bg-[#FFFAF0] flex justify-center items-center  border-[2px] rounded-2xl h-12 w-12',
+            'border-[#FFDEAD] bg-[#FFFAF0] flex flex-col justify-center items-center  border-[2px] rounded-2xl h-12 w-12',
           )}
         >
           <svg height={'14px'} width={'100%'}>
@@ -31,14 +31,28 @@ export default function recommend() {
               y="10"
               fill="#ff9832"
               color="#ff9832"
-              fontSize={'8px'}
+              fontSize={'10px'}
             >
               {' '}
               MAT
             </text>
           </svg>
+          <svg height={'14px'} width={'100%'}>
+            <text
+              x="50%"
+              text-anchor="middle"
+              y="10"
+              fill="#ff9832"
+              fontWeight={600}
+              color="#ff9832"
+              fontSize={'10px'}
+            >
+              {' '}
+              321
+            </text>
+          </svg>
         </div>
-        <div className="xueqiTag absolute rounded-sm text-[white] flex justify-center items-center text-xs p-1 w-4 h-4 bottom-0 right-0">
+        <div className="xueqiTag absolute rounded-[6px] p-[6px] text-[white] flex justify-center items-center text-xs w-5 h-5 bottom-0 right-0">
           秋
         </div>
       </div>
@@ -123,7 +137,7 @@ export default function recommend() {
       <div className="w-full">
         <div className="flex items-center justify-center">
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
-          <div className="whitespace-nowrap text-[#DCDDE1]">必修课</div>
+          <div className="whitespace-nowrap text-[#DCDDE1] text-xs mx-2">必修课</div>
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
         </div>
         <CourseSelector></CourseSelector>
@@ -136,7 +150,7 @@ export default function recommend() {
       <div className="w-full">
         <div className="flex items-center justify-center">
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
-          <div className="whitespace-nowrap text-[#DCDDE1]">必修课</div>
+          <div className="whitespace-nowrap text-[#DCDDE1] text-xs mx-2">必修课</div>
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
         </div>
         <div>
@@ -168,19 +182,19 @@ export default function recommend() {
     return (
       <>
         <div className="flex items-top space-x-8 w-full">
-          <div className="min-w-[40px] w-10 flex items-center justify-center text-center h-10 bg-[#F7F8F9] rounded-lg text-xs">
+          <div className="min-w-[44px] text-[#798195] w-11 flex items-center justify-center text-center h-11 bg-[#F7F8F9] rounded-lg text-xs">
             MAT 302
           </div>
           <div className="w-full space-y-4">
             <div className="flex items-center space-x-10 h-10">
-              <div className="text-blueTitle">优先</div>
-              <div className="ml-10 w-10 text-center text-xs">
+              <div className="text-blueTitle text-xs font-semibold">优先</div>
+              <div className="ml-10 w-10 text-center text-xs text-[#798195]">
                 Raymond Grinnel
               </div>
             </div>
             <div className="flex items-center space-x-10">
-              <div className="text-blueTitle">优先</div>
-              <div className="ml-10 w-10 text-center text-xs">
+            <div className="text-blueTitle text-xs font-semibold">可选</div>
+              <div className="ml-10 w-10 text-center text-xs text-[#798195]">
                 Raymond Grinnel
               </div>
             </div>
@@ -207,7 +221,7 @@ export default function recommend() {
         >
           <LoveIcon></LoveIcon>
           <div className="text-sm" onClick={() => {}}>
-            已收藏课表
+          已收藏
           </div>
         </div>
         <div className="bg-[#F3F4F6] w-full h-10 rounded-lg  flex justify-center items-center">

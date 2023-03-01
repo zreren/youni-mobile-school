@@ -46,6 +46,7 @@ export default function index() {
   const courseData = React.useMemo(() => 
   _courseData && !courseError ? courseData ? [...courseData].concat(..._courseData): [].concat(..._courseData) : null
   , [_courseData,campusId,value,courseError])
+
   const { data: _professorList, mutate: professorMutate } = useFetch(
     `/professor/list`,
     'page',

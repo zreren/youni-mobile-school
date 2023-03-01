@@ -86,3 +86,8 @@
 .waterfall .rv-skeleton__row {
     border-radius: 8px !important;
 }
+
+.rv-tabs__line{
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    width: 40% !important;
+}

@@ -144,7 +144,7 @@ function SchoolPage(props) {
   );
   const { user ,loggedOut} = useUser();
 
-  const [category, setCategory] = useState(loggedOut?'idle':'recommend_list');
+  const [category, setCategory] = useState('idle');
   const pathname = useMemo(() => {
     const follow_list = '/post/follow_list';
     const home_list = '/post/home_list';
@@ -167,11 +167,11 @@ function SchoolPage(props) {
     pageSize: 20,
   });
 
-  // useEffect(()=>{
-  //   enableZoom()
-  // },[])
+  useEffect(()=>{
+    console.log(loggedOut,"loggedOut")
+  },[loggedOut])
   const postData = useMemo(() => {
-    return _postData ? [].concat(..._postData) : [];
+    return _postData ? postData ? [...postData].concat(..._postData) : [].concat(..._postData) : null;
   }, [_postData, category]);
   useEffect(() => {
     console.log(postData, 'postData');
@@ -252,6 +252,10 @@ function SchoolPage(props) {
         ]
       }
   },[loggedOut])
+  useEffect(()=>{
+    console.log(headerMenuList,"headerMenuList")
+    // setCategory(headerMenuList[0].label)
+  },[headerMenuList])
   const [reRender, setreRender] = useState(1);
   const onRefresh = (showToast) => {
     return new Promise((resolve) => {

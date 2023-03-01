@@ -15,6 +15,9 @@ import DownIcon from './down.svg';
 import useLanguage from '@/hooks/useLanguage';
 import classnames from 'classnames';
 import { Tabs } from 'react-vant';
+import PrefixIcon from './prefix.svg';
+import RecommendIcon from './recommend.svg';
+import { useRouter } from 'next/router';
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -56,7 +59,7 @@ type Course = {
 };
 export default function Introduce(props: Course) {
   console.log(props, 'props');
-
+  const router = useRouter()
   let porpsIntroduce = props;
   if (!props) {
     porpsIntroduce = {
@@ -152,7 +155,80 @@ export default function Introduce(props: Course) {
       </div>
     );
   };
-
+  const CourseSelector = (props) => {
+    const { isSelect } = props;
+    return (
+      <div
+        className={classnames(
+          'flex justify-center relative items-center w-14 h-14  p-[1px] rounded-2xl',
+          {
+            'border-[2px] border-[#FFDEAD]': isSelect,
+          },
+        )}
+      >
+        <div
+          className={classnames(
+            'border-[#FFDEAD] bg-[#FFFAF0] flex flex-col justify-center items-center  border-[2px] rounded-2xl h-12 w-12',
+          )}
+        >
+          <svg height={'14px'} width={'100%'}>
+            <text
+              x="50%"
+              text-anchor="middle"
+              y="10"
+              fill="#ff9832"
+              color="#ff9832"
+              fontSize={'8px'}
+              wordSpacing={1}
+            >
+              {' '}
+              MAT 
+            </text>
+          </svg>
+          <svg height={'14px'} width={'100%'}>
+            <text
+              x="50%"
+              text-anchor="middle"
+              y="10"
+              fill="#ff9832"
+              color="#ff9832"
+              fontSize={'8px'}
+              wordSpacing={1}
+            >
+              {' '}
+              123 
+            </text>
+          </svg>
+          
+        </div>
+        <div className="xueqiTag absolute rounded-[6px] text-[white] flex justify-center items-center text-xs p-1 w-5 h-5 bottom-0 right-0">
+          秋
+        </div>
+      </div>
+    );
+  };
+  const RecommendCourse = () =>{
+    const Item = (props)=>{
+      return (
+        <div className='w-1/4 h-36 py-1 flex flex-col items-center justify-center border-gray-50 border-[0.5px] rounded-md'>
+        {props?.prefix?  <RecommendIcon></RecommendIcon> :<PrefixIcon></PrefixIcon> }
+        <div className='text-blueTitle text-xs  font-semibold'>COMM</div>
+        <div className='text-blueTitle text-xs font-semibold'>341</div>
+        <div className='bg-[#F7F8F9] text-blueTitle text-xs h-8 w-2/3 rounded-lg flex justify-center items-center '>
+        {props?.prefix? '前置课':'推荐课'}
+        </div>
+      </div>
+      )
+    }
+    return (
+      <div className='flex items-center space-x-2'>
+        <Item prefix></Item>
+        <Item></Item>
+        <Item></Item>
+        <Item></Item>
+      </div>
+    )
+  }
   const Menu = () => {
     const [label, setLabel] = useState(0);
     return (
@@ -189,9 +265,7 @@ export default function Introduce(props: Course) {
               <RedIcon className="mr-2"></RedIcon>
               <Title
                 className="mb-0 mt-0"
-                title={`${porpsIntroduce.subject[
-                  useLanguage('name')
-                ]?.toUpperCase()} ${code}`}
+                title={ code}
               ></Title>
             </div>
             <Title
@@ -237,7 +311,7 @@ export default function Introduce(props: Course) {
                       <div className="font-semibold ">前置课</div>
                     </div>
                     <div className="p-2 text-[#798195]  text-sm">Grade 12 Calculus and Vectors</div>
-                    <Accordion className="rounded-lg p-0" sx={{ padding: 0 }}>
+                    <Accordion defaultExpanded className="rounded-lg p-0" sx={{ padding: 0 }}>
                       <AccordionSummary
                         sx={{ padding: 0 }}
                         expandIcon={<DownIcon />}
@@ -251,8 +325,8 @@ export default function Introduce(props: Course) {
                       </AccordionSummary>
                       <AccordionDetails>
                         <div className="w-full grid grid-rows-2 grid-cols-2 gap-3">
-                          <div className="bg-[#F7F8F9] w-full h-6">1</div>
-                          <div className="bg-[#F7F8F9] w-full h-6">1</div>
+                          <div className="bg-[#F7F8F9] rounded-md w-full flex justify-center items-center h-6 text-xs text-[#798195]">MAT 120</div>
+                          <div className="bg-[#F7F8F9]  rounded-md w-full  flex justify-center items-center text-xs text-[#798195] h-6">MAT 120</div>
                         </div>
                       </AccordionDetails>
                     </Accordion>
@@ -312,8 +386,10 @@ export default function Introduce(props: Course) {
                       aria-controls="panel1a-content"
                       id="panel1a-header"
                     >
-                      <div className="flex p-3 space-x-3">
+                      <div>
+                      <div className="flex w-full p-3 space-x-3">
                         <div className="w-6 h-6 rounded-md bg-[#F7F8F9] flex items-center justify-center">
+                          {/* index */}
                           1
                         </div>
                         <div>
@@ -325,9 +401,21 @@ export default function Introduce(props: Course) {
                           </div>
                         </div>
                       </div>
+                      <div className='w-full px-2'>
+                        <CourseSelector></CourseSelector>
+                      </div>
+                      </div>
                     </AccordionSummary>
                     <AccordionDetails>
-                      <div className="w-full h-10">
+                      <div onClick={()=>{
+                        router.push({
+                          pathname:'/[campus]/Course/recommend/[id]',
+                          query:{
+                            campus: router.query.campus,
+                            id:1
+                          }
+                        })
+                      }} className="w-full h-10">
                         <div className="bg-[#FFFBD9] rounded-lg text-[#D9A823] w-full h-10 flex justify-center items-center">
                           查看全文
                         </div>
@@ -350,6 +438,7 @@ export default function Introduce(props: Course) {
                 <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
                 <div className="font-semibold">智能推荐</div>
               </div>
+              <RecommendCourse></RecommendCourse>
             </div>
           </div>
         ) : null}
