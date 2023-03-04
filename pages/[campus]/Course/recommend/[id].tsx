@@ -6,14 +6,17 @@ import PostGroupIcon2 from './post-group/icon2.svg';
 import PostGroupIcon3 from './post-group/icon3.svg';
 import classnames from 'classnames';
 import LoveIcon from './heart.svg';
+import LoveIconx from './heartx.svg';
+import useRequest from '@/libs/request';
 import useFetch from '@/hooks/useFetch';
 import { useRouter } from 'next/router';
 import { Toast } from 'react-vant';
+import { mutate } from 'swr';
 
 export default function recommend() {
   const router = useRouter();
 
-  const { data } = useFetch(`/post/detail?id=${router.query.id}`, 'get');
+  const { data,mutate } = useFetch(`/post/detail?id=${router.query.id}`, 'get');
   const CourseSelector = (props) => {
     const { isSelect } = props;
     return (
@@ -315,31 +318,59 @@ export default function recommend() {
       </>
     );
   };
+  const started =  React.useMemo(()=>data?.data?.interactInfo?.stared,[data?.data?.interactInfo?.stared])
+
+  
   return (
     <div className="w-screen min-h-screen pb-20">
       <Header></Header>
       <div className="flex justify-between items-center mt-4 px-4 space-x-2">
         <div
           className={classnames(
-            'w-full font-semibold space-x-2 h-10 rounded-lg  flex justify-center items-center  bg-[#FFD036]',
+            'w-full font-semibold space-x-2 h-10 rounded-lg  flex justify-center items-center ',
             {
-              'bg-[#FF6E69] text-white': true,
+              'bg-[#FF6E69] text-white': started,
+              'text-[#FF6E69] bg-[#FFEBEB]' : !started
             },
           )}
         >
-          <LoveIcon></LoveIcon>
+          {
+           started ? <LoveIcon></LoveIcon> : <LoveIconx></LoveIconx>
+          } 
           <div
             className="text-sm"
-            onClick={() => {
-              Toast.success('收藏成功');
+            onClick={async() => {
+              if(started){
+                await useRequest.post('/api/post/unstar',{
+                  id:router.query.id
+                })
+                Toast.success('取消收藏');
+                mutate()
+                // setStarted((pre)=>!pre)
+              }else{
+                await useRequest.post('/api/post/star',{
+                  id:router.query.id
+                })
+                Toast.success('收藏成功');
+                mutate()
+                // setStarted((pre)=>!pre)
+              }
+              
+
             }}
           >
-            已收藏
+            { started ? '已收藏' : '收藏'}
           </div>
         </div>
         <div
           onClick={() => {
-            Toast.success('已复制到简介板，分享给好友吧！');
+            try {
+              navigator.clipboard.writeText(router.pathname);
+              Toast.success('已复制到简介板，分享给好友吧！');
+
+            } catch (error) {
+              Toast.fail('复制失败')
+            }
           }}
           className="bg-[#F3F4F6] w-full h-10 rounded-lg  flex justify-center items-center"
         >
