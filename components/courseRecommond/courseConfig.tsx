@@ -322,7 +322,7 @@ export default function config(props) {
                       if (isSelectCustom) {
                         setSelectList((pre) => [
                           ...pre.filter(
-                            (i) => !i.id && i.name !== customProfessor || i.id !== -1,
+                            (i) => !i.id && i.name !== customProfessor && i.id !== -1,
                           ),
                         ]);
                         return;
@@ -474,7 +474,7 @@ export default function config(props) {
                             if (selectList?.length >= 0) {
                               if (isSelect) {
                                 setSelectList((pre) => [
-                                  ...pre.filter((i) => i.id !== item.id || item.id !== -1),
+                                  ...pre.filter((i) => i.id !== item.id && item.id !== -1),
                                 ]);
                                 return;
                               }
@@ -530,7 +530,7 @@ export default function config(props) {
                       if (isSelectCustom) {
                         setSelectList((pre) => [
                           ...pre.filter(
-                            (i) => !i.id && i.name !== customProfessor || i.id !== -1,
+                            (i) => !i.id && i.name !== customProfessor && i.id !== -1,
                           ),
                         ]);
                         return;
