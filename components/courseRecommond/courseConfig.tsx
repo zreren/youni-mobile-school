@@ -1301,7 +1301,7 @@ export default function config(props) {
               </div>
               <div className="flex items-center space-x-2 mt-6">
                 <div className="w-1 h-4 bg-yellow-300 rounded-full"></div>
-                <div className="font-semibold">秋季学期 Fall 2023</div>
+                <div className="font-semibold">{termValue}</div>
               </div>
               {filteredData?.map((item: Course) => {
                 return (

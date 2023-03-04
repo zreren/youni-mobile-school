@@ -218,33 +218,9 @@ export default function recommend() {
               'border-[#FFDEAD] bg-[#FFFAF0] flex flex-col justify-center items-center  border-[2px] rounded-2xl h-12 w-12',
             )}
           >
-            <svg height={'14px'} width={'100%'}>
-              <text
-                x="50%"
-                text-anchor="middle"
-                y="10"
-                fill="#ff9832"
-                color="#ff9832"
-                fontSize={'10px'}
-              >
-                {' '}
-                MAT
-              </text>
-            </svg>
-            <svg height={'14px'} width={'100%'}>
-              <text
-                x="50%"
-                text-anchor="middle"
-                y="10"
-                fill="#ff9832"
-                fontWeight={600}
-                color="#ff9832"
-                fontSize={'10px'}
-              >
-                {' '}
-                321
-              </text>
-            </svg>
+           <div className="text-[10px] text-[#ff9832] flex justify-center text-center items-center">
+              {props.data.label}
+            </div>
           </div>
           <div className="xueqiTag absolute rounded-[6px] p-[6px] text-[white] flex justify-center items-center text-xs w-5 h-5 bottom-0 right-0">
           {data?.data?.form?.term?.slice(0,1)}

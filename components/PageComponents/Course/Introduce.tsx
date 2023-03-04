@@ -69,37 +69,7 @@ export default function Introduce(props: {MyIntroduce:Course,recommendsData:any}
   const router = useRouter()
   let porpsIntroduce = props.MyIntroduce;
 
-  if (!props) {
-    porpsIntroduce = {
-      ename: 'default',
-      code: '1000',
-      cname: '数学',
-      desc: '',
-      rating: {
-        professorRating: 1,
-        homeworkRating: 1,
-        contentRating: 1.2,
-        examRating: 1.2,
-      },
-      sections: [
-        {
-          name: 'default',
-          startTime: 'default',
-          endTime: 'default',
-        },
-      ],
-      subject: {
-        cname: 'default',
-        ename: 'default',
-        shortName: 'default',
-      },
-      type: {
-        cname: 'default',
-        ename: 'default',
-        desc: 'default',
-      },
-    };
-  }
+  if (!props) return
   const { ename, code, sections, subject, type, rating, cname } =
     porpsIntroduce;
   const Section = (props) => {
