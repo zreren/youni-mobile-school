@@ -502,7 +502,9 @@ export default function config(props) {
                             },
                           )}
                         >
-                          选择
+                          {selectList?.some(
+                                (i) => i.id === item.id,
+                              ) ? '取消选中' : '选中'}
                         </div>
                       </div>
                       <div className="w-full h-[0.8px] bg-[#F3F4F6] rounded-md "></div>
@@ -565,7 +567,8 @@ export default function config(props) {
                     },
                   )}
                 >
-                  选择
+                  {selectList?.some(
+                        (i) => i.name === customProfessor ? '取消选中' : '选中' }
                 </div>
               </div>
               <div className="text-[#A9B0C0] my-3">非常规情况</div>
