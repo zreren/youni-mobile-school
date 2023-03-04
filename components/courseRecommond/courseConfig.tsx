@@ -503,7 +503,7 @@ export default function config(props) {
                           )}
                         >
                           {selectList?.some(
-                                (i) => i.id === item.id,
+                                (i) => i.id === item.id
                               ) ? '取消选中' : '选中'}
                         </div>
                       </div>
