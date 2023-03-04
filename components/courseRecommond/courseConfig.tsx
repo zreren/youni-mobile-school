@@ -17,18 +17,12 @@ import useFetch from '@/hooks/useFetch';
 import { useRouter } from 'next/router';
 import { Toast } from 'react-vant';
 import { professorList } from '@/mock/data';
-export default function config() {
+import { selectOpen } from '@/stores/authSlice';
+import Select from './select'
+import DraftIcon from './draft.svg';
+export default function config(props) {
   const router = useRouter();
-  const Puller = styled(Box)(({ theme }) => ({
-    width: 33,
-    height: 4,
-    backgroundColor: theme.palette.mode === 'light' ? grey[300] : grey[900],
-    borderRadius: 3,
-    position: 'absolute',
-    top: 8,
-    left: 'calc(50% - 15px)',
-  }));
-
+  const [semesterData, setSemesterData] = useState(null);
   const { data: campusData, mutate: campusDataMutate } = useFetch(
     '/campus/query',
     'get',
@@ -39,93 +33,159 @@ export default function config() {
   const campusId = React.useMemo(() => {
     return campusData?.data[0]?.id;
   }, [campusData?.data, router]);
+  const { data: fetchedData } = useFetch('/campus/term/list', 'get', {
+    campusId: campusId,
+  });
+
+  // React.useEffect(() => {
+  //   async function fetchData() {
+
+  //     setSemesterData(fetchedData);
+  //   }
+  //   if(campusId){
+  //     fetchData()
+  //   }
+  // }, [campusId])
+
+  const Puller = styled(Box)(({ theme }) => ({
+    width: 33,
+    height: 4,
+    backgroundColor: theme.palette.mode === 'light' ? grey[300] : grey[900],
+    borderRadius: 3,
+    position: 'absolute',
+    top: 8,
+    left: 'calc(50% - 15px)',
+  }));
+  const CourseSelectFormItem = (props) => {
+    const { data }: { data: Course } = props;
+    return (
+      <>
+        <div className="flex mt-4 items-top space-x-8 w-full">
+          <div className="min-w-[44px] text-[#798195] w-11 flex items-center justify-center text-center h-11 bg-[#F7F8F9] rounded-lg text-xs">
+            {data.label}
+          </div>
+          <div className="w-full space-y-4">
+            <div className="flex items-center space-x-10 h-10">
+              <div className="text-blueTitle text-xs font-semibold">优先</div>
+              {data?.professorMust.map((item) => {
+                return (
+                  <div className="ml-10 w-10 text-center text-xs text-[#798195]">
+                    {item.label}
+                  </div>
+                );
+              })}
+            </div>
+            {data?.professorOption.length > 0 && (
+              <div className="flex items-center space-x-10">
+                <div className="text-blueTitle text-xs font-semibold">可选</div>
+                {data?.professorOption.map((item) => {
+                  return (
+                    <div className="ml-10 w-10 text-center text-xs text-[#798195]">
+                      {item.label}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+        {data.note && (
+          <div className="rounded-sm bg-[#F7F8F9] text-[#798195] w-full p-4 mt-4 text-xs">
+            {data?.note}
+          </div>
+        )}
+
+        <div className="bg-[#F7F8F9] w-full h-[0.5px] mt-4"></div>
+      </>
+    );
+  };
 
   const [professorCurrent, setProfessorCurrent] = useState(0);
 
-  const [courseList, setCourseList] = useState({
-    0: {
-      id: null,
-      label: null,
-      type: null,
-      professorMust: [],
-      professorOption:[],
-      note: null,
-    },
-    1: {
-      id: null,
-      label: null,
-      type: null,
-      professorMust: [],
-      professorOption:[],
-      note: null,
-    },
-    2: {
-      id: null,
-      label: null,
-      type: null,
-      professorMust: [],
-      professorOption:[],
-      note: null,
-    },
-    3: {
-      id: null,
-      label: null,
-      type: null,
-      professorMust: [],
-      professorOption:[],
-      note: null,
-    },
-    4: {
-      id: null,
-      label: null,
-      type: null,
-      professorMust: [],
-      professorOption:[],
-      note: null,
-    },
-    5: {
-      id: null,
-      label: null,
-      type: null,
-      professorMust: [],
-      professorOption:[],
-      note: null,
-    },
-    6: {
-      id: null,
-      label: null,
-      professorMust: [],
-      professorOption:[],
-      note: null,
-    },
-    7: {
-      id: null,
-      label: null,
-      type: null,
-      professorMust: [],
-      professorOption:[],
-      note: null,
-    },
-    8: {
-      id: null,
-      label: null,
-      type: null,
-      professorMust: [],
-      professorOption:[],
-      note: null,
-    },
-    9: {
-      id: null,
-      label: null,
-      type: null,
-      professorMust: [],
-      professorOption:[],
-      note: null,
-    },
-  });
+  // const [courseList, setCourseList] = useState({
+  //   0: {
+  //     id: null,
+  //     label: null,
+  //     type: null,
+  //     professorMust: [],
+  //     professorOption: [],
+  //     note: null,
+  //   },
+  //   1: {
+  //     id: null,
+  //     label: null,
+  //     type: null,
+  //     professorMust: [],
+  //     professorOption: [],
+  //     note: null,
+  //   },
+  //   2: {
+  //     id: null,
+  //     label: null,
+  //     type: null,
+  //     professorMust: [],
+  //     professorOption: [],
+  //     note: null,
+  //   },
+  //   3: {
+  //     id: null,
+  //     label: null,
+  //     type: null,
+  //     professorMust: [],
+  //     professorOption: [],
+  //     note: null,
+  //   },
+  //   4: {
+  //     id: null,
+  //     label: null,
+  //     type: null,
+  //     professorMust: [],
+  //     professorOption: [],
+  //     note: null,
+  //   },
+  //   5: {
+  //     id: null,
+  //     label: null,
+  //     type: null,
+  //     professorMust: [],
+  //     professorOption: [],
+  //     note: null,
+  //   },
+  //   6: {
+  //     id: null,
+  //     label: null,
+  //     professorMust: [],
+  //     professorOption: [],
+  //     note: null,
+  //   },
+  //   7: {
+  //     id: null,
+  //     label: null,
+  //     type: null,
+  //     professorMust: [],
+  //     professorOption: [],
+  //     note: null,
+  //   },
+  //   8: {
+  //     id: null,
+  //     label: null,
+  //     type: null,
+  //     professorMust: [],
+  //     professorOption: [],
+  //     note: null,
+  //   },
+  //   9: {
+  //     id: null,
+  //     label: null,
+  //     type: null,
+  //     professorMust: [],
+  //     professorOption: [],
+  //     note: null,
+  //   },
+  // });
   const [professorOpen, setProfessorOpen] = useState(false);
   const [professorOptionOpen, setProfessorOptionOpen] = useState(false);
-
+  const {courseList,setCourseList}:{courseList:Course[],setCourseList:any} = props;
   const CourseId = React.useMemo(
     () => courseList[professorCurrent].id,
     [professorCurrent, courseList],
@@ -182,38 +242,47 @@ export default function config() {
                 {props?.data?.map((item) => {
                   const isSelect = selectList?.some((i) => i.id === item.id);
                   return (
-                    <div
-                      className="h-14"
-                      onClick={() => {
-                        if (selectList?.length >= 0) {
-                          if (isSelect) {
-                            setSelectList((pre) => [
-                              ...pre.filter((i) => i.id !== item.id),
-                            ]);
-                            return;
-                          }
-                          setSelectList((pre) => [
-                            ...pre,
-                            { id: item.id, label: item.name },
-                          ]);
-                        } else {
-                          setSelectList([
-                            {
-                              id: item.id,
-                              label: item.name,
-                            },
-                          ]);
-                        }
-                      }}
-                    >
+                    <div className="h-14">
                       <div className="flex items-center justify-between h-10">
-                        <div className="text-sm text-[#37455C]">
+                        <div
+                          className={classnames(
+                            {
+                              'text-[#37455C] border-[#F3F4F6]':
+                                !selectList?.every((i) => i.id === item.id),
+                              ' text-[#B38314]': selectList?.some(
+                                (i) => i.id === item.id,
+                              ),
+                            },
+                            'text-sm ',
+                          )}
+                        >
                           {item.name}
                         </div>
                         {/* {isSelect} */}
                         <div
+                          onClick={() => {
+                            if (selectList?.length >= 0) {
+                              if (isSelect) {
+                                setSelectList((pre) => [
+                                  ...pre.filter((i) => i.id !== item.id || item.id !== -1),
+                                ]);
+                                return;
+                              }
+                              setSelectList((pre) => [
+                                ...pre.filter((item)=>item.id!==-1),
+                                { id: item.id, label: item.name },
+                              ]);
+                            } else {
+                              setSelectList([
+                                {
+                                  id: item.id,
+                                  label: item.name,
+                                },
+                              ]);
+                            }
+                          }}
                           className={classnames(
-                            ' px-4 py-1 text-xs  border rounded-md',
+                            ' px-4 py-1 text-xs text-[#798195] border rounded-md',
                             {
                               'text-[#798195] border-[#F3F4F6]':
                                 !selectList?.every((i) => i.id === item.id),
@@ -223,39 +292,17 @@ export default function config() {
                             },
                           )}
                         >
-                          选择
+                          {selectList?.some((i) => i.id === item.id) ?
+                            '取消选中' : '选中'}
+                           
                         </div>
                       </div>
-                      <div className="w-full h-[0.1px] bg-[#F3F4F6] rounded-md border border-lg"></div>
+                      <div className="w-full h-[0.8px] bg-[#F3F4F6] rounded-md "></div>
                     </div>
                   );
                 })}
               </div>
-              <div
-                className="flex items-center justify-between h-10"
-                onClick={() => {
-                  if (selectList?.length >= 0 && customProfessor?.length > 0) {
-                    if (isSelectCustom) {
-                      setSelectList((pre) => [
-                        ...pre.filter((i) => i.name !== customProfessor),
-                      ]);
-                      return;
-                    }
-                    setSelectList((pre) => [
-                      ...pre,
-                      { id: null, label: customProfessor },
-                    ]);
-                  } else {
-                    if (customProfessor?.length > 0) return;
-                    setSelectList([
-                      {
-                        id: null,
-                        label: customProfessor,
-                      },
-                    ]);
-                  }
-                }}
-              >
+              <div className="flex items-center justify-between h-10">
                 <div className="text-sm text-[#37455C]">
                   <input
                     value={customProfessor}
@@ -267,27 +314,85 @@ export default function config() {
                 </div>
                 {/* {isSelect} */}
                 <div
+                  onClick={() => {
+                    if (
+                      selectList?.length >= 0 &&
+                      customProfessor?.length > 0
+                    ) {
+                      if (isSelectCustom) {
+                        setSelectList((pre) => [
+                          ...pre.filter(
+                            (i) => !i.id && i.name !== customProfessor || i.id !== -1,
+                          ),
+                        ]);
+                        return;
+                      }
+                      setSelectList((pre) => [
+                        ...pre.filter((item)=>item.id!==-1),
+                        { id: null, label: customProfessor },
+                      ]);
+                    } else {
+                      if (customProfessor?.length === 0) return;
+                      setSelectList((pre) => [
+                        ...pre.filter((item)=>item.id!==-1),
+                        { id: null, label: customProfessor },
+                      ]);
+                      // setSelectList([
+                      //   {
+                      //     id: null,
+                      //     label: customProfessor,
+                      //   },
+                      // ]);
+                    }
+                  }}
                   className={classnames(
                     ' px-4 py-1 text-xs  border rounded-md',
                     {
                       'text-[#798195] border-[#F3F4F6]': !selectList?.every(
-                        (i) => i.name === customProfessor,
+                        (i) => i.label === customProfessor,
                       ),
                       'bg-red-400 text-white': selectList?.some(
-                        (i) => i.name === customProfessor,
+                        (i) => i.label === customProfessor,
                       ),
                     },
                   )}
                 >
-                  选择
+                   {selectList?.some((i) =>i.label === customProfessor) ?
+                            '取消选中' : '选中'}
                 </div>
               </div>
               <div className="text-[#A9B0C0] my-3">非常规情况</div>
               <div className="space-y-2">
-                <div className="text-[#798195] text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10">
+                <div onClick={()=>{
+                  setSelectList((pre) => [
+                    { id: -1, label: '均可选择' },
+                  ]);
+                }} className={
+                  classnames("text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10",{
+                    'text-[#798195] ': !selectList?.some(
+                      (i) => i.label === '均可选择' && i.id === -1,
+                    ),
+                    'text-[#C8A655] ': selectList?.some(
+                      (i) => i.label === '均可选择' && i.id === -1,
+                    ),
+                  })
+                }>
                   教授均可选择
                 </div>
-                <div className="text-[#798195] text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10">
+                <div onClick={()=>{
+                  setSelectList((pre) => [
+                    { id: -1, label: '无教授推荐' },
+                  ]);
+                }} className={
+                  classnames("text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10",{
+                    'text-[#798195] ': !selectList?.some(
+                      (i) => i.label === '无教授推荐' && i.id === -1,
+                    ),
+                    'text-[#C8A655] ': selectList?.some(
+                      (i) => i.label === '无教授推荐' && i.id === -1,
+                    ),
+                  })
+                }>
                   无教授推荐
                 </div>
               </div>
@@ -297,7 +402,7 @@ export default function config() {
         </SwipeableDrawer>
       );
     },
-    [professorCurrent],
+    [professorCurrent, courseList],
   );
   const SelectProfessorOption = useCallback(
     (props) => {
@@ -307,7 +412,7 @@ export default function config() {
         mutate,
       }: { open: boolean; isEdit: boolean; mutate: any } = props;
       const [selectList, setSelectList] = useState<any>(
-        courseList[professorCurrent].professorMust,
+        courseList[professorCurrent].professorOption,
       );
       React.useEffect(() => {
         console.log(
@@ -347,38 +452,47 @@ export default function config() {
                 {props?.data?.map((item) => {
                   const isSelect = selectList?.some((i) => i.id === item.id);
                   return (
-                    <div
-                      className="h-14"
-                      onClick={() => {
-                        if (selectList?.length >= 0) {
-                          if (isSelect) {
-                            setSelectList((pre) => [
-                              ...pre.filter((i) => i.id !== item.id),
-                            ]);
-                            return;
-                          }
-                          setSelectList((pre) => [
-                            ...pre,
-                            { id: item.id, label: item.name },
-                          ]);
-                        } else {
-                          setSelectList([
-                            {
-                              id: item.id,
-                              label: item.name,
-                            },
-                          ]);
-                        }
-                      }}
-                    >
+                    <div className="h-14">
                       <div className="flex items-center justify-between h-10">
-                        <div className="text-sm text-[#37455C]">
+                        <div
+                          className={classnames(
+                            {
+                              'text-[#37455C] border-[#F3F4F6]':
+                                !selectList?.every((i) => i.id === item.id),
+                              ' text-[#B38314]': selectList?.some(
+                                (i) => i.id === item.id,
+                              ),
+                            },
+                            'text-sm ',
+                          )}
+                        >
                           {item.name}
                         </div>
                         {/* {isSelect} */}
                         <div
+                          onClick={() => {
+                            if (selectList?.length >= 0) {
+                              if (isSelect) {
+                                setSelectList((pre) => [
+                                  ...pre.filter((i) => i.id !== item.id || item.id !== -1),
+                                ]);
+                                return;
+                              }
+                              setSelectList((pre) => [
+                                ...pre,
+                                { id: item.id, label: item.name },
+                              ]);
+                            } else {
+                              setSelectList([
+                                {
+                                  id: item.id,
+                                  label: item.name,
+                                },
+                              ]);
+                            }
+                          }}
                           className={classnames(
-                            ' px-4 py-1 text-xs  border rounded-md',
+                            ' px-4 py-1 text-xs text-[#798195] border rounded-md',
                             {
                               'text-[#798195] border-[#F3F4F6]':
                                 !selectList?.every((i) => i.id === item.id),
@@ -391,36 +505,12 @@ export default function config() {
                           选择
                         </div>
                       </div>
-                      <div className="w-full h-[0.1px] bg-[#F3F4F6] rounded-md border border-lg"></div>
+                      <div className="w-full h-[0.8px] bg-[#F3F4F6] rounded-md "></div>
                     </div>
                   );
                 })}
               </div>
-              <div
-                className="flex items-center justify-between h-10"
-                onClick={() => {
-                  if (selectList?.length >= 0 && customProfessor?.length > 0) {
-                    if (isSelectCustom) {
-                      setSelectList((pre) => [
-                        ...pre.filter((i) => i.name !== customProfessor),
-                      ]);
-                      return;
-                    }
-                    setSelectList((pre) => [
-                      ...pre,
-                      { id: null, label: customProfessor },
-                    ]);
-                  } else {
-                    if (customProfessor?.length > 0) return;
-                    setSelectList([
-                      {
-                        id: null,
-                        label: customProfessor,
-                      },
-                    ]);
-                  }
-                }}
-              >
+              <div className="flex items-center justify-between h-10">
                 <div className="text-sm text-[#37455C]">
                   <input
                     value={customProfessor}
@@ -432,6 +522,37 @@ export default function config() {
                 </div>
                 {/* {isSelect} */}
                 <div
+                  onClick={() => {
+                    if (
+                      selectList?.length >= 0 &&
+                      customProfessor?.length > 0
+                    ) {
+                      if (isSelectCustom) {
+                        setSelectList((pre) => [
+                          ...pre.filter(
+                            (i) => !i.id && i.name !== customProfessor || i.id !== -1,
+                          ),
+                        ]);
+                        return;
+                      }
+                      setSelectList((pre) => [
+                        ...pre.filter((item)=>item.id!==-1),
+                        { id: null, label: customProfessor },
+                      ]);
+                    } else {
+                      if (customProfessor?.length === 0) return;
+                      setSelectList((pre) => [
+                        ...pre.filter((item)=>item.id!==-1),
+                        { id: null, label: customProfessor },
+                      ]);
+                      // setSelectList([
+                      //   {
+                      //     id: null,
+                      //     label: customProfessor,
+                      //   },
+                      // ]);
+                    }
+                  }}
                   className={classnames(
                     ' px-4 py-1 text-xs  border rounded-md',
                     {
@@ -449,10 +570,36 @@ export default function config() {
               </div>
               <div className="text-[#A9B0C0] my-3">非常规情况</div>
               <div className="space-y-2">
-                <div className="text-[#798195] text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10">
+                <div onClick={()=>{
+                  setSelectList([
+                    { id: -1, label: '均可选择' },
+                  ]);
+                }} className={
+                  classnames("text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10",{
+                    'text-[#798195] ': !selectList?.some(
+                      (i) => i.label === '均可选择' && i.id === -1,
+                    ),
+                    'text-[#C8A655] ': selectList?.some(
+                      (i) => i.label === '均可选择' && i.id === -1,
+                    ),
+                  })
+                }>
                   教授均可选择
                 </div>
-                <div className="text-[#798195] text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10">
+                <div onClick={()=>{
+                  setSelectList([
+                    { id: -1, label: '无教授推荐' },
+                  ]);
+                }} className={
+                  classnames("text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10",{
+                    'text-[#798195] ': !selectList?.some(
+                      (i) => i.label === '无教授推荐' && i.id === -1,
+                    ),
+                    'text-[#C8A655] ': selectList?.some(
+                      (i) => i.label === '无教授推荐' && i.id === -1,
+                    ),
+                  })
+                }>
                   无教授推荐
                 </div>
               </div>
@@ -462,7 +609,7 @@ export default function config() {
         </SwipeableDrawer>
       );
     },
-    [professorCurrent],
+    [professorCurrent, courseList],
   );
   const SelectCourse = useCallback((props) => {
     const [value, setValue] = useState('');
@@ -484,7 +631,7 @@ export default function config() {
     });
     React.useEffect(() => {
       m();
-    }, [campusId,value]);
+    }, [campusId, value]);
     const courseData = React.useMemo(
       () =>
         _courseData && !courseError
@@ -590,6 +737,7 @@ export default function config() {
     id: number;
     label: string;
     professorMust: { id: number; label: string }[];
+    professorOption: { id: number; label: string }[];
     type: string;
     note: string;
   }
@@ -675,12 +823,12 @@ export default function config() {
     console.log(courseList, 'courseList');
   }, [courseList]);
 
-
   React.useEffect(() => {
     evaluationDataMutate();
   }, [CourseId]);
 
   const MustStudy = (props) => {
+    const { data }: { data: Course[] } = props;
     const CourseSelector = (props) => {
       const { isSelect } = props;
       return (
@@ -697,7 +845,10 @@ export default function config() {
               'border-[#FFDEAD] bg-[#FFFAF0] flex flex-col justify-center items-center  border-[2px] rounded-2xl h-12 w-12',
             )}
           >
-            <svg height={'14px'} width={'100%'}>
+            <div className="text-[10px] text-[#ff9832] flex justify-center text-center items-center">
+              {props.data.label}
+            </div>
+            {/* <svg className='whitespace-wrap' height={'14px'} width={'100%'}>
               <text
                 x="50%"
                 text-anchor="middle"
@@ -707,32 +858,18 @@ export default function config() {
                 fontSize={'10px'}
               >
                 {' '}
-                MAT
+                {props.data.label}
               </text>
-            </svg>
-            <svg height={'14px'} width={'100%'}>
-              <text
-                x="50%"
-                text-anchor="middle"
-                y="10"
-                fill="#ff9832"
-                fontWeight={600}
-                color="#ff9832"
-                fontSize={'10px'}
-              >
-                {' '}
-                321
-              </text>
-            </svg>
+            </svg> */}
           </div>
-          <div className="xueqiTag absolute rounded-[6px] p-[6px] text-[white] flex justify-center items-center text-xs w-5 h-5 bottom-0 right-0">
-            秋
+          <div className="xueqiTag absolute rounded-[5px] p-[5px] text-[white] flex justify-center items-center text-[10px] w-4 h-4 bottom-0 right-0">
+            {termValue?.slice(0,1)}
           </div>
         </div>
       );
     };
     return (
-      <div className="w-full h-16 max-w-[1/2]">
+      <div className="min-w-[1/2] h-16 w-1/2  max-w-[1/2]">
         <div className="flex items-center justify-center">
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
           <div className="whitespace-nowrap text-[#DCDDE1] text-xs mx-2">
@@ -740,9 +877,9 @@ export default function config() {
           </div>
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
         </div>
-        <div className="flex items-center overflow-scroll space-x-4 max-w-[1/2]">
-          {props.data.map((item) => {
-            return <CourseSelector></CourseSelector>;
+        <div className="flex items-center overflow-scroll space-x-4  max-w-[1/2]">
+          {data.map((item) => {
+            return <CourseSelector data={item}></CourseSelector>;
           })}
         </div>
         {/* //course list */}
@@ -795,41 +932,37 @@ export default function config() {
             </svg>
           </div>
           <div className="xueqiTag absolute rounded-[6px] p-[6px] text-[white] flex justify-center items-center text-xs w-5 h-5 bottom-0 right-0">
-            秋
+          {termValue?.slice(0,1)}
           </div>
         </div>
       );
     };
     return (
-      <div className="w-full h-16 max-w-[1/2]">
+      <div className="min-w-[1/2] h-16 w-1/2  max-w-[1/2]">
         <div className="flex items-center justify-center">
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
           <div className="whitespace-nowrap text-[#DCDDE1] text-xs mx-2">
-            必修课
+            选修课
           </div>
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
         </div>
-        <div className="flex items-center overflow-scroll space-x-4 max-w-[1/2]">
+        <div className="flex items-center overflow-scroll space-x-4  max-w-[1/2]">
           {props.data.map((item) => {
-            return <CourseSelector></CourseSelector>;
+            return <CourseSelector data={item}></CourseSelector>;
           })}
         </div>
         {/* //course list */}
       </div>
     );
   };
-  const mustStudyData = React.useMemo(
-    () =>
-      Object.values(courseList).filter((item: Course) => item?.type === 'must'),
-    [courseList],
-  );
-  const optionStudyData = React.useMemo(
-    () =>
-      Object.values(courseList).filter(
-        (item: Course) => item?.type === 'option',
-      ),
-    [courseList],
-  );
+  const mustStudyData = React.useMemo(() => {
+    const values = Object.values(courseList) as Course[];
+    return values.filter((item: Course) => item?.type === 'must');
+  }, [courseList]);
+  const optionStudyData = React.useMemo(() => {
+    const values = Object.values(courseList) as Course[];
+    return values.filter((item: Course) => item?.type === 'option');
+  }, [courseList]);
   React.useEffect(() => {
     console.log(mustStudyData, 'mustStudyData');
   }, [mustStudyData]);
@@ -842,7 +975,7 @@ export default function config() {
         <div className="bg-[#F0F6FF] p-2 min-w-[48px] w-12 h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
           笔记
         </div>
-        <div className="w-"></div>
+        <div className="w-[0.5px] h-3 bg-[#F0F6FF]"></div>
         {!open ? (
           <div
             onClick={() => {
@@ -876,16 +1009,63 @@ export default function config() {
       </div>
     );
   };
-
-
-  const submit = ()=>{
-    const filteredData = Object.fromEntries(
-      Object.entries(courseList)
-        .filter(([_, value]) => value.id !== null)
-        .map(([key, value]) => [key, value])
+  const filteredData = React.useMemo(
+    () =>
+      Object.values(
+        Object.fromEntries(
+          Object.entries(courseList)
+            .filter(([_, value]) => value.id !== null)
+            .map(([key, value]) => [key, value]),
+        ),
+      ),
+    [courseList],
+  );
+  const submit = () => {
+    console.log(filteredData, 'filteredData');
+  };
+  const deleteProfessor = (p, i, t) => {
+    setCourseList((pre) => {
+      return {
+        ...pre,
+        [i]: {
+          ...courseList[i],
+          [t]: courseList[i][t].filter((item) => item !== p),
+        },
+      };
+    });
+  };
+  const {termValue,setTermValue} = props
+  const submitPost = async (form, draft) => {};
+  const {term,year} = props;
+  React.useEffect(() => {
+    console.log(term,"term")
+  }, [term])
+  
+  const Footer = () => {
+    return (
+      <div className="w-full shadow-footer bg-white h-[60px] space-x-4 flex justify-between fixed bottom-12 px-5 py-2">
+        <div
+          className="flex flex-col items-center  w-[40px]"
+          onClick={() => {
+            console.log(filteredData,term,termValue,year,'courseList')
+          }}
+        >
+          <DraftIcon></DraftIcon>
+          <div className="text-[10px] text-[#798195] whitespace-nowrap">
+            存草稿
+          </div>
+        </div>
+        <div
+          onClick={() => {
+            console.log(filteredData,term,termValue,year,'courseList')
+          }}
+          className="bg-[#FFD036] cursor-pointer  text-white rounded-full w-full h-10 flex justify-center items-center"
+        >
+          发布
+        </div>
+      </div>
     );
-    console.log(filteredData,"filteredData")
-  }
+  };
   return (
     <div className="pb-20">
       <div className="items-start justify-between  py-0 bg-white p-5">
@@ -917,14 +1097,20 @@ export default function config() {
             setProfessorOpen(true);
           }}
         ></SelectProfessor>
-        <SelectProfessorOption onClose={()=>{
-           setProfessorOptionOpen(false)
-        }} onOpen={() => {
-            setProfessorOptionOpen(true)
-          }}  data={evaluationData?.data} selectCourse={(professor) => {
+        <SelectProfessorOption
+          onClose={() => {
+            setProfessorOptionOpen(false);
+          }}
+          onOpen={() => {
+            setProfessorOptionOpen(true);
+          }}
+          data={evaluationData?.data}
+          selectCourse={(professor) => {
             updateProfessorOption({ [professorCurrent]: professor });
             // updateForm({ [current]: course });
-          }} open={professorOptionOpen}></SelectProfessorOption>
+          }}
+          open={professorOptionOpen}
+        ></SelectProfessorOption>
         <div className="flex justify-between mb-6 mt-2">
           <div className="flex items-center space-x-2">
             <CateGoryIcon></CateGoryIcon>
@@ -932,6 +1118,9 @@ export default function config() {
             <div className="text-blueTitle">课程配置</div>
           </div>
           {/* <div>{item.action}</div> */}
+        </div>
+        <div className='mb-4'>
+          <Select value={termValue} change={(e)=>{setTermValue(e)}} data={fetchedData?.data}></Select>
         </div>
         <div className="grid grid-cols-5 grid-rows-2 gap-y-2 gap-x-2">
           {new Array(10).fill(1).map((item, index) => {
@@ -951,11 +1140,16 @@ export default function config() {
         </div>
       </div>
       <div className="mt-2 w-full"></div>
-      <div className="items-start justify-between  py-0 bg-white p-5">
+      <div className="items-start justify-between space-y-2  py-0 bg-white p-5 mb-4">
         {courseMap?.map((item, index) => {
           if (item.id) {
             return (
-              <div onClick={()=>{ setProfessorCurrent(index)}} className="border border-[#F7F8F9] rounded-md w-full p-2">
+              <div
+                onClick={() => {
+                  setProfessorCurrent(index);
+                }}
+                className="border border-[#F7F8F9] rounded-md w-full p-2"
+              >
                 <Accordion
                   defaultExpanded={professorCurrent === index}
                   className="rounded-lg"
@@ -996,7 +1190,8 @@ export default function config() {
                           className={classnames(
                             ' flex justify-center items-center w-14 h-6 text-xs p-2  rounded-md',
                             {
-                              'bg-yellow-300 text-white': item.type === 'must',
+                              'bg-[#FFD036] text-[#93660A]':
+                                item.type === 'must',
                               'bg-[#F7F8F9] text-[#798195]':
                                 item.type !== 'must',
                             },
@@ -1015,7 +1210,7 @@ export default function config() {
                           className={classnames(
                             ' flex justify-center items-center w-14 h-6 text-xs p-2  rounded-md',
                             {
-                              'bg-yellow-300 text-white':
+                              'bg-[#FFD036] text-[#93660A]':
                                 item.type === 'option',
                               'bg-[#F7F8F9] text-[#798195]':
                                 item.type !== 'option',
@@ -1026,39 +1221,54 @@ export default function config() {
                         </div>
                       </div>
                       <div className="flex items-center space-x-3">
-                        <div className="bg-[#F0F6FF] p-2 w-12 h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
+                        <div className="bg-[#F0F6FF] p-2 min-w-[48px] h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
                           优先
                         </div>
-                        <div className="w-"></div>
+                        <div className="w-[0.5px] h-3 bg-[#F0F6FF]"></div>
                         <div
                           onClick={() => {
                             setProfessorOpen(true);
                           }}
-                          className=" flex justify-center border border-gray-300 items-center min-w-[36px] h-9 text-xs p-2 text-[#798195] rounded-md"
+                          className=" flex border-dashed justify-center border border-gray-300 items-center min-w-[36px] h-9 text-xs p-2 text-[#798195] rounded-md"
                         >
                           +
                         </div>
                         {item?.professorMust.map((item) => {
                           return (
-                            <div className="bg-[#F7F8F9] flex justify-center items-center w-14 h-6 text-xs p-2 text-[#798195] rounded-md">
+                            <div
+                              onClick={() => {
+                                // up
+                                deleteProfessor(item, index, 'professorMust');
+                              }}
+                              className=" flex justify-center items-center min-w-[68px] h-6 text-xs p-2 text-[#798195] rounded-md"
+                            >
                               {item.label}
                             </div>
                           );
                         })}
                       </div>
                       <div className="flex items-center space-x-3">
-                        <div className="bg-[#F0F6FF] p-2 w-12 h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
+                        <div className="bg-[#F0F6FF] p-2 min-w-[48px] h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
                           可选
                         </div>
-                        <div className="w-"></div>
-                        <div  onClick={() => {
+                        <div className="w-[0.5px] h-3 bg-[#F0F6FF]"></div>
+                        <div
+                          onClick={() => {
                             setProfessorOptionOpen(true);
-                          }} className=" flex justify-center border border-gray-300 items-center w-9 h-9 text-xs p-2 text-[#798195] rounded-md">
+                          }}
+                          className=" flex justify-center border border-gray-300 items-center w-9 h-9 text-xs p-2 text-[#798195] rounded-md"
+                        >
                           +
                         </div>
                         {item?.professorOption.map((item) => {
                           return (
-                            <div className="bg-[#F7F8F9] flex justify-center items-center w-14 h-6 text-xs p-2 text-[#798195] rounded-md">
+                            <div
+                              onClick={() => {
+                                // up
+                                deleteProfessor(item, index, 'professorOption');
+                              }}
+                              className=" flex justify-center items-center min-w-[68px] h-6 text-xs p-2 text-[#798195] rounded-md"
+                            >
                               {item.label}
                             </div>
                           );
@@ -1089,16 +1299,18 @@ export default function config() {
                 <MustStudy data={mustStudyData}></MustStudy>
                 <OptionalStudy data={optionStudyData}></OptionalStudy>
               </div>
-              <div className="flex items-center space-x-2 mt-4">
+              <div className="flex items-center space-x-2 mt-6">
                 <div className="w-1 h-4 bg-yellow-300 rounded-full"></div>
                 <div className="font-semibold">秋季学期 Fall 2023</div>
               </div>
+              {filteredData?.map((item: Course) => {
+                return (
+                  <CourseSelectFormItem data={item}></CourseSelectFormItem>
+                );
+              })}
             </div>
           )}
         </div>
-      </div>
-      <div>
-        <div onClick={()=>{submit()}} className='btn'> 提交</div>
       </div>
     </div>
   );

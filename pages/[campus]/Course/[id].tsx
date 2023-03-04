@@ -32,6 +32,7 @@ export default function courseEvaluation() {
   const {data:campusData} = useFetch('/campus/query','get',{
     name: router.query.campus,
   })
+
   const campusId = useMemo(()=>{
     return campusData?.data?.[0]?.id
   },[campusData])
@@ -165,7 +166,7 @@ export default function courseEvaluation() {
   };
 
   const [isFilteringOut, setisFilteringOut] = React.useState(true);
-
+  const {data:recommendsData} = useFetch(`/course/recommends?id=${CourseId}`,'get')
   const CourseEva = (props) => {
     type order = 'default' | 'positive' | 'negative';
     const [evaluationOrder, setEvaluationOrder] =
@@ -193,6 +194,7 @@ export default function courseEvaluation() {
       `/evaluation/list?courseId=${CourseId}&campusId=${1}`,
       'get',
     );
+
     const [data, setData] = React.useState(evaluationData?.data);
     if (!props) {
       props = {
@@ -328,7 +330,7 @@ export default function courseEvaluation() {
       {/* <div className='mt-6'></div> */}
       {/* {!Menu ? <Menu></Menu> : null} */}
       {/* {Menu} */}
-      {Menu === 0 ? Introduce(MyIntroduce) : null}
+      {Menu === 0 ? <Introduce recommendsData={recommendsData?.data} MyIntroduce={MyIntroduce}></Introduce> : null}
       {Menu === 1 ? Evaluation(evaluationData?.data) : null}
       {Menu === 2 ? <CourseEva {...courseEvaluation?.data} /> : null}
       {Menu === 3 ? GroupChat() : null}

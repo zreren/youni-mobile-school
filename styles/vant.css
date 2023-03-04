@@ -91,3 +91,7 @@
     background-color: rgba(0, 0, 0, 0.7) !important;
     width: 40% !important;
 }
+
+.field .rv-input__control{
+    text-align: right;
+}

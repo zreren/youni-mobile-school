@@ -18,6 +18,7 @@ import { Tabs } from 'react-vant';
 import PrefixIcon from './prefix.svg';
 import RecommendIcon from './recommend.svg';
 import { useRouter } from 'next/router';
+import useFetch from '@/hooks/useFetch';
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -35,6 +36,11 @@ type Course = {
   cname: string;
   ename: string;
   desc: string;
+  prerequisites:any;
+  exclusions:any;
+  property:any;
+  level:any;
+  department:any;
   type: {
     cname: string;
     ename: string;
@@ -57,10 +63,12 @@ type Course = {
     examRating: number;
   };
 };
-export default function Introduce(props: Course) {
-  console.log(props, 'props');
+export default function Introduce(props: {MyIntroduce:Course,recommendsData:any}) {
+
+  console.log(props.recommendsData, 'recommendsData');
   const router = useRouter()
-  let porpsIntroduce = props;
+  let porpsIntroduce = props.MyIntroduce;
+
   if (!props) {
     porpsIntroduce = {
       ename: 'default',
@@ -171,38 +179,17 @@ export default function Introduce(props: Course) {
             'border-[#FFDEAD] bg-[#FFFAF0] flex flex-col justify-center items-center  border-[2px] rounded-2xl h-12 w-12',
           )}
         >
-          <svg height={'14px'} width={'100%'}>
-            <text
-              x="50%"
-              text-anchor="middle"
-              y="10"
-              fill="#ff9832"
-              color="#ff9832"
-              fontSize={'8px'}
-              wordSpacing={1}
-            >
-              {' '}
-              MAT 
-            </text>
-          </svg>
-          <svg height={'14px'} width={'100%'}>
-            <text
-              x="50%"
-              text-anchor="middle"
-              y="10"
-              fill="#ff9832"
-              color="#ff9832"
-              fontSize={'8px'}
-              wordSpacing={1}
-            >
-              {' '}
-              123 
-            </text>
-          </svg>
+        <div className={
+          classnames("text-[10px] text-[#ff9832] flex justify-center text-center items-center",{
+
+          })
+        }>
+              {props.data.label}
+            </div>
           
         </div>
-        <div className="xueqiTag absolute rounded-[6px] text-[white] flex justify-center items-center text-xs p-1 w-5 h-5 bottom-0 right-0">
-          秋
+        <div className="xueqiTag absolute rounded-[5px] p-[5px] text-[white] flex justify-center items-center text-[10px] w-4 h-4 overflow-hidden bottom-0 right-0">
+            {props?.term?.slice(0,1)}
         </div>
       </div>
     );
@@ -265,7 +252,7 @@ export default function Introduce(props: Course) {
               <RedIcon className="mr-2"></RedIcon>
               <Title
                 className="mb-0 mt-0"
-                title={ code}
+                title={code}
               ></Title>
             </div>
             <Title
@@ -310,7 +297,7 @@ export default function Introduce(props: Course) {
                       <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
                       <div className="font-semibold ">前置课</div>
                     </div>
-                    <div className="p-2 text-[#798195]  text-sm">Grade 12 Calculus and Vectors</div>
+                    <div className="p-2 text-[#798195]  text-sm">{props.MyIntroduce.prerequisites.map((item)=>item.code)}</div>
                     <Accordion defaultExpanded className="rounded-lg p-0" sx={{ padding: 0 }}>
                       <AccordionSummary
                         sx={{ padding: 0 }}
@@ -323,10 +310,21 @@ export default function Introduce(props: Course) {
                           <div className="font-semibold">学分排除</div>
                         </div>
                       </AccordionSummary>
-                      <AccordionDetails>
+                      <AccordionDetails
+                      sx={{paddingLeft:0,paddingTop:0}}
+                      >
                         <div className="w-full grid grid-rows-2 grid-cols-2 gap-3">
-                          <div className="bg-[#F7F8F9] rounded-md w-full flex justify-center items-center h-6 text-xs text-[#798195]">MAT 120</div>
-                          <div className="bg-[#F7F8F9]  rounded-md w-full  flex justify-center items-center text-xs text-[#798195] h-6">MAT 120</div>
+                          {
+                            props.MyIntroduce.exclusions?.map((item)=>{
+                              return (
+                                <div className="bg-[#F7F8F9] font-semibold rounded-md w-full flex justify-center items-center h-8 text-xs text-[#798195]">
+                                  { item.code}
+                                </div>
+                              )
+                            })
+                          }
+                          {/* <div className="bg-[#F7F8F9] rounded-md w-full flex justify-center items-center h-6 text-xs text-[#798195]">MAT 120</div>
+                          <div className="bg-[#F7F8F9]  rounded-md w-full  flex justify-center items-center text-xs text-[#798195] h-6">MAT 120</div> */}
                         </div>
                       </AccordionDetails>
                     </Accordion>
@@ -345,28 +343,28 @@ export default function Introduce(props: Course) {
                       <div className="font-semibold">校区</div>
                     </div>
                     <div className="p-2  text-sm text-[#798195]">
-                      Grade 12 Calculus and Vectors
+                      {router.query.campus}
                     </div>
                     <div className="flex items-center space-x-2 mt-2 p-2">
                       <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
                       <div className="font-semibold">学部</div>
                     </div>
                     <div className="p-2  text-sm text-[#798195]">
-                      Grade 12 Calculus and Vectors
+                     {props.MyIntroduce.department || 'default'}
                     </div>
                     <div className="flex items-center space-x-2 mt-2 p-2">
                       <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
                       <div className="font-semibold">等级</div>
                     </div>
                     <div className="p-2 text-sm text-[#798195]">
-                      Grade 12 Calculus and Vectors
+                    {props.MyIntroduce.level || 'default'}
                     </div>
                     <div className="flex items-center space-x-2 mt-2 p-2">
                       <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
                       <div className="font-semibold">属性</div>
                     </div>
                     <div className="p-2  text-sm text-[#798195]">
-                      Grade 12 Calculus and Vectors
+                    {props.MyIntroduce.property || 'default'}
                     </div>
                   </div>
                 </div>
@@ -378,51 +376,65 @@ export default function Introduce(props: Course) {
                 选课 <span className="text-[#2347D9]">推荐</span>
               </div>
               <div className="mt-2">
-                <div className="border border-[#F7F8F9] rounded-md w-full">
-                  <Accordion className="rounded-lg p-0" sx={{ padding: 0 }}>
-                    <AccordionSummary
-                      sx={{ padding: 0, paddingRight: 2 }}
-                      expandIcon={<DownIcon />}
-                      aria-controls="panel1a-content"
-                      id="panel1a-header"
-                    >
-                      <div>
-                      <div className="flex w-full p-3 space-x-3">
-                        <div className="w-6 h-6 rounded-md bg-[#F7F8F9] flex items-center justify-center">
-                          {/* index */}
-                          1
-                        </div>
-                        <div>
-                          <div className="text-sm font-semibold text-[#798195]">
-                            选课方案2
+                {
+                  props.recommendsData?.map((item,index)=>{
+                    return(
+                      <div className="border border-[#F7F8F9] rounded-md w-full">
+                      <Accordion className="rounded-lg p-0" sx={{ padding: 0 }}>
+                        <AccordionSummary
+                          sx={{ padding: 0, paddingRight: 2 }}
+                          expandIcon={<DownIcon />}
+                          aria-controls="panel1a-content"
+                          id="panel1a-header"
+                        >
+                          <div>
+                          <div className="flex w-full p-3 space-x-3">
+                            <div className="w-6 h-6 rounded-md bg-[#F7F8F9] flex items-center justify-center">
+                              {/* index */}
+                              {index + 1}
+                            </div>
+                            <div>
+                              <div className="text-sm font-semibold text-[#798195]">
+                                {item.title}
+                              </div>
+                              <div className="text-xs text-[#A9B0C0]">
+                                由 {item.user.nickName} 提供
+                              </div>
+                            </div>
                           </div>
-                          <div className="text-xs text-[#A9B0C0]">
-                            由 testuser 提供
+                          <div className='w-full px-2 flex overflow-x-scroll'>
+                            {
+                              item?.form?.courseData?.map((i)=>{
+                                return (
+                                  <CourseSelector data={i} term={item.form.term}></CourseSelector>
+                                )
+                              })
+                            }
+                            
                           </div>
-                        </div>
-                      </div>
-                      <div className='w-full px-2'>
-                        <CourseSelector></CourseSelector>
-                      </div>
-                      </div>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <div onClick={()=>{
-                        router.push({
-                          pathname:'/[campus]/Course/recommend/[id]',
-                          query:{
-                            campus: router.query.campus,
-                            id:1
-                          }
-                        })
-                      }} className="w-full h-10">
-                        <div className="bg-[#FFFBD9] rounded-lg text-[#D9A823] w-full h-10 flex justify-center items-center">
-                          查看全文
-                        </div>
-                      </div>
-                    </AccordionDetails>
-                  </Accordion>
-                </div>
+                          </div>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          <div  className="w-full h-10">
+                            <div onClick={()=>{
+                            router.push({
+                              pathname:'/[campus]/Course/recommend/[id]',
+                              query:{
+                                campus: router.query.campus,
+                                id: item.post?.id
+                              }
+                            })
+                          }} className="bg-[#FFFBD9] rounded-lg text-[#D9A823] w-full h-10 flex justify-center items-center">
+                              查看全文
+                            </div>
+                          </div>
+                        </AccordionDetails>
+                      </Accordion>
+                    </div>
+                    )
+                  })
+                }
+               
               </div>
             </div>
             <div className="h-3 w-full bg-bg"></div>
@@ -430,10 +442,10 @@ export default function Introduce(props: Course) {
               <div className="font-semibold mt-4 text-lg text-[#37455C]">
                 课程 <span className="text-[#D92B31]">关联</span>
               </div>
-              <div className="flex items-center space-x-2 mt-2 p-2">
+              {/* <div className="flex items-center space-x-2 mt-2 p-2">
                 <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
                 <div className="font-semibold">架构图</div>
-              </div>
+              </div> */}
               <div className="flex items-center space-x-2 mt-2 p-2">
                 <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
                 <div className="font-semibold">智能推荐</div>

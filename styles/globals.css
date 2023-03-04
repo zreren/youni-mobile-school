@@ -455,3 +455,10 @@
 .xueqiTag {
   background: linear-gradient(41.99deg, #FE8800 7.11%, #FFB62F 90.46%);;
 }
+
+.shadow-footer {
+  /* 底部卡片黄色阴影 */
+
+/* box-shadow: 0px 0px 16px 6px rgba(247, 218, 120, 0.04); */
+box-shadow: 0px -4px 6px rgba(33, 35, 37, 0.04);
+}

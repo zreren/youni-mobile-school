@@ -86,8 +86,8 @@ const StyledTab = styled((props: StyledTabProps) => (
   textTransform: 'none',
   backgroundColor: '#fff',
   width: 52,
-  border:"1px solid #DCDDE1",
-  height: "28px",
+  border: '1px solid #DCDDE1',
+  height: '28px',
   className: 'w-1/5 h-4 min-w-0 fill-yellow-500',
   minWidth: 0,
   [theme.breakpoints.up('sm')]: {
@@ -119,20 +119,20 @@ const StyledTab = styled((props: StyledTabProps) => (
 }));
 
 export default function CustomizedTabs(props) {
-  let { id,type } = props;
+  let { id, type } = props;
   if (!id) {
     id = 0;
   }
-  React.useEffect(()=>{
-    console.log(id,"id")
-  },[id])
-  React.useEffect(()=>{
-    console.log(type,"type")
-    setValue(id)
-  },[id])
+  React.useEffect(() => {
+    console.log(id, 'id');
+  }, [id]);
+  React.useEffect(() => {
+    console.log(type, 'type');
+    setValue(id);
+  }, [id]);
   const [value, setValue] = React.useState(id);
   const { headerMenuList, className } = props;
-  const handleChange = (newValue: number):void => {
+  const handleChange = (newValue: number): void => {
     Dialog.confirm({
       title: '切换分类',
       message: '切换分类将导致部分自定义参数重置，确定要进行分类切换吗？',
@@ -147,24 +147,32 @@ export default function CustomizedTabs(props) {
   };
   React.useEffect(() => {
     // props.change(value);
-    console.log(value,'index');
-  },[value])
+    console.log(value, 'index');
+  }, [value]);
   const getIcon = (props) => {
     const Icon = props;
     return <Icon></Icon>;
   };
   return (
-    <div className='flex w-full space-x-3 overflow-scroll scrollbar-hide '>
-        {
-            headerMenuList.map((item,index)=>{
-                return (
-                    <div onClick={()=>{handleChange(index)}} 
-                    className={classnames('h-[28px]  text-sm min-w-[56px] w-14 flex justify-center  items-center rounded-full',
-                    {"bg-[#FFD036] text-[#8C6008] " : value === index,
-                    "text-[#A9B0C0] border-[#DCDDE1] border ":value !== index})}>{item.label}</div>
-                )
-            })
-        }
+    <div className="flex w-full space-x-3 overflow-scroll scrollbar-hide ">
+      {headerMenuList.map((item, index) => {
+        return (
+          <div
+            onClick={() => {
+              handleChange(index);
+            }}
+            className={classnames(
+              'h-[28px]  text-sm min-w-[68px] px-4 whitespace-nowrap  flex justify-center  items-center rounded-full',
+              {
+                'bg-[#FFD036] text-[#8C6008] ': value === index,
+                'text-[#A9B0C0] border-[#DCDDE1] border ': value !== index,
+              },
+            )}
+          >
+            {item.label}
+          </div>
+        );
+      })}
     </div>
   );
 }

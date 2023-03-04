@@ -52,11 +52,12 @@ import DeliveryRadio from './assets/actives/deliveryRadio.svg';
 import { set } from 'react-hook-form';
 import { json } from 'stream/consumers';
 import { useRouter } from 'next/router';
+import AddCourse from './addCourse';
 
 export default function addPost() {
   const Footer = () => {
     return (
-      <div className="w-full bg-white h-[60px] space-x-4 flex justify-between fixed bottom-12 px-5 py-2">
+      <div className="w-full shadow-footer bg-white h-[60px] space-x-4 flex justify-between fixed bottom-12 px-5 py-2">
         <div
           className="flex flex-col items-center  w-[40px]"
           onClick={() => {
@@ -120,6 +121,10 @@ export default function addPost() {
       key: 'carpool',
     },
     {
+      label: '课程配置',
+      key: 'course_recommend',
+    },
+    {
       label: '二手书',
       key: 'book',
     },
@@ -161,7 +166,7 @@ export default function addPost() {
     if (router.query.type) {
       setType(router.query.type as string);
     }
-  },[router])
+  }, [router]);
 
   const [previews, setPreviews] = React.useState([]);
   // useEffect(() => {
@@ -241,8 +246,9 @@ export default function addPost() {
             setLocal(true);
           }}
         >
-          {placeName || 'locate...'}
-          {/* {form.getFieldValue('location').length > 6 ? JSON?.parse(form.getFieldValue('location')).placename : null || 'locate...'} */}
+
+          {/* {'located'} */}
+          {form.getFieldValue('location')?.length > 6 ? JSON?.parse(form.getFieldValue('location')).placename : null || 'locate...'}
         </div>
         <div>
           <SwipeableDrawer
@@ -1209,47 +1215,45 @@ export default function addPost() {
       </SwipeableDrawer>
     );
   };
-  const DeliveryRadioMenu = ()=>{
-    const [state, setState] = useState('实体书')
-    useEffect(()=>{
-      form.setFieldValue('delivery',state)
-    },[state])
+  const DeliveryRadioMenu = () => {
+    const [state, setState] = useState('实体书');
+    useEffect(() => {
+      form.setFieldValue('delivery', state);
+    }, [state]);
     return (
       <div className="ml-8 h-full flex items-center justify-end pr-1 rounded-lg">
-      <div className="border-[#DCDDE1] border  overflow-hidden  rounded-lg  h-[28px]   flex ">
-        <div
-          onClick={() => {
-            setState( '实体书' );
-          }}
-          className={classnames(
-            'w-full whitespace-nowrap flex justify-center px-2 items-center text-center text-[#A9B0C0]',
-            {
-              'bg-slate-50 text-[#FFD036]':
-                state === '实体书',
-            },
-          )}
-        >
-          实体书
+        <div className="border-[#DCDDE1] border  overflow-hidden  rounded-lg  h-[28px]   flex ">
+          <div
+            onClick={() => {
+              setState('实体书');
+            }}
+            className={classnames(
+              'w-full whitespace-nowrap flex justify-center px-2 items-center text-center text-[#A9B0C0]',
+              {
+                'bg-slate-50 text-[#FFD036]': state === '实体书',
+              },
+            )}
+          >
+            实体书
+          </div>
+          <div
+            onClick={() => {
+              setState('电子书');
+            }}
+            className={classnames(
+              'w-full  flex justify-center px-2 items-center text-center text-[#A9B0C0]',
+              {
+                'bg-slate-50 text-[#FFD036]': state === '电子书',
+              },
+            )}
+          >
+            电子书
+          </div>
+          <div></div>
         </div>
-        <div
-          onClick={() => {
-            setState(  '电子书' );
-          }}
-          className={classnames(
-            'w-full  flex justify-center px-2 items-center text-center text-[#A9B0C0]',
-            {
-              'bg-slate-50 text-[#FFD036]':
-                state === '电子书',
-            },
-          )}
-        >
-          电子书
-        </div>
-        <div></div>
       </div>
-    </div>
-    )
-  }
+    );
+  };
   const [placeName, setPlaceName] = useState();
   const dynamicFormData = React.useMemo(
     () => dynamicForm?.data ?? [],
@@ -1260,7 +1264,7 @@ export default function addPost() {
   const [ideaPricesVisible, setIdeaPricesVisible] = useState(false);
   const StartTimeData = React.useMemo(() => {
     console.log('StartTime render count ++');
-  },[form])
+  }, [form]);
   const DynamicForm = React.useCallback(
     (props: any) => {
       const data = React.useMemo(
@@ -1271,7 +1275,7 @@ export default function addPost() {
         console.log('DynamicForm render count ++');
       }, []);
       return data?.map((item) => {
-       const [state,setState] = useState(form.getFieldValue(item.dataIndex))
+        const [state, setState] = useState(form.getFieldValue(item.dataIndex));
         // const Node = React.useCallback(()=>{
         //   console.log('render count ++')
         //   return customComponents[item.type]
@@ -1298,12 +1302,12 @@ export default function addPost() {
             // children={()=>{
             //   return <Node></Node>
             // }}
-            trigger='onConfirm'
+            trigger="onConfirm"
             valuePropName="checked"
             onClick={
               item.type === 'time'
                 ? (_, action) => {
-                    console.log(_,"action")
+                    console.log(_, 'action');
                     action.current?.open();
                   }
                 : () => {
@@ -1323,16 +1327,28 @@ export default function addPost() {
             )}
             {item.type === 'time' && (
               <DatetimePicker
-              minDate={new Date()}
-              onChange={(data)=>{
-                console.log(data,"DatetimePicker")
-                setState(data)
-              }} value={state} popup type="datetime">
-                {(val: Date,_,actions) => (val ? val.toDateString() : <div onClick={()=>{
-                    actions.open()
-                }}>
-                {"请选择日期" || val.toDateString()}
-                </div>)}
+                minDate={new Date()}
+                onChange={(data) => {
+                  console.log(data, 'DatetimePicker');
+                  setState(data);
+                }}
+                value={state}
+                popup
+                type="datetime"
+              >
+                {(val: Date, _, actions) =>
+                  val ? (
+                    val.toDateString()
+                  ) : (
+                    <div
+                      onClick={() => {
+                        actions.open();
+                      }}
+                    >
+                      {'请选择日期' || val.toDateString()}
+                    </div>
+                  )
+                }
               </DatetimePicker>
             )}
             {item.type === 'Switch' && (
@@ -1353,16 +1369,14 @@ export default function addPost() {
                 }}
               ></Input>
             )}
-            {
-              item.type === 'type' && (
-                <Input
+            {item.type === 'type' && (
+              <Input
                 placeholder="请输入"
                 onChange={(v) => {
                   form.setFieldValue(item.dataIndex, v);
                 }}
               ></Input>
-              )
-            }
+            )}
             {item.type === 'contact' && (
               <div
                 onClick={() => {
@@ -1380,20 +1394,18 @@ export default function addPost() {
                   : form.getFieldValue('prices')?.text || '点击输入价格信息'}
               </div>
             )}
-            {
-              item.type === 'deliveryRadio' && (
-                <DeliveryRadioMenu></DeliveryRadioMenu>
-              )
-            }
+            {item.type === 'deliveryRadio' && (
+              <DeliveryRadioMenu></DeliveryRadioMenu>
+            )}
             {/* {
             ite
           } */}
           </Form.Item>
         );
       });
-    }
+    },
     // (pre) => {if(form.validateFields)}
-    ,[dynamicForm, placeName, form,form.getFieldValue('startTime')],
+    [dynamicForm, placeName, form, form.getFieldValue('startTime')],
   );
   const [topicVisible, setTopicVisible] = useState(false);
   const TopicDrawer = useCallback(
@@ -1412,19 +1424,19 @@ export default function addPost() {
         // }
         setTopic((pre) => {
           if (!pre) return [item];
-          if(pre.indexOf(item)>=0){
+          if (pre.indexOf(item) >= 0) {
             Toast.fail('已移除该话题');
             return pre.filter((value, index, self) => {
-              return value !== item
-            })
+              return value !== item;
+            });
           }
           // const uniqueArray = pre.filter((value, index, self) => {
           //   return self.indexOf(value) === index;
           // });
           Toast.success(`已加入${item}话题`);
-          return [...pre,item];
+          return [...pre, item];
         });
-       
+
         // form.setFieldValue('location', obj);
         // setPlaceName(item?.place_name);
         setLocal(false);
@@ -1446,7 +1458,6 @@ export default function addPost() {
               setLocal(true);
             }}
           >
-            {placeName || 'locate...'}
             {/* {form.getFieldValue('location').length > 6 ? JSON?.parse(form.getFieldValue('location')).placename : null || 'locate...'} */}
           </div>
           <div>
@@ -1496,211 +1507,376 @@ export default function addPost() {
   const handleSetTitle = React.useCallback((value) => {
     setTitle(value);
   }, []);
+  const submitCourseConfig = async (e,draft?)=>{
+    console.log({
+      ...e,
+      draft: draft,
+      title: title,
+      body: content,
+      topic: topic,
+      preview: previews,
+      type: type,
+      contact: [],
+    },"submitCourseConfig")
+    if (!title || !content ) {
+      Toast.fail('请完善标题和内容');
+      return;
+    }
+    if(!topic){
+      Toast.fail('至少添加一个话题');
+      return;
+    }
+    if(!topic){
+      Toast.fail('至少添加一个话题');
+      return;
+    }
+    if(!e.form.term){
+      Toast.fail('至少选择一学期');
+      return;
+    }
+    try {
+      const { data } = await useRequest.post('/api/post/create', {
+        ...e,
+        draft: draft,
+        title: title,
+        body: content,
+        topic: topic,
+        preview: previews,
+        type: type,
+        contact: ["微信"],
+      });
+      if (data.message === 'success') {
+        Toast.success('发布成功');
+      } else {
+        Toast.fail('发布失败');
+      }
+    } catch (error) {
+      Toast.fail(error);
+    }
+    console.log(e,'get form')
+  }
   return (
-    <div className="mb-14">
-      {KeyboardShow ? <Keyboard></Keyboard> : null}
-      <TopicDrawer
-        visible={topicVisible}
-        onClose={() => {
-          setTopicVisible(false);
-        }}
-      ></TopicDrawer>
-      <ContactModel
-        data={contactListTemp}
-        onClose={() => {
-          setContactVisible(false);
-        }}
-        visible={contactVisible}
-        close={() => {
-          setContactVisible(false);
-        }}
-      ></ContactModel>
-      <PricesModel
-        visible={pricesVisible}
-        onClose={() => {
-          setPricesVisible(false);
-        }}
-        close={() => {
-          setPricesVisible(false);
-        }}
-        confirm={(e) => {
-          form.setFieldValue('prices', e);
-        }}
-      ></PricesModel>
-      <IdeaPricesModel
-        visible={ideaPricesVisible}
-        onClose={() => {
-          setIdeaPricesVisible(false);
-        }}
-        close={() => {
-          setIdeaPricesVisible(false);
-        }}
-        confirm={(e) => {
-          form.setFieldValue('prices', e);
-        }}
-      ></IdeaPricesModel>
-      {/* <Keyboard></Keyboard> */}
-      <Header className="shadow-none"></Header>
-      {/* <div>
-        <div>width: {width}</div>
-        <div>height: {height}</div>
-      </div> */}
-      <div className="items-start justify-between p-5 py-0 pt-6">
-        <div className="flex justify-between">
-          <div className="flex items-center space-x-2">
-            <CateGoryIcon></CateGoryIcon>
-            {/* {item.Icon ? <Icon className="mt-1"></Icon> : null} */}
-            <div className="text-blueTitle">{item.title}</div>
+    <>
+       <div className="mb-0 mt-12">
+       <Header className="shadow-none"></Header>
+
+            <div className="items-start justify-between p-5 py-0 pt-6">
+              <div className="flex justify-between">
+                <div className="flex items-center space-x-2">
+                  <CateGoryIcon></CateGoryIcon>
+                  {/* {item.Icon ? <Icon className="mt-1"></Icon> : null} */}
+                  <div className="text-blueTitle">{item.title}</div>
+                </div>
+                <div>{item.action}</div>
+              </div>
+              <div className="text-xs text-gray-300">{item.intro}</div>
+            </div>
+            <div className="p-5">
+              <PostCategory
+                change={(e) => {
+                  changeCategory(headerMenuList[e].key);
+                }}
+                id={
+                  headerMenuList
+                    .map((item, index) => {
+                      if (item.key === type) {
+                        return index;
+                      }
+                    })
+                    .filter((item) => item !== undefined)[0]
+                }
+                // value={type}
+                headerMenuList={headerMenuList}
+                className="mt-0"
+              ></PostCategory>
+            </div>
+            {/* <AddCourse></AddCourse> */}
           </div>
-          <div>{item.action}</div>
-        </div>
-        <div className="text-xs text-gray-300">{item.intro}</div>
-      </div>
-      <div className="p-5 pt-3">
-        <PostCategory
-          change={(e) => {
-            changeCategory(headerMenuList[e].key);
-          }}
-          id={headerMenuList.map((item,index) => {
-            if(item.key === type){
-              return index
-            }
-          }).filter((item)=> item !== undefined)[0]}
-          // value={type}
-          headerMenuList={headerMenuList}
-          className="mt-0"
-        ></PostCategory>
-      </div>
-      <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
-      <div className="px-5 py-3">
-        <Uploader
-          accept="*"
-          upload={upload}
-          uploadIcon={<AddUploaderIcon></AddUploaderIcon>}
-          onChange={(items) => {
-            addPreviews(items);
-          }}
-        />
-      </div>
-      <div className="px-5 post-title">
-        <Input
-          placeholder="填写标题获得更多流量～"
-          value={title}
-          onChange={handleSetTitle}
-          clearable
-          clearTrigger="always"
-          className="text-2xl font-bold"
-        />
-      </div>
-      <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
-      <div className="px-5 mt-4">
-        <Input.TextArea
-          placeholder="添加正文"
-          value={content}
-          onChange={setContent}
-          autoSize={{ minHeight: 180, maxHeight: 180 }}
-        />
-        <div className="flex items-center my-2 space-x-2">
-          {topic?.map((item) => {
-            return <div className="text-[#2347D9] text-sm">{item}</div>;
-          })}
-        </div>
-        <div className="flex space-x-[10px] mb-2 ">
-          <div
-            onClick={() => {
-              setTopicVisible(true);
-            }}
-            className="text-[#B38314] rounded bg-[#FFFBD9] px-2 text-xs py-1"
-          >
-            # 话题{' '}
+      <>
+        {type === 'course_recommend' ? (
+          <div className="min-h-screen ">
+                        <TopicDrawer
+              visible={topicVisible}
+              onClose={() => {
+                setTopicVisible(false);
+              }}
+            ></TopicDrawer>
+                        <div className="px-5 post-title">
+              <Input
+                placeholder="填写标题获得更多流量～"
+                value={title}
+                onChange={handleSetTitle}
+                clearable
+                clearTrigger="always"
+                className="text-2xl font-bold"
+              />
+            </div>
+            <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
+            <div className="px-5 mt-4">
+              <Input.TextArea
+                placeholder="添加正文"
+                value={content}
+                onChange={setContent}
+                autoSize={{ minHeight: 180, maxHeight: 180 }}
+              />
+              <div className="flex items-center my-2 space-x-2">
+                {topic?.map((item) => {
+                  return <div onClick={()=>{
+                    setTopic((pre) => {
+                      if (!pre) return [item];
+                      if (pre.indexOf(item) >= 0) {
+                        return pre.filter((value, index, self) => {
+                          return value !== item;
+                        });
+                      }
+                    });
+                  }} className="text-[#2347D9] text-sm">{item}</div>;
+                })}
+              </div>
+              <div className="flex space-x-[10px] mb-2 ">
+                <div
+                  onClick={() => {
+                    setTopicVisible(true);
+                  }}
+                  className="text-[#B38314] rounded bg-[#FFFBD9] px-2 text-xs py-1"
+                >
+                  # 话题{' '}
+                </div>
+                <div
+                  onClick={() => {
+                    setTopic((pre) => {
+                      if (!pre) return ['# 约克大学'];
+                      if (pre.indexOf('# 约克大学') >= 0) {
+                        Toast.fail('已移除该话题');
+                        return pre.filter((value, index, self) => {
+                          return value !== '# 约克大学';
+                        });
+                      }
+                      // const uniqueArray = pre.filter((value, index, self) => {
+                      //   return self.indexOf(value) === index;
+                      // });
+                      Toast.success(`已加入# 约克大学 话题`);
+                      return [...pre, '# 约克大学'];
+                    });
+                  }}
+                  className="text-[#798195] rounded bg-[#F3F4F6] px-2 text-xs py-1"
+                >
+                  # 约克大学{' '}
+                </div>
+              </div>
+            </div>
+            <div className='bg-[#F6F6F6] w-full h-3'></div>
+            <AddCourse submit={(e)=>{submitCourseConfig(e)}}></AddCourse>
           </div>
-          <div onClick={()=>{
-            setTopic((pre) => {
-              if (!pre) return ['# 约克大学'];
-              if(pre.indexOf('# 约克大学')>=0){
-                Toast.fail('已移除该话题');
-                return pre.filter((value, index, self) => {
-                  return value !== '# 约克大学'
-                })
-              }
-              // const uniqueArray = pre.filter((value, index, self) => {
-              //   return self.indexOf(value) === index;
-              // });
-              Toast.success(`已加入# 约克大学 话题`);
-              return [...pre,'# 约克大学'];
-            })
-          }} className="text-[#798195] rounded bg-[#F3F4F6] px-2 text-xs py-1">
-            # 约克大学{' '}
+        ) : (
+          <div className="mb-0">
+            {KeyboardShow ? <Keyboard></Keyboard> : null}
+            <TopicDrawer
+              visible={topicVisible}
+              onClose={() => {
+                setTopicVisible(false);
+              }}
+            ></TopicDrawer>
+            <ContactModel
+              data={contactListTemp}
+              onClose={() => {
+                setContactVisible(false);
+              }}
+              visible={contactVisible}
+              close={() => {
+                setContactVisible(false);
+              }}
+            ></ContactModel>
+            <PricesModel
+              visible={pricesVisible}
+              onClose={() => {
+                setPricesVisible(false);
+              }}
+              close={() => {
+                setPricesVisible(false);
+              }}
+              confirm={(e) => {
+                form.setFieldValue('prices', e);
+              }}
+            ></PricesModel>
+            <IdeaPricesModel
+              visible={ideaPricesVisible}
+              onClose={() => {
+                setIdeaPricesVisible(false);
+              }}
+              close={() => {
+                setIdeaPricesVisible(false);
+              }}
+              confirm={(e) => {
+                form.setFieldValue('prices', e);
+              }}
+            ></IdeaPricesModel>
+            {/* <Keyboard></Keyboard> */}
+            {/* <div className="p-5">
+              <PostCategory
+                change={(e) => {
+                  changeCategory(headerMenuList[e].key);
+                }}
+                id={
+                  headerMenuList
+                    .map((item, index) => {
+                      if (item.key === type) {
+                        return index;
+                      }
+                    })
+                    .filter((item) => item !== undefined)[0]
+                }
+                // value={type}
+                headerMenuList={headerMenuList}
+                className="mt-0"
+              ></PostCategory>
+            </div> */}
+            <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
+            <div className="px-5 py-3">
+              <Uploader
+                accept="*"
+                upload={upload}
+                uploadIcon={<AddUploaderIcon></AddUploaderIcon>}
+                onChange={(items) => {
+                  addPreviews(items);
+                }}
+              />
+            </div>
+            <div className="px-5 post-title">
+              <Input
+                placeholder="填写标题获得更多流量～"
+                value={title}
+                onChange={handleSetTitle}
+                clearable
+                clearTrigger="always"
+                className="text-2xl font-bold"
+              />
+            </div>
+            <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
+            <div className="px-5 mt-4">
+              <Input.TextArea
+                placeholder="添加正文"
+                value={content}
+                onChange={setContent}
+                autoSize={{ minHeight: 180, maxHeight: 180 }}
+              />
+              <div className="flex items-center my-2 space-x-2">
+                {topic?.map((item) => {
+                  return <div onClick={()=>{
+                    setTopic((pre) => {
+                      if (!pre) return [item];
+                      if (pre.indexOf(item) >= 0) {
+                        return pre.filter((value, index, self) => {
+                          return value !== item;
+                        });
+                      }
+                    });
+                  }} className="text-[#2347D9] text-sm">{item}</div>;
+                })}
+              </div>
+              <div className="flex space-x-[10px] mb-2 ">
+                <div
+                  onClick={() => {
+                    setTopicVisible(true);
+                  }}
+                  className="text-[#B38314] rounded bg-[#FFFBD9] px-2 text-xs py-1"
+                >
+                  # 话题{' '}
+                </div>
+                <div
+                  onClick={() => {
+                    setTopic((pre) => {
+                      if (!pre) return ['# 约克大学'];
+                      if (pre.indexOf('# 约克大学') >= 0) {
+                        Toast.fail('已移除该话题');
+                        return pre.filter((value, index, self) => {
+                          return value !== '# 约克大学';
+                        });
+                      }
+                      // const uniqueArray = pre.filter((value, index, self) => {
+                      //   return self.indexOf(value) === index;
+                      // });
+                      Toast.success(`已加入# 约克大学 话题`);
+                      return [...pre, '# 约克大学'];
+                    });
+                  }}
+                  className="text-[#798195] rounded bg-[#F3F4F6] px-2 text-xs py-1"
+                >
+                  # 约克大学{' '}
+                </div>
+              </div>
+            </div>
+            <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
+            <div className="px-5 mt-4 post-form pb-10">
+              <Form
+                form={form}
+                onFinish={(v) => {
+                  submitPost(v, false);
+                  console.log(v);
+                }}
+              >
+                {
+                  //  dynamicFormData?.map((item) => {
+                  //   const Node = ()=>{
+                  //     return customComponents[item.type]
+                  //   };
+                  //   const Label = () => {
+                  //     const Icon = () => {
+                  //       return IconList[item.icon] ? IconList[item.icon] : <div></div>;
+                  //     };
+                  //     return (
+                  //       <div className="flex items-center space-x-4">
+                  //         <Icon></Icon>
+                  //         <div>{item.label}</div>
+                  //       </div>
+                  //     );
+                  //   };
+                  //   return (
+                  //     <Form.Item
+                  //       name={item.dataIndex}
+                  //       label={<Label></Label>}
+                  //       key={item.dataIndex}
+                  //       // children={()=>{
+                  //       //   return <Node></Node>
+                  //       // }}
+                  //       valuePropName="checked"
+                  //       onClick={
+                  //         item.type === 'time'
+                  //           ? (_, action) => {
+                  //               action.current?.open();
+                  //             }
+                  //           : () => {
+                  //               if (item.type === 'prices') {
+                  //                 setPricesVisible(true);
+                  //               }
+                  //               if (item.dataIndex === 'contact') {
+                  //                 setContactVisible(true);
+                  //               }
+                  //             }
+                  //       }
+                  //     >
+                  //       {/* {item.type === 'location' && (
+                  //         <PickLocation location={''} placeName={placeName}></PickLocation>
+                  //       )}
+                  //       {item.type !== 'location' && customComponents[item.type]} */}
+                  //       {customComponents[item.type]}
+                  //     </Form.Item>
+                  //   );
+                  // })
+                }
+                <DynamicForm
+                  data={form}
+                  placeName={placeName}
+                  dynamicForm={dynamicForm}
+                ></DynamicForm>
+              </Form>
+              <div className="mb-8"></div>
+            </div>
+            <Footer></Footer>
           </div>
-        </div>
-      </div>
-      <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
-      <div className="px-5 mt-4 post-form pb-10">
-        <Form
-          form={form}
-          onFinish={(v) => {
-            submitPost(v, false);
-            console.log(v);
-          }}
-        >
-          {
-            //  dynamicFormData?.map((item) => {
-            //   const Node = ()=>{
-            //     return customComponents[item.type]
-            //   };
-            //   const Label = () => {
-            //     const Icon = () => {
-            //       return IconList[item.icon] ? IconList[item.icon] : <div></div>;
-            //     };
-            //     return (
-            //       <div className="flex items-center space-x-4">
-            //         <Icon></Icon>
-            //         <div>{item.label}</div>
-            //       </div>
-            //     );
-            //   };
-            //   return (
-            //     <Form.Item
-            //       name={item.dataIndex}
-            //       label={<Label></Label>}
-            //       key={item.dataIndex}
-            //       // children={()=>{
-            //       //   return <Node></Node>
-            //       // }}
-            //       valuePropName="checked"
-            //       onClick={
-            //         item.type === 'time'
-            //           ? (_, action) => {
-            //               action.current?.open();
-            //             }
-            //           : () => {
-            //               if (item.type === 'prices') {
-            //                 setPricesVisible(true);
-            //               }
-            //               if (item.dataIndex === 'contact') {
-            //                 setContactVisible(true);
-            //               }
-            //             }
-            //       }
-            //     >
-            //       {/* {item.type === 'location' && (
-            //         <PickLocation location={''} placeName={placeName}></PickLocation>
-            //       )}
-            //       {item.type !== 'location' && customComponents[item.type]} */}
-            //       {customComponents[item.type]}
-            //     </Form.Item>
-            //   );
-            // })
-          }
-          <DynamicForm
-            data={form}
-            placeName={placeName}
-            dynamicForm={dynamicForm}
-          ></DynamicForm>
-        </Form>
-        <div className='mb-8'></div>
-      </div>
-      <Footer></Footer>
-    </div>
+        )}
+      </>
+
+    </>
   );
 }
