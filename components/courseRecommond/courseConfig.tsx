@@ -264,7 +264,7 @@ export default function config(props) {
                             if (selectList?.length >= 0) {
                               if (isSelect) {
                                 setSelectList((pre) => [
-                                  ...pre.filter((i) => i.id !== item.id || item.id !== -1),
+                                  ...pre.filter((i) => i.id !== item.id && item.id !== -1),
                                 ]);
                                 return;
                               }
@@ -996,11 +996,11 @@ export default function config(props) {
               }}
               className="bg-[#F7F8F9] w-full h-full"
               onBlur={() => {
-                updateForm({
+                setTimeOut(()=>{updateForm({
                   [String(professorCurrent)]: {
                     note: value,
                   },
-                });
+                })},10000)
               }}
             ></textarea>
             {/* note area */}
