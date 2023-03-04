@@ -568,7 +568,7 @@ export default function config(props) {
                   )}
                 >
                   {selectList?.some(
-                        (i) => i.name === customProfessor ? '取消选中' : '选中' }
+                        (i) => i.name === customProfessor) ? '取消选中' : '选中' }
                 </div>
               </div>
               <div className="text-[#A9B0C0] my-3">非常规情况</div>
