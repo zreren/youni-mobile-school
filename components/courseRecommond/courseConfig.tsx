@@ -996,7 +996,7 @@ export default function config(props) {
               }}
               className="bg-[#F7F8F9] w-full h-full"
               onBlur={() => {
-                setTimeOut(()=>{updateForm({
+                setTimeout(()=>{updateForm({
                   [String(professorCurrent)]: {
                     note: value,
                   },
