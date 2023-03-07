@@ -243,7 +243,7 @@ export default function idValid() {
     
       // setCountdown(true)
     };
-
+    const router = useRouter();
     const [ValidFormData, setValidFormData] = useState<ValidForm>({
       campusId: '',
       year: 2016,
@@ -252,14 +252,24 @@ export default function idValid() {
       email: '',
       code: '',
     });
-    const submitValid = (ValidFormData: ValidForm) => {
-      useRequest.post('/api/profile/education/email_verify', {
-        ...ValidFormData,
-        email: ValidFormData.email + mailBack,
-        degree: degree,
-        campusId: schoolList.id,
-        year:enrollYear
-      });
+    const submitValid = async (ValidFormData: ValidForm) => {
+      try {
+        const {data} = await useRequest.post('/api/profile/education/email_verify', {
+          ...ValidFormData,
+          email: ValidFormData.email + mailBack,
+          degree: degree,
+          campusId: schoolList.id,
+          year:enrollYear
+        });
+        if(data?.message === 'success'){
+          Toast.success('认证成功');
+          router.push('/Profile')
+        }else{
+          Toast.fail('认证失败');
+        }
+      } catch (error) {
+          Toast.fail('fatal error')
+      }
     };
 
     const [degree,setDegree] = useState();

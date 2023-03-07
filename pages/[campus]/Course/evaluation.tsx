@@ -192,6 +192,15 @@ const ProfessorTag = (props) => {
   // const tagList = props.data
   const data = React.useContext(EvaluationForm);
   const updateData = (level) => {
+    if(data.data.professorTagsEvaluation.indexOf(level) > -1) {
+      data.setData({
+        ...data.data,
+        professorTagsEvaluation: [
+          ...data.data.professorTagsEvaluation.filter((item)=>item!==level),
+        ]
+      });
+      return;
+    }
     data.setData({
       ...data.data,
       professorTagsEvaluation: [

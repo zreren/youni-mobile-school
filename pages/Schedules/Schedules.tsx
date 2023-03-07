@@ -387,15 +387,28 @@ export default function Schedules() {
   const getWeekDates = () => {
     const weekDates = [];
     const currentDate = new Date();
-    let day = currentDate.getUTCDay();
-    const diff = currentDate.getUTCDate() - day;
+    let day = currentDate.getDay();
+    const diff = currentDate.getDate() - day;
     for (let i = 0; i < 7; i++) {
-      const newDate = new Date(currentDate.setUTCDate(diff + i));
+      const newDate = new Date(currentDate.getTime());
+      newDate.setDate(diff + i);
       const dateString = newDate.toISOString().slice(0, 10);
       weekDates.push(dateString);
     }
     return weekDates;
   };
+  // const getWeekDates = () => {
+  //   const weekDates = [];
+  //   const currentDate = new Date();
+  //   let day = currentDate.getUTCDay();
+  //   const diff = currentDate.getUTCDate() - day;
+  //   for (let i = 0; i < 7; i++) {
+  //     const newDate = new Date(currentDate.setUTCDate(diff + i));
+  //     const dateString = newDate.toISOString().slice(0, 10);
+  //     weekDates.push(dateString);
+  //   }
+  //   return weekDates;
+  // };
   // 给开始时间和结束时间，计算当前属于这个时间段的第几个星期
   const getWeekNumber = (start) => {
     const startDate = new Date(start);

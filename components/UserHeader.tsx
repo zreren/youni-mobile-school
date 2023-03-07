@@ -14,7 +14,7 @@ export default function UserHeader(props) {
     })
   }
   return (
-    <div className={classnames("flex backdrop-opacity-75 blur-background  items-center  p-2",className)} >
+    <div className={classnames("flex backdrop-opacity-95 blur-background  items-center  p-2",className)} >
       <div className="avatar placeholder">
         <div
           onClick={() => {
