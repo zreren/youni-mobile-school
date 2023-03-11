@@ -106,6 +106,9 @@ function courseInfo(props) {
           console.log(newValue, 'event');
           selectItem(newValue);
         }}
+        onBlur={(e) => {
+          // selectItem(e);
+        }}
         sx={{
           display: 'inline-block',
           width: 200,
@@ -137,7 +140,7 @@ function courseInfo(props) {
             }}
             {...params}
             onChange={(e) => {
-              selectItem(e.target.value);
+              // selectItem(e.target.value);
             }}
             InputProps={{
               ...params.InputProps,
@@ -155,7 +158,7 @@ function courseInfo(props) {
     error,
     mutate: mutateSubject,
   } = useFetch(`/subject/courses`, 'page',{
-    id : data?.data?.subject?.id ,
+    id : data?.data?.subject?.id  | 1,
     pageSize : 100
   });
   useEffect(()=>{
