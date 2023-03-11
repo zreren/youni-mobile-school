@@ -31,23 +31,24 @@ function courseInfo(props) {
   const CCourseInput = (props: CCourseInput) => {
     const { title, isNess, children, data, renderData, value } = props;
     const [_value, setValue] = useState(value);
+    // if(!data) return;
     const selectItem = (e) => {
       console.log(e, 'selectItem');
       // setValue(e)
       if (!data) {
         props.change({
           id: null,
-          label: e,
+          label: e ? e :null,
         });
         return true;
       }
       // let allValuesGreaterThanZero = true;
       if (
         !Object?.values(data)?.some((value: any) => {
-          if (value.ename === e) {
-            props.change({
-              id: value.id,
-              label: value.ename,
+          if (value?.ename === e) {
+            props?.change({
+              id: value?.id,
+              label: value?.ename,
             });
             return true;
           }
@@ -56,10 +57,10 @@ function courseInfo(props) {
       )
         if (
           !Object?.values(data)?.some((value: any) => {
-            if (value.name === e) {
-              props.change({
-                id: value.id,
-                label: value.name,
+            if (value?.name === e) {
+              props?.change({
+                id: value?.id,
+                label: value?.name,
               });
               return true;
             }
@@ -69,7 +70,7 @@ function courseInfo(props) {
           if (typeof e === 'string') {
             props.change({
               id: null,
-              label: e,
+              label: e ? e : null,
             });
             return true;
           }
@@ -154,7 +155,7 @@ function courseInfo(props) {
     error,
     mutate: mutateSubject,
   } = useFetch(`/subject/courses`, 'page',{
-    id : data?.data?.subject?.id,
+    id : data?.data?.subject?.id ,
     pageSize : 100
   });
   useEffect(()=>{
@@ -167,6 +168,9 @@ function courseInfo(props) {
     `/course/detail?id=${data?.data?.course?.id}`,
     'get',
   );
+  useEffect(()=>{
+    mutateCourse()
+  },[data?.data?.course?.id])
   const ProfessorList = useMemo(() => {
     return courseDetail?.data?.sections
       .map((item) => {
@@ -221,6 +225,7 @@ function courseInfo(props) {
           change={(val: { id: any; label: any }) => {
             console.log(val, 'val');
             // handleChange(val.id);
+            if(!val) return;
             updateData({
               key: 'subject',
               value: val,
@@ -254,10 +259,11 @@ function courseInfo(props) {
         </span>
         <CCourseInput
           value={{
-            value: data.data?.course?.id,
-            label: data.data?.course?.label,
+            value: data?.data?.course?.id,
+            label: data?.data?.course?.label,
           }}
           change={(val: { id: any; label: any }) => {
+            if(!val) return;
             updateData({
               key: 'course',
               value: val,
@@ -265,7 +271,7 @@ function courseInfo(props) {
           }}
           data={courseData}
           renderData={courseData?.map((item) => {
-            return item?.ename;
+            return item?.code;
           })}
         ></CCourseInput>
       </label>

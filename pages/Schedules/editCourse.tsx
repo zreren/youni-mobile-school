@@ -75,7 +75,7 @@ const CCourseColor = (props) => {
   const [select, setSelect] = useState(colorId?.id);
   return (
     <div className="flex space-x-2">
-      {colorList.map((item) => {
+      {colorList?.map((item) => {
         return (
           <div
             onClick={() => {
@@ -346,7 +346,9 @@ export default function AddSchedule(props) {
     }, [CURRICULUM?.sectionId]);
 
     const [value, setValue] = React.useState<Dayjs | null>(null);
-    const { data: courseData } = useFetch('/course/query?campusId=1', 'get');
+    const { data: _courseData } = useFetch('/course/query?campusId=1',  'page',{
+      pageSize: 100
+    });
     const handleChange = useCallback((val: any, name: string) => {
       setCURRICULUM((preVal: any) => {
         return {
@@ -355,6 +357,17 @@ export default function AddSchedule(props) {
         };
       });
     }, []);
+
+    const courseData = React.useMemo(
+      () =>
+        _courseData
+          ? courseData
+            ? [...courseData].concat(..._courseData)
+            : [].concat(..._courseData)
+          : null,
+      [_courseData]
+    );
+
     const translateTime = (time, endTime) => {
       if (!time || !endTime) return;
       // time:"12:00-18:00 转 time:"12.00-18.00
@@ -369,7 +382,7 @@ export default function AddSchedule(props) {
         Toast.fail('编辑模式只能添加一天的课程');
         return;
       }
-      const requestQueen = dayOfWeek.map(async (item) => {
+      const requestQueen = dayOfWeek?.map(async (item) => {
         const data = await submitCourse({
           ...values,
           dayOfWeek: Number(item),

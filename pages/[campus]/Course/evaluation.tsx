@@ -273,7 +273,7 @@ export default function evaluation() {
       examRating: 1,
     },
     course:{
-      id:1
+      id:1,
     },
     professor:{
       id:1

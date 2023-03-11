@@ -116,7 +116,7 @@ export default function LabelBottomNavigation(props) {
   `,
   );
   return (
-    <div>
+    <div id='bottom-navigation'>
       {value === 3 ? (
         <div className='bg-transparent'>
           <UserAddMenu close={()=>{setValue(0)}}></UserAddMenu>

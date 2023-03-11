@@ -823,7 +823,9 @@ function Calendar(props) {
                     onClick={() => {
                       changeView();
                     }}
-                    className="w-full h-full flex justify-center items-center"
+                    className={classnames("w-full pl-2 h-full flex justify-center items-center",{
+                      'pl-2 ml-1': !calendarView
+                    })} 
                   >
                     <Icon></Icon>
                   </div>,
@@ -908,7 +910,7 @@ function Calendar(props) {
           weekends={setting.isWeekend}
         />
       </div>
-      <div className="bg-gray-50 z-20 relative ">
+      <div className="bg-gray-50 z-20 relative mt-1">
         {!calendarView ? <ListView></ListView> : null}
       </div>
     </div>

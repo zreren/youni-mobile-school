@@ -11,7 +11,7 @@ import MasonryLayout from 'react-fast-masonry';
 import { Flex, Loading } from 'react-vant';
 import { useRouter } from 'next/router';
 import EmptyPostIcon from  './emptyPost.svg';
-
+import CourseRC from './courserc';
 const Masonry = dynamic(
   () => import('masonic').then((module) => module.Masonry),
   { ssr: false },
@@ -127,6 +127,7 @@ export default function Waterfall(props) {
   const [data, setData] = useState<any[]>(postData);
   const [id, setId] = useState(0);
   const [postDetailShow, setPostDetailShow] = useState(false);
+  const [courseRcDetailShow,setCourseRcDetailShow] = useState(false)
   const [hasMore, setHasMore] = useState(true);
   const [reRender, setReRender] = useState(true);
   const container = React.useRef<HTMLElement | null>(null);
@@ -175,6 +176,34 @@ export default function Waterfall(props) {
       </SwipeableDrawer>
     );
   };
+  const CourseRCDraw = (props) => {
+    const PostMemo = useMemo(() => {
+      return (
+        <CourseRC returnClick={()=>{
+          props.setVisible(false);
+        }}  id={props.id}></CourseRC>
+      )
+    }, [id])
+
+    return (
+      <SwipeableDrawer
+      anchor='right'
+        open={props.visible}
+        onClose={() => {
+          props.setVisible(false);
+        }}
+        onOpen={() => {
+          props.setVisible(true);
+        }}
+        className="h-screen post"
+      >
+        <div className="w-screen h-screen">
+          {/* <PostMemo></PostMemo> */}
+          {PostMemo}
+        </div>
+      </SwipeableDrawer>
+    );
+  }
   useEffect(() => {
     // setReRender(false);
     // router.push('/post/[id]', {
@@ -189,7 +218,7 @@ export default function Waterfall(props) {
 
   const CardWithClick = React.useCallback(
     (props) => (
-      <Display {...props} cancelStarPost={(id)=>{cancelStarPost(id)}} isEdit={isEdit} handleClick={(e) => { setId(e); setPostDetailShow(true) }} />
+      <Display {...props} cancelStarPost={(id)=>{cancelStarPost(id)}} isEdit={isEdit} openCourseRecommend={(e)=>{setId(e); setCourseRcDetailShow(true) }} handleClick={(e) => { setId(e); setPostDetailShow(true) }} />
     ),
     [],
   );
@@ -224,10 +253,12 @@ export default function Waterfall(props) {
         id={id}
         visible={postDetailShow}
       ></PostDetail>
+      <CourseRCDraw visible={courseRcDetailShow}  setVisible={setCourseRcDetailShow} id={id}>
+
+      </CourseRCDraw>
       <div className="mx-2">
         {data?.length >= 0 && reRender ? (
           <Masonry
-            
             columnCount={2}
             columnGutter={2}
             columnWidth={150}
@@ -242,7 +273,7 @@ export default function Waterfall(props) {
         {
           data?.length === 0 ?  <div className='flex mt-10 flex-col space-y-4 items-center justify-center '>
             <EmptyPostIcon></EmptyPostIcon>
-          <div className='text-xs text-[#A9B0C0]'>暂无贴文发布</div>
+          <div className='text-xs text-[#A9B0C0]'>暂无贴文</div>
          </div>:null
         }
       </div>

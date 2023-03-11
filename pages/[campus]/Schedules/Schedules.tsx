@@ -32,7 +32,7 @@ import { Cell, Dialog } from 'react-vant';
 import { useRouter } from 'next/router';
 import BgSVG from './bg.svg';
 import ArrowRight from './arrow-right.svg';
-import { setOpenLogin } from '@/stores/authSlice';
+import { setOpenLogin ,setAuthState } from '@/stores/authSlice';
 import { useDispatch } from 'react-redux';
 import { Loading } from 'react-vant';
 
@@ -538,6 +538,11 @@ export default function Schedules() {
       </div>
     );
   };
+  useEffect(()=>{
+   
+    // dispatch(setAuthState(false));
+
+  },[visible,scheduleVisible])
   return (
     <div className="space-y-1 bg-bg">
       {/* div className="mb-10"> */}
@@ -671,6 +676,9 @@ export default function Schedules() {
             setting={setting}
             courseData={courseData}
             clickEvent={(arg) => {
+              const  x = document.getElementById('#bottom-navigation')
+              console.log(x,"x bottom-navigation")
+              x.style.height = '0px';
               setArg({ ...arg });
               console.log(arg, 'Calendar clcik');
               setVisible(true);

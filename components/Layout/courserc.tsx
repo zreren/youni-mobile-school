@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import Imagebg from '../bg.png';
+import Imagebg from './bg.png';
 import PostGroupIcon1 from './post-group/icon1.svg';
 import PostGroupIcon2 from './post-group/icon2.svg';
 import PostGroupIcon3 from './post-group/icon3.svg';
@@ -14,13 +14,14 @@ import { Toast } from 'react-vant';
 import { mutate } from 'swr';
 import useUser from '@/hooks/useUser';
 import { useDispatch } from 'react-redux';
-import { setOpenLogin } from '../../../../stores/authSlice';
+import { setOpenLogin } from '@/stores/authSlice';
 import { Cell, Dialog } from 'react-vant';
 
-export default function recommend() {
+export default function recommend(props) {
   const router = useRouter();
   const {user} = useUser();
-  const { data,mutate } = useFetch(`/post/detail?id=${router.query.id}`, 'get');
+  const id = React.useMemo(() => router.query.id || props.id, [router,props])
+  const { data,mutate } = useFetch(`/post/detail?id=${id}`, 'get');
   const CourseSelector = (props) => {
     const { isSelect } = props;
     return (
@@ -348,7 +349,7 @@ export default function recommend() {
             onClick={async() => {
               if(started){
                 await useRequest.post('/api/post/unstar',{
-                  id:router.query.id
+                  id: id
                 })
                 Toast.success('取消收藏');
                 mutate()
@@ -372,7 +373,7 @@ export default function recommend() {
                     return;
                 }
                 await useRequest.post('/api/post/star',{
-                  id:router.query.id
+                  id: id
                 })
                 Toast.success('收藏成功');
                 mutate()

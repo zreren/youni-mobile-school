@@ -462,3 +462,27 @@
 /* box-shadow: 0px 0px 16px 6px rgba(247, 218, 120, 0.04); */
 box-shadow: 0px -4px 6px rgba(33, 35, 37, 0.04);
 }
+
+.bottomPlusx{
+  z-index: 999999999 !important;
+}
+
+#demo-simple-select{
+  z-index: 99999999999 !important;
+}
+
+.MuiPopover-root{
+  z-index: 99999999999999999 !important;
+}
+
+.css2Overflow-ellipsis{
+  /* border:1px solid #ddd; */
+  width: 100%;
+  word-wrap: normal;
+  word-break: keep-all;
+  text-overflow: ellipsis;
+  display: -webkit-box; /** 将对象作为伸缩盒子模型显示 **/
+  -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+  -webkit-line-clamp: 2; /** 显示的行数 **/
+  overflow: hidden;  /** 隐藏超出的内容 **/
+}

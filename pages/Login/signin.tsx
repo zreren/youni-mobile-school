@@ -224,7 +224,7 @@ export default function SignIn(props) {
       );
     };
     const PhoneLabel = () => {
-      const [age, setAge] = React.useState('86');
+      const [age, setAge] = React.useState('1');
       const [phoneNumber, setPhoneNumber] = useState('');
       const [school, setSchool] = useState('University of York1');
       const handleChange = (event: SelectChangeEvent) => {
@@ -264,12 +264,13 @@ export default function SignIn(props) {
             </Select>
           </div> */}
           <div className="w-full">
-            <label className="flex items-center input-group">
+            <label className="flex items-center input-group bottomPlusx">
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={age}
                 sx={{
+                  zIndex:9999,
                   boxShadow: 'none',
                   '.MuiOutlinedInput-notchedOutline': { border: 0 },
                   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
@@ -284,7 +285,7 @@ export default function SignIn(props) {
               >
                 {prefixSorted.map((item) => {
                   return (
-                    <MenuItem value={item.prefix}>+{item.prefix}</MenuItem>
+                    <MenuItem className='bottomPlusx' sx={{zIndex:999999999}} value={item.prefix}>+{item.prefix}</MenuItem>
                   );
                 })}
               </Select>
