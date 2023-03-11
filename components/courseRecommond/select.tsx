@@ -20,6 +20,7 @@ export default function MySelect(props) {
       value={selectedOption}
       onChange={handleChange}
       style={{
+        width:'120px',
         backgroundColor: '#F7F8F9',
         borderRadius: '4px',
         color: '#798195',
@@ -35,6 +36,9 @@ export default function MySelect(props) {
             props?.data?.map((item)=>{
                 return <option value={item.name}>{item.name}</option>
             })
+        }
+        {
+            props?.data?.length === 0 && <option>请选择学期</option>
         }
     </select>
   );

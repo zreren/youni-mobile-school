@@ -96,7 +96,7 @@ export default function addCourse(props) {
       <CourseConfig setTermValue={setTermValue} termValue={termValue} courseList={courseList} setCourseList={setCourseList} year={year} term={term}></CourseConfig>
      )
     },
-    [courseList],
+    [courseList,term],
   )
 
   useEffect(()=>{
