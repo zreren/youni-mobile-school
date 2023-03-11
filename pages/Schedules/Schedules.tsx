@@ -515,6 +515,7 @@ export default function Schedules() {
       console.log(curriculumId,"curriculumId")
       otherSchedulesMutate();
     },[curriculumId])
+
     const switchCurriculum = (id) => {
       if (id === -1) {
         setStudentId(-1);
@@ -748,6 +749,7 @@ export default function Schedules() {
     },
   );
   const { data: timeTableData } = useFetch(`/timetable/query`, 'get');
+
   const tempData = React.useMemo(() => {
     if (!data?.data) return null;
     return data?.data[0]?.items.map((item) => {
@@ -758,6 +760,7 @@ export default function Schedules() {
       };
     });
   }, [data]);
+
   const otherTemData = React.useMemo(()=>{
     if (!otherSchedules?.data) return null;
     return otherSchedules?.data?.items.map((item) => {
@@ -769,6 +772,17 @@ export default function Schedules() {
     });
   },[otherSchedules,curriculumId,studentId])
 
+  // useEffect
+
+  useEffect(()=>{
+    if(visible || scheduleVisible){
+      const dom = document.getElementById('bottom-navigation');
+      dom.style.display = 'none';
+    }else{
+      const dom = document.getElementById('bottom-navigation');
+      dom.style.display = 'block';
+    }
+  },[visible,scheduleVisible])
 
   function getPastWeekDates(): [Date, Date] {
     const today = new Date();
@@ -829,6 +843,7 @@ export default function Schedules() {
     // }
     console.log(data, 'data');
   }, [data]);
+
   const [arg, setArg] = useState<any>();
   const [setting, setSetting] = useState({
     view: 'day',
@@ -915,6 +930,7 @@ export default function Schedules() {
       </div>
     );
   };
+
   return (
     <div className="space-y-1 bg-bg schedule min-h-[840px]">
       {/* div className="mb-10"> */}

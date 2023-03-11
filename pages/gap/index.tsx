@@ -49,14 +49,27 @@ const CScoreCard = (props) => {
 
 export default function index() {
   const router = useRouter();
-  const { data, error } = useFetch('/grade/list', 'get');
+  const { data, error,mutate } = useFetch('/grade/list', 'get');
   const { data: total, error: totalError } = useFetch('/grade/stat', 'get');
 
   const deleteGapItem = async (id: number | string): Promise<any> => {
-    useRequest.post('/api/grade/delete', { id });
+    Dialog.confirm({
+      title: '删除',
+      message: '确定删除改gap记录吗？',
+    })
+      .then((res) => {
+        useRequest.post('/api/grade/delete', { id });
+        mutate();
+        // dispatch(setOpenLogin('login'));
+        // router.push("/Login/signin");
+        // console.log(res,"登录YoUni");
+      })
+      .catch((err) => {
+        // router.push(`/${campus}`);
+        //  dispatch(setOpenLogin('register'))
+      });
   };
-  if (error) return;
-  console.log(data);
+  // if (error) return;
   // const addGrad
   const Header = (props) => {
     const { children, title, className, returnClick } = props;
@@ -399,8 +412,11 @@ export default function index() {
   };
   const GapGroup = (props) => {
     const { item, index } = props;
+
     const colorMap = ['#FF7978', '#FFB87C', '#FED64B', '#E2DAFF'];
     const color = colorMap[index % 4];
+
+
     console.log(`bg-[${color}]`, '`bg-[${color}]`');
     console.log(props, 'props');
     const [newCourse, setNewCourse] = React.useState(false);
@@ -574,11 +590,10 @@ export default function index() {
           <Loading color="#FED64B" />
         </div>
       ) : (
-        <div className="px-0  ">
+        <div className="px-0"  >
           {data?.data?.map((item, index) => {
-            return <GapGroup item={item} index={index}></GapGroup>;
+            return <GapGroup item={item} index={index} ></GapGroup>;
           })}
-
           <div className={'w-full h-12 mt-4'}>
             <div
               className={
