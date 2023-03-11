@@ -777,9 +777,11 @@ export default function Schedules() {
   useEffect(()=>{
     if(visible || scheduleVisible){
       const dom = document.getElementById('bottom-navigation');
+      if(!dom) return
       dom.style.display = 'none';
     }else{
       const dom = document.getElementById('bottom-navigation');
+      if(!dom) return;
       dom.style.display = 'block';
     }
   },[visible,scheduleVisible])

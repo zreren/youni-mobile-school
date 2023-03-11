@@ -57,6 +57,16 @@ import ReturnBackIcon from './returnBack.svg';
 
 const PostGroupDetail = (props) => {
   const { data,isEdit,mutate } = props;
+  const [name,setName] = useState(data?.name)
+  useEffect(()=>{
+    setName(data?.name)
+  },[data?.name])
+  useEffect(()=>{
+    useRequest.post('/api/collection/update',{
+      id: data?.id,
+      name : name
+    })
+  },[name])
   const cancelStarPost = async (id)=>{
     console.log("PostGroupDetail",id,data?.id)
     await  useRequest.post("/api/post/unstar",{
@@ -94,17 +104,21 @@ const PostGroupDetail = (props) => {
           {
             isEdit ?
            <div className='ml-4'>
-            <Input className=" text-[#37455C]  underline  font-semibold text-lg" value={data?.name}></Input>
+            <Input value={name} onChange={(e)=>{setName(e)}} className=" text-[#37455C]  underline  font-semibold text-lg" ></Input>
             <div className='mt-2 flex items-center'>
               <div className='w-[4px] h-4 bg-[#FFCE00] mr-2 rounded-full'></div>
               <div className='mr-4 text-blueTitle'>是否公开</div>
-              <Switch  size="24px" activeColor="#FED440"></Switch></div>
+              <Switch onChange={(e)=>{
+                useRequest.post('/api/collection/update',{
+                  id: data?.id,
+                  isPublic : e
+                })
+              }} size="24px" activeColor="#FED440"></Switch></div>
            </div>:
             <div className="ml-4 text-[#37455C] font-semibold text-lg">
             {data?.name}
           </div>
           }
-          
         </div>
         <div className="flex justify-between mt-3">
           <div>
@@ -281,6 +295,7 @@ const PostGroup = (props) => {
     </div>
   );
 };
+
 const Identify = () => {
   const router = useRouter();
   const { t } = useTranslation('translations');
@@ -302,6 +317,7 @@ const Identify = () => {
     </div>
   );
 };
+
 const ProfileMenu = () => {
   return (
     <div className="flex justify-between p-4  relative">
@@ -320,6 +336,7 @@ const ProfileMenu = () => {
     </div>
   );
 };
+
 const Setting = () => {
   return (
     <div className="w-full rounded-lg card bg-base-100 ">
