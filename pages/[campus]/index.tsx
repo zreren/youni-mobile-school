@@ -214,6 +214,10 @@ function SchoolPage(props) {
             label: '二手书',
             value: 'book',
           },
+          {
+            label: '课程配置',
+            value: 'course_recommend',
+          },
         ]
       }else{
         return [

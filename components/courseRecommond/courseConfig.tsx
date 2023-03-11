@@ -18,7 +18,7 @@ import { useRouter } from 'next/router';
 import { Toast } from 'react-vant';
 import { professorList } from '@/mock/data';
 import { selectOpen } from '@/stores/authSlice';
-import Select from './select'
+import Select from './select';
 import DraftIcon from './draft.svg';
 export default function config(props) {
   const router = useRouter();
@@ -185,7 +185,10 @@ export default function config(props) {
   // });
   const [professorOpen, setProfessorOpen] = useState(false);
   const [professorOptionOpen, setProfessorOptionOpen] = useState(false);
-  const {courseList,setCourseList}:{courseList:Course[],setCourseList:any} = props;
+  const {
+    courseList,
+    setCourseList,
+  }: { courseList: Course[]; setCourseList: any } = props;
   const CourseId = React.useMemo(
     () => courseList[professorCurrent].id,
     [professorCurrent, courseList],
@@ -264,12 +267,14 @@ export default function config(props) {
                             if (selectList?.length >= 0) {
                               if (isSelect) {
                                 setSelectList((pre) => [
-                                  ...pre.filter((i) => i.id !== item.id && item.id !== -1),
+                                  ...pre.filter(
+                                    (i) => i.id !== item.id && item.id !== -1,
+                                  ),
                                 ]);
                                 return;
                               }
                               setSelectList((pre) => [
-                                ...pre.filter((item)=>item.id!==-1),
+                                ...pre.filter((item) => item.id !== -1),
                                 { id: item.id, label: item.name },
                               ]);
                             } else {
@@ -292,9 +297,9 @@ export default function config(props) {
                             },
                           )}
                         >
-                          {selectList?.some((i) => i.id === item.id) ?
-                            '取消选中' : '选中'}
-                           
+                          {selectList?.some((i) => i.id === item.id)
+                            ? '取消选中'
+                            : '选中'}
                         </div>
                       </div>
                       <div className="w-full h-[0.8px] bg-[#F3F4F6] rounded-md "></div>
@@ -322,19 +327,22 @@ export default function config(props) {
                       if (isSelectCustom) {
                         setSelectList((pre) => [
                           ...pre.filter(
-                            (i) => !i.id && i.name !== customProfessor && i.id !== -1,
+                            (i) =>
+                              !i.id &&
+                              i.name !== customProfessor &&
+                              i.id !== -1,
                           ),
                         ]);
                         return;
                       }
                       setSelectList((pre) => [
-                        ...pre.filter((item)=>item.id!==-1),
+                        ...pre.filter((item) => item.id !== -1),
                         { id: null, label: customProfessor },
                       ]);
                     } else {
                       if (customProfessor?.length === 0) return;
                       setSelectList((pre) => [
-                        ...pre.filter((item)=>item.id!==-1),
+                        ...pre.filter((item) => item.id !== -1),
                         { id: null, label: customProfessor },
                       ]);
                       // setSelectList([
@@ -357,42 +365,47 @@ export default function config(props) {
                     },
                   )}
                 >
-                   {selectList?.some((i) =>i.label === customProfessor) ?
-                            '取消选中' : '选中'}
+                  {selectList?.some((i) => i.label === customProfessor)
+                    ? '取消选中'
+                    : '选中'}
                 </div>
               </div>
               <div className="text-[#A9B0C0] my-3">非常规情况</div>
               <div className="space-y-2">
-                <div onClick={()=>{
-                  setSelectList((pre) => [
-                    { id: -1, label: '均可选择' },
-                  ]);
-                }} className={
-                  classnames("text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10",{
-                    'text-[#798195] ': !selectList?.some(
-                      (i) => i.label === '均可选择' && i.id === -1,
-                    ),
-                    'text-[#C8A655] ': selectList?.some(
-                      (i) => i.label === '均可选择' && i.id === -1,
-                    ),
-                  })
-                }>
+                <div
+                  onClick={() => {
+                    setSelectList((pre) => [{ id: -1, label: '均可选择' }]);
+                  }}
+                  className={classnames(
+                    'text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10',
+                    {
+                      'text-[#798195] ': !selectList?.some(
+                        (i) => i.label === '均可选择' && i.id === -1,
+                      ),
+                      'text-[#C8A655] ': selectList?.some(
+                        (i) => i.label === '均可选择' && i.id === -1,
+                      ),
+                    },
+                  )}
+                >
                   教授均可选择
                 </div>
-                <div onClick={()=>{
-                  setSelectList((pre) => [
-                    { id: -1, label: '无教授推荐' },
-                  ]);
-                }} className={
-                  classnames("text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10",{
-                    'text-[#798195] ': !selectList?.some(
-                      (i) => i.label === '无教授推荐' && i.id === -1,
-                    ),
-                    'text-[#C8A655] ': selectList?.some(
-                      (i) => i.label === '无教授推荐' && i.id === -1,
-                    ),
-                  })
-                }>
+                <div
+                  onClick={() => {
+                    setSelectList((pre) => [{ id: -1, label: '无教授推荐' }]);
+                  }}
+                  className={classnames(
+                    'text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10',
+                    {
+                      'text-[#798195] ': !selectList?.some(
+                        (i) => i.label === '无教授推荐' && i.id === -1,
+                      ),
+                      'text-[#C8A655] ': selectList?.some(
+                        (i) => i.label === '无教授推荐' && i.id === -1,
+                      ),
+                    },
+                  )}
+                >
                   无教授推荐
                 </div>
               </div>
@@ -474,7 +487,9 @@ export default function config(props) {
                             if (selectList?.length >= 0) {
                               if (isSelect) {
                                 setSelectList((pre) => [
-                                  ...pre.filter((i) => i.id !== item.id && item.id !== -1),
+                                  ...pre.filter(
+                                    (i) => i.id !== item.id && item.id !== -1,
+                                  ),
                                 ]);
                                 return;
                               }
@@ -502,9 +517,9 @@ export default function config(props) {
                             },
                           )}
                         >
-                          {selectList?.some(
-                                (i) => i.id === item.id
-                              ) ? '取消选中' : '选中'}
+                          {selectList?.some((i) => i.id === item.id)
+                            ? '取消选中'
+                            : '选中'}
                         </div>
                       </div>
                       <div className="w-full h-[0.8px] bg-[#F3F4F6] rounded-md "></div>
@@ -532,19 +547,22 @@ export default function config(props) {
                       if (isSelectCustom) {
                         setSelectList((pre) => [
                           ...pre.filter(
-                            (i) => !i.id && i.name !== customProfessor && i.id !== -1,
+                            (i) =>
+                              !i.id &&
+                              i.name !== customProfessor &&
+                              i.id !== -1,
                           ),
                         ]);
                         return;
                       }
                       setSelectList((pre) => [
-                        ...pre.filter((item)=>item.id!==-1),
+                        ...pre.filter((item) => item.id !== -1),
                         { id: null, label: customProfessor },
                       ]);
                     } else {
                       if (customProfessor?.length === 0) return;
                       setSelectList((pre) => [
-                        ...pre.filter((item)=>item.id!==-1),
+                        ...pre.filter((item) => item.id !== -1),
                         { id: null, label: customProfessor },
                       ]);
                       // setSelectList([
@@ -567,42 +585,47 @@ export default function config(props) {
                     },
                   )}
                 >
-                  {selectList?.some(
-                        (i) => i.name === customProfessor) ? '取消选中' : '选中' }
+                  {selectList?.some((i) => i.name === customProfessor)
+                    ? '取消选中'
+                    : '选中'}
                 </div>
               </div>
               <div className="text-[#A9B0C0] my-3">非常规情况</div>
               <div className="space-y-2">
-                <div onClick={()=>{
-                  setSelectList([
-                    { id: -1, label: '均可选择' },
-                  ]);
-                }} className={
-                  classnames("text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10",{
-                    'text-[#798195] ': !selectList?.some(
-                      (i) => i.label === '均可选择' && i.id === -1,
-                    ),
-                    'text-[#C8A655] ': selectList?.some(
-                      (i) => i.label === '均可选择' && i.id === -1,
-                    ),
-                  })
-                }>
+                <div
+                  onClick={() => {
+                    setSelectList([{ id: -1, label: '均可选择' }]);
+                  }}
+                  className={classnames(
+                    'text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10',
+                    {
+                      'text-[#798195] ': !selectList?.some(
+                        (i) => i.label === '均可选择' && i.id === -1,
+                      ),
+                      'text-[#C8A655] ': selectList?.some(
+                        (i) => i.label === '均可选择' && i.id === -1,
+                      ),
+                    },
+                  )}
+                >
                   教授均可选择
                 </div>
-                <div onClick={()=>{
-                  setSelectList([
-                    { id: -1, label: '无教授推荐' },
-                  ]);
-                }} className={
-                  classnames("text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10",{
-                    'text-[#798195] ': !selectList?.some(
-                      (i) => i.label === '无教授推荐' && i.id === -1,
-                    ),
-                    'text-[#C8A655] ': selectList?.some(
-                      (i) => i.label === '无教授推荐' && i.id === -1,
-                    ),
-                  })
-                }>
+                <div
+                  onClick={() => {
+                    setSelectList([{ id: -1, label: '无教授推荐' }]);
+                  }}
+                  className={classnames(
+                    'text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10',
+                    {
+                      'text-[#798195] ': !selectList?.some(
+                        (i) => i.label === '无教授推荐' && i.id === -1,
+                      ),
+                      'text-[#C8A655] ': selectList?.some(
+                        (i) => i.label === '无教授推荐' && i.id === -1,
+                      ),
+                    },
+                  )}
+                >
                   无教授推荐
                 </div>
               </div>
@@ -702,12 +725,22 @@ export default function config(props) {
           props.onClick();
         }}
         className={classnames(
-          'flex justify-center items-center w-14 h-14  p-[1px] rounded-2xl',
+          'flex justify-center relative items-center w-14 h-14  p-[1px] rounded-2xl',
           {
             'border-[2px] border-[#FFF4B0]': isSelect,
           },
         )}
       >
+        {props?.data?.label && (
+          <div
+            onClick={() => {
+              props.deleteCourse(props?.data);
+            }}
+            className="bg-red-500 absolute -top-2 -right-2 rounded-full w-5 h-5 text-white flex justify-center items-center text-xs"
+          >
+            x
+          </div>
+        )}
         <div
           className={classnames(
             'flex justify-center text-xs text-[#798195] items-center text-center border-[2px] rounded-2xl h-12 w-12',
@@ -866,7 +899,7 @@ export default function config(props) {
             </svg> */}
           </div>
           <div className="xueqiTag absolute rounded-[5px] p-[5px] text-[white] flex justify-center items-center text-[10px] w-4 h-4 bottom-0 right-0">
-            {termValue?.slice(0,1)}
+            {termValue?.slice(0, 1)}
           </div>
         </div>
       );
@@ -935,7 +968,7 @@ export default function config(props) {
             </svg>
           </div>
           <div className="xueqiTag absolute rounded-[6px] p-[6px] text-[white] flex justify-center items-center text-xs w-5 h-5 bottom-0 right-0">
-          {termValue?.slice(0,1)}
+            {termValue?.slice(0, 1)}
           </div>
         </div>
       );
@@ -999,11 +1032,13 @@ export default function config(props) {
               }}
               className="bg-[#F7F8F9] w-full h-full"
               onBlur={() => {
-                setTimeout(()=>{updateForm({
-                  [String(professorCurrent)]: {
-                    note: value,
-                  },
-                })},10000)
+                setTimeout(() => {
+                  updateForm({
+                    [String(professorCurrent)]: {
+                      note: value,
+                    },
+                  });
+                }, 10000);
               }}
             ></textarea>
             {/* note area */}
@@ -1037,20 +1072,20 @@ export default function config(props) {
       };
     });
   };
-  const {termValue,setTermValue} = props
+  const { termValue, setTermValue } = props;
   const submitPost = async (form, draft) => {};
-  const {term,year} = props;
+  const { term, year } = props;
   React.useEffect(() => {
-    console.log(term,"term")
-  }, [term])
-  
+    console.log(term, 'term');
+  }, [term]);
+
   const Footer = () => {
     return (
       <div className="w-full shadow-footer bg-white h-[60px] space-x-4 flex justify-between fixed bottom-12 px-5 py-2">
         <div
           className="flex flex-col items-center  w-[40px]"
           onClick={() => {
-            console.log(filteredData,term,termValue,year,'courseList')
+            console.log(filteredData, term, termValue, year, 'courseList');
           }}
         >
           <DraftIcon></DraftIcon>
@@ -1060,7 +1095,7 @@ export default function config(props) {
         </div>
         <div
           onClick={() => {
-            console.log(filteredData,term,termValue,year,'courseList')
+            console.log(filteredData, term, termValue, year, 'courseList');
           }}
           className="bg-[#FFD036] cursor-pointer  text-white rounded-full w-full h-10 flex justify-center items-center"
         >
@@ -1122,14 +1157,35 @@ export default function config(props) {
           </div>
           {/* <div>{item.action}</div> */}
         </div>
-        <div className='mb-4'>
-          <Select value={termValue} change={(e)=>{setTermValue(e)}} data={fetchedData?.data}></Select>
+        <div className="mb-4">
+          <Select
+            value={termValue}
+            change={(e) => {
+              setTermValue(e);
+            }}
+            data={fetchedData?.data}
+          ></Select>
         </div>
         <div className="grid grid-cols-5 grid-rows-2 gap-y-2 gap-x-2">
           {new Array(10).fill(1).map((item, index) => {
             console.log(item, 'courseList');
             return (
               <CourseSelector
+                deleteCourse={(data) => {
+                  setCourseList((pre) => {
+                    return {
+                      ...pre,
+                      [index]: {
+                        id: null,
+                        label: null,
+                        type: null,
+                        professorMust: [],
+                        professorOption: [],
+                        note: null,
+                      },
+                    };
+                  });
+                }}
                 onClick={() => {
                   setCurrent(index);
                   setOpenCourse(true);
