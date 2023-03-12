@@ -21,6 +21,7 @@ import classnames from 'classnames';
 import useFetch from '../../hooks/useFetch';
 import useLanguage from '@/hooks/useLanguage';
 import useCurriculum from '@/hooks/useCurriculum';
+import useRequest from '@/libs/request';
 
 const CCourseTime = (props) => {
   return (
@@ -291,13 +292,13 @@ export default function AddSchedule() {
       });
     }, []);
     const submitTime = async (values) => {
-      if(values.all((item)=>{
-        item !== undefined || item !== null
-      })){
-        const { data } = await instance.post('/api/timetable/create', values);
+      console.log(values, 'submit values');
+      if(values.name && values.color && values.startTime && values.endTime){
+        const { data } = await useRequest.post('/api/timetable/create', values);
         return data;
       }else{
         Toast.fail('请填写完整信息')
+        return
       }
 
     };
@@ -319,7 +320,8 @@ export default function AddSchedule() {
       // }
     };
     const submitForm = async (values: any) => {
-      const requestQueen = [0].map(async (item) => {
+      console.log(values,"submit values")
+      // const requestQueen = [0].map(async (item) => {
         const data = await submitTime({
           ...values,
           startTime: `${getYYMMDD(value)} ${time}:00`,
@@ -327,23 +329,30 @@ export default function AddSchedule() {
           // dayOfWeek: Number(item),
           // time: translateTime(time, endTime),
         });
-        return data;
-      });
-      Promise.all(requestQueen)
-        .then((res) => {
-          console.log(res, 'res');
-          // if(res.every((item)=>item.code===200))
-          if (res.some((item) => item.message !== 'success')) {
-            Toast.fail('添加失败');
-          } else {
-            Toast.success('添加成功');
-          }
-          // if(res.)
-          // Toast.success('添加成功');
-        })
-        .catch((err) => {
-          Toast.fail('添加失败');
-        });
+        // if()
+        console.log(data,"getYYMMDDdata")
+        // return data;
+      // });
+      if(data?.message === 'success'){
+        Toast.success('添加成功');
+      }else{
+        Toast.fail('添加失败');
+      }
+      // Promise.all(requestQueen)
+      //   .then((res) => {
+      //     console.log(res, 'res');
+      //     // if(res.every((item)=>item.code===200))
+      //     if (res.some((item) => item.message !== 'success')) {
+      //       Toast.fail('添加失败');
+      //     } else {
+      //       Toast.success('添加成功');
+      //     }
+      //     // if(res.)
+      //     // Toast.success('添加成功');
+      //   })
+      //   .catch((err) => {
+      //     Toast.fail('添加失败');
+      //   });
     };
     return (
       <div className="w-full space-y-4 youni-form">
