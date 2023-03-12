@@ -612,30 +612,6 @@ export default function config(props) {
                 setValue(e.target.value);
               }}
             ></input>
-            <div
-              className="w-full flex flex-col justify-between h-12"
-              onClick={() => {
-                setCourseList((pre) => {
-                  return {
-                    ...pre,
-                    [current]: {
-                      id: null,
-                      label: '',
-                      professorMust: [],
-                      professorOption: [],
-                      type: '',
-                      note: '',
-                    },
-                  };
-                });
-              }}
-            >
-              <div></div>
-              <div className="text-gray-500  font-semibold text-sm">
-                移除此位置的课程
-              </div>
-              <div className="w-full h-[0.1px] bg-[#F3F4F6] rounded-md border border-lg"></div>
-            </div>
             {courseData?.map((item) => {
               return (
                 <div
@@ -663,7 +639,7 @@ export default function config(props) {
     );
   }, []);
   const CourseSelector = (props) => {
-    const { isSelect } = props;
+    const { isSelect, key } = props;
     return (
       <div
         onClick={() => {
@@ -676,16 +652,28 @@ export default function config(props) {
           },
         )}
       >
-        {/* {props?.data?.label && (
+        {props?.data?.label && (
           <div
             onClick={() => {
-              props.deleteCourse(props?.data);
+              setCourseList((pre) => {
+                return {
+                  ...pre,
+                  [props.index]: {
+                    id: null,
+                    label: null,
+                    professorMust: [],
+                    professorOption: [],
+                    type: null,
+                    note: null,
+                  },
+                };
+              });
             }}
             className="bg-red-500 absolute -top-2 -right-2 rounded-full w-5 h-5 text-white flex justify-center items-center text-xs"
           >
             x
           </div>
-        )} */}
+        )}
         <div
           className={classnames(
             'flex justify-center text-xs text-[#798195] items-center text-center border-[2px] rounded-2xl h-12 w-12',
@@ -744,7 +732,7 @@ export default function config(props) {
         },
       };
     });
-    setCurrent((pre)=>pre)
+    setCurrent((pre) => pre);
   };
   interface Professor {
     id: any;
@@ -1124,6 +1112,7 @@ export default function config(props) {
                 }}
                 data={courseList[index]}
                 isSelect={current === index}
+                index={index}
                 key={index}
               ></CourseSelector>
             );

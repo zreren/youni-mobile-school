@@ -130,13 +130,11 @@ function index(props) {
 
    useEffect(()=>{
     if(id===0) return
+    console.log(data?.data?.type,"data?.data?.type")
     if(data?.data?.type !== 'course_recommend'){
       window.history.replaceState({}, '', `/${campus}/post/${id}`);
-    }else{
-      window.history.replaceState({}, '', `/${campus}/recommend/${id}`);
-
     }
-   },[id,])
+   },[id])
 
   /**
    * @description 发送评论

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import Imagebg from './bg.png';
 import PostGroupIcon1 from './post-group/icon1.svg';
@@ -20,8 +20,12 @@ import { Cell, Dialog } from 'react-vant';
 export default function recommend(props) {
   const router = useRouter();
   const {user} = useUser();
+  const campus = router.query.campus;
   const id = React.useMemo(() => router.query.id || props.id, [router,props])
   const { data,mutate } = useFetch(`/post/detail?id=${id}`, 'get');
+  useEffect(()=>{
+    window.history.replaceState({}, '', `/${campus}/recommend/${id}`);
+  },[data])
   const CourseSelector = (props) => {
     const { isSelect } = props;
     return (
