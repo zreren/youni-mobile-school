@@ -1236,6 +1236,161 @@ export default function addPost() {
       </SwipeableDrawer>
     );
   };
+
+  const ActivePricesModel = (props) => {
+    const { visible, open, close, confirm } = props;
+    const [currentInPut, setCurrentInPut] = useState<string>();
+    const [state, updateState] = hooks.useSetState({
+      text: form?.getFieldValue('prices')?.text || '',
+      unit: form?.getFieldValue('prices')?.unit || '',
+      pricesUnit: form?.getFieldValue('prices')?.pricesUnit || pricesUnit,
+      oldPrice: form?.getFieldValue('prices')?.oldPrice || '',
+      showOldPrice: form?.getFieldValue('prices')?.showOldPrice || false,
+      service: form?.getFieldValue('prices')?.service || [],
+    });
+    useEffect(() => {
+      console.log(form.getFieldValue('prices'), 'form');
+      // updateState({
+      //   text: form.getFieldValue('text'),
+      //   unit: form.getFieldValue('unit'),
+      //   oldPrice: form.getFieldValue('oldPrice'),
+      //   showOldPrice: form.getFieldValue('showOldPrice'),
+      //   service: form.getFieldValue('service'),
+      // });
+    }, [form]);
+    const deleteInput = () => {
+      if (!currentInPut) return;
+      updateState({
+        [currentInPut]: state[currentInPut]?.slice(
+          0,
+          state[currentInPut].length - 1,
+        ),
+      });
+    };
+    const onInput = (v) => {
+      // Toast.success(v);
+      if (v === 'CAD') {
+        updateState({ pricesUnit: 'USD' });
+        setPricesUnit('USD');
+      }
+      if (v === 'USD') {
+        setPricesUnit('CAD');
+        updateState({ pricesUnit: 'CAD' });
+      }
+      if (v === '完成') {
+        close();
+      }
+      updateState({
+        [currentInPut]: state[currentInPut] + v,
+      });
+    };
+    const serviceList = [
+      { title: '当面交易' },
+      { title: '包邮' },
+      { title: '快递' },
+    ];
+    const ServicesItem = (props) => {
+      const { title, defaultSelect, change } = props;
+      const [select, setSelect] = useState(defaultSelect);
+      useEffect(() => {
+        if (select) {
+          props.change(title);
+        } else {
+          props.remove(title);
+        }
+      }, [select]);
+      return (
+        <div
+          onClick={() => {
+            setSelect(!select);
+          }}
+          className={classnames(
+            'bg-bg m-1  text-xs font-light h-6 px-1 py-1  rounded',
+            {
+              'text-yellow-500': select,
+              'text-gray-600': !select,
+            },
+          )}
+        >
+          {title}
+        </div>
+      );
+    };
+    const columns = [
+      { text: '日', value: 0 },
+      { text: '周', value: 1 },
+      { text: '月', value: 2 },
+      { text: '季', value: 3 },
+      { text: '年', value: 4 },
+      // { text: '南通', value: 5 },
+      // { text: '宿迁', value: 6 },
+      // { text: '泰州', value: 7 },
+      // { text: '无锡', value: 8 },
+    ];
+    return (
+      <SwipeableDrawer
+        className="z-10 "
+        disableDiscovery={true}
+        disableSwipeToOpen={true}
+        onClose={close}
+        onOpen={open}
+        open={visible}
+        anchor="bottom"
+      >
+        <div className="h-[380px] ">
+          <Puller></Puller>
+          <div className="p-5 mt-2 ">
+            <div className="h-1 m-0 mt-2 mb-2 divider opacity-30"></div>
+            <div className="flex justify-between items-center">
+              <div className="flex w-full space-x-4 items-center">
+                <div className="whitespace-nowrap text-[#37455C] text-sm">
+                  活动价格
+                </div>
+                <div className="flex items-end">
+                  <div className="w-[70px]">
+                    <Input
+                      onFocus={() => {
+                        setCurrentInPut('oldPrice');
+                      }}
+                      type={'number'}
+                      value={state.oldPrice}
+                      readOnly
+                      onChange={(text) => updateState({ oldPrice: text })}
+                      placeholder={
+                        currentInPut === 'oldPrice' ? '|' : '活动价格'
+                      }
+                      className="text-lg text-[#798195]"
+                    />
+                  </div>
+                  <div className="text-sm text-[#798195]">{pricesUnit}</div>
+                </div>
+              </div>
+              {/* swith */}
+            </div>
+            <div className="h-1 m-0 mt-2 divider opacity-30"></div>
+          </div>
+          <NumberKeyboard
+            theme="custom"
+            onDelete={() => {
+              deleteInput();
+            }}
+            extraKey={[pricesUnit, '.']}
+            closeButtonText="完成"
+            visible={true}
+            onClose={() => {
+              confirm(state);
+              close();
+            }}
+            className="-translate-y-8"
+            // onChange={()=>{close();Toast.success('完成')}}
+            onInput={onInput}
+            // onDelete={onDelete}
+          />
+          {/* <div className='h-[20px]'></div> */}
+        </div>
+      </SwipeableDrawer>
+    );
+  };
   const DeliveryRadioMenu = () => {
     const [state, setState] = useState('实体书');
     useEffect(() => {
@@ -1282,6 +1437,7 @@ export default function addPost() {
   );
   const [pricesVisible, setPricesVisible] = useState(false);
   const [contactVisible, setContactVisible] = useState(false);
+  const [activePricesVisible,setActivePricesVisible] = useState(false);
   const [ideaPricesVisible, setIdeaPricesVisible] = useState(false);
   const StartTimeData = React.useMemo(() => {
     console.log('StartTime render count ++');
@@ -1335,8 +1491,14 @@ export default function addPost() {
                     if (item.type === 'prices' && type === 'sublet') {
                       setPricesVisible(true);
                     }
-                    if (item.type === 'prices' && type !== 'sublet') {
+                    if (item.type === 'prices' && type === 'idea') {
                       setIdeaPricesVisible(true);
+                    }
+                    if (item.type === 'prices' && type === 'book') {
+                      setIdeaPricesVisible(true);
+                    }
+                    if (item.type === 'prices' && type === 'activity') {
+                      setActivePricesVisible(true)
                     }
                     if (item.type === 'contact') {
                     }
@@ -1778,6 +1940,21 @@ export default function addPost() {
                 form.setFieldValue('prices', e);
               }}
             ></IdeaPricesModel>
+            <ActivePricesModel
+            visible={activePricesVisible}
+            onClose={() => {
+              setActivePricesVisible(false);
+            }}
+            close={() => {
+              setActivePricesVisible(false);
+            }}
+            confirm={(e) => {
+              form.setFieldValue('prices', e);
+            }}
+            >
+              
+
+            </ActivePricesModel>
             {/* <Keyboard></Keyboard> */}
             {/* <div className="p-5">
               <PostCategory

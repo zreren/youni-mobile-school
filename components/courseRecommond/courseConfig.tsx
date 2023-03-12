@@ -671,7 +671,7 @@ export default function config(props) {
             }}
             className="bg-red-500 absolute -top-2 -right-2 rounded-full w-5 h-5 text-white flex justify-center items-center text-xs"
           >
-            x
+            -
           </div>
         )}
         <div
