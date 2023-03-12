@@ -134,7 +134,6 @@ export default function Waterfall(props) {
   useEffect(()=>{
     // window.location.href = 
     if(id===0) return
-    window.history.replaceState({}, '', `/${campus}/post/${id}`);
   //  router.replace({
   //   pathname:'[campus]/post/[id]',
   //   query:{campus:campus,id:id},

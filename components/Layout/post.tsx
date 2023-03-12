@@ -31,6 +31,7 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import classnames from 'classnames';
 import Waterfall from '@/components/Layout/Waterfall';
 import TopicIcon from './topic.svg';
+import { useRouter } from 'next/router';
 
 
 const PostGroupDetail = (props) => {
@@ -112,8 +113,8 @@ const PostGroupDrawer = (props) => {
 function index(props) {
   const { id } = props;
   const { data, mutate } = useFetch(`/post/detail?id=${id}`, 'get');
-
-
+  const router = useRouter();
+  const campus = router.query.campus;
   const {data:_commentData,mutate:mutateComment} = useFetch('/comment/list','page',{
     id: id,
     pageSize : 10,
@@ -127,7 +128,15 @@ function index(props) {
     console.log(commentData,"commentData")
    },[commentData])
 
+   useEffect(()=>{
+    if(id===0) return
+    if(data?.data?.type !== 'course_recommend'){
+      window.history.replaceState({}, '', `/${campus}/post/${id}`);
+    }else{
+      window.history.replaceState({}, '', `/${campus}/recommend/${id}`);
 
+    }
+   },[id,])
 
   /**
    * @description 发送评论

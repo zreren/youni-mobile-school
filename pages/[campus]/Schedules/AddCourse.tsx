@@ -432,7 +432,7 @@ export default function AddSchedule() {
             handleChange(val.label, 'name');
             handleChange(val.id, 'courseId');
           }}
-          renderData={courseData?.data?.map((item) => item.ename)}
+          renderData={courseData?.data?.map((item) => item.code)}
           data={courseData?.data}
         ></CCourseInput>
         <div>{CourseId}</div>

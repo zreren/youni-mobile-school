@@ -469,9 +469,9 @@ function SchoolPage(props) {
                 <Swiper.Item>
                   <Image
                     src={
-                      item.img.indexOf('http') > -1
-                        ? item.img
-                        : `${Cons.BASEURL}${item.img}`
+                      item.image.indexOf('http') > -1
+                        ? item.image
+                        : `${Cons.BASEURL}${item.image}`
                     }
                     width="100%"
                     height={imageSize.height}

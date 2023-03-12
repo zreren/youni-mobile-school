@@ -142,7 +142,7 @@ export default function recommend() {
           {data?.data?.body}
         </div>
         <div className="flex mt-4 px-1 items-center space-x-1">
-          {data?.data?.topic.map((item) => {
+          {data?.data?.topics.map((item) => {
             return <div className=" text-[#2347D9] text-sm">{item}</div>;
           })}
         </div>

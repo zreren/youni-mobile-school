@@ -300,6 +300,14 @@ export default function AddSchedule(props) {
     }, [data]);
     const [time, setTime] = useState<any>();
     const [endTime, setEndTime] = useState<any>();
+    interface Curriculum {
+      id: number;
+      name: string;
+      curriculum: any[]; // curriculum属性可能包含任何类型的数组
+      isShare: boolean;
+      createdAt: string;
+      updatedAt: string;
+    }
     const [CURRICULUM, setCURRICULUM] = useState({
       name: '',
       color: null,
@@ -314,6 +322,9 @@ export default function AddSchedule(props) {
       time:{
         start:'',
         end:''
+      },
+      curriculum:{
+        id:null,
       }
       // time:''
     });
@@ -385,6 +396,7 @@ export default function AddSchedule(props) {
       const requestQueen = dayOfWeek?.map(async (item) => {
         const data = await submitCourse({
           ...values,
+          id: CURRICULUM?.curriculum.id,
           dayOfWeek: Number(item),
           time: translateTime(time, endTime),
         });

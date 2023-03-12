@@ -676,9 +676,6 @@ export default function Schedules() {
             setting={setting}
             courseData={courseData}
             clickEvent={(arg) => {
-              const  x = document.getElementById('#bottom-navigation')
-              console.log(x,"x bottom-navigation")
-              x.style.height = '0px';
               setArg({ ...arg });
               console.log(arg, 'Calendar clcik');
               setVisible(true);

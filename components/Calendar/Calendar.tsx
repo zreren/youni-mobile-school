@@ -559,7 +559,7 @@ function Calendar(props) {
     return (
       <div
         onClick={() => {
-          props.clickEvent(arg);
+          props?.clickEvent(arg);
         }}
         className="flex flex-col overflow-hidden justify-center h-full w-full items-center"
       >
@@ -598,7 +598,7 @@ function Calendar(props) {
     return (
       <div
         onClick={() => {
-          props.clickEvent(arg);
+          props?.clickEvent(arg);
         }}
         className="flex overflow-hidden flex-col justify-center h-full w-full items-center"
       >
@@ -875,12 +875,12 @@ function Calendar(props) {
             }
             return setting.view === 'day' ? (
               <DayCourseEvent
-                clickEvent={props.clickEvent}
+                clickEvent={props?.clickEvent}
                 arg={arg}
               ></DayCourseEvent>
             ) : (
               <CourseEvent
-                clickEvent={props.clickEvent}
+                clickEvent={props?.clickEvent}
                 arg={arg}
               ></CourseEvent>
             );

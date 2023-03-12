@@ -167,7 +167,21 @@ export default function addPost() {
       setType(router.query.type as string);
     }
   }, [router]);
+  const { data: campusData, mutate: campusDataMutate } = useFetch(
+    '/campus/query',
+    'get',
+    {
+      name: router.query.campus,
+    },
+  );
+  const [topicVisible, setTopicVisible] = useState(false);
 
+  useEffect(() => {
+    campusDataMutate();
+  }, [router.query.campus]);
+  const campusID = useMemo(() => {
+    return campusData?.data?.[0]?.id;
+  }, [campusData,router,topicVisible]);
   const [previews, setPreviews] = React.useState([]);
   // useEffect(() => {
   //   // if(form.get){
@@ -246,9 +260,10 @@ export default function addPost() {
             setLocal(true);
           }}
         >
-
           {/* {'located'} */}
-          {form.getFieldValue('location')?.length > 6 ? JSON?.parse(form.getFieldValue('location')).placename : null || 'locate...'}
+          {form.getFieldValue('location')?.length > 6
+            ? JSON?.parse(form.getFieldValue('location')).placename
+            : null || 'locate...'}
         </div>
         <div>
           <SwipeableDrawer
@@ -400,7 +415,13 @@ export default function addPost() {
     };
   }
   const submitPost = async (form, draft) => {
-    console.log({ ...form }, 'form');
+    console.log(topic?.map((item)=> {
+      return (
+        {
+          id:item.id || null,name:item.name
+        }
+      )
+    }))
     // if (
     //   !Object.keys(form).some((element) => {
     //     if (
@@ -432,7 +453,7 @@ export default function addPost() {
         draft: draft,
         title: title,
         body: content,
-        topic: topic,
+        topics: topic?.map((item)=> item.name),
         preview: previews,
         type: type,
         contact: form.contact?.filter((item) => item.public === true),
@@ -1407,7 +1428,6 @@ export default function addPost() {
     // (pre) => {if(form.validateFields)}
     [dynamicForm, placeName, form, form.getFieldValue('startTime')],
   );
-  const [topicVisible, setTopicVisible] = useState(false);
   const TopicDrawer = useCallback(
     (props: any) => {
       const { data, visible } = props;
@@ -1433,7 +1453,7 @@ export default function addPost() {
           // const uniqueArray = pre.filter((value, index, self) => {
           //   return self.indexOf(value) === index;
           // });
-          Toast.success(`已加入${item}话题`);
+          Toast.success(`已加入${item.name}话题`);
           return [...pre, item];
         });
 
@@ -1441,7 +1461,33 @@ export default function addPost() {
         // setPlaceName(item?.place_name);
         setLocal(false);
       };
-      const topList = ['# 热门话题', '# 最新话题', '# 最热话题', '# 闲置'];
+      // const topList = ['# 热门话题', '# 最新话题', '# 最热话题', '# 闲置'];
+      const [topName,setTopName] = useState('')
+      // const campusID = useMemo(() => {
+      //   return campusData?.data?.[0]?.id;
+      // }, [campusData,router,topicVisible]);
+      const { data: _topicList, mutate: _topicListMutate } = useFetch(
+        '/campus/topic/list',
+        'page',
+        {
+          pageSize: 100,
+          campusId: campusID,
+          name: topName,
+        },
+      );
+      useEffect(() => {
+        _topicListMutate();
+      }, [campusID,topName,topicVisible]);
+      const topList = React.useMemo(
+        () =>
+          _topicList
+            ? topList
+              ? [...topList].concat(..._topicList)
+              : [].concat(..._topicList)
+            : null,
+        [_topicList,campusID,topName, router,topicVisible],
+      );
+
       const placeName = useMemo(() => {
         try {
           const res = JSON.parse(form.getFieldValue('location'));
@@ -1477,7 +1523,14 @@ export default function addPost() {
                 {/* <SignIn></SignIn> */}
                 <div className="p-5">
                   <div className="h-1 mt-3 mb-2 divider opacity-30"></div>
-                  {topList?.map((item) => {
+                  <input
+                    className="bg-bg mb-3 h-10 hover:outline-none  input border-none input-bordered w-full input-md"
+                    value={topName}
+                    onChange={(e) => {
+                      setTopName(e.target.value);
+                    }}
+                  ></input>
+                  {topList?.length > 1 ? topList?.map((item) => {
                     return (
                       <div
                         className="w-full flex flex-col justify-center "
@@ -1486,7 +1539,7 @@ export default function addPost() {
                         }}
                       >
                         <div className="text-gray-500 font-semibold text-sm">
-                          {item}
+                          # {item?.name}
                         </div>
                         {/* <div className="text-gray-400 font-medium text-sm">
                         {item.place_name}
@@ -1494,7 +1547,7 @@ export default function addPost() {
                         <div className="h-1 m-0 divider opacity-30 mt-3 mb-3"></div>
                       </div>
                     );
-                  })}
+                  }) : null}
                 </div>
               </div>
             </SwipeableDrawer>
@@ -1507,30 +1560,33 @@ export default function addPost() {
   const handleSetTitle = React.useCallback((value) => {
     setTitle(value);
   }, []);
-  const submitCourseConfig = async (e,draft?)=>{
-    console.log({
-      ...e,
-      draft: draft,
-      title: title,
-      body: content,
-      topic: topic,
-      preview: previews,
-      type: type,
-      contact: [],
-    },"submitCourseConfig")
-    if (!title || !content ) {
+  const submitCourseConfig = async (e, draft?) => {
+    console.log(
+      {
+        ...e,
+        draft: draft,
+        title: title,
+        body: content,
+        topic: topic,
+        preview: previews,
+        type: type,
+        contact: [],
+      },
+      'submitCourseConfig',
+    );
+    if (!title || !content) {
       Toast.fail('请完善标题和内容');
       return;
     }
-    if(!topic){
+    if (!topic) {
       Toast.fail('至少添加一个话题');
       return;
     }
-    if(!topic){
+    if (!topic) {
       Toast.fail('至少添加一个话题');
       return;
     }
-    if(!e.form.term){
+    if (!e.form.term) {
       Toast.fail('至少选择一学期');
       return;
     }
@@ -1543,7 +1599,7 @@ export default function addPost() {
         topic: topic,
         preview: previews,
         type: type,
-        contact: ["微信"],
+        contact: ['微信'],
       });
       if (data.message === 'success') {
         Toast.success('发布成功');
@@ -1553,55 +1609,55 @@ export default function addPost() {
     } catch (error) {
       Toast.fail(error);
     }
-    console.log(e,'get form')
-  }
+    console.log(e, 'get form');
+  };
   return (
     <>
-       <div className="mb-0 mt-12">
-       <Header className="shadow-none"></Header>
+      <div className="mb-0 mt-12">
+        <Header className="shadow-none"></Header>
 
-            <div className="items-start justify-between p-5 py-0 pt-6">
-              <div className="flex justify-between">
-                <div className="flex items-center space-x-2">
-                  <CateGoryIcon></CateGoryIcon>
-                  {/* {item.Icon ? <Icon className="mt-1"></Icon> : null} */}
-                  <div className="text-blueTitle">{item.title}</div>
-                </div>
-                <div>{item.action}</div>
-              </div>
-              <div className="text-xs text-gray-300">{item.intro}</div>
+        <div className="items-start justify-between p-5 py-0 pt-6">
+          <div className="flex justify-between">
+            <div className="flex items-center space-x-2">
+              <CateGoryIcon></CateGoryIcon>
+              {/* {item.Icon ? <Icon className="mt-1"></Icon> : null} */}
+              <div className="text-blueTitle">{item.title}</div>
             </div>
-            <div className="p-5">
-              <PostCategory
-                change={(e) => {
-                  changeCategory(headerMenuList[e].key);
-                }}
-                id={
-                  headerMenuList
-                    .map((item, index) => {
-                      if (item.key === type) {
-                        return index;
-                      }
-                    })
-                    .filter((item) => item !== undefined)[0]
-                }
-                // value={type}
-                headerMenuList={headerMenuList}
-                className="mt-0"
-              ></PostCategory>
-            </div>
-            {/* <AddCourse></AddCourse> */}
+            <div>{item.action}</div>
           </div>
+          <div className="text-xs text-gray-300">{item.intro}</div>
+        </div>
+        <div className="p-5">
+          <PostCategory
+            change={(e) => {
+              changeCategory(headerMenuList[e].key);
+            }}
+            id={
+              headerMenuList
+                .map((item, index) => {
+                  if (item.key === type) {
+                    return index;
+                  }
+                })
+                .filter((item) => item !== undefined)[0]
+            }
+            // value={type}
+            headerMenuList={headerMenuList}
+            className="mt-0"
+          ></PostCategory>
+        </div>
+        {/* <AddCourse></AddCourse> */}
+      </div>
       <>
         {type === 'course_recommend' ? (
           <div className="min-h-screen ">
-                        <TopicDrawer
+            <TopicDrawer
               visible={topicVisible}
               onClose={() => {
                 setTopicVisible(false);
               }}
             ></TopicDrawer>
-                        <div className="px-5 post-title">
+            <div className="px-5 post-title">
               <Input
                 placeholder="填写标题获得更多流量～"
                 value={title}
@@ -1621,16 +1677,23 @@ export default function addPost() {
               />
               <div className="flex items-center my-2 space-x-2">
                 {topic?.map((item) => {
-                  return <div onClick={()=>{
-                    setTopic((pre) => {
-                      if (!pre) return [item];
-                      if (pre.indexOf(item) >= 0) {
-                        return pre.filter((value, index, self) => {
-                          return value !== item;
+                  return (
+                    <div
+                      onClick={() => {
+                        setTopic((pre) => {
+                          if (!pre) return [item];
+                          if (pre.indexOf(item) >= 0) {
+                            return pre.filter((value, index, self) => {
+                              return value !== item;
+                            });
+                          }
                         });
-                      }
-                    });
-                  }} className="text-[#2347D9] text-sm">{item}</div>;
+                      }}
+                      className="text-[#2347D9] text-sm"
+                    >
+                     {`# ${item.name}`}
+                    </div>
+                  );
                 })}
               </div>
               <div className="flex space-x-[10px] mb-2 ">
@@ -1645,18 +1708,18 @@ export default function addPost() {
                 <div
                   onClick={() => {
                     setTopic((pre) => {
-                      if (!pre) return ['# 约克大学'];
-                      if (pre.indexOf('# 约克大学') >= 0) {
+                      if (!pre) return [ {id:null,name:'# 约克大学'}];
+                      if (pre.indexOf( {id:null,name:'# 约克大学'}) >= 0) {
                         Toast.fail('已移除该话题');
                         return pre.filter((value, index, self) => {
-                          return value !== '# 约克大学';
+                          return value.name !== '# 约克大学';
                         });
                       }
                       // const uniqueArray = pre.filter((value, index, self) => {
                       //   return self.indexOf(value) === index;
                       // });
                       Toast.success(`已加入# 约克大学 话题`);
-                      return [...pre, '# 约克大学'];
+                      return [...pre, {id:null,name:'# 约克大学'}];
                     });
                   }}
                   className="text-[#798195] rounded bg-[#F3F4F6] px-2 text-xs py-1"
@@ -1665,11 +1728,15 @@ export default function addPost() {
                 </div>
               </div>
             </div>
-            <div className='bg-[#F6F6F6] w-full h-3'></div>
-            <AddCourse submit={(e)=>{submitCourseConfig(e)}}></AddCourse>
+            <div className="bg-[#F6F6F6] w-full h-3"></div>
+            <AddCourse
+              submit={(e) => {
+                submitCourseConfig(e);
+              }}
+            ></AddCourse>
           </div>
         ) : (
-          <div className="mb-0">
+          <div className="mb-0 pb-10">
             {KeyboardShow ? <Keyboard></Keyboard> : null}
             <TopicDrawer
               visible={topicVisible}
@@ -1762,16 +1829,23 @@ export default function addPost() {
               />
               <div className="flex items-center my-2 space-x-2">
                 {topic?.map((item) => {
-                  return <div onClick={()=>{
-                    setTopic((pre) => {
-                      if (!pre) return [item];
-                      if (pre.indexOf(item) >= 0) {
-                        return pre.filter((value, index, self) => {
-                          return value !== item;
+                  return (
+                    <div
+                      onClick={() => {
+                        setTopic((pre) => {
+                          if (!pre) return [item];
+                          if (pre.indexOf(item) >= 0) {
+                            return pre.filter((value, index, self) => {
+                              return value !== item;
+                            });
+                          }
                         });
-                      }
-                    });
-                  }} className="text-[#2347D9] text-sm">{item}</div>;
+                      }}
+                      className="text-[#2347D9] text-sm"
+                    >
+                     # {item.name}
+                    </div>
+                  );
                 })}
               </div>
               <div className="flex space-x-[10px] mb-2 ">
@@ -1786,18 +1860,18 @@ export default function addPost() {
                 <div
                   onClick={() => {
                     setTopic((pre) => {
-                      if (!pre) return ['# 约克大学'];
-                      if (pre.indexOf('# 约克大学') >= 0) {
+                      if (!pre) return [ {id:null,name:'约克大学'}];
+                      if (pre.indexOf( {id:null,name:'约克大学'}) >= 0) {
                         Toast.fail('已移除该话题');
                         return pre.filter((value, index, self) => {
-                          return value !== '# 约克大学';
+                          return value.name !== '约克大学';
                         });
                       }
                       // const uniqueArray = pre.filter((value, index, self) => {
                       //   return self.indexOf(value) === index;
                       // });
-                      Toast.success(`已加入# 约克大学 话题`);
-                      return [...pre, '# 约克大学'];
+                      Toast.success(`已加入 # 约克大学 话题`);
+                      return [...pre, {id:null,name:'约克大学'}];
                     });
                   }}
                   className="text-[#798195] rounded bg-[#F3F4F6] px-2 text-xs py-1"
@@ -1876,7 +1950,6 @@ export default function addPost() {
           </div>
         )}
       </>
-
     </>
   );
 }

@@ -62,6 +62,7 @@ type Course = {
     contentRating: number;
     examRating: number;
   };
+  recommends: any;
 };
 export default function Introduce(props: {
   MyIntroduce: Course;
@@ -70,7 +71,7 @@ export default function Introduce(props: {
   console.log(props.recommendsData, 'recommendsData');
   const router = useRouter();
   let porpsIntroduce = props.MyIntroduce;
-  const { data } = useFetch(`/campus/query?name=${router.query.campus}`,'get');
+  const { data } = useFetch(`/campus/query?name=${router.query.campus}`, 'get');
   if (!props) return;
   const { ename, code, sections, subject, type, rating, cname } =
     porpsIntroduce;
@@ -166,29 +167,49 @@ export default function Introduce(props: {
       </div>
     );
   };
-  const RecommendCourse = () => {
+  const RecommendCourse = (props) => {
+    console.log(props, 'RecommendCourse');
+    const { data } = props;
+    function flatten(arr) {
+      return arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val), []);
+    }
+    const recommends = React.useMemo(() => {
+     const flattened=  flatten(data?.recommends?.map((item) => item.form.courseData))
+       const filtered = flattened.filter(Boolean);
+  const uniqueLabels = Array.from(new Set(filtered.map((item) => item.label)));
+  const deduplicated = uniqueLabels.map((label) => filtered.find((item) => item.label === label));
+  return deduplicated;
+    }, [data?.recommends]);
+    console.log(recommends,"recommends")
     const Item = (props) => {
+      const {prerequisites,recommends} = props;
+      if(!prerequisites && !recommends) return null;
+      const course = 'MATH 1000';
+      const parts = course.split(' ');
+      console.log(parts); // Output: ['MATH', '1000']
       return (
-        <div className="w-1/4 h-36 py-1 flex flex-col items-center justify-center border-gray-50 border-[0.5px] rounded-md">
+        <div className="w-1/4 min-w-[25%] h-36 py-1 flex flex-col items-center justify-center border-gray-50 border-[0.5px] rounded-md">
           {props?.prefix ? (
             <RecommendIcon></RecommendIcon>
           ) : (
             <PrefixIcon></PrefixIcon>
           )}
-          <div className="text-blueTitle text-xs  font-semibold">COMM</div>
-          <div className="text-blueTitle text-xs font-semibold">341</div>
-          <div className="bg-[#F7F8F9] text-blueTitle text-xs h-8 w-2/3 rounded-lg flex justify-center items-center ">
+          <div className="text-blueTitle text-xs  font-semibold">{props?.prefix?prerequisites?.subject?.ename:recommends?.label.split(' ')?.[0]}</div>
+          <div className="text-blueTitle text-xs font-semibold">{props?.prefix?data?.no:recommends?.label.split(' ')?.[1]}</div>
+          <div className="bg-[#F7F8F9] text-blueTitle text-xs h-8 min-w-[40px] w-2/3 rounded-lg flex justify-center items-center ">
             {props?.prefix ? '前置课' : '推荐课'}
           </div>
         </div>
       );
     };
     return (
-      <div className="flex items-center space-x-2">
-        <Item prefix></Item>
-        <Item></Item>
-        <Item></Item>
-        <Item></Item>
+      <div className="flex items-center space-x-2 overflow-x-scroll">
+        {data?.prerequisites?.map((item) => {
+          return <Item prerequisites={item} prefix></Item>;
+        })}
+        {recommends?.map((item) => {
+          return <Item recommends={item}></Item>;
+        })}
       </div>
     );
   };
@@ -277,11 +298,11 @@ export default function Introduce(props: {
                     <div className="p-2 text-[#798195]  text-sm">
                       {props.MyIntroduce.prerequisites.map((item) => item.code)}
                     </div>
-                    {
-                            props.MyIntroduce.prerequisites.length === 0 ? <div className='text-xs flex text-[#798195] ml-4 -mt-2'>
-                              暂无前置课
-                            </div> : null
-                          }
+                    {props.MyIntroduce.prerequisites.length === 0 ? (
+                      <div className="text-xs flex text-[#798195] ml-4 -mt-2">
+                        暂无前置课
+                      </div>
+                    ) : null}
                     <Accordion
                       defaultExpanded
                       className="rounded-lg p-0"
@@ -310,11 +331,11 @@ export default function Introduce(props: {
                           {/* <div className="bg-[#F7F8F9] rounded-md w-full flex justify-center items-center h-6 text-xs text-[#798195]">MAT 120</div>
                           <div className="bg-[#F7F8F9]  rounded-md w-full  flex justify-center items-center text-xs text-[#798195] h-6">MAT 120</div> */}
                         </div>
-                        {
-                            props?.MyIntroduce?.exclusions?.length === 0 ? <div className='text-xs flex text-[#798195] ml-4 -mt-2'>
-                              暂无排除学分
-                            </div> : null
-                          }
+                        {props?.MyIntroduce?.exclusions?.length === 0 ? (
+                          <div className="text-xs flex text-[#798195] ml-4 -mt-2">
+                            暂无排除学分
+                          </div>
+                        ) : null}
                       </AccordionDetails>
                     </Accordion>
                   </div>
@@ -327,31 +348,30 @@ export default function Introduce(props: {
                       选课 <span className="text-[#2347D9]">详情</span>
                     </div>
                     {/* <div className="flex w-full justify-between mt-5 items-center px-2 space-x-3"></div> */}
-                    {
-                      router.query.campus &&  <>
-                      
-                      <div className="flex items-center space-x-2 mt-2 p-2">
-                      <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
-                      <div className="font-semibold">校区</div>
-                    </div>
-                    <div className="p-2  text-sm text-[#798195]">
-                      {data?.data?.[0].ename}
-                    </div>
+                    {router.query.campus && (
+                      <>
+                        <div className="flex items-center space-x-2 mt-2 p-2">
+                          <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
+                          <div className="font-semibold">校区</div>
+                        </div>
+                        <div className="p-2  text-sm text-[#798195]">
+                          {data?.data?.[0].ename}
+                        </div>
                       </>
-                    }
-                    
-                    {
-                      props.MyIntroduce.department &&  <>
-                      <div className="flex items-center space-x-2 mt-2 p-2">
-                      <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
-                      <div className="font-semibold">学部</div>
-                    </div>
-                    <div className="p-2  text-sm text-[#798195]">
-                      {props.MyIntroduce.department || 'default'}
-                    </div>
+                    )}
+
+                    {props.MyIntroduce.department && (
+                      <>
+                        <div className="flex items-center space-x-2 mt-2 p-2">
+                          <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
+                          <div className="font-semibold">学部</div>
+                        </div>
+                        <div className="p-2  text-sm text-[#798195]">
+                          {props.MyIntroduce.department || 'default'}
+                        </div>
                       </>
-                    }
-                    
+                    )}
+
                     {props.MyIntroduce.level && (
                       <>
                         <div className="flex items-center space-x-2 mt-2 p-2">
@@ -363,107 +383,113 @@ export default function Introduce(props: {
                         </div>
                       </>
                     )}
-                    {
-                      props.MyIntroduce.property &&  <>
-                      <div className="flex items-center space-x-2 mt-2 p-2">
-                      <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
-                      <div className="font-semibold">属性</div>
-                    </div>
-                    <div className="p-2  text-sm text-[#798195]">
-                      {props.MyIntroduce.property || 'default'}
-                    </div>
+                    {props.MyIntroduce.property && (
+                      <>
+                        <div className="flex items-center space-x-2 mt-2 p-2">
+                          <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
+                          <div className="font-semibold">属性</div>
+                        </div>
+                        <div className="p-2  text-sm text-[#798195]">
+                          {props.MyIntroduce.property || 'default'}
+                        </div>
                       </>
-                    }
-                    
+                    )}
                   </div>
                 </div>
               </Tabs.TabPane>
             </Tabs>
             <div className="h-3 w-full bg-bg"></div>
-            {
-              props.recommendsData.length > 0 &&<div className="w-full p-3  bg-white">
-              <div className="font-semibold mt-4 text-lg text-[#37455C]">
-                选课 <span className="text-[#2347D9]">推荐</span>
-              </div>
-              <div className="mt-2">
-                {props.recommendsData?.map((item, index) => {
-                  return (
-                    <div className="border border-[#F7F8F9] rounded-md w-full">
-                      <Accordion className="rounded-lg p-0" sx={{ padding: 0 }}>
-                        <AccordionSummary
-                          sx={{ padding: 0, paddingRight: 2 }}
-                          expandIcon={<DownIcon />}
-                          aria-controls="panel1a-content"
-                          id="panel1a-header"
+            {props.recommendsData.length > 0 && (
+              <div className="w-full p-3  bg-white">
+                <div className="font-semibold mt-4 text-lg text-[#37455C]">
+                  选课 <span className="text-[#2347D9]">推荐</span>
+                </div>
+                <div className="mt-2">
+                  {props.recommendsData?.map((item, index) => {
+                    return (
+                      <div className="border border-[#F7F8F9] rounded-md w-full">
+                        <Accordion
+                          className="rounded-lg p-0"
+                          sx={{ padding: 0 }}
                         >
-                          <div>
-                            <div className="flex w-full p-3 space-x-3">
-                              <div className="w-6 h-6 rounded-md bg-[#F7F8F9] flex items-center justify-center">
-                                {/* index */}
-                                {index + 1}
-                              </div>
-                              <div>
-                                <div className="text-sm font-semibold text-[#798195]">
-                                  {item.title}
+                          <AccordionSummary
+                            sx={{ padding: 0, paddingRight: 2 }}
+                            expandIcon={<DownIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                          >
+                            <div>
+                              <div className="flex w-full p-3 space-x-3">
+                                <div className="w-6 h-6 rounded-md bg-[#F7F8F9] flex items-center justify-center">
+                                  {/* index */}
+                                  {index + 1}
                                 </div>
-                                <div className="text-xs text-[#A9B0C0]">
-                                  由 {item.user.nickName} 提供
+                                <div>
+                                  <div className="text-sm font-semibold text-[#798195]">
+                                    {item.title}
+                                  </div>
+                                  <div className="text-xs text-[#A9B0C0]">
+                                    由 {item.user.nickName} 提供
+                                  </div>
                                 </div>
                               </div>
+                              <div className="w-full px-2 flex overflow-x-scroll">
+                                {item?.form?.courseData?.map((i) => {
+                                  return (
+                                    <CourseSelector
+                                      data={i}
+                                      term={item.form.term}
+                                    ></CourseSelector>
+                                  );
+                                })}
+                              </div>
                             </div>
-                            <div className="w-full px-2 flex overflow-x-scroll">
-                              {item?.form?.courseData?.map((i) => {
-                                return (
-                                  <CourseSelector
-                                    data={i}
-                                    term={item.form.term}
-                                  ></CourseSelector>
-                                );
-                              })}
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <div className="w-full h-10">
+                              <div
+                                onClick={() => {
+                                  router.push({
+                                    pathname: '/[campus]/Course/recommend/[id]',
+                                    query: {
+                                      campus: router.query.campus,
+                                      id: item.post?.id,
+                                    },
+                                  });
+                                }}
+                                className="bg-[#FFFBD9] rounded-lg text-[#D9A823] w-full h-10 flex justify-center items-center"
+                              >
+                                查看全文
+                              </div>
                             </div>
-                          </div>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <div className="w-full h-10">
-                            <div
-                              onClick={() => {
-                                router.push({
-                                  pathname: '/[campus]/Course/recommend/[id]',
-                                  query: {
-                                    campus: router.query.campus,
-                                    id: item.post?.id,
-                                  },
-                                });
-                              }}
-                              className="bg-[#FFFBD9] rounded-lg text-[#D9A823] w-full h-10 flex justify-center items-center"
-                            >
-                              查看全文
-                            </div>
-                          </div>
-                        </AccordionDetails>
-                      </Accordion>
-                    </div>
-                  );
-                })}
+                          </AccordionDetails>
+                        </Accordion>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-            }
-            
+            )}
+
             <div className="h-3 w-full bg-bg"></div>
-            <div className="w-full p-3  bg-white">
-              <div className="font-semibold mt-4 text-lg text-[#37455C]">
-                课程 <span className="text-[#D92B31]">关联</span>
-              </div>
-              {/* <div className="flex items-center space-x-2 mt-2 p-2">
+            {props.MyIntroduce.prerequisites.length > 0 ||
+            props.MyIntroduce.recommends.length > 0 ? (
+              <div className="w-full p-3  bg-white">
+                <div className="font-semibold mt-4 text-lg text-[#37455C]">
+                  课程 <span className="text-[#D92B31]">关联</span>
+                </div>
+                {/* <div className="flex items-center space-x-2 mt-2 p-2">
                 <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
                 <div className="font-semibold">架构图</div>
               </div> */}
-              <div className="flex items-center space-x-2 mt-2 p-2">
-                <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
-                <div className="font-semibold">智能推荐</div>
+                <div className="flex items-center space-x-2 mt-2 p-2">
+                  <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
+                  <div className="font-semibold">智能推荐</div>
+                </div>
+
+                <RecommendCourse data={props.MyIntroduce}></RecommendCourse>
               </div>
-              <RecommendCourse></RecommendCourse>
-            </div>
+            ) : null}
           </div>
         ) : null}
       </>

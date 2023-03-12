@@ -119,7 +119,7 @@ export default function Schedules() {
   const Footer = (props) => {
     if(isOwner){
       return (
-       <div className='fixed bottom-0 shadow z-30 h-20 w-full bg-white px-4 flex justify-center '>
+       <div className='fixed space-x-2 bottom-0 shadow z-30 h-20 w-full bg-white px-4 flex justify-center '>
          <div className='w-full font-semibold space-x-2 h-10 mt-2 flex justify-center items-center  text-[#8C6008]  bg-[#FFD036]'>
             <SchedulesIcon></SchedulesIcon>
             <div className='text-sm' onClick={()=>{
@@ -130,6 +130,17 @@ export default function Schedules() {
                 },
               })
             }}>返回我的课表</div>
+        </div>
+        <div className='w-full font-semibold space-x-2 h-10 mt-2 flex justify-center items-center  text-[#ffffff]  bg-[#3665FF]'>
+            {/* <SchedulesIcon></SchedulesIcon> */}
+            <div className='text-sm' onClick={()=>{
+              try {
+                navigator.clipboard.writeText(window.location.href);
+                Toast.success('已复制到简介板，分享给好友吧！');
+              } catch (error) {
+                Toast.fail('复制失败')
+              }
+            }}>分享</div>
         </div>
        </div>
       )

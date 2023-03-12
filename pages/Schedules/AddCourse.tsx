@@ -117,14 +117,17 @@ const dayOfWeekList = [
 export default function AddSchedule() {
   const router = useRouter();
   const [CourseId, setCourseId] = useState();
+  const { data:campusData } = useFetch(`/campus/query`, 'get',{
+    params: {
+      name: router.query.campus,
+    },
+  });
   const fetchData = (e) => {
     setCourseId(e);
   };
   const submitCourse = async (values: any) => {
-
       const { data } = await instance.post('/api/curriculum/item/create', values);
       return data;
-    
   };
   interface ChangeType {
     id: number;
@@ -528,10 +531,11 @@ export default function AddSchedule() {
         return item.id === CURRICULUM.sectionId;
       })[0];
     }, [CURRICULUM.sectionId]);
-
+    const campusId = React.useMemo(()=> campusData?.data[0]?.id,[campusData,router])
+    const {data:_courseFormat} = useFetch(`/course_mode/list?campusId=${campusId}`,'get')
     const [value, setValue] = React.useState<Dayjs | null>(null);
     const { data: _courseData } = useFetch('/course/query', 'page',{
-      campusId:1,
+      campusId:campusId,
       pageSize: 100,
     });
     const courseData = useMemo(() => {
@@ -601,7 +605,7 @@ export default function AddSchedule() {
             handleChange(val.label, 'name');
             handleChange(val.id, 'courseId');
           }}
-          renderData={courseData?.map((item) => item.ename)}
+          renderData={courseData?.map((item) => item?.code)}
           data={courseData}
         ></CCourseInput>
         <div>{CourseId}</div>
@@ -726,8 +730,8 @@ export default function AddSchedule() {
           change={(val) => {
             handleChange(val.label, 'mode');
           }}
-          data={courseFormat?.mode}
-          renderData={courseFormat?.mode?.map(
+          data={_courseFormat?.data}
+          renderData={_courseFormat?.data?.map(
             (item) => item[useLanguage('name')],
           )}
         ></CCourseInput>

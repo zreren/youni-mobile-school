@@ -80,7 +80,7 @@ function useFetch(path, method, body?) {
     );
     const isEmpty = data?.[0]?.length === 0;
     const isReachingEnd =
-      isEmpty || (data && data[data.length - 1]?.length < body.pageSize);
+      isEmpty || (data && data[data.length - 1]?.length < body?.pageSize);
     const isLoading = !data && isValidating;
     // const isLoadingMore =
     // const hasMore = size === data?.data.meta?.totalPages
