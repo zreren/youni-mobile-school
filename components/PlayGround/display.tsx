@@ -47,19 +47,19 @@ export default function Display(props) {
 
   const textColorMap = ['tag-red', 'tag-blue'];
   const [loading, setLoading] = React.useState(true);
-  const [like, setLike] = React.useState(data?.interactInfo.liked);
-  const defaultLikeCount = data?.interactInfo.likeCount;
+  const [like, setLike] = React.useState(data?.interactInfo?.liked);
+  const defaultLikeCount = data?.interactInfo?.likeCount;
   const cancelStart = (id: number) => {
     props.cancelStarPost(id);
   };
   const LikeCount = React.useMemo(() => {
     if (!defaultLikeCount && like) {
-      return Number(data?.interactInfo.likeCount) + 1;
+      return Number(data?.interactInfo?.likeCount) + 1;
     }
     if (defaultLikeCount && !like) {
-      return Number(data?.interactInfo.likeCount) - 1;
+      return Number(data?.interactInfo?.likeCount) - 1;
     }
-    return data?.interactInfo.likeCount;
+    return data?.interactInfo?.likeCount;
   }, [like]);
   const handleLike = async (id) => {
     setLike(!like);
@@ -140,7 +140,7 @@ export default function Display(props) {
             {' '}
           </Skeleton>
           {
-            data?.preview? <Image
+            data?.preview.length >= 1? <Image
             layout="responsive"
             objectFit="cover"
             blurDataURL={`${Cons.BASEURL}${data?.preview?.[0]}`}
@@ -239,7 +239,8 @@ export default function Display(props) {
         ) : (
           <div className="flex items-end mt-2 space-x-1 text-sm"></div>
         )}
-        <div className="flex items-center justify-between mt-2 mb-2">
+        {
+          data?.user?.nickName ?        <div className="flex items-center justify-between mt-2 mb-2">
           <div className="flex items-center space-x-1">
             <div className="overflow-hidden w-[18px] h-[18px] rounded-full bg-neutral-focus text-neutral-content">
             <img src={`${Cons.BASEURL}${data?.user?.avatar}`} />
@@ -259,7 +260,9 @@ export default function Display(props) {
               {LikeCount}
             </div>
           </div>
-        </div>
+        </div> : null
+        }
+
       </div>
     );
   }

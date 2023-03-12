@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import Image from 'next/image';
 import Imagebg from './bg.png';
 import PostGroupIcon1 from './post-group/icon1.svg';
@@ -16,6 +16,12 @@ import useUser from '@/hooks/useUser';
 import { useDispatch } from 'react-redux';
 import { setOpenLogin } from '@/stores/authSlice';
 import { Cell, Dialog } from 'react-vant';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import TopicIcon from './topic.svg';
+import Waterfall from '@/components/Layout/Waterfall';
+import { grey } from '@mui/material/colors';
 
 export default function recommend(props) {
   const router = useRouter();
@@ -137,6 +143,10 @@ export default function recommend(props) {
       </div>
     );
   };
+  const [openDetail, setOpenDetail] = useState(false);
+  const [topicName, setTopicName] = useState();
+  const [topicId, setTopicId] = useState();
+
   const Recommend = () => {
     return (
       <div className="w-full p-2 mt-4">
@@ -148,7 +158,11 @@ export default function recommend(props) {
         </div>
         <div className="flex mt-4 px-1 items-center space-x-1">
           {data?.data?.topics.map((item) => {
-            return <div className=" text-[#2347D9] text-sm">{item}</div>;
+            return <div  onClick={() => {
+              setOpenDetail(true);
+              setTopicName(item?.name);
+              setTopicId(item?.id);
+            }} className=" text-[#2347D9] text-sm">#{item?.name}</div>;
           })}
         </div>
       </div>
@@ -331,7 +345,103 @@ export default function recommend(props) {
   const started =  React.useMemo(()=>data?.data?.interactInfo?.stared,[data?.data?.interactInfo?.stared])
 
   const dispatch = useDispatch();
+  const PostGroupDetail = (props) => {
+    const { data, isEdit, mutate } = props;
+    const cancelStarPost = async (id) => {
+      console.log('PostGroupDetail', id, data?.id);
+      await useRequest.post('/api/post/unstar', {
+        id: id,
+        collectionId: data?.id,
+      });
+      Toast.success('移除成功');
+      mutate();
+    };
+    useEffect(() => {
+      console.log(isEdit, 'isEdit');
+    }, [isEdit]);
 
+    // if (!data) return;
+    return (
+      <div className="w-full h-screen">
+        <div className="w-full h-[126px] bg-[#F7F8F9] p-5 pt-6 mb-2">
+          <div className="flex items-center">
+            <div className=" ">
+              <TopicIcon></TopicIcon>
+            </div>
+            {
+              <div className="ml-4 text-[#37455C] font-semibold text-lg">
+                {props?.topicName}
+              </div>
+            }
+          </div>
+          <div></div>
+        </div>
+        {data?.length > 0 ? (
+          <Waterfall
+            key={data?.id + data?.length}
+            cancelStarPost={(id) => {
+              cancelStarPost(id);
+            }}
+            postData={data?.map((item) => {
+              return { ...item, user: { nickName: data?.user?.nickName } };
+            })}
+          ></Waterfall>
+        ) : (
+          <div className="text-[#898E97] flex justify-center">
+            该话题暂时没有内容
+          </div>
+        )}
+      </div>
+    );
+  };
+  const PostGroupDrawer = (props) => {
+    const {
+      open,
+      isEdit,
+      mutate,
+    }: { open: boolean; isEdit: boolean; mutate: any } = props;
+    const [id, setId] = useState(props?.id);
+    const Puller = styled(Box)(({ theme }) => ({
+      width: 33,
+      height: 4,
+      backgroundColor: theme.palette.mode === 'light' ? grey[300] : grey[900],
+      borderRadius: 3,
+      position: 'absolute',
+      top: 8,
+      left: 'calc(50% - 15px)',
+    }));
+    return (
+      <SwipeableDrawer
+        className="z-20 bottom-footer-theTop"
+        disableDiscovery={true}
+        disableSwipeToOpen={true}
+        onClose={() => {
+          props.onClose();
+        }}
+        onOpen={() => {
+          props.onOpen();
+        }}
+        open={open}
+        anchor="bottom"
+      >
+        <div className="h-[96vh]">
+          <Puller></Puller>
+          <PostGroupDetail
+            topicName={props.topicName}
+            mutate={() => {
+              mutate();
+            }}
+            isEdit={isEdit}
+            data={props.data}
+          ></PostGroupDetail>
+        </div>
+      </SwipeableDrawer>
+    );
+  };
+  const { data: topicCourseList } = useFetch(
+    `/campus/topic/posts?id=${topicId}`,
+    'get',
+  );
   return (
     <div className="w-screen min-h-screen pb-20">
       <Header></Header>
@@ -406,6 +516,17 @@ export default function recommend(props) {
         </div>
       </div>
       <Recommend></Recommend>
+      <PostGroupDrawer
+        topicName={topicName}
+        onOpen={() => {
+          setOpenDetail(true);
+        }}
+        onClose={() => {
+          setOpenDetail(false);
+        }}
+        data={topicCourseList?.data?.items}
+        open={openDetail}
+      ></PostGroupDrawer>
       <div className="bg-[#F6F6F6] w-full h-3 mt-4"> </div>
       {
         data?.data?.form?.courseData?.length > 1 ? <CourseRecommend></CourseRecommend> : null

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Imagebg from '../bg.png';
 import PostGroupIcon1 from './post-group/icon1.svg';
@@ -16,11 +16,21 @@ import useUser from '@/hooks/useUser';
 import { useDispatch } from 'react-redux';
 import { setOpenLogin } from '../../../../stores/authSlice';
 import { Cell, Dialog } from 'react-vant';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import TopicIcon from './topic.svg';
+import Waterfall from '@/components/Layout/Waterfall';
+import { grey } from '@mui/material/colors';
 
 export default function recommend() {
   const router = useRouter();
-  const {user} = useUser();
-  const { data,mutate } = useFetch(`/post/detail?id=${router.query.id}`, 'get');
+  const { user } = useUser();
+  const [openDetail, setOpenDetail] = useState(false);
+  const { data, mutate } = useFetch(
+    `/post/detail?id=${router.query.id}`,
+    'get',
+  );
   const CourseSelector = (props) => {
     const { isSelect } = props;
     return (
@@ -71,6 +81,106 @@ export default function recommend() {
       </div>
     );
   };
+  const PostGroupDetail = (props) => {
+    const { data, isEdit, mutate } = props;
+    const cancelStarPost = async (id) => {
+      console.log('PostGroupDetail', id, data?.id);
+      await useRequest.post('/api/post/unstar', {
+        id: id,
+        collectionId: data?.id,
+      });
+      Toast.success('移除成功');
+      mutate();
+    };
+    useEffect(() => {
+      console.log(isEdit, 'isEdit');
+    }, [isEdit]);
+
+    // if (!data) return;
+    return (
+      <div className="w-full h-screen">
+        <div className="w-full h-[126px] bg-[#F7F8F9] p-5 pt-6 mb-2">
+          <div className="flex items-center">
+            <div className=" ">
+              <TopicIcon></TopicIcon>
+            </div>
+            {
+              <div className="ml-4 text-[#37455C] font-semibold text-lg">
+                {props?.topicName}
+              </div>
+            }
+          </div>
+          <div></div>
+        </div>
+        {data?.length > 0 ? (
+          <Waterfall
+            key={data?.id + data?.length}
+            cancelStarPost={(id) => {
+              cancelStarPost(id);
+            }}
+            postData={data?.map((item) => {
+              return { ...item};
+            })}
+          ></Waterfall>
+        ) : (
+          <div className="text-[#898E97] flex justify-center">
+            该话题暂时没有内容
+          </div>
+        )}
+      </div>
+    );
+  };
+  const [topicId, setTopicId] = useState();
+  const { data: topicCourseList } = useFetch(
+    `/campus/topic/posts?id=${topicId}`,
+    'get',
+  );
+
+  const PostGroupDrawer = (props) => {
+    const {
+      open,
+      isEdit,
+      mutate,
+    }: { open: boolean; isEdit: boolean; mutate: any } = props;
+    const [id, setId] = useState(props?.id);
+    const Puller = styled(Box)(({ theme }) => ({
+      width: 33,
+      height: 4,
+      backgroundColor: theme.palette.mode === 'light' ? grey[300] : grey[900],
+      borderRadius: 3,
+      position: 'absolute',
+      top: 8,
+      left: 'calc(50% - 15px)',
+    }));
+    return (
+      <SwipeableDrawer
+        className="z-20 bottom-footer-theTop"
+        disableDiscovery={true}
+        disableSwipeToOpen={true}
+        onClose={() => {
+          props.onClose();
+        }}
+        onOpen={() => {
+          props.onOpen();
+        }}
+        open={open}
+        anchor="bottom"
+      >
+        <div className="h-[96vh]">
+          <Puller></Puller>
+          <PostGroupDetail
+            topicName={props.topicName}
+            mutate={() => {
+              mutate();
+            }}
+            isEdit={isEdit}
+            data={props.data}
+          ></PostGroupDetail>
+        </div>
+      </SwipeableDrawer>
+    );
+  };
+
   const Header = () => {
     return (
       <div className="w-screen h-[210px]">
@@ -143,15 +253,26 @@ export default function recommend() {
         </div>
         <div className="flex mt-4 px-1 items-center space-x-1">
           {data?.data?.topics.map((item) => {
-            return <div className=" text-[#2347D9] text-sm">{item}</div>;
+            return (
+              <div
+                onClick={() => {
+                  setOpenDetail(true);
+                  setTopicName(item?.name);
+                  setTopicId(item?.id);
+                }}
+                className=" text-[#2347D9] text-sm"
+              >
+                #{item?.name}
+              </div>
+            );
           })}
         </div>
       </div>
     );
   };
   const MustStudy = (props) => {
-    const { data:data1 }: { data: Course[] } = props;
-    if(!data) return
+    const { data: data1 }: { data: Course[] } = props;
+    if (!data) return;
     const CourseSelector = (props) => {
       const { isSelect } = props;
       return (
@@ -186,7 +307,7 @@ export default function recommend() {
             </svg> */}
           </div>
           <div className="xueqiTag absolute rounded-[5px] p-[5px] text-[white] flex justify-center items-center text-[10px] w-4 h-4 bottom-0 right-0">
-            {data?.data?.form?.term?.slice(0,1)}
+            {data?.data?.form?.term?.slice(0, 1)}
           </div>
         </div>
       );
@@ -226,12 +347,12 @@ export default function recommend() {
               'border-[#FFDEAD] bg-[#FFFAF0] flex flex-col justify-center items-center  border-[2px] rounded-2xl h-12 w-12',
             )}
           >
-           <div className="text-[10px] text-[#ff9832] flex justify-center text-center items-center">
+            <div className="text-[10px] text-[#ff9832] flex justify-center text-center items-center">
               {props.data.label}
             </div>
           </div>
           <div className="xueqiTag absolute rounded-[6px] p-[6px] text-[white] flex justify-center items-center text-xs w-5 h-5 bottom-0 right-0">
-          {data?.data?.form?.term?.slice(0,1)}
+            {data?.data?.form?.term?.slice(0, 1)}
           </div>
         </div>
       );
@@ -261,8 +382,16 @@ export default function recommend() {
           选课 <span className="text-[#2347D9]">推荐</span>
         </div>
         <div className="flex w-full justify-between mt-5 items-center px-2 space-x-3">
-        <MustStudy data={data?.data?.form?.courseData?.filter((item)=>item.type !== 'option')}></MustStudy>
-        <OptionalStudy  data={data?.data?.form?.courseData?.filter((item)=>item.type !== 'must')}></OptionalStudy>
+          <MustStudy
+            data={data?.data?.form?.courseData?.filter(
+              (item) => item.type !== 'option',
+            )}
+          ></MustStudy>
+          <OptionalStudy
+            data={data?.data?.form?.courseData?.filter(
+              (item) => item.type !== 'must',
+            )}
+          ></OptionalStudy>
         </div>
         <div className="flex items-center space-x-2 mt-4">
           <div className="w-1 h-4 bg-yellow-300 rounded-full"></div>
@@ -323,9 +452,13 @@ export default function recommend() {
       </>
     );
   };
-  const started =  React.useMemo(()=>data?.data?.interactInfo?.stared,[data?.data?.interactInfo?.stared])
+  const started = React.useMemo(
+    () => data?.data?.interactInfo?.stared,
+    [data?.data?.interactInfo?.stared],
+  );
 
   const dispatch = useDispatch();
+  const [topicName, setTopicName] = useState();
 
   return (
     <div className="w-screen min-h-screen pb-20">
@@ -336,28 +469,27 @@ export default function recommend() {
             'w-full font-semibold space-x-2 h-10 rounded-lg  flex justify-center items-center ',
             {
               'bg-[#FF6E69] text-white': started,
-              'text-[#FF6E69] bg-[#FFEBEB]' : !started
+              'text-[#FF6E69] bg-[#FFEBEB]': !started,
             },
           )}
         >
-          {
-           started ? <LoveIcon></LoveIcon> : <LoveIconx></LoveIconx>
-          } 
+          {started ? <LoveIcon></LoveIcon> : <LoveIconx></LoveIconx>}
           <div
             className="text-sm"
-            onClick={async() => {
-              if(started){
-                await useRequest.post('/api/post/unstar',{
-                  id:router.query.id
-                })
+            onClick={async () => {
+              if (started) {
+                await useRequest.post('/api/post/unstar', {
+                  id: router.query.id,
+                });
                 Toast.success('取消收藏');
-                mutate()
+                mutate();
                 // setStarted((pre)=>!pre)
-              }else{
-                if(!user) {
+              } else {
+                if (!user) {
                   Dialog.confirm({
                     title: '登录',
-                    message: '您还未登录，登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！',
+                    message:
+                      '您还未登录，登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！',
                   })
                     .then((res) => {
                       dispatch(setOpenLogin('login'));
@@ -369,20 +501,18 @@ export default function recommend() {
                       //  dispatch(setOpenLogin('register'))
                     });
 
-                    return;
+                  return;
                 }
-                await useRequest.post('/api/post/star',{
-                  id:router.query.id
-                })
+                await useRequest.post('/api/post/star', {
+                  id: router.query.id,
+                });
                 Toast.success('收藏成功');
-                mutate()
+                mutate();
                 // setStarted((pre)=>!pre)
               }
-              
-
             }}
           >
-            { started ? '已收藏' : '收藏'}
+            {started ? '已收藏' : '收藏'}
           </div>
         </div>
         <div
@@ -390,9 +520,8 @@ export default function recommend() {
             try {
               navigator.clipboard.writeText(window.location.href);
               Toast.success('已复制到简介板，分享给好友吧！');
-
             } catch (error) {
-              Toast.fail('复制失败')
+              Toast.fail('复制失败');
             }
           }}
           className="bg-[#F3F4F6] w-full h-10 rounded-lg  flex justify-center items-center"
@@ -400,11 +529,22 @@ export default function recommend() {
           分享
         </div>
       </div>
+      <PostGroupDrawer
+        topicName={topicName}
+        onOpen={() => {
+          setOpenDetail(true);
+        }}
+        onClose={() => {
+          setOpenDetail(false);
+        }}
+        data={topicCourseList?.data?.items}
+        open={openDetail}
+      ></PostGroupDrawer>
       <Recommend></Recommend>
       <div className="bg-[#F6F6F6] w-full h-3 mt-4"> </div>
-      {
-        data?.data?.form?.courseData?.length > 1 ? <CourseRecommend></CourseRecommend> : null
-      }
+      {data?.data?.form?.courseData?.length > 1 ? (
+        <CourseRecommend></CourseRecommend>
+      ) : null}
       <div className="px-5 mt-3">
         {data?.data?.form?.courseData?.map((item: any) => {
           return <CourseSelectFormItem data={item}></CourseSelectFormItem>;

@@ -1729,8 +1729,8 @@ export default function addPost() {
         draft: draft,
         title: title,
         body: content,
-        topic: topic,
-        preview: previews,
+        topics: topic?.map((item)=>item.name),
+        preview: ['/upload/bg-202303091736764.png'],
         type: type,
         contact: [],
       },
@@ -1758,10 +1758,11 @@ export default function addPost() {
         draft: draft,
         title: title,
         body: content,
-        topic: topic,
-        preview: previews,
+        topics: topic?.map((item)=>item.name),
+        preview: ['/upload/bg-202303091736764.png'],
         type: type,
         contact: ['微信'],
+        campusId:campusID
       });
       if (data.message === 'success') {
         Toast.success('发布成功');
