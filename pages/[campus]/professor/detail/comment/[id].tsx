@@ -54,12 +54,12 @@ export default function userComment() {
     };
     const likeCount = useMemo(() => {
       if (defaultLike && !clike) {
-        return Number(data?.likeCount) - 1;
+        return Number(data?.interactInfo?.likeCount) - 1;
       }
       if (!defaultLike && clike) {
-        return Number(data?.likeCount) + 1;
+        return Number(data?.interactInfo?.likeCount) + 1;
       }
-      return Number(data?.likeCount);
+      return Number(data?.interactInfo?.likeCount);
       // if(defaultLike && clike){
       //   return Number(data?.likeCount);
       // }

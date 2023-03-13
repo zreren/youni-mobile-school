@@ -120,7 +120,7 @@ export default function userComment(props) {
           </div>
           <div className="flex">
             <Comments></Comments>
-            <div className="text-xs text-gray-300">{data?.commentCount}</div>
+            <div className="text-xs text-gray-300">{data?.interactInfo?.commentCount}</div>
           </div>
         </div>
         <div>
