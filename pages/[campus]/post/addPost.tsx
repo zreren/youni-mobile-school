@@ -181,7 +181,7 @@ export default function addPost() {
   }, [router.query.campus]);
   const campusID = useMemo(() => {
     return campusData?.data?.[0]?.id;
-  }, [campusData,router,topicVisible]);
+  }, [campusData, router, topicVisible]);
   const [previews, setPreviews] = React.useState([]);
   // useEffect(() => {
   //   // if(form.get){
@@ -415,13 +415,14 @@ export default function addPost() {
     };
   }
   const submitPost = async (form, draft) => {
-    console.log(topic?.map((item)=> {
-      return (
-        {
-          id:item.id || null,name:item.name
-        }
-      )
-    }))
+    console.log(
+      topic?.map((item) => {
+        return {
+          id: item.id || null,
+          name: item.name,
+        };
+      }),
+    );
     // if (
     //   !Object.keys(form).some((element) => {
     //     if (
@@ -447,25 +448,51 @@ export default function addPost() {
       Toast.fail('请完善表单');
       return;
     }
-    try {
-      const { data } = await useRequest.post('/api/post/create', {
-        form: { ...form },
-        draft: draft,
-        title: title,
-        body: content,
-        topics: topic?.map((item)=> item.name),
-        preview: previews,
-        type: type,
-        contact: form.contact?.filter((item) => item.public === true),
-      });
-      if (data.message === 'success') {
-        Toast.success('发布成功');
-      } else {
-        Toast.fail('发布失败');
+    if(router.query.isEdit){
+      try {
+        const { data } = await useRequest.post('/api/post/update', {
+          id: router.query.id,
+          form: { ...form },
+          draft: draft,
+          title: title,
+          body: content,
+          topics: topic?.map((item) => item.name),
+          preview: previews,
+          type: type,
+          contact: form.contact?.filter((item) => item.public === true),
+          campusId: campusID,
+        });
+        if (data.message === 'success') {
+          Toast.success('修改成功');
+        } else {
+          Toast.fail('修改失败');
+        }
+      } catch (error) {
+        Toast.fail(error);
+      } 
+    }else{
+      try {
+        const { data } = await useRequest.post('/api/post/create', {
+          form: { ...form },
+          draft: draft,
+          title: title,
+          body: content,
+          topics: topic?.map((item) => item.name),
+          preview: previews,
+          type: type,
+          contact: form.contact?.filter((item) => item.public === true),
+          campusId: campusID,
+        });
+        if (data.message === 'success') {
+          Toast.success('发布成功');
+        } else {
+          Toast.fail('发布失败');
+        }
+      } catch (error) {
+        Toast.fail(error);
       }
-    } catch (error) {
-      Toast.fail(error);
     }
+    
   };
   const changeCategory = (val) => {
     setType(val);
@@ -1437,11 +1464,36 @@ export default function addPost() {
   );
   const [pricesVisible, setPricesVisible] = useState(false);
   const [contactVisible, setContactVisible] = useState(false);
-  const [activePricesVisible,setActivePricesVisible] = useState(false);
+  const [activePricesVisible, setActivePricesVisible] = useState(false);
   const [ideaPricesVisible, setIdeaPricesVisible] = useState(false);
+  const [switchValue, setSwitchValue] = useState(false);
+
   const StartTimeData = React.useMemo(() => {
     console.log('StartTime render count ++');
   }, [form]);
+  const { data, mutate: detailMutate } = useFetch('/post/detail', 'get', {
+    id: router.query.id,
+  });
+  useEffect(() => {
+    if (router.query.isEdit) {
+      setType(router.query.type as string);
+      detailMutate();
+    }
+  }, []);
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue(data?.data?.form);
+      setSwitchValue(data?.data?.form?.map);
+      setTopic(
+        data?.data?.topics.map((item) => {
+          return { id: item.id, name: item.name };
+        }),
+      );
+      setTitle(data?.data?.title);
+      setContent(data?.data?.body);
+      setPreviews(data?.data?.preview);
+    }
+  }, [data]);
   const DynamicForm = React.useCallback(
     (props: any) => {
       const data = React.useMemo(
@@ -1491,14 +1543,14 @@ export default function addPost() {
                     if (item.type === 'prices' && type === 'sublet') {
                       setPricesVisible(true);
                     }
-                    if (item.type === 'prices' && type === 'idea') {
+                    if (item.type === 'prices' && type === 'idle') {
                       setIdeaPricesVisible(true);
                     }
                     if (item.type === 'prices' && type === 'book') {
                       setIdeaPricesVisible(true);
                     }
                     if (item.type === 'prices' && type === 'activity') {
-                      setActivePricesVisible(true)
+                      setActivePricesVisible(true);
                     }
                     if (item.type === 'contact') {
                     }
@@ -1539,6 +1591,8 @@ export default function addPost() {
                 onChange={(e) => {
                   form.setFieldValue(item.dataIndex, e);
                 }}
+                defaultChecked={form.getFieldValue(item.dataIndex)}
+                // checked={form.getFieldValue(item.index)}
                 activeColor="#FFD036"
                 size={20}
                 inactiveColor="#dcdee0"
@@ -1546,7 +1600,9 @@ export default function addPost() {
             )}
             {item.type === 'input' && (
               <Input
+                defaultValue={form.getFieldValue(item.dataIndex)}
                 placeholder="请输入"
+                value={form.getFieldValue(item.dataIndex)}
                 onChange={(v) => {
                   form.setFieldValue(item.dataIndex, v);
                 }}
@@ -1624,7 +1680,7 @@ export default function addPost() {
         setLocal(false);
       };
       // const topList = ['# 热门话题', '# 最新话题', '# 最热话题', '# 闲置'];
-      const [topName,setTopName] = useState('')
+      const [topName, setTopName] = useState('');
       // const campusID = useMemo(() => {
       //   return campusData?.data?.[0]?.id;
       // }, [campusData,router,topicVisible]);
@@ -1639,7 +1695,7 @@ export default function addPost() {
       );
       useEffect(() => {
         _topicListMutate();
-      }, [campusID,topName,topicVisible]);
+      }, [campusID, topName, topicVisible]);
       const topList = React.useMemo(
         () =>
           _topicList
@@ -1647,7 +1703,7 @@ export default function addPost() {
               ? [...topList].concat(..._topicList)
               : [].concat(..._topicList)
             : null,
-        [_topicList,campusID,topName, router,topicVisible],
+        [_topicList, campusID, topName, router, topicVisible],
       );
 
       const placeName = useMemo(() => {
@@ -1692,24 +1748,26 @@ export default function addPost() {
                       setTopName(e.target.value);
                     }}
                   ></input>
-                  {topList?.length > 1 ? topList?.map((item) => {
-                    return (
-                      <div
-                        className="w-full flex flex-col justify-center "
-                        onClick={() => {
-                          selectPoint(item);
-                        }}
-                      >
-                        <div className="text-gray-500 font-semibold text-sm">
-                          # {item?.name}
-                        </div>
-                        {/* <div className="text-gray-400 font-medium text-sm">
+                  {topList?.length > 1
+                    ? topList?.map((item) => {
+                        return (
+                          <div
+                            className="w-full flex flex-col justify-center "
+                            onClick={() => {
+                              selectPoint(item);
+                            }}
+                          >
+                            <div className="text-gray-500 font-semibold text-sm">
+                              # {item?.name}
+                            </div>
+                            {/* <div className="text-gray-400 font-medium text-sm">
                         {item.place_name}
                       </div> */}
-                        <div className="h-1 m-0 divider opacity-30 mt-3 mb-3"></div>
-                      </div>
-                    );
-                  }) : null}
+                            <div className="h-1 m-0 divider opacity-30 mt-3 mb-3"></div>
+                          </div>
+                        );
+                      })
+                    : null}
                 </div>
               </div>
             </SwipeableDrawer>
@@ -1729,7 +1787,7 @@ export default function addPost() {
         draft: draft,
         title: title,
         body: content,
-        topics: topic?.map((item)=>item.name),
+        topics: topic?.map((item) => item.name),
         preview: ['/upload/bg-202303091736764.png'],
         type: type,
         contact: [],
@@ -1758,11 +1816,11 @@ export default function addPost() {
         draft: draft,
         title: title,
         body: content,
-        topics: topic?.map((item)=>item.name),
+        topics: topic?.map((item) => item.name),
         preview: ['/upload/bg-202303091736764.png'],
         type: type,
         contact: ['微信'],
-        campusId:campusID
+        campusId: campusID,
       });
       if (data.message === 'success') {
         Toast.success('发布成功');
@@ -1854,7 +1912,7 @@ export default function addPost() {
                       }}
                       className="text-[#2347D9] text-sm"
                     >
-                     {`# ${item.name}`}
+                      {`# ${item.name}`}
                     </div>
                   );
                 })}
@@ -1871,8 +1929,8 @@ export default function addPost() {
                 <div
                   onClick={() => {
                     setTopic((pre) => {
-                      if (!pre) return [ {id:null,name:'# 约克大学'}];
-                      if (pre.indexOf( {id:null,name:'# 约克大学'}) >= 0) {
+                      if (!pre) return [{ id: null, name: '# 约克大学' }];
+                      if (pre.indexOf({ id: null, name: '# 约克大学' }) >= 0) {
                         Toast.fail('已移除该话题');
                         return pre.filter((value, index, self) => {
                           return value.name !== '# 约克大学';
@@ -1882,7 +1940,7 @@ export default function addPost() {
                       //   return self.indexOf(value) === index;
                       // });
                       Toast.success(`已加入# 约克大学 话题`);
-                      return [...pre, {id:null,name:'# 约克大学'}];
+                      return [...pre, { id: null, name: '# 约克大学' }];
                     });
                   }}
                   className="text-[#798195] rounded bg-[#F3F4F6] px-2 text-xs py-1"
@@ -1942,20 +2000,17 @@ export default function addPost() {
               }}
             ></IdeaPricesModel>
             <ActivePricesModel
-            visible={activePricesVisible}
-            onClose={() => {
-              setActivePricesVisible(false);
-            }}
-            close={() => {
-              setActivePricesVisible(false);
-            }}
-            confirm={(e) => {
-              form.setFieldValue('prices', e);
-            }}
-            >
-              
-
-            </ActivePricesModel>
+              visible={activePricesVisible}
+              onClose={() => {
+                setActivePricesVisible(false);
+              }}
+              close={() => {
+                setActivePricesVisible(false);
+              }}
+              confirm={(e) => {
+                form.setFieldValue('prices', e);
+              }}
+            ></ActivePricesModel>
             {/* <Keyboard></Keyboard> */}
             {/* <div className="p-5">
               <PostCategory
@@ -1981,6 +2036,12 @@ export default function addPost() {
               <Uploader
                 accept="*"
                 upload={upload}
+                value={previews?.map( (item, index) => {
+                  return {
+                    name: item,
+                    url: `${Cons.BASEURL}${item}`,
+                  };
+                })}
                 uploadIcon={<AddUploaderIcon></AddUploaderIcon>}
                 onChange={(items) => {
                   addPreviews(items);
@@ -2021,7 +2082,7 @@ export default function addPost() {
                       }}
                       className="text-[#2347D9] text-sm"
                     >
-                     # {item.name}
+                      # {item.name}
                     </div>
                   );
                 })}
@@ -2038,8 +2099,8 @@ export default function addPost() {
                 <div
                   onClick={() => {
                     setTopic((pre) => {
-                      if (!pre) return [ {id:null,name:'约克大学'}];
-                      if (pre.indexOf( {id:null,name:'约克大学'}) >= 0) {
+                      if (!pre) return [{ id: null, name: '约克大学' }];
+                      if (pre.indexOf({ id: null, name: '约克大学' }) >= 0) {
                         Toast.fail('已移除该话题');
                         return pre.filter((value, index, self) => {
                           return value.name !== '约克大学';
@@ -2049,7 +2110,7 @@ export default function addPost() {
                       //   return self.indexOf(value) === index;
                       // });
                       Toast.success(`已加入 # 约克大学 话题`);
-                      return [...pre, {id:null,name:'约克大学'}];
+                      return [...pre, { id: null, name: '约克大学' }];
                     });
                   }}
                   className="text-[#798195] rounded bg-[#F3F4F6] px-2 text-xs py-1"

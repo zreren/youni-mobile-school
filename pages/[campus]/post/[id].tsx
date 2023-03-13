@@ -22,6 +22,7 @@ import { Toast } from 'react-vant';
 import { areOptionsEqual } from '@mui/base';
 import { useRouter } from 'next/router';
 import mapRequest from '@/libs/mapRequest';
+import useUser from '@/hooks/useUser';
 
 function index(props) {
   const router = useRouter()
@@ -260,6 +261,7 @@ function index(props) {
   const focusInput = () => {
     inputRef.current.focus();
   }
+  const {user} = useUser();
   return (
     <div className="mb-10 w-full h-full pb-10">
       <Popup
@@ -336,10 +338,26 @@ function index(props) {
           })}
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end space-x-2">
           <div className="mt-2 border border-[#DCDDE1] w-14 h-6 text-xs rounded-full text-[#A9B0C0] whitespace-nowrap	flex justify-center items-center">
             举报
           </div>
+          {
+            data?.data?.user?.id === user?.id  &&  
+            <div onClick={()=>{
+              router.push({
+                pathname:'/[campus]/post/addPost',
+                query:{
+                  campus:router.query.campus,
+                  id:data?.data?.id,
+                  isEdit:true,
+                  type:data?.data?.type
+                }
+              })
+            }} className="mt-2 border border-[#DCDDE1] w-14 h-6 text-xs rounded-full text-[#A9B0C0] whitespace-nowrap	flex justify-center items-center">
+            编辑
+          </div>
+         }
         </div>
       </div>
       <div className="w-full h-2 bg-bg"></div>

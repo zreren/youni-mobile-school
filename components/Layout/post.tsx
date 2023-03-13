@@ -32,6 +32,7 @@ import classnames from 'classnames';
 import Waterfall from '@/components/Layout/Waterfall';
 import TopicIcon from './topic.svg';
 import { useRouter } from 'next/router';
+import useUser from '@/hooks/useUser';
 
 
 const PostGroupDetail = (props) => {
@@ -283,7 +284,7 @@ function index(props) {
 
   const PostTag = (props) => {
     const { tag } = props;
-    return <div onClick={()=>{props.check(tag)}}  className="mt-2 text-[#2347D9] text-sm">{tag}</div>;
+    return <div onClick={()=>{props.check(tag)}}  className="mt-2 text-[#2347D9] text-sm">#{tag}</div>;
   };
 
   const CImage = (props) => {
@@ -366,6 +367,7 @@ function index(props) {
   const focusInput = () => {
     inputRef.current.focus();
   }
+  const {user} = useUser()
   const [openDetail, setOpenDetail] = useState(false);
   const [topicName,setTopicName] = useState()
   const [detailId, setDetailId] = useState(1);
@@ -440,8 +442,8 @@ function index(props) {
               <SwiperSlide>
                 <CImage
                   onTouchStart={(e) => {
-                    e.preventDefault();
-                    props.stop();
+                    // e.preventDefault();
+                    // props.stop();
                   }}
                   item={item}
                 ></CImage>
@@ -488,10 +490,26 @@ function index(props) {
             }} key={index} tag={item}></PostTag>;
           })}
         </div>
-        <div className="flex justify-end">
+        <div className="flex justify-end space-x-2">
           <div className="mt-2 border border-[#DCDDE1] w-14 h-6 text-xs rounded-full text-[#A9B0C0] whitespace-nowrap	flex justify-center items-center">
             举报
           </div>
+         {
+            data?.data?.user?.id === user?.id  &&  
+            <div onClick={()=>{
+              router.push({
+                pathname:'/[campus]/post/addPost',
+                query:{
+                  campus:router.query.campus,
+                  id:data?.data?.id,
+                  isEdit:true,
+                  type:data?.data?.type
+                }
+              })
+            }} className="mt-2 border border-[#DCDDE1] w-14 h-6 text-xs rounded-full text-[#A9B0C0] whitespace-nowrap	flex justify-center items-center">
+            编辑
+          </div>
+         }
         </div>
       </div>
       <div className="w-full h-2 bg-bg"></div>
