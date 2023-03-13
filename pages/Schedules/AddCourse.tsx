@@ -581,10 +581,6 @@ export default function AddSchedule() {
       return `${timeStr}-${endTimeStr}`;
     };
     const submitForm = async (values: any) => {
-      console.log('tiem',  {
-        start: dayOfWeekListData[item].startTime,
-        end: dayOfWeekListData[item].endTime,
-      },)
       if (!values || !values.name || !values.color || !dayOfWeek) {
         Toast.fail('请填写完整信息');
         return;
