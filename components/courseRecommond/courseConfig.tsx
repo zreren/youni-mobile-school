@@ -27,7 +27,7 @@ export default function config(props) {
   const [current, setCurrent] = React.useState(0);
   function usePersistentState(key, defaultValue) {
     const [state, setState] = useState(() => {
-      const value = localStorage.getItem(key);
+      const value = typeof window !== undefined ? localStorage.getItem(key) : null;
       if (value) {
         return JSON.parse(value);
       } else {
