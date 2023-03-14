@@ -57,6 +57,7 @@ import ReturnBackIcon from './returnBack.svg';
 
 const PostGroupDetail = (props) => {
   const { data,isEdit,mutate } = props;
+  console.log(data,"PostGroupDetail")
   const [name,setName] = useState(data?.name)
   useEffect(()=>{
     setName(data?.name)
@@ -79,6 +80,10 @@ const PostGroupDetail = (props) => {
   useEffect(()=>{
     console.log(isEdit,"isEdit")
   },[isEdit])
+  const [checked,setChecked] = useState(data?.isPublic)
+  useEffect(()=>{
+    setChecked(data?.isPublic)
+  },[data?.isPublic])
   if (!data) return;
   return (
     <div className="w-full h-screen">
@@ -108,7 +113,10 @@ const PostGroupDetail = (props) => {
             <div className='mt-2 flex items-center'>
               <div className='w-[4px] h-4 bg-[#FFCE00] mr-2 rounded-full'></div>
               <div className='mr-4 text-blueTitle'>是否公开</div>
-              <Switch onChange={(e)=>{
+              <Switch
+              checked={checked}
+              onChange={(e)=>{
+                setChecked(e)
                 useRequest.post('/api/collection/update',{
                   id: data?.id,
                   isPublic : e

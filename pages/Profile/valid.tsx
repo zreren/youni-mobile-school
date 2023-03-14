@@ -8,7 +8,7 @@ import { Picker, Field } from 'react-vant';
 import useFetch from '@/hooks/useFetch';
 import useCountDown from '@/hooks/useCountDown';
 import { useRouter } from 'next/router';
-
+import useUser from '@/hooks/useUser';
 // import { demoData, upload } from './utils';
 // import './style.less';
 export default function idValid() {
@@ -30,8 +30,9 @@ export default function idValid() {
   }
   const { data: schoolList } = useFetch('/campus/query', 'get');
   const CPicker = (props) => {
+    const {user} = useUser();
     const [loading, setLoading] = React.useState(false);
-    const [value, setValue] = React.useState<string[]>();
+    const [value, setValue] = React.useState<string[]>(props?.value);
     const mailList = React.useMemo(() => {
       return schoolList?.data.filter((item) => {
         return item.id === value;
@@ -45,7 +46,7 @@ export default function idValid() {
       if (!props) return;
       props?.change(value, mailList?.email);
     }, [value]);
-
+    if(!schoolList) return;
     return (
       <Picker
         popup={{
@@ -53,14 +54,18 @@ export default function idValid() {
         }}
         value={value}
         title="请选择"
-        columns={schoolList?.data}
+        columns={schoolList?.data || []}
         onConfirm={setValue}
         visibleItemCount={8}
-        onChange={setValue}
+        onChange={(e)=>{
+          if(!e) return
+          console.log(e,"Picker")
+          setValue(e)
+        }}
         columnsFieldNames={{ text: 'ename', value: 'id' }}
         optionRender={(option: any) => {
           // console.log(option,"option")
-          if (!option.alias) return null;
+          if (!option?.cname) return;
           return (
             <div className="flex space-x-1">
               <div>{option.cname}</div>
@@ -77,7 +82,7 @@ export default function idValid() {
               readOnly
               clickable
               value={_?.ename || ''}
-              placeholder="选择学校"
+              placeholder={user?.campus?.ename || "选择学校"}
               onClick={() => actions.open()}
             />
           );
@@ -215,6 +220,9 @@ export default function idValid() {
       { label: '验证码', Value: 5, dataIndex: 'code' },
     ];
     const [schoolList, setSelectSchool] = useState<{ id: any; mail: any[] }>();
+    useEffect(()=>{
+      console.log(schoolList,"schoolList")
+    },[schoolList])
     const [mailBack, setMailBack] = useState();
     const [countdownTime, setCountdown] = useState(60);
     const [start, setStart] = useState(false);
@@ -285,7 +293,13 @@ export default function idValid() {
         };
       });
     }, []);
-
+    const {user} = useUser();
+    useEffect(()=>{
+      setSelectSchool({
+        id: user?.campus?.id,
+        mail: user?.campus?.email
+      })
+    },[user])
     return (
       <div className="w-full space-y-4">
         <InputComponent label={'学校名称'}>
@@ -383,7 +397,7 @@ export default function idValid() {
               onChange={(val) => {
                 updateData('code', val.target.value);
               }}
-              className="mr-20 text-sm font-medium text-right text-gray-500 placeholder-gray-300 border-none input hover:outline-none"
+              className="mr-28 text-sm font-medium text-right text-gray-500 placeholder-gray-300 border-none input hover:outline-none"
             />
           </label>
           {/* {count} */}

@@ -68,13 +68,14 @@ export default function Introduce(props: {
   MyIntroduce: Course;
   recommendsData: any;
 }) {
+  if(!props.MyIntroduce) return;
   console.log(props.recommendsData, 'recommendsData');
   const router = useRouter();
   let porpsIntroduce = props.MyIntroduce;
+  const {code,sections,rating} = props.MyIntroduce;
   const { data } = useFetch(`/campus/query?name=${router.query.campus}`, 'get');
   if (!props) return;
-  const { ename, code, sections, subject, type, rating, cname } =
-    porpsIntroduce;
+  // const {  code, sections, rating } = porpsIntroduce;
   const Section = (props) => {
     const { name, startTime, endTime, professors, mode } = props.data;
     console.log(props.data, 'props.data Section');
@@ -171,31 +172,55 @@ export default function Introduce(props: {
     console.log(props, 'RecommendCourse');
     const { data } = props;
     function flatten(arr) {
-      return arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val), []);
+      return arr.reduce(
+        (acc, val) =>
+          Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val),
+        [],
+      );
     }
     const recommends = React.useMemo(() => {
-     const flattened=  flatten(data?.recommends?.map((item) => item.form.courseData))
-       const filtered = flattened.filter(Boolean);
-  const uniqueLabels = Array.from(new Set(filtered.map((item) => item.label)));
-  const deduplicated = uniqueLabels.map((label) => filtered.find((item) => item.label === label));
-  return deduplicated;
+      const flattened = flatten(
+        data?.recommends?.map((item) => item.form.courseData),
+      );
+      const filtered = flattened.filter(Boolean);
+      const uniqueLabels = Array.from(
+        new Set(filtered.map((item) => item.label)),
+      );
+      const deduplicated = uniqueLabels.map((label) =>
+        filtered.find((item) => item.label === label),
+      );
+      return deduplicated;
     }, [data?.recommends]);
-    console.log(recommends,"recommends")
+    console.log(recommends, 'recommends');
     const Item = (props) => {
-      const {prerequisites,recommends} = props;
-      if(!prerequisites && !recommends) return null;
+      const { prerequisites, recommends } = props;
+      if (!prerequisites && !recommends) return null;
       const course = 'MATH 1000';
       const parts = course.split(' ');
       console.log(parts); // Output: ['MATH', '1000']
       return (
-        <div className="w-1/4 min-w-[25%] h-36 py-1 flex flex-col items-center justify-center border-gray-50 border-[0.5px] rounded-md">
+        <div onClick={()=>{
+          router.push({
+            pathname: '/[campus]/Course/[id]',
+            query: {
+              campus:router.query.campus,
+              id:props?.prefix ? prerequisites?.id : recommends?.id
+            }
+          })
+        }} className="w-1/4 min-w-[25%] h-36 py-1 flex flex-col items-center justify-center border-gray-50 border-[0.5px] rounded-md">
           {props?.prefix ? (
             <RecommendIcon></RecommendIcon>
           ) : (
             <PrefixIcon></PrefixIcon>
           )}
-          <div className="text-blueTitle text-xs  font-semibold">{props?.prefix?prerequisites?.subject?.ename:recommends?.label.split(' ')?.[0]}</div>
-          <div className="text-blueTitle text-xs font-semibold">{props?.prefix?data?.no:recommends?.label.split(' ')?.[1]}</div>
+          <div className="text-blueTitle text-xs  font-semibold">
+            {props?.prefix
+              ? prerequisites?.subject?.ename?.toUpperCase()
+              : recommends?.label.split(' ')?.[0]}
+          </div>
+          <div className="text-blueTitle text-xs font-semibold">
+            {props?.prefix ? prerequisites?.no : recommends?.label.split(' ')?.[1]}
+          </div>
           <div className="bg-[#F7F8F9] text-blueTitle text-xs h-8 min-w-[40px] w-2/3 rounded-lg flex justify-center items-center ">
             {props?.prefix ? '前置课' : '推荐课'}
           </div>
