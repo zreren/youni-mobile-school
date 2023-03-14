@@ -20,9 +20,28 @@ import { professorList } from '@/mock/data';
 import { selectOpen } from '@/stores/authSlice';
 import Select from './select';
 import DraftIcon from './draft.svg';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+
 export default function config(props) {
   const router = useRouter();
   const [current, setCurrent] = React.useState(0);
+  function usePersistentState(key, defaultValue) {
+    const [state, setState] = useState(() => {
+      const value = localStorage.getItem(key);
+      if (value) {
+        return JSON.parse(value);
+      } else {
+        return defaultValue;
+      }
+    });
+  
+    React.useEffect(() => {
+      localStorage.setItem(key, JSON.stringify(state));
+    }, [key, state]);
+  
+    return [state, setState];
+  }
+  const [expandedItems, setExpandedItems] = usePersistentState('expandedItems', []);
 
   const [semesterData, setSemesterData] = useState(null);
   const { data: campusData, mutate: campusDataMutate } = useFetch(
@@ -111,7 +130,7 @@ export default function config(props) {
     setCourseList,
   }: { courseList: Course[]; setCourseList: any } = props;
   const CourseId = React.useMemo(
-    () => courseList[professorCurrent].id,
+    () => courseList[professorCurrent]?.id,
     [professorCurrent, courseList],
   );
   const { data: evaluationData, mutate: evaluationDataMutate } = useFetch(
@@ -126,7 +145,7 @@ export default function config(props) {
         mutate,
       }: { open: boolean; isEdit: boolean; mutate: any } = props;
       const [selectList, setSelectList] = useState<any>(
-        courseList[professorCurrent].professorMust,
+        courseList[professorCurrent]?.professorMust,
       );
       React.useEffect(() => {
         console.log(
@@ -346,7 +365,7 @@ export default function config(props) {
         mutate,
       }: { open: boolean; isEdit: boolean; mutate: any } = props;
       const [selectList, setSelectList] = useState<any>(
-        courseList[professorCurrent].professorOption,
+        courseList[professorCurrent]?.professorOption,
       );
       React.useEffect(() => {
         console.log(
@@ -710,7 +729,8 @@ export default function config(props) {
     note: string;
   }
   const courseMap: Course[] = React.useMemo(
-    () => Object.values(courseList) as Course[],
+    () =>
+      Object.values(courseList).filter((item) => item.id !== null) as Course[],
     [courseList],
   );
 
@@ -985,7 +1005,7 @@ export default function config(props) {
       Object.values(
         Object.fromEntries(
           Object.entries(courseList)
-            .filter(([_, value]) => value.id !== null)
+            .filter(([_, value]) => value?.id !== null)
             .map(([key, value]) => [key, value]),
         ),
       ),
@@ -1037,6 +1057,49 @@ export default function config(props) {
       </div>
     );
   };
+  const [draggedItemId, setDraggedItemId] = useState(null);
+
+  const handleDragEnd = (result) => {
+    if (!result.destination) {
+      return;
+    }
+    const sourceIndex = result.source.index;
+    const destinationIndex = result.destination.index;
+    const courseListArray = Object.keys(courseList).map(
+      (key) => courseList[key],
+    );
+    const [removed] = courseListArray.splice(sourceIndex, 1);
+    courseListArray.splice(destinationIndex, 0, removed);
+    const newCourseList = courseListArray.reduce((obj, item, index) => {
+      return { ...obj, [index]: item };
+    }, {});
+    setCourseList(newCourseList);
+     // Update expandedItems to match the new order of courseListArray
+  const newExpandedItems = expandedItems.map((expandedIndex) => {
+    if (expandedIndex === sourceIndex) {
+      return destinationIndex;
+    } else if (sourceIndex < destinationIndex) {
+      if (expandedIndex > sourceIndex && expandedIndex <= destinationIndex) {
+        return expandedIndex - 1;
+      } else {
+        return expandedIndex;
+      }
+    } else {
+      if (expandedIndex >= destinationIndex && expandedIndex < sourceIndex) {
+        return expandedIndex + 1;
+      } else {
+        return expandedIndex;
+      }
+    }
+  });
+  setExpandedItems(newExpandedItems);
+    setDraggedItemId(null);
+  };
+  React.useEffect(() => {
+    console.log(expandedItems, 'expandedItems');
+
+  }, [expandedItems])
+  
   return (
     <div className="pb-20">
       <div className="items-start justify-between  py-0 bg-white p-5">
@@ -1121,147 +1184,192 @@ export default function config(props) {
       </div>
       <div className="mt-2 w-full"></div>
       <div className="items-start justify-between space-y-2  py-0 bg-white p-5 mb-4">
-        {courseMap?.map((item, index) => {
-          if (item.id) {
-            return (
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="course-list space-y-2">
+            {(provided) => (
               <div
-                onClick={() => {
-                  setProfessorCurrent(index);
-                }}
-                className="border border-[#F7F8F9] rounded-md w-full p-2"
+                {...provided.dragHandleProps}
+                {...provided.droppableProps}
+                ref={provided.innerRef}
               >
-                <Accordion
-                  defaultExpanded={professorCurrent === index}
-                  className="rounded-lg"
-                  sx={{ padding: 0 }}
-                >
-                  <AccordionSummary
-                    expandIcon={<DownIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                    sx={{ padding: 0 }}
+                {courseMap.map((item, index) => (
+                  <Draggable
+                    key={index}
+                    draggableId={index.toString()}
+                    onStart={() => {
+                      setDraggedItemId(index);
+                    }}
+                    index={index}
                   >
-                    <div className="flex w-full items-center space-x-4">
-                      <PrefixIcon></PrefixIcon>
-                      <div className="w-6 h-6 rounded-md text-[#798195] bg-[#F7F8F9] flex items-center justify-center">
-                        {/* index */}
-                        {index + 1}
-                      </div>
-                      <div className="text-[#798195] font-semibold text-sm">
-                        {item.label}
-                      </div>
-                    </div>
-                  </AccordionSummary>
-                  <AccordionDetails sx={{ padding: 0 }}>
-                    <div className="w-full space-y-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="bg-[#F0F6FF] p-2 w-12 h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
-                          类别
-                        </div>
-                        <div className="w-"></div>
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        {/* Your existing course item component goes here */}
                         <div
                           onClick={() => {
-                            updateForm({
-                              [index]: {
-                                type: 'must',
-                              },
-                            });
+                            setProfessorCurrent(index);
                           }}
-                          className={classnames(
-                            ' flex justify-center items-center w-14 h-6 text-xs p-2  rounded-md',
-                            {
-                              'bg-[#FFD036] text-[#93660A]':
-                                item.type === 'must',
-                              'bg-[#F7F8F9] text-[#798195]':
-                                item.type !== 'must',
-                            },
-                          )}
+                          className="border border-[#F7F8F9] rounded-md w-full p-2 mb-2"
                         >
-                          必修课
-                        </div>
-                        <div
-                          onClick={() => {
-                            updateForm({
-                              [index]: {
-                                type: 'option',
-                              },
-                            });
-                          }}
-                          className={classnames(
-                            ' flex justify-center items-center w-14 h-6 text-xs p-2  rounded-md',
-                            {
-                              'bg-[#FFD036] text-[#93660A]':
-                                item.type === 'option',
-                              'bg-[#F7F8F9] text-[#798195]':
-                                item.type !== 'option',
-                            },
-                          )}
-                        >
-                          选修课
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <div className="bg-[#F0F6FF] p-2 min-w-[48px] h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
-                          优先
-                        </div>
-                        <div className="w-[0.5px] h-3 bg-[#F0F6FF]"></div>
-                        <div
-                          onClick={() => {
-                            setProfessorOpen(true);
-                          }}
-                          className=" flex border-dashed justify-center border border-gray-300 items-center min-w-[36px] h-9 text-xs p-2 text-[#798195] rounded-md"
-                        >
-                          +
-                        </div>
-                        {item?.professorMust.map((item) => {
-                          return (
-                            <div
-                              onClick={() => {
-                                // up
-                                deleteProfessor(item, index, 'professorMust');
-                              }}
-                              className=" flex justify-center items-center min-w-[68px] h-6 text-xs p-2 text-[#798195] rounded-md"
+                          <Accordion
+                            defaultExpanded={expandedItems.includes(index)}
+                            expanded={expandedItems.includes(index)}
+                            onChange={() => {
+                              setExpandedItems((prev) => {
+                                if (prev.includes(index)) {
+                                  return prev.filter((item) => item !== index);
+                                } else {
+                                  return [...prev, index];
+                                }
+                              });
+                            }}
+                            className="rounded-lg"
+                            sx={{ padding: 0 }}
+                          >
+                            <AccordionSummary
+                              expandIcon={<DownIcon />}
+                              aria-controls="panel1a-content"
+                              id="panel1a-header"
+                              sx={{ padding: 0 }}
                             >
-                              {item.label}
-                            </div>
-                          );
-                        })}
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <div className="bg-[#F0F6FF] p-2 min-w-[48px] h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
-                          可选
+                              <div className="flex w-full items-center space-x-4">
+                                <PrefixIcon></PrefixIcon>
+                                <div className="w-6 h-6 rounded-md text-[#798195] bg-[#F7F8F9] flex items-center justify-center">
+                                  {/* index */}
+                                  {index + 1}
+                                </div>
+                                <div className="text-[#798195] font-semibold text-sm">
+                                  {item?.label}
+                                </div>
+                              </div>
+                            </AccordionSummary>
+                            <AccordionDetails sx={{ padding: 0 }}>
+                              <div className="w-full space-y-4">
+                                <div className="flex items-center space-x-3">
+                                  <div className="bg-[#F0F6FF] p-2 w-12 h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
+                                    类别
+                                  </div>
+                                  <div className="w-"></div>
+                                  <div
+                                    onClick={() => {
+                                      updateForm({
+                                        [index]: {
+                                          type: 'must',
+                                        },
+                                      });
+                                    }}
+                                    className={classnames(
+                                      ' flex justify-center items-center w-14 h-6 text-xs p-2  rounded-md',
+                                      {
+                                        'bg-[#FFD036] text-[#93660A]':
+                                          item.type === 'must',
+                                        'bg-[#F7F8F9] text-[#798195]':
+                                          item.type !== 'must',
+                                      },
+                                    )}
+                                  >
+                                    必修课
+                                  </div>
+                                  <div
+                                    onClick={() => {
+                                      updateForm({
+                                        [index]: {
+                                          type: 'option',
+                                        },
+                                      });
+                                    }}
+                                    className={classnames(
+                                      ' flex justify-center items-center w-14 h-6 text-xs p-2  rounded-md',
+                                      {
+                                        'bg-[#FFD036] text-[#93660A]':
+                                          item.type === 'option',
+                                        'bg-[#F7F8F9] text-[#798195]':
+                                          item.type !== 'option',
+                                      },
+                                    )}
+                                  >
+                                    选修课
+                                  </div>
+                                </div>
+                                <div className="flex items-center space-x-3">
+                                  <div className="bg-[#F0F6FF] p-2 min-w-[48px] h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
+                                    优先
+                                  </div>
+                                  <div className="w-[0.5px] h-3 bg-[#F0F6FF]"></div>
+                                  <div
+                                    onClick={() => {
+                                      setProfessorOpen(true);
+                                    }}
+                                    className=" flex border-dashed justify-center border border-gray-300 items-center min-w-[36px] h-9 text-xs p-2 text-[#798195] rounded-md"
+                                  >
+                                    +
+                                  </div>
+                                  {item?.professorMust.map((item) => {
+                                    return (
+                                      <div
+                                        onClick={() => {
+                                          // up
+                                          deleteProfessor(
+                                            item,
+                                            index,
+                                            'professorMust',
+                                          );
+                                        }}
+                                        className=" flex justify-center items-center min-w-[68px] h-6 text-xs p-2 text-[#798195] rounded-md"
+                                      >
+                                        {item.label}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                                <div className="flex items-center space-x-3">
+                                  <div className="bg-[#F0F6FF] p-2 min-w-[48px] h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
+                                    可选
+                                  </div>
+                                  <div className="w-[0.5px] h-3 bg-[#F0F6FF]"></div>
+                                  <div
+                                    onClick={() => {
+                                      setProfessorOptionOpen(true);
+                                    }}
+                                    className=" flex justify-center border border-gray-300 items-center w-9 h-9 text-xs p-2 text-[#798195] rounded-md"
+                                  >
+                                    +
+                                  </div>
+                                  {item?.professorOption.map((item) => {
+                                    return (
+                                      <div
+                                        onClick={() => {
+                                          // up
+                                          deleteProfessor(
+                                            item,
+                                            index,
+                                            'professorOption',
+                                          );
+                                        }}
+                                        className=" flex justify-center items-center min-w-[68px] h-6 text-xs p-2 text-[#798195] rounded-md"
+                                      >
+                                        {item.label}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                                <NoteArea data={item?.note}></NoteArea>
+                              </div>
+                            </AccordionDetails>
+                          </Accordion>
                         </div>
-                        <div className="w-[0.5px] h-3 bg-[#F0F6FF]"></div>
-                        <div
-                          onClick={() => {
-                            setProfessorOptionOpen(true);
-                          }}
-                          className=" flex justify-center border border-gray-300 items-center w-9 h-9 text-xs p-2 text-[#798195] rounded-md"
-                        >
-                          +
-                        </div>
-                        {item?.professorOption.map((item) => {
-                          return (
-                            <div
-                              onClick={() => {
-                                // up
-                                deleteProfessor(item, index, 'professorOption');
-                              }}
-                              className=" flex justify-center items-center min-w-[68px] h-6 text-xs p-2 text-[#798195] rounded-md"
-                            >
-                              {item.label}
-                            </div>
-                          );
-                        })}
                       </div>
-                      <NoteArea data={item?.note}></NoteArea>
-                    </div>
-                  </AccordionDetails>
-                </Accordion>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
               </div>
-            );
-          }
-        })}
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
       <div className="bg-[#F6F6F6] w-full h-3"></div>
 

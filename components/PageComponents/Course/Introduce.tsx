@@ -288,14 +288,14 @@ export default function Introduce(props: {
                 <div>
                   <div className="w-full p-3  bg-white">
                     <div className="font-semibold mt-4 text-lg text-[#37455C]">
-                      选课 <span className="text-[#2347D9]">介绍</span>
+                      选课 <span className="text-[#2347D9]">要求</span>
                     </div>
                     {/* <div className="flex w-full justify-between mt-5 items-center px-2 space-x-3"></div> */}
                     <div className="flex items-center space-x-2 mt-2 p-2">
                       <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
                       <div className="font-semibold ">前置课</div>
                     </div>
-                    <div className="p-2 text-[#798195]  text-sm">
+                    <div className="p-2 text-[#798195] space-x-2 font-normal text-sm">
                       {props.MyIntroduce.prerequisites.map((item) => item.code)}
                     </div>
                     {props.MyIntroduce.prerequisites.length === 0 ? (

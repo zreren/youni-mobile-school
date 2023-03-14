@@ -107,7 +107,7 @@ export default function addCourse(props) {
       Object.values(
         Object.fromEntries(
           Object.entries(courseList)
-            .filter(([_, value]) => value.id !== null)
+            .filter(([_, value]) => value?.id !== null)
             .map(([key, value]) => [key, value]),
         ),
       ),
