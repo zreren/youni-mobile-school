@@ -35,8 +35,10 @@ export default function config(props) {
       }
     });
   
-    React.useEffect(() => {
-      localStorage.setItem(key, JSON.stringify(state));
+    useEffect(() => {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(key, JSON.stringify(state));
+      }
     }, [key, state]);
   
     return [state, setState];
