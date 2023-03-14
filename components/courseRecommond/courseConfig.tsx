@@ -26,20 +26,22 @@ export default function config(props) {
   const router = useRouter();
   const [current, setCurrent] = React.useState(0);
   function usePersistentState(key, defaultValue) {
+    const isBrowser = typeof window !== 'undefined';
     const [state, setState] = useState(() => {
-      const value = typeof window !== undefined ? localStorage.getItem(key) : null;
-      if (value) {
-        return JSON.parse(value);
-      } else {
-        return defaultValue;
+      if (isBrowser) {
+        const value = localStorage.getItem(key);
+        if (value) {
+          return JSON.parse(value);
+        }
       }
+      return defaultValue;
     });
   
     React.useEffect(() => {
-      if (typeof window !== 'undefined') {
+      if (isBrowser) {
         localStorage.setItem(key, JSON.stringify(state));
       }
-    }, [key, state]);
+    }, [isBrowser, key, state]);
   
     return [state, setState];
   }
