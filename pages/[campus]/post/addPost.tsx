@@ -55,9 +55,28 @@ import { useRouter } from 'next/router';
 import AddCourse from './addCourse';
 
 export default function addPost() {
+
   const Footer = () => {
+    const getDomAndHide  = ()=>{
+      const dom = document.getElementById('bottom-navigation')
+      if(!dom) return
+      dom.style.display = 'none'
+    }
+    useEffect(()=>{
+      const dom = document.getElementById('bottom-navigation')
+      if(!dom) {
+        setTimeout(() => {
+          getDomAndHide()
+        }, 500);
+        return;
+      };
+      dom.style.display = 'none'
+      return ()=>{
+        dom.style.display = 'block'
+      }
+    },[])
     return (
-      <div className="w-full shadow-footer bg-white h-[60px] space-x-4 flex justify-between fixed bottom-12 px-5 py-2">
+      <div className="w-full shadow-footer bg-white h-[60px] space-x-4 flex justify-between fixed bottom-2 px-5 py-2">
         <div
           className="flex flex-col items-center  w-[40px]"
           onClick={() => {
@@ -210,15 +229,7 @@ export default function addPost() {
         const { data } = await mapRequest.get(
           `geocoding/v5/mapbox.places/${theLocation}.json?access_token=${TOKEN}`,
         );
-        // const { data } = await mapRequest.get(
-        //   `matching/v5/mapbox/driving/${theLocation};${theLocation}?access_token=${TOKEN}`,
-        // );
 
-        // console.log(res,"res")
-        // form.setFieldValue('location', JSON.stringify({
-        //   point:item.center,
-        //   placename:item?.place_name
-        // }));
         console.log(data, 'defaultData');
         const defaultData = JSON.stringify({
           point: data?.features[0].center,
@@ -1780,6 +1791,7 @@ export default function addPost() {
   const handleSetTitle = React.useCallback((value) => {
     setTitle(value);
   }, []);
+
   const submitCourseConfig = async (e, draft?) => {
     console.log(
       {

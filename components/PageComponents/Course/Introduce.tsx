@@ -429,7 +429,7 @@ export default function Introduce(props: {
                 <div className="font-semibold mt-4 text-lg text-[#37455C]">
                   选课 <span className="text-[#2347D9]">推荐</span>
                 </div>
-                <div className="mt-2">
+                <div className="mt-2 space-y-2">
                   {props.recommendsData?.map((item, index) => {
                     return (
                       <div className="border border-[#F7F8F9] rounded-md w-full">

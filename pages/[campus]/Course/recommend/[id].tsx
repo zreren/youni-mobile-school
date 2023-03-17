@@ -414,7 +414,15 @@ export default function recommend() {
     return (
       <>
         <div className="flex mt-4 items-top space-x-8 w-full">
-          <div className="min-w-[44px] text-[#798195] w-11 flex items-center justify-center text-center h-11 bg-[#F7F8F9] rounded-lg text-xs">
+          <div onClick={()=>{
+            router.push({
+              pathname: '/[campus]/Course/[id]',
+              query:{
+                campus : router.query.campus,
+                id: data.id
+              }
+            })
+          }} className="min-w-[44px] text-[#798195] w-11 flex items-center justify-center text-center h-11 bg-[#F7F8F9] rounded-lg text-xs">
             {data.label}
           </div>
           <div className="w-full space-y-4">

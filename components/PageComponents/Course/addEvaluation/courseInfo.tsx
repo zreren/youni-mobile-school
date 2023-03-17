@@ -32,9 +32,9 @@ function courseInfo(props) {
   };
   const CCourseInput = (props: CCourseInput) => {
     const { title, isNess, children, data, renderData, value } = props;
-    const [_value,setValue] = useState(value);
+    const [_value, setValue] = useState(value);
     const __value = React.useRef<any>(value);
-    
+
     const selectItem = (e) => {
       if (!data) {
         props.change({
@@ -43,9 +43,9 @@ function courseInfo(props) {
         });
         return true;
       }
-    
+
       let found = false;
-      Object.values(data).forEach((value:any) => {
+      Object.values(data).forEach((value: any) => {
         if (value?.ename === e || value?.name === e || value?.code === e) {
           props.change({
             id: value?.id,
@@ -54,7 +54,7 @@ function courseInfo(props) {
           found = true;
         }
       });
-    
+
       if (!found && typeof e === 'string') {
         props.change({
           id: null,
@@ -62,13 +62,13 @@ function courseInfo(props) {
         });
       }
     };
-    const debouncedChange = debounce(props.change, 1000); // 设置延迟时间为 300ms
+    
+    const debouncedChange = debounce(props.change, 300); // 设置延迟时间为 300ms
+
+
     const handleInputChange = (e) => {
       __value.current = { id: null, label: e.target.value || null };
-      debouncedChange({
-        id: null,
-        label: e.target.value || null,
-      });
+      debouncedChange(__value.current);
     };
 
     return (
@@ -79,7 +79,7 @@ function courseInfo(props) {
         onChange={(event: any, newValue: string | null) => {
           setValue({
             value: null,
-            label: newValue
+            label: newValue,
           });
           selectItem(newValue);
         }}
@@ -113,7 +113,7 @@ function courseInfo(props) {
               },
             }}
             {...params}
-           value={_value?.label}
+            value={_value?.label}
             onChange={handleInputChange}
             InputProps={{
               ...params.InputProps,
@@ -130,26 +130,30 @@ function courseInfo(props) {
     data: _courseData,
     error,
     mutate: mutateSubject,
-  } = useFetch(`/subject/courses`, 'page',{
-    id : data?.data?.subject?.id  | 1,
-    pageSize : 100
+  } = useFetch(`/subject/courses`, 'page', {
+    id: data?.data?.subject?.id | 1,
+    pageSize: 100,
   });
-  useEffect(()=>{
-    mutateSubject()
-  },[ data?.data?.subject?.id])
-  const courseData = useMemo(()=>{
-    return _courseData ? courseData ? [...courseData].concat(..._courseData) : [].concat(..._courseData) : null
-  },[_courseData,data?.data?.subject?.id])
+  useEffect(() => {
+    mutateSubject();
+  }, [data?.data?.subject?.id]);
+  const courseData = useMemo(() => {
+    return _courseData
+      ? courseData
+        ? [...courseData].concat(..._courseData)
+        : [].concat(..._courseData)
+      : null;
+  }, [_courseData, data?.data?.subject?.id]);
   const { data: courseDetail, mutate: mutateCourse } = useFetch(
     `/course/detail?id=${data?.data?.course?.id}`,
     'get',
   );
-  useEffect(()=>{
-    mutateCourse()
-  },[data?.data?.course?.id])
-  useEffect(()=>{
-    console.log(data,"mutateSubject")
-  },[data])
+  useEffect(() => {
+    mutateCourse();
+  }, [data?.data?.course?.id]);
+  useEffect(() => {
+    console.log(data, 'mutateSubject');
+  }, [data]);
   const ProfessorList = useMemo(() => {
     return courseDetail?.data?.sections
       .map((item) => {
@@ -169,7 +173,15 @@ function courseInfo(props) {
   useEffect(() => {
     console.log(ProfessorList, 'ProfessorList');
   }, [ProfessorList]);
-  const CCourseInputMemo = React.useMemo(() => CCourseInput, [data?.data?.course,data?.data?.courseData,data?.data?.professor,data?.data?.mode]);
+  const CCourseInputMemo = React.useMemo(
+    () => CCourseInput,
+    [
+      data?.data?.course,
+      data?.data?.courseData,
+      data?.data?.professor,
+      data?.data?.mode,
+    ],
+  );
 
   useEffect(() => {
     mutateSubject();
@@ -204,7 +216,7 @@ function courseInfo(props) {
           change={(val: { id: any; label: any }) => {
             console.log(val, 'val');
             // handleChange(val.id);
-            if(!val) return;
+            if (!val) return;
             updateData({
               key: 'subject',
               value: val,
@@ -242,7 +254,7 @@ function courseInfo(props) {
             label: data?.data?.course?.label,
           }}
           change={(val: { id: any; label: any }) => {
-            if(!val) return;
+            if (!val) return;
             updateData({
               key: 'course',
               value: val,
