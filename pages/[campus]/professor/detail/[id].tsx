@@ -15,6 +15,9 @@ import FooterDiscussionInput from '@/components/Input/FooterDiscussionInput';
 
 export default function ProfessorDetail() {
   const [currentSelectId, setCurrentSelectId] = useState<null|number>(0);
+  useEffect(()=>{
+    mutate()
+  },[currentSelectId])
   // const [CourseID, setCourseID] = useState<null|number>(null);
   const router = useRouter();
   const Id = router.query.id;
@@ -23,7 +26,7 @@ export default function ProfessorDetail() {
     `/professor/courses?id=${Id}`,
     'get',
   );
-  const {data:_professorCommentList,error:professorCommentError} = useFetch(`/professor/evaluations`,'page',{
+  const {data:_professorCommentList,error:professorCommentError,mutate} = useFetch(`/professor/evaluations`,'page',{
     id: Id,
     courseId: currentSelectId,
     pageSize:100,
@@ -37,7 +40,7 @@ export default function ProfessorDetail() {
   const professorListCopy = useMemo(() => {
     if (!professorDataList?.data) return [{ id: 0, ename: '查看全部' }];
     const newval = professorDataList?.data.slice()
-    return [{ id: 0, ename: '查看全部' }, ...newval];
+    return [{ id: 0, code: '查看全部' }, ...newval];
   }, [professorDataList]);
   useEffect(()=>{
     console.log(professorListCopy,"professorListCopy")
@@ -108,7 +111,7 @@ export default function ProfessorDetail() {
                   'text-blueTitle': currentSelectId !== item.id,
                 }}
               >
-                {item.ename}
+                {item.code}
               </CButton2>
             </div>
           );

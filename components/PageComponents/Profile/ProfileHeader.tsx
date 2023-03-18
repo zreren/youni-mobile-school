@@ -111,7 +111,7 @@ export default function ProfileHeader(props) {
             'bg-[#FFD036] text-[#8C6008]': !isFollow,
             'bg-[#E5E5E5] text-[#808080]': isFollow,
             })
-        }>{isFollow?'已关注':'关注'}</div> : !loggedOut && <Link href="/Setting/profile"><Button></Button></Link>}
+        }>{isFollow?'已关注':'关注'}</div> : !loggedOut && <Link href="/Setting"><Button></Button></Link>}
       </div>
     );
   };
@@ -154,7 +154,9 @@ export default function ProfileHeader(props) {
               }
             </div>
           </div>
-          <div className="pt-6">
+          <div onClick={()=>{
+            router.push('/Setting/profile')
+          }} className="pt-6">
             <RightIcon></RightIcon> 
           </div>
         </div>

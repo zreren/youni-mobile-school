@@ -86,6 +86,10 @@ const CCourseColor = ({ setColor }) => {
 
 const dayOfWeekList = [
   {
+    label: '周日',
+    value: '0',
+  },
+  {
     label: '周一',
     value: '1',
   },
@@ -108,10 +112,6 @@ const dayOfWeekList = [
   {
     label: '周六',
     value: '6',
-  },
-  {
-    label: '周日',
-    value: '0',
   },
 ];
 

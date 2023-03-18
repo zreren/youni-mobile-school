@@ -22,6 +22,7 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import TopicIcon from './topic.svg';
 import Waterfall from '@/components/Layout/Waterfall';
 import { grey } from '@mui/material/colors';
+import ReturnBackIcon from './returnBack.svg';
 
 export default function recommend() {
   const router = useRouter();
@@ -186,6 +187,11 @@ export default function recommend() {
       <div className="w-screen h-[210px]">
         <div className="z-30 h-[210px] flex flex-col justify-between text-white text-lg pl-8 pr-8 pt-20">
           <div></div>
+          <div className='absolute top-10' onClick={()=>{
+            router.back()
+          }}>
+          <ReturnBackIcon></ReturnBackIcon>
+          </div>
           <div className="z-30 css2Overflow-ellipsis">{data?.data?.title}</div>
           {/* <div className="z-30">适用于UTSC校区</div> */}
           <div className="flex justify-between mt-3 mb-4">
