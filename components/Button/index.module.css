@@ -22,3 +22,9 @@
 .text-PingFang{
     font-family: 'PingFang SC';
 }
+
+.gray {
+    background: linear-gradient(260.85deg, #F2F2F2 -1.17%, #F2F2F2 94.12%);
+    @apply animate-pulse;
+    /* @apply animate-ping; */
+}

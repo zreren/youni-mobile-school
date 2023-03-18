@@ -17,9 +17,10 @@ import Icon10 from '@/public/assets/setting/10.svg';
 import Icon11 from '@/public/assets/setting/11.svg';
 import Icon12 from '@/public/assets/setting/2-12.svg';
 import Icon13 from '@/public/assets/setting/2-13.svg';
-
+import useRequest from '@/libs/request';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { Toast } from 'react-vant';
 const Icon =new Array(3).map((item,index) => require("@/public/assets/setting/" + index + 1 + ".svg"));
 const IconRender = (props) =>{
     const IconGetter= Icon[props]
@@ -35,6 +36,23 @@ const InputSelect = (props) => {
 };
 export default function index() {
   const router = useRouter();
+  const List5 = [
+    {
+      Icon: Icon1,
+      title: 'Account logout',
+      intro: '',
+      action: <RightIcon></RightIcon>,
+      event:async() => {
+        const {data} = await useRequest.get('/api/account/logout')
+        if(data?.message === 'success'){
+          Toast.success('Logout successfully')
+          router.push('/Profile')
+        }else{
+          Toast.fail('network error')
+        }
+      }
+    },
+  ]
   const List1 = [
     {
       Icon: Icon1,
@@ -126,13 +144,13 @@ export default function index() {
     },
   ];
   return (
-    <CommonLayout className="overflow-hidden bg-white">
+    <CommonLayout className="overflow-hidden bg-white pb-10">
       <Header title="Setting"></Header>
       <Form header="Account" List={List1}></Form>
       <Form header="Content" List={List2}></Form>
       <Form header="Cache & support" List={List3}></Form>
       <Form header="About" List={List4}></Form>
-
+      <Form header="Auth" List={List5}></Form>
       {/* <Form header="翻译" List={List2}></Form> */}
 
     </CommonLayout>

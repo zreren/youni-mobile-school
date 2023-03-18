@@ -27,7 +27,15 @@ import EmptyCourseIcon from './emptyCourse.svg';
 export default function courseEvaluation() {
   const router = useRouter();
   const CourseId = router.query.id;
-  const CampusId = router.query.campus;
+  const CAMPUS = router.query.campus;
+
+  const {data:campusData} = useFetch('/campus/query','get',{
+    name: router.query.campus,
+  })
+
+  const campusId = useMemo(()=>{
+    return campusData?.data?.[0]?.id
+  },[campusData])
   // const router =useRouter();
   const { data: courseEvaluation, error } = useFetch(
     `${Cons.API.COURSE.DETAIL}?id=${CourseId}`,
@@ -92,13 +100,20 @@ export default function courseEvaluation() {
   function CustomIconWrapper(props) {
     return <FilterIcon {...props} style={{ transform: 'rotate(0deg)' }} />;
   }
+  const {data:professorRankList} = useFetch('/professor/hot','get',{
+    campusId:campusId
+  })
+  useEffect(()=>{
+    console.log(professorRankList,"professorRankList")
+  },[professorRankList])
+
   const Evaluation = (props) => {
     console.log(props, 'Evaluation props');
     return (
       <CommonLayout>
         <Search></Search>
         <Title title="热门教授"></Title>
-        <HotProfessorCar professorList={professorRankList}></HotProfessorCar>
+        <HotProfessorCar professorList={professorRankList?.data}></HotProfessorCar>
         <Title title="教授列表" customClick={() => {}}>
           {/* <FilterIcon></FilterIcon> */}
           <Select
@@ -136,7 +151,7 @@ export default function courseEvaluation() {
                     const campusId = router.query.campus;
                     router.push({
                       pathname: `/[campus]/professor/detail/${item.id}`,
-                      query: { campus: CampusId },
+                      query: { campus: router.query.campus },
                     });
                   }}
                 ></ProfessorCard>
@@ -149,26 +164,9 @@ export default function courseEvaluation() {
       </CommonLayout>
     );
   };
-  const professorRankList = [
-    // {
-    //   id: 1,
-    //   name: 'Leonard Eli Karakowsky',
-    //   score: 4.5,
-    // },
-    // {
-    //   id: 2,
-    //   name: 'Test Professor 1',
-    //   score: 3.2,
-    // },
-    // {
-    //   id: 3,
-    //   name: 'Test Professor 2',
-    //   score: 1.7,
-    // },
-  ];
 
   const [isFilteringOut, setisFilteringOut] = React.useState(true);
-
+  const {data:recommendsData} = useFetch(`/course/recommends?id=${CourseId}`,'get')
   const CourseEva = (props) => {
     type order = 'default' | 'positive' | 'negative';
     const [evaluationOrder, setEvaluationOrder] =
@@ -196,6 +194,7 @@ export default function courseEvaluation() {
       `/evaluation/list?courseId=${CourseId}&campusId=${1}`,
       'get',
     );
+
     const [data, setData] = React.useState(evaluationData?.data);
     if (!props) {
       props = {
@@ -286,7 +285,7 @@ export default function courseEvaluation() {
     );
   };
   const { data: evaluationData } = useFetch(
-    `${Cons.API.PROFESSOR.QUERY}?id=${CourseId}`,
+    `/course/professors?id=${CourseId}`,
     'get',
   );
   const MyIntroduce = React.useMemo(() => {
@@ -319,10 +318,7 @@ export default function courseEvaluation() {
   return (
     <div className="w-screen min-h-screen bg-bg pb-2">
       <Header
-        title={`${
-          courseEvaluation?.data?.subject[useLanguage('name')]?.toUpperCase() ||
-          ''
-        } ${courseEvaluation?.data?.code || 'loading...'}`}
+        title={`${courseEvaluation?.data?.code || 'loading...'}`}
       ></Header>
       <HeaderMenu
         headerMenuList={headerMenuList}
@@ -334,7 +330,7 @@ export default function courseEvaluation() {
       {/* <div className='mt-6'></div> */}
       {/* {!Menu ? <Menu></Menu> : null} */}
       {/* {Menu} */}
-      {Menu === 0 ? Introduce(MyIntroduce) : null}
+      {Menu === 0 ? <Introduce recommendsData={recommendsData?.data} MyIntroduce={MyIntroduce}></Introduce> : null}
       {Menu === 1 ? Evaluation(evaluationData?.data) : null}
       {Menu === 2 ? <CourseEva {...courseEvaluation?.data} /> : null}
       {Menu === 3 ? GroupChat() : null}

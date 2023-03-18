@@ -44,6 +44,7 @@
     "ppfish-mobile": "^1.0.4",
     "prettier": "^2.7.1",
     "react": "18.1.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "18.1.0",
     "react-fast-masonry": "^0.7.1",

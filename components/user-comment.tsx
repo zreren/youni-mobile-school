@@ -49,15 +49,15 @@ export default function userComment(props) {
         <div className="flex items-center mb-4">
           <div className="avatar placeholder">
             <div className="bg-neutral-focus text-neutral-content rounded-full w-14">
-              <img src={`${Cons.BASEURL}${data?.student?.avatar}`} />
+              <img src={`${Cons.BASEURL}${data?.user?.avatar}`} />
             </div>
           </div>
           <div>
             <div className="text-lg ml-4 font-medium max-w-8 text-blueTitle">
-              {data?.student?.nickName}
+              {data?.user?.nickName}
             </div>
             <div className="text-gray-200 ml-4">
-              {data?.student?.education?.year}届 · B.Com Accounting
+              {data?.user?.education?.year}届 · B.Com Accounting
             </div>
           </div>
         </div>
@@ -137,7 +137,7 @@ export default function userComment(props) {
           </div>
           <div className="flex">
             <Comments></Comments>
-            <div className="text-xs text-gray-300">{data?.commentCount}</div>
+            <div className="text-xs text-gray-300">{data?.interactInfo?.commentCount}</div>
           </div>
         </div>
         <div>

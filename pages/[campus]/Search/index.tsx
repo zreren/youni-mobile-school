@@ -10,11 +10,12 @@ import useFetch from '@/hooks/useFetch';
 import ProfessorCard from '@/components/ProfessorListItem';
 import useLocalStorage from '@/hooks/useStore';
 import Head from 'next/head';
+import { disableZoom } from '@/libs/disableZoom';
+import { enableZoom } from '@/libs/enableZoom';
 export default function index() {
   // const router = useRouter();
   const router = useRouter();
   const campus = router.query.campus as string;
-  console.log(campus, 'campus');
   const { data: campusData, mutate: campusDataMutate } = useFetch(
     '/campus/query',
     'get',
@@ -24,7 +25,7 @@ export default function index() {
   );
   const campusId = React.useMemo(() => {
     return campusData?.data[0]?.id;
-  }, [campusData?.data[0]?.id]);
+  }, [campusData?.data]);
   useEffect(() => {
     campusDataMutate();
   }, [router.query.campus]);
@@ -34,21 +35,43 @@ export default function index() {
   const [value, setValue] = React.useState('');
   const [historyList, setHistoryList] = useState<any[]>(history);
   const {
-    data: courseData,
+    data: _courseData,
     error: courseError,
     mutate,
-  } = useFetch(`/course/query`, 'get', {
+  } = useFetch(`/course/query`, 'page', {
     keyword: value,
     campusId: campusId,
+    pageSize: 100
   });
-  const { data: professorList, mutate: professorMutate } = useFetch(
+  const courseData = React.useMemo(() => 
+  _courseData && !courseError ? courseData ? [...courseData].concat(..._courseData): [].concat(..._courseData) : null
+  , [_courseData,campusId,value,courseError])
+
+  const { data: _professorList, mutate: professorMutate } = useFetch(
     `/professor/list`,
-    'get',
+    'page',
     {
       keyword: value,
       campusId: campusId,
+      pageSize: 100,
     },
   );
+  useEffect(()=>{
+    if(menu === 1){
+      mutate()
+    }
+    if(menu === 0){
+      professorMutate()
+    }
+
+  },[campusData,menu])
+  const professorList = React.useMemo(() => {
+    return _professorList
+      ? professorList
+        ? [...professorList].concat(..._professorList)
+        : [].concat(..._professorList)
+      : [];
+  }, [_professorList, campusId, value, campusData]);
   const SearchTag = (props) => {
     const { title } = props;
     return (
@@ -167,7 +190,7 @@ export default function index() {
         )}
         <div className="min-h-full">
           {menu === 1
-            ? courseData?.data?.map((item) => {
+            ? courseData?.map((item) => {
                 return (
                   <div className="mt-3">
                     <CourseScoreCard data={item}></CourseScoreCard>
@@ -178,11 +201,11 @@ export default function index() {
         </div>
         <div className="space-y-3">
           {menu === 0
-            ? professorList?.data?.map((item) => {
+            ? professorList?.map((item) => {
                 return (
                   <ProfessorCard
                     data={item}
-                    key={item.id}
+                    key={item?.id}
                     onClick={() => {
                       const { campus } = router.query;
                       router.push({

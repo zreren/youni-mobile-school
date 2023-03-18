@@ -52,12 +52,12 @@ export default function LabelBottomNavigation(props) {
     console.log(BrowserInfo,' BrowserInfo');
     if(BrowserInfo.isPhone){
       const dom = document.getElementById("bottom-menu");
-      if(!dom)return
+      if(!dom)return;
       dom.style.paddingBottom = "10px";
-      dom.style.height = '60px'
+      dom.style.height = '60px';
     }else{
       const dom = document.getElementById("bottom-menu");
-      if(!dom)return
+      if(!dom)return;
       dom.style.paddingBottom = "0px";
     }
   },[router])
@@ -116,7 +116,7 @@ export default function LabelBottomNavigation(props) {
   `,
   );
   return (
-    <div>
+    <div id='bottom-navigation'>
       {value === 3 ? (
         <div className='bg-transparent'>
           <UserAddMenu close={()=>{setValue(0)}}></UserAddMenu>

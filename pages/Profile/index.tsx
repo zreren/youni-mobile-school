@@ -51,10 +51,23 @@ import Box from '@mui/material/Box';
 import { Switch } from 'react-vant';
 import useRequest from "@/libs/request";
 import EmptyPostIcon from  './emptyPost.svg';
+import ReturnBackIcon from './returnBack.svg';
+
 // import Waterfall from '@/components/Layout/Waterfall';
 
 const PostGroupDetail = (props) => {
   const { data,isEdit,mutate } = props;
+  console.log(data,"PostGroupDetail")
+  const [name,setName] = useState(data?.name)
+  useEffect(()=>{
+    setName(data?.name)
+  },[data?.name])
+  useEffect(()=>{
+    useRequest.post('/api/collection/update',{
+      id: data?.id,
+      name : name
+    })
+  },[name])
   const cancelStarPost = async (id)=>{
     console.log("PostGroupDetail",id,data?.id)
     await  useRequest.post("/api/post/unstar",{
@@ -67,6 +80,10 @@ const PostGroupDetail = (props) => {
   useEffect(()=>{
     console.log(isEdit,"isEdit")
   },[isEdit])
+  const [checked,setChecked] = useState(data?.isPublic)
+  useEffect(()=>{
+    setChecked(data?.isPublic)
+  },[data?.isPublic])
   if (!data) return;
   return (
     <div className="w-full h-screen">
@@ -76,12 +93,15 @@ const PostGroupDetail = (props) => {
             {data?.posts?.length > 0? data?.posts?.slice(0, 4).map((item) => {
               return (
                 <div className="overflow-hidden  h-[26px] w-[26px]">
-                  <img
+                  {
+                    item.preview?  <img
                     width={'100%'}
                     style={{ objectFit: 'contain' }}
                     height={'100%'}
                     src={`${Cons.BASEURL}${item.preview[0]}`}
-                  ></img>
+                  ></img>:null
+                  }
+                
                 </div>
               );
             }):<div className='h-[26px] w-[26px]'></div>}
@@ -89,17 +109,24 @@ const PostGroupDetail = (props) => {
           {
             isEdit ?
            <div className='ml-4'>
-            <Input className=" text-[#37455C]  underline  font-semibold text-lg" value={data?.name}></Input>
+            <Input value={name} onChange={(e)=>{setName(e)}} className=" text-[#37455C]  underline  font-semibold text-lg" ></Input>
             <div className='mt-2 flex items-center'>
               <div className='w-[4px] h-4 bg-[#FFCE00] mr-2 rounded-full'></div>
               <div className='mr-4 text-blueTitle'>是否公开</div>
-              <Switch  size="24px" activeColor="#FED440"></Switch></div>
+              <Switch
+              checked={checked}
+              onChange={(e)=>{
+                setChecked(e)
+                useRequest.post('/api/collection/update',{
+                  id: data?.id,
+                  isPublic : e
+                })
+              }} size="24px" activeColor="#FED440"></Switch></div>
            </div>:
             <div className="ml-4 text-[#37455C] font-semibold text-lg">
             {data?.name}
           </div>
           }
-          
         </div>
         <div className="flex justify-between mt-3">
           <div>
@@ -111,7 +138,7 @@ const PostGroupDetail = (props) => {
                   }}
                   className="w-8 rounded-full bg-neutral-focus text-neutral-content"
                 >
-                  <img src={`${Cons.BASEURL}${data?.student?.avatar}`} />
+                  <img src={`${Cons.BASEURL}${data?.user?.avatar}`} />
                 </div>
               </div>
               <div
@@ -120,10 +147,10 @@ const PostGroupDetail = (props) => {
                 }}
               >
                 <div className="ml-4 text-sm  font-normal max-w-8 text-[#37455C] ">
-                  {data?.student?.nickName}
+                  {data?.user?.nickName}
                 </div>
                 <div className="ml-4 text-xs text-gray-200">
-                  {data?.student?.education?.year} · {data?.student?.education?.major}
+                  {data?.user?.education?.year} · {data?.user?.education?.major}
                   {/* 2022届 · B.Com Accounting */}
                 </div>
               </div>
@@ -152,7 +179,7 @@ const PostGroupDetail = (props) => {
             key={data?.id + data?.posts?.length}
             cancelStarPost={(id)=>{cancelStarPost(id)}}
             postData={data?.posts?.map((item) => {
-              return { ...item, student: { nickName: data?.student?.nickName } };
+              return { ...item, student: { nickName: data?.user?.nickName } };
             })}
           ></Waterfall>:<div className='text-[#898E97] flex justify-center'>该文集暂时没有内容</div>}
     </div>
@@ -255,14 +282,17 @@ const PostGroup = (props) => {
           data?.posts?.length > 0 ? data?.posts?.slice(0,4).map((item,index)=>{
             return (
              <div>
-               <Image
-              width={64}
-              height={64}
-              placeholder="blur"
-              blurDataURL={`${Cons.BASEURL}${item.preview[0]}`}
-              src={`${Cons.BASEURL}${item.preview[0]}`}
-              className="rounded-xl"
-            ></Image>
+              {
+                item.preview?<Image
+                width={64}
+                height={64}
+                placeholder="blur"
+                blurDataURL={`${Cons.BASEURL}${item.preview[0]}`}
+                src={`${Cons.BASEURL}${item.preview[0]}`}
+                className="rounded-xl"
+              ></Image>:null
+              }
+               
              </div>
             )
           }): <div className='w-full h-16 text-[#798195] flex justify-center items-center'>
@@ -273,6 +303,7 @@ const PostGroup = (props) => {
     </div>
   );
 };
+
 const Identify = () => {
   const router = useRouter();
   const { t } = useTranslation('translations');
@@ -285,7 +316,6 @@ const Identify = () => {
     >
       <div className="flex items-center space-x-2">
         <ValidIcon className="absolute left-0"></ValidIcon>
-        {/* <div>{t("profile.identify.student.certification")}</div> */}
         <div className="pl-10 font-bold text-brown">学生认证</div>
       </div>
       <div className="flex flex-col items-center text-xs text-brown">
@@ -295,6 +325,7 @@ const Identify = () => {
     </div>
   );
 };
+
 const ProfileMenu = () => {
   return (
     <div className="flex justify-between p-4  relative">
@@ -313,6 +344,7 @@ const ProfileMenu = () => {
     </div>
   );
 };
+
 const Setting = () => {
   return (
     <div className="w-full rounded-lg card bg-base-100 ">
@@ -489,8 +521,8 @@ function index(props) {
           </div>
         ) : (
           <Waterfall
-            postData={data?.data.map((item) => {
-              return { ...item, student: { nickName: user?.nickName } };
+            postData={data?.data?.map((item) => {
+              return { ...item, user: { nickName: user?.nickName } };
             })}
           ></Waterfall>
         )}
@@ -504,6 +536,7 @@ function index(props) {
     const { data: liked } = useFetch('/post/liked', 'get');
     const { data: stard } = useFetch('/post/stard', 'get');
     const { data: PostGroupData } = useFetch('/collection/followed', 'get');
+
     const postData = React.useMemo(() => {
       if(liked?.data && stard?.data){
         return (
@@ -683,7 +716,7 @@ function index(props) {
 
   return (
     <div className="w-screen min-h-screen   pb-36">
-      <ProfileHeader data={{ student: user }}></ProfileHeader>
+      <ProfileHeader data={{ user: user }}></ProfileHeader>
       <div className="w-full overflow-hidden rounded-full ">
         {menuVal !== 4 ? (
           <HeaderMenu

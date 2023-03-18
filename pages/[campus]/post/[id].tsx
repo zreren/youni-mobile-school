@@ -22,6 +22,7 @@ import { Toast } from 'react-vant';
 import { areOptionsEqual } from '@mui/base';
 import { useRouter } from 'next/router';
 import mapRequest from '@/libs/mapRequest';
+import useUser from '@/hooks/useUser';
 
 function index(props) {
   const router = useRouter()
@@ -39,7 +40,7 @@ function index(props) {
     });
     if (data?.message) {
       Toast.success('评论成功');
-      mutate({}, true);
+      mutate();
     }
   };
   /**
@@ -56,9 +57,27 @@ function index(props) {
     });
     if (data?.message) {
       Toast.success('评论成功');
-      mutate({}, true);
+      mutate();
     }
   };
+
+  const {data:_commentData,mutate:mutateComment} = useFetch('/comment/list','page',{
+    id: id,
+    pageSize : 10,
+    type :  2
+  })
+  useEffect(()=>{
+    mutateComment()
+  },[id])
+  const commentData = useMemo(() => 
+  _commentData? commentData?
+   [...commentData].concat(_commentData).filter((item)=>item !== undefined):[].concat(..._commentData).filter((item)=>item !== undefined): null
+   ,[_commentData,data])
+   useEffect(()=>{
+    console.log(commentData,"commentData")
+   },[commentData])
+
+
   interface MapLocation  {
     point: number[];
     placename: string;
@@ -78,6 +97,7 @@ function index(props) {
       console.log(Location,'Location')
       if(!Location?.point) return null
       const point = Location?.point;
+      if(!point) return
       const bbox_width = 0.005;
       const bbox_height = 0.005;
       const longitude1 = point[0] - (bbox_width / 2)
@@ -241,6 +261,7 @@ function index(props) {
   const focusInput = () => {
     inputRef.current.focus();
   }
+  const {user} = useUser();
   return (
     <div className="mb-10 w-full h-full pb-10">
       <Popup
@@ -254,7 +275,7 @@ function index(props) {
       </Popup>
       <UserHeader
         className="fixed z-10   top-0 w-full"
-        data={data?.data?.student}
+        data={data?.data?.user}
       ></UserHeader>
       <div className="min-h-[380px]">
         <Swiper
@@ -317,17 +338,33 @@ function index(props) {
           })}
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end space-x-2">
           <div className="mt-2 border border-[#DCDDE1] w-14 h-6 text-xs rounded-full text-[#A9B0C0] whitespace-nowrap	flex justify-center items-center">
             举报
           </div>
+          {
+            data?.data?.user?.id === user?.id  &&  
+            <div onClick={()=>{
+              router.push({
+                pathname:'/[campus]/post/addPost',
+                query:{
+                  campus:router.query.campus,
+                  id:data?.data?.id,
+                  isEdit:true,
+                  type:data?.data?.type
+                }
+              })
+            }} className="mt-2 border border-[#DCDDE1] w-14 h-6 text-xs rounded-full text-[#A9B0C0] whitespace-nowrap	flex justify-center items-center">
+            编辑
+          </div>
+         }
         </div>
       </div>
       <div className="w-full h-2 bg-bg"></div>
       <div className="p-5 pt-4 pb-2">
         <UserInfo
           contact={data?.data?.form?.contact}
-          data={data?.data?.student}
+          data={data?.data?.user}
         ></UserInfo>
       </div>
       <div className="w-full h-2 bg-bg"></div>
@@ -339,12 +376,12 @@ function index(props) {
         <PostDiscussionInput
          callDiscussion={focusInput}
         ></PostDiscussionInput>
-        <Discussion
-        callDiscussion={focusInput}
+       <Discussion
+          callDiscussion={focusInput}
           commentComment={(e) => {
             commentComment(e);
           }}
-          comments={data?.data?.comments}
+          comments={commentData}
         ></Discussion>
       </div>
       {commentChild?.id ? (

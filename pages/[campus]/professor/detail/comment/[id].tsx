@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import CScoreCard from '@/components/Rating/CScoreCard';
 import Super from '../surper.svg';
 import Like from './Like.svg';
@@ -15,6 +15,9 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import FooterDiscussionInput from '@/components/Input/FooterDiscussionInput';
 import useLocalStorage from '../../../../../hooks/useStore';
+// import Discussion from '@/components/Discussion/index'
+import GDiscussionComponent from '@/components/Discussion'
+
 export default function userComment() {
   const router = useRouter();
   const [reRender, setReRender] = useState(false);
@@ -22,106 +25,25 @@ export default function userComment() {
     const data = await useRequest.post(`/api/comment/like`, {
       id: id,
     });
-    // console.log(data.message, "message")
-    // if(data.message){
-    // setReRender(!reRender);
-    // }
   };
   const [language, setLanguage] = useLocalStorage('language', 'en');
   const { id } = router.query;
-  const { data, error } = useFetch(`/evaluation/detail?id=${id}`, 'get');
-  const comments = [
-    {
-      id: 1,
-      createdAt: '2022-12-07',
-      updatedAt: '2022-12-07',
-      content: 'This is the first comment',
-      children: [
-        {
-          id: 2,
-          createdAt: '2022-12-07',
-          updatedAt: '2022-12-07',
-          content: 'This is the first reply to the first comment',
-          children: [],
-          parent: 1,
-          evaluation: {},
-          student: {},
-          deletedAt: null,
-        },
-        {
-          id: 3,
-          createdAt: '2022-12-07',
-          updatedAt: '2022-12-07',
-          content: 'This is the second reply to the first comment',
-          children: [],
-          parent: 1,
-          evaluation: {},
-          student: {},
-          deletedAt: null,
-        },
-        {
-          id: 4,
-          createdAt: '2022-12-07',
-          updatedAt: '2022-12-07',
-          content: 'This is the third reply to the first comment',
-          children: [],
-          parent: 1,
-          evaluation: {},
-          student: {},
-          deletedAt: null,
-        },
-      ],
-      parent: null,
-      evaluation: {},
-      student: {},
-      deletedAt: null,
-    },
-    {
-      id: 5,
-      createdAt: '2022-12-07',
-      updatedAt: '2022-12-07',
-      content: 'This is the second comment',
-      children: [
-        {
-          id: 6,
-          createdAt: '2022-12-07',
-          updatedAt: '2022-12-07',
-          content: 'This is the first reply to the second comment',
-          children: [],
-          parent: 5,
-          evaluation: {},
-          student: {},
-          deletedAt: null,
-        },
-        {
-          id: 7,
-          createdAt: '2022-12-07',
-          updatedAt: '2022-12-07',
-          content: 'This is the second reply to the second comment',
-          children: [],
-          parent: 5,
-          evaluation: {},
-          student: {},
-          deletedAt: null,
-        },
-        {
-          id: 8,
-          createdAt: '2022-12-07',
-          updatedAt: '2022-12-07',
-          content: 'This is the third reply to the second comment',
-          children: [],
-          parent: 5,
-          evaluation: {},
-          student: {},
-          deletedAt: null,
-        },
-      ],
-      parent: null,
-      evaluation: {},
-      student: {},
-      deletedAt: null,
-    },
-  ];
+  const { data, error, } = useFetch(`/evaluation/detail?id=${id}`, 'get');
+  const {data:_commentData,mutate} = useFetch('/comment/list','page',{
+    id:data?.data?.id,
+    pageSize : 10,
+    type :  3
+  })
+  const commentData = useMemo(() => 
+  _commentData? commentData?
+   [...commentData].concat(_commentData):[].concat(..._commentData): []
+   ,[_commentData,data])
+  React.useEffect(() => {
+     console.log(commentData,"commentData")
+  }, [commentData])
+  useEffect(()=>{
+    mutate()
+  },[data?.data?.id])
   const DiscussionComponentFooter = (props) => {
     const { data, id } = props;
     const [clike, setLike] = useState(data?.liked);
@@ -132,12 +54,12 @@ export default function userComment() {
     };
     const likeCount = useMemo(() => {
       if (defaultLike && !clike) {
-        return Number(data?.likeCount) - 1;
+        return Number(data?.interactInfo?.likeCount) - 1;
       }
       if (!defaultLike && clike) {
-        return Number(data?.likeCount) + 1;
+        return Number(data?.interactInfo?.likeCount) + 1;
       }
-      return Number(data?.likeCount);
+      return Number(data?.interactInfo?.likeCount);
       // if(defaultLike && clike){
       //   return Number(data?.likeCount);
       // }
@@ -169,24 +91,24 @@ export default function userComment() {
     return (
       <div className="w-full mt-2 flex justify-start space-x-3">
         <div className="rounded-full">
-          {data?.student?.avatar ? (
+          {data?.user?.avatar ? (
             <Image
               placeholder="blur"
               objectFit="cover"
-              blurDataURL={`${Cons.BASEURL}${data?.student.avatar}`}
+              blurDataURL={`${Cons.BASEURL}${data?.user.avatar}`}
               width={'24px'}
               height={'24px'}
               className="rounded-full"
-              src={`${Cons.BASEURL}${data?.student?.avatar}`}
+              src={`${Cons.BASEURL}${data?.user?.avatar}`}
             />
           ) : (
             <span className="text-3xl">K</span>
           )}
         </div>
         <div className="w-full pr-4">
-          <div className="font-medium">{data?.student.nickName}</div>
+          <div className="font-medium">{data?.user.nickName}</div>
           <div className="text-xs text-secondGray mt-1">
-            {data?.student?.education?.year} · {data?.student?.education?.major}
+            {data?.user?.education?.year} · {data?.user?.education?.major}
           </div>
           <div className="text-sm mt-1">{data?.content}</div>
           <DiscussionComponentFooter
@@ -213,15 +135,15 @@ export default function userComment() {
                       return (
                         <div className="w-full mt-2 flex justify-start space-x-3">
                           <div className="rounded-full">
-                            {item?.student?.avatar ? (
+                            {item?.user?.avatar ? (
                               <Image
                                 placeholder="blur"
                                 objectFit="cover"
-                                blurDataURL={`${Cons.BASEURL}${item?.student.avatar}`}
+                                blurDataURL={`${Cons.BASEURL}${item?.user.avatar}`}
                                 width={'24px'}
                                 height={'24px'}
                                 className="rounded-full"
-                                src={`${Cons.BASEURL}${item?.student?.avatar}`}
+                                src={`${Cons.BASEURL}${item?.user?.avatar}`}
                               />
                             ) : (
                               <span className="text-3xl">K</span>
@@ -229,11 +151,11 @@ export default function userComment() {
                           </div>
                           <div className="w-full">
                             <div className="font-medium">
-                              {item.student.nickName}
+                              {item.user.nickName}
                             </div>
                             <div className="text-xs text-secondGray mt-1">
-                              {item?.student?.education?.year || '未认证'} ·{' '}
-                              {item.student?.education?.major || '未认证'}
+                              {item?.user?.education?.year || '未认证'} ·{' '}
+                              {item.user?.education?.major || '未认证'}
                             </div>
                             <div className="text-sm mt-1 w-full">
                               {item.content}
@@ -250,15 +172,15 @@ export default function userComment() {
                       return (
                         <div className="w-full mt-2 flex justify-start space-x-3">
                           <div className="rounded-full">
-                            {item?.student?.avatar ? (
+                            {item?.user?.avatar ? (
                               <Image
                                 placeholder="blur"
                                 objectFit="cover"
-                                blurDataURL={`${Cons.BASEURL}${item?.student.avatar}`}
+                                blurDataURL={`${Cons.BASEURL}${item?.user.avatar}`}
                                 width={'24px'}
                                 height={'24px'}
                                 className="rounded-full"
-                                src={`${Cons.BASEURL}${item?.student?.avatar}`}
+                                src={`${Cons.BASEURL}${item?.user?.avatar}`}
                               />
                             ) : (
                               <span className="text-3xl">K</span>
@@ -266,11 +188,11 @@ export default function userComment() {
                           </div>
                           <div className="w-full">
                             <div className="font-medium">
-                              {item?.student?.nickName}
+                              {item?.user?.nickName}
                             </div>
                             <div className="text-xs text-secondGray mt-1">
-                              {item.student?.education?.year} ·{' '}
-                              {item?.student?.education?.major || '未认证'}
+                              {item.user?.education?.year} ·{' '}
+                              {item?.user?.education?.major || '未认证'}
                             </div>
                             <div className="text-sm mt-1 w-full">
                               {item?.content}
@@ -304,6 +226,11 @@ export default function userComment() {
       </div>
     );
   };
+  const inputRef = React.useRef(null);
+  const focusInput = () => {
+    inputRef.current.focus();
+  }
+
   return (
     <>
       <div className="bg-white p-4 rounded-lg  mb-4">
@@ -333,26 +260,26 @@ export default function userComment() {
         <div className="flex items-center  ml-2">
           <div className="avatar placeholder">
             <div className="bg-neutral-focus text-neutral-content rounded-full w-6">
-              {data?.data?.student ? (
+              {data?.data?.user ? (
                 <Image
                   placeholder="blur"
                   objectFit="cover"
                   className="rounded-full"
-                  blurDataURL={`${Cons.BASEURL}${data?.data?.student?.avatar}`}
+                  blurDataURL={`${Cons.BASEURL}${data?.data?.user?.avatar}`}
                   width={'24px'}
                   height={'24px'}
-                  src={`${Cons.BASEURL}${data?.data?.student?.avatar}`}
+                  src={`${Cons.BASEURL}${data?.data?.user?.avatar}`}
                 />
               ) : null}
             </div>
           </div>
           <div>
             <div className="text-sm ml-2 font-medium max-w-8 text-blueTitle">
-              {data?.data?.student?.nickName}
+              {data?.data?.user?.nickName}
             </div>
             <div className="text-gray-200 text-xs ml-2">
-              {data?.data?.student?.education?.year} ·{' '}
-              {data?.data?.student?.education?.major}
+              {data?.data?.user?.education?.year} ·{' '}
+              {data?.data?.user?.education?.major}
             </div>
           </div>
         </div>
@@ -360,33 +287,6 @@ export default function userComment() {
       </div>
       <div className="mb-11"></div>
         </>
-        {/* {reRender} */}
-        {/* <div className="flex items-center mb-4">
-          <div className="avatar placeholder">
-            <div className="bg-neutral-focus text-neutral-content rounded-full w-14">
-              {data?.data?.student ? (
-                <Image
-                  placeholder="blur"
-                  objectFit="cover"
-                  className="rounded-full"
-                  blurDataURL={`${Cons.BASEURL}${data?.data?.student?.avatar}`}
-                  width={'80px'}
-                  height={'80px'}
-                  src={`${Cons.BASEURL}${data?.data?.student?.avatar}`}
-                />
-              ) : null}
-            </div>
-          </div>
-          <div>
-            <div className="text-lg ml-4 font-medium max-w-8 text-blueTitle">
-              {data?.data?.student?.nickName}
-            </div>
-            <div className="text-gray-200 ml-4">
-              {data?.data?.student?.education?.year} ·{' '}
-              {data?.data?.student?.education?.major}
-            </div>
-          </div>
-        </div> */}
         <div>
           <div className="w-full   rounded-t-xl org-gradient2 relative h-8">
             <Super className="absolute right-1 bottom-0 z-10"></Super>
@@ -399,7 +299,7 @@ export default function userComment() {
                 <div className="flex space-x-2 mb-1 mt-1">
                   <div className="text-gray-300">课程名称:</div>
                   <div className="text-blueTitle">
-                    {data?.data?.course.ename} {data?.data?.course.code}
+                     {data?.data?.course.code}
                   </div>
                 </div>
                 <div className="flex space-x-2 mb-1 mt-1">
@@ -435,12 +335,15 @@ export default function userComment() {
         </div>
         <div className="h-1 m-0 divider opacity-30"></div>
         <div className="space-y-8 mt-4 mb-20">
-          <PostDiscussionInput></PostDiscussionInput>
-          <Discussion data={data?.data?.comments}></Discussion>
+          <PostDiscussionInput callDiscussion={focusInput}></PostDiscussionInput>
+          <GDiscussionComponent  
+          commentComment={(e) => {
+            
+          }} callDiscussion={focusInput} comments={commentData} data={commentData}></GDiscussionComponent>
         </div>
       </div>
      <div className='fixed bottom-12 w-full'>
-     <FooterDiscussionInput method={'course'} send={()=>{
+     <FooterDiscussionInput  ref={inputRef} method={'course'} send={()=>{
       
      }} data={data?.data}></FooterDiscussionInput>
      </div>

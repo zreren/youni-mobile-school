@@ -7,7 +7,7 @@ import { useState } from 'react';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { styled } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
-import { Swiper } from 'react-vant';
+import { Swiper, Toast } from 'react-vant';
 import classnames from 'classnames';
 import Header from '@/components/Header';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,6 +26,9 @@ import useFetch from '../../hooks/useFetch';
 import { useLocalStorage } from 'react-use';
 import { Popup } from 'react-vant';
 import { useRouter } from 'next/router';
+import { enableZoom } from '@/libs/enableZoom';
+import { SwitchTransition, CSSTransition } from 'react-transition-group';
+import useUser from '@/hooks/useUser';
 const PostDetail = (props) => {
   return (
     <SwipeableDrawer
@@ -139,49 +142,136 @@ function SchoolPage(props) {
     props?.post?.alias,
     props?.post?.id,
   );
-  // const [postData, setPostData] = useState({});
+  const { user ,loggedOut} = useUser();
+
+  const [category, setCategory] = useState('idle');
+  const pathname = useMemo(() => {
+    const follow_list = '/post/follow_list';
+    const home_list = '/post/home_list';
+    const recommend_list = '/post/recommend_list';
+    if (category === 'follow_list') {
+      return follow_list;
+    }
+    if (category === 'recommend_list') {
+      return recommend_list;
+    }
+    return home_list;
+  }, [category]);
+  const {
+    data: _postData,
+    error,
+    mutate,
+    isLoading,
+  } = useFetch(pathname, 'page', {
+    type: pathname === '/post/home_list' ? category : null,
+    pageSize: 20,
+  });
+
+  useEffect(()=>{
+    console.log(loggedOut,"loggedOut")
+  },[loggedOut])
+  const postData = useMemo(() => {
+    return _postData ? postData ? [...postData].concat(..._postData) : [].concat(..._postData) : null;
+  }, [_postData, category]);
+  useEffect(() => {
+    console.log(postData, 'postData');
+  }, [postData]);
   const dispatch = useDispatch();
-  const headerMenuList = [
-    {
-      label: '闲置',
-      value: 'idle',
-    },
-    {
-      label: '活动',
-      value: 'activity',
-    },
-    {
-      label: '新闻',
-      value: 'news',
-    },
-    {
-      label: '转租',
-      value: 'sublet',
-    },
-    {
-      label: '拼车',
-      value: 'carpool',
-    },
-    {
-      label: '二手书',
-      value: 'book',
-    },
-    {
-      label: '关注',
-    },
-    {
-      label: '推荐',
-    },
-  ];
+  // ()=>{
+  //   if(loggedOut){
+  //     return (
+  //       {
+  //         label: '关注',
+  //         value: 'follow_list',
+  //       }
+  //     )
+  //   }
+  // },
+  const headerMenuList = useMemo(()=>{
+    if(loggedOut){
+      return [
+          {
+            label: '闲置',
+            value: 'idle',
+          },
+          {
+            label: '活动',
+            value: 'activity',
+          },
+          {
+            label: '新闻',
+            value: 'news',
+          },
+          {
+            label: '转租',
+            value: 'sublet',
+          },
+          {
+            label: '拼车',
+            value: 'carpool',
+          },
+          {
+            label: '二手书',
+            value: 'book',
+          },
+          {
+            label: '课程配置',
+            value: 'course_recommend',
+          },
+        ]
+      }else{
+        return [
+          {
+            label: '推荐',
+            value: 'recommend_list',
+          },
+          {
+            label: '关注',
+            value: 'follow_list',
+          },
+          {
+            label: '闲置',
+            value: 'idle',
+          },
+          {
+            label: '活动',
+            value: 'activity',
+          },
+          {
+            label: '新闻',
+            value: 'news',
+          },
+          {
+            label: '转租',
+            value: 'sublet',
+          },
+          {
+            label: '拼车',
+            value: 'carpool',
+          },
+          {
+            label: '二手书',
+            value: 'book',
+          },
+          {
+            label: '课程配置',
+            value: 'course_recommend',
+          },
+        ]
+      }
+  },[loggedOut])
+  useEffect(()=>{
+    console.log(headerMenuList,"headerMenuList")
+    // setCategory(headerMenuList[0].label)
+  },[headerMenuList])
   const [reRender, setreRender] = useState(1);
   const onRefresh = (showToast) => {
     return new Promise((resolve) => {
       setTimeout(() => {
         if (showToast) {
-          // Toast.info('刷新成功')
+          mutate();
+          Toast.info('刷新成功');
         }
-        // setreRender(reRender+1)
-        // setCount(count + 1)
         resolve(true);
       }, 1000);
     });
@@ -201,36 +291,23 @@ function SchoolPage(props) {
   });
 
   const router = useRouter();
-  const [category, setCategory] = useState('idle');
   // useEffect(() => {
-  const { data: postData, error,mutate } = useFetch(
-    `/post/home_list`,
-    'get',{
-      type: category,
-      pageSize:20,
-      page:1,
-    }
-  );
-  useEffect(()=>{
-    mutate()
-  },[category])
-  const { data: carouselData } = useFetch('/campus/carousel', 'get', {
+  useEffect(() => {
+    mutate();
+  }, [category]);
+  const { data: carouselData } = useFetch('/campus/carousels', 'get', {
     id: campusIdMap,
   });
-
   React.useEffect(() => {
     setCampusIdMap(props?.post?.id);
-    // setCampusIdMap([...campusIdMap, {
-    //   [props?.post?.alias]: props?.post?.id
-    // }])
     dispatch(setAuthState(true));
   }, []);
   const [countryId, setCountryId] = useState();
   const SchoolList = (props) => {
     const { arg, countryId } = props;
     const [select, setSelect] = useState();
-    const [selectSchool,setSelectSchool] = useLocalStorage('school',null)
-    const { data: countryData, mutate } = useFetch('/country/campus', 'get', {
+    const [selectSchool, setSelectSchool] = useLocalStorage('school', null);
+    const { data: countryData, mutate } = useFetch('/country/campuses', 'get', {
       countryId: countryId,
     });
     useEffect(() => {
@@ -249,26 +326,17 @@ function SchoolPage(props) {
       mutate();
     }, [countryId]);
     console.log(schoolList, 'schoolList');
-    const countryList = [
-      { label: '中国', value: 'Canada' },
-      { label: '中国', value: 'China' },
-    ];
-    // if(countryData?.data?.length === 0){
-    //   return (
-    //     // <div>No</div>
-    //   )
-    // }
     return (
       <div className="">
         <Popup
-        overlayClass={'Popup'}
-        className="z-30 topIndexPlus rounded-full "
-        visible={!countryData}
-      >
-        <div className="rounded-full w-10 h-10 flex overflow-hidden justify-center items-center">
-          <Loading type="spinner" color="#FED64B" />
-        </div>
-      </Popup>
+          overlayClass={'Popup'}
+          className="z-30 topIndexPlus rounded-full "
+          visible={!countryData}
+        >
+          <div className="rounded-full w-10 h-10 flex overflow-hidden justify-center items-center">
+            <Loading type="spinner" color="#FED64B" />
+          </div>
+        </Popup>
         <SwipeableDrawer
           anchor="left"
           open={props.visible}
@@ -320,7 +388,10 @@ function SchoolPage(props) {
                     }}
                   >
                     <div className="flex items-center min-h-[16px] w-full space-x-2">
-                      <div className=' whitespace-pre-wrap'> {item[useLanguage('name')]}</div>
+                      <div className=" whitespace-pre-wrap">
+                        {' '}
+                        {item[useLanguage('name')]}
+                      </div>
                       <div className="p-1 text-xs bg-bg">{item.shortName}</div>
                     </div>
                     <div className="text-xs text-lightGray">{item.alias}</div>
@@ -333,10 +404,20 @@ function SchoolPage(props) {
       </div>
     );
   };
-  // if (!Post) {
-  //   return <div>loading</div>;
-  // }
+  useEffect(() => {
+    setPostDetailShow(false);
+  }, [router.pathname]);
   const [loading, setLoading] = useState(true);
+  const helloRef = React.useRef(null);
+  const goodbyeRef = React.useRef(null);
+  const nodeRef = postData ? helloRef : goodbyeRef;
+  const [loadingState,setLoadingState] = useState(false)
+  useEffect(()=>{
+    setLoadingState(true);
+    setTimeout(() => {
+      setLoadingState(false)
+    }, 1000);
+  },[category,postData])
   return (
     <div className="w-screen  pb-10">
       <PostDetail
@@ -370,25 +451,27 @@ function SchoolPage(props) {
         ></HeaderLayout>
         <MenuAtSchool></MenuAtSchool>
         <div className="w-full pl-5 pr-5">
-          <Swiper
-          autoplay={3000}
-          >
-            {
-              loading ?  <Swiper.Item>
-              <Skeleton loading={true} row={1} rowWidth={'100%'} rowHeight={70}>
-                {' '}
-              </Skeleton>
-            </Swiper.Item>:null
-            }
+          <Swiper autoplay={3000}>
+            {loading ? (
+              <Swiper.Item>
+                <Skeleton
+                  loading={true}
+                  row={1}
+                  rowWidth={'100%'}
+                  rowHeight={70}
+                >
+                  {' '}
+                </Skeleton>
+              </Swiper.Item>
+            ) : null}
             {carouselData?.data.map((item, index) => {
-              // if (index !== 0) return;
               return (
                 <Swiper.Item>
                   <Image
                     src={
-                      item.img.indexOf('http') > -1
-                        ? item.img
-                        : `${Cons.BASEURL}${item.img}`
+                      item.image.indexOf('http') > -1
+                        ? item.image
+                        : `${Cons.BASEURL}${item.image}`
                     }
                     width="100%"
                     height={imageSize.height}
@@ -399,8 +482,8 @@ function SchoolPage(props) {
                         width: '100%',
                         height: '20rem',
                       });
-                      if(index === 0){
-                      setLoading(false);
+                      if (index === 0) {
+                        setLoading(false);
                       }
                     }}
                     objectFit="contain"
@@ -419,33 +502,42 @@ function SchoolPage(props) {
           ></PostCategory>
         </div>
         <div className="mb-10">
-          {/* {postData?.data? ( */}
-          {postData?.data ? (
-            <Waterfall
-              key={category +postData?.data?.length }
-              postData={postData?.data}
-              show={() => {
-                setPostDetailShow(true);
-              }}
-              onClick={() => {}}
-            ></Waterfall>
-          ) : null}
-          {!postData?.data && postData?.code === 1102 ? (
-            <div className="text-[#A9B0C0] mt-10 flex justify-center items-center w-full">
-              暂无内容
-            </div>
-          ) : null}
-          {!postData?.data && postData?.code !== 1102 ? (
-            <LoadingWaterfall
+          <SwitchTransition mode="out-in">
+            <CSSTransition
+              in={isLoading}
+              classNames="fade"
+              timeout={60}
               key={category}
-              show={() => {
-                setPostDetailShow(true);
+              addEndListener={(done) => {
+                nodeRef?.current?.addEventListener("transitionend", done, false);
               }}
-              onClick={() => {}}
-            ></LoadingWaterfall>
-          ) : null}
-          {error ? 'error' : null}
-          {/* ):null} */}
+            >
+              <div ref={nodeRef}>
+                {/* {postData?.data? ( */}
+                {postData && !isLoading && !loadingState ? (
+                  <Waterfall
+                    key={category + postData?.length}
+                    postData={postData}
+                    show={() => {
+                      setPostDetailShow(true);
+                    }}
+                    onClick={() => {}}
+                  ></Waterfall>
+                ) : <LoadingWaterfall
+                key={category}
+                show={() => {
+                  setPostDetailShow(true);
+                }}
+                onClick={() => {}}
+              ></LoadingWaterfall>}
+                {!postData && !isLoading ? (
+                  <div className="text-[#A9B0C0] mt-10 flex justify-center items-center w-full">
+                    暂无内容
+                  </div>
+                ) : null}
+              </div>
+            </CSSTransition>
+          </SwitchTransition>
         </div>
       </PullRefresh>
     </div>
@@ -459,12 +551,7 @@ export async function getServerSideProps({ params }) {
       name: params.campus,
     },
   });
-  console.log(data,"data")
-  // if(!data?.data[0]){
-  //   return {
-  //     notFound:true
-  //   }
-  // }
+  console.log(data, 'data');
   return {
     props: {
       post: data?.data[0],

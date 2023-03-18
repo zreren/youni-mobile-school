@@ -440,9 +440,49 @@
 .blur-background {
   /* background-color: #fff; */
   /* box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.5); */
-  background-color: rgba(255, 255, 255, 0.6); 
+  background-color: rgba(255, 255, 255, 0.9); 
   backdrop-filter: blur(10px);
 }
 .bottomPlus{
   z-index: 99999999 !important;
+}
+
+.gray-pulse{
+  background: linear-gradient(260.85deg, #F2F2F2 -1.17%, #F2F2F2 94.12%);
+
+}
+
+.xueqiTag {
+  background: linear-gradient(41.99deg, #FE8800 7.11%, #FFB62F 90.46%);;
+}
+
+.shadow-footer {
+  /* 底部卡片黄色阴影 */
+
+/* box-shadow: 0px 0px 16px 6px rgba(247, 218, 120, 0.04); */
+box-shadow: 0px -4px 6px rgba(33, 35, 37, 0.04);
+}
+
+.bottomPlusx{
+  z-index: 999999999 !important;
+}
+
+#demo-simple-select{
+  z-index: 99999999999 !important;
+}
+
+.MuiPopover-root{
+  z-index: 99999999999999999 !important;
+}
+
+.css2Overflow-ellipsis{
+  /* border:1px solid #ddd; */
+  width: 100%;
+  word-wrap: normal;
+  word-break: keep-all;
+  text-overflow: ellipsis;
+  display: -webkit-box; /** 将对象作为伸缩盒子模型显示 **/
+  -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+  -webkit-line-clamp: 2; /** 显示的行数 **/
+  overflow: hidden;  /** 隐藏超出的内容 **/
 }

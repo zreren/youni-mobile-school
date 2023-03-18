@@ -1,4 +1,4 @@
-import React, { useRef,useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Header from '@/components/Header';
 import CommonLayout from '@/components/Layout/CommonLayout';
 import Form from '@/components/Form/Form';
@@ -10,12 +10,13 @@ import useRequest from '@/libs/request';
 import { Input, Sticky } from 'react-vant';
 
 export default function account() {
-  const { user,mutate } = useUser();
+  const { user, mutate } = useUser();
   const { i18n } = useTranslation();
   // const {extraInfo } = user;
   const InputSelect = (props) => {
     const [isEdit, setIsEdit] = useState(false);
     const [value, setValue] = useState(props?.label);
+    const [gender,setGender] = useState(props?.value)
     const updateInfo = async (v, k) => {
       if (!props.editable) return;
       if (props.dataIndex === 'nickName') {
@@ -27,13 +28,25 @@ export default function account() {
           mutate();
         }
       }
+      if (props.dataIndex === 'gender') {
+        const { data } = await useRequest.post('/api/profile/update/gender', {
+          gender: v === '男' ? 0 :1,
+        });
+        if (data?.message === 'success') {
+          setIsEdit(false);
+          mutate();
+        }
+      }
     };
     return (
-      <div  onClick={() => {
-        if (!props.editable) return;
-        setIsEdit(true);
-      }} className="flex items-center text-gray-400">
-        {isEdit ? (
+      <div
+        onClick={() => {
+          if (!props.editable) return;
+          setIsEdit(true);
+        }}
+        className="flex items-center text-gray-400"
+      >
+        {isEdit && props.dataIndex === 'nickName' ? (
           <Input
             align="right"
             onChange={(e) => {
@@ -45,9 +58,35 @@ export default function account() {
             className=" text-[#37455C]  underline  font-semibold text-xs"
             value={value}
           ></Input>
-        ) : (
+        ) : null}
+        {isEdit && props.dataIndex === 'gender' ? (
+          <select
+            value={value}
+            onChange={(e)=>{
+              setValue(e.target.value)
+              updateInfo(e.target.value,props.dataIndex)
+              setIsEdit(false)
+            }}
+            style={{
+              width: '60px',
+              backgroundColor: '#F7F8F9',
+              borderRadius: '4px',
+              color: '#798195',
+              border: 'none',
+              padding: '0px 12px',
+              height: '30px',
+              fontWeight: 600,
+              fontSize: '12px',
+              outline: 'none',
+            }}
+          >
+          <option value='男'>男</option>
+          <option value='女'>女</option>
+          </select>
+        ) : null}
+        {!isEdit ? (
           <div>{props?.label ? props?.label : '未设置'}</div>
-        )}
+        ) : null}
         <RightIcon></RightIcon>
       </div>
     );
@@ -56,18 +95,24 @@ export default function account() {
     {
       title: '账号',
       intro: '',
-      action: <InputSelect dataIndex="nickName" editable={true} label={user?.nickName}></InputSelect>,
+      action: (
+        <InputSelect
+          dataIndex="nickName"
+          editable={true}
+          label={user?.nickName}
+        ></InputSelect>
+      ),
     },
     {
       title: 'YoUni ID',
       intro: '',
-      action: <InputSelect label={user?.userId}></InputSelect>,
+      action: <InputSelect  label={String(user?.id)}></InputSelect>,
     },
     {
       title: '性别',
       intro: '',
       action: (
-        <InputSelect label={user?.gender === 0 ? '男' : '女'}></InputSelect>
+        <InputSelect dataIndex="gender" editable={true} value={user?.gender} label={user?.gender === 0 ? '男' : '女'}></InputSelect>
       ),
     },
   ];
@@ -133,11 +178,10 @@ export default function account() {
     console.log(e.target.files, 'e');
     const reader = new FileReader();
     const body = new FormData();
-      body.append('image',  e.target.files[0]);
-    const {data:res} = await useRequest.post('/api/upload', body);
+    body.append('image', e.target.files[0]);
+    const { data: res } = await useRequest.post('/api/upload', body);
     console.log(res, 'res');
-    await useRequest.post('/api/profile/update/avatar',body),
-    mutate()
+    await useRequest.post('/api/profile/update/avatar', body), mutate();
     reader.readAsDataURL(e.target.files[0]);
     reader.onload = function () {
       const base64 = reader.result;

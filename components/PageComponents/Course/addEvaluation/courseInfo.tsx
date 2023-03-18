@@ -6,6 +6,8 @@ import Autocomplete from '@mui/material/Autocomplete';
 import useFetch from '@/hooks/useFetch';
 import { EvaluationForm } from '@/libs/context';
 import useLanguage from '@/hooks/useLanguage';
+import { debounce } from 'lodash';
+
 function courseInfo(props) {
   const { subjectData } = props;
   interface ChangeType {
@@ -31,78 +33,54 @@ function courseInfo(props) {
   const CCourseInput = (props: CCourseInput) => {
     const { title, isNess, children, data, renderData, value } = props;
     const [_value, setValue] = useState(value);
+    const __value = React.useRef<any>(value);
+
     const selectItem = (e) => {
-      console.log(e, 'selectItem');
-      // setValue(e)
       if (!data) {
         props.change({
           id: null,
-          label: e,
+          label: e ? e : null,
         });
         return true;
       }
-      // let allValuesGreaterThanZero = true;
-      if (
-        !Object?.values(data)?.some((value: any) => {
-          if (value.ename === e) {
-            props.change({
-              id: value.id,
-              label: value.ename,
-            });
-            return true;
-          }
-          return false;
-        })
-      )
-        if (
-          !Object?.values(data)?.some((value: any) => {
-            if (value.name === e) {
-              props.change({
-                id: value.id,
-                label: value.name,
-              });
-              return true;
-            }
-            return false;
-          })
-        )
-          if (typeof e === 'string') {
-            props.change({
-              id: null,
-              label: e,
-            });
-            return true;
-          }
 
-      // if (!allValuesGreaterThanZero) {
-      //   // execute code
-      //   props.change({
-      //     courseId: null,
-      //     courseName: e,
-      //   });
-      // }
-      // if(!Object.values(data).every((item:any) => { item})
-      // Object.values(data).every((item:any) => {
-      //   if(item.ename === e){
-      //     props.change({
-      //       courseId:item.id,
-      //       courseName:item.ename
-      //     })
-      //   }
-      // })
-      // props.change({
-      //   courseId:null,
-      //   courseName:e
-      // })
+      let found = false;
+      Object.values(data).forEach((value: any) => {
+        if (value?.ename === e || value?.name === e || value?.code === e) {
+          props.change({
+            id: value?.id,
+            label: value?.code || value?.ename || value?.name,
+          });
+          found = true;
+        }
+      });
+
+      if (!found && typeof e === 'string') {
+        props.change({
+          id: null,
+          label: e ? e : null,
+        });
+      }
     };
+    
+    const debouncedChange = debounce(props.change, 300); // 设置延迟时间为 300ms
+
+
+    const handleInputChange = (e) => {
+      __value.current = { id: null, label: e.target.value || null };
+      debouncedChange(__value.current);
+    };
+
     return (
       <Autocomplete
         id="free-solo-demo"
         freeSolo
         value={_value?.label}
         onChange={(event: any, newValue: string | null) => {
-          console.log(event, 'event');
-          console.log(newValue, 'event');
+          setValue({
+            value: null,
+            label: newValue,
+          });
           selectItem(newValue);
         }}
         sx={{
@@ -135,9 +113,8 @@ function courseInfo(props) {
               },
             }}
             {...params}
-            onChange={(e) => {
-              selectItem(e.target.value);
-            }}
+            value={_value?.label}
+            onChange={handleInputChange}
             InputProps={{
               ...params.InputProps,
               disableUnderline: true,
@@ -150,14 +127,33 @@ function courseInfo(props) {
   };
   const [subjectId, setSubjectId] = useState();
   const {
-    data: courseData,
+    data: _courseData,
     error,
     mutate: mutateSubject,
-  } = useFetch(`/subject/course?id=${data?.data?.subject?.id}`, 'get');
+  } = useFetch(`/subject/courses`, 'page', {
+    id: data?.data?.subject?.id | 1,
+    pageSize: 100,
+  });
+  useEffect(() => {
+    mutateSubject();
+  }, [data?.data?.subject?.id]);
+  const courseData = useMemo(() => {
+    return _courseData
+      ? courseData
+        ? [...courseData].concat(..._courseData)
+        : [].concat(..._courseData)
+      : null;
+  }, [_courseData, data?.data?.subject?.id]);
   const { data: courseDetail, mutate: mutateCourse } = useFetch(
     `/course/detail?id=${data?.data?.course?.id}`,
     'get',
   );
+  useEffect(() => {
+    mutateCourse();
+  }, [data?.data?.course?.id]);
+  useEffect(() => {
+    console.log(data, 'mutateSubject');
+  }, [data]);
   const ProfessorList = useMemo(() => {
     return courseDetail?.data?.sections
       .map((item) => {
@@ -177,7 +173,15 @@ function courseInfo(props) {
   useEffect(() => {
     console.log(ProfessorList, 'ProfessorList');
   }, [ProfessorList]);
-  const CCourseInputMemo = React.useMemo(() => CCourseInput, []);
+  const CCourseInputMemo = React.useMemo(
+    () => CCourseInput,
+    [
+      data?.data?.course,
+      data?.data?.courseData,
+      data?.data?.professor,
+      data?.data?.mode,
+    ],
+  );
 
   useEffect(() => {
     mutateSubject();
@@ -204,14 +208,15 @@ function courseInfo(props) {
         <span className="bg-white font-medium text-blueTitle text-sm">
           <NessIcon className="mr-1"></NessIcon> 课程分类
         </span>
-        <CCourseInput
+        <CCourseInputMemo
           value={{
-            value: data.data?.subject?.id,
+            value: data?.data?.subject?.id,
             label: data.data?.subject?.label,
           }}
           change={(val: { id: any; label: any }) => {
             console.log(val, 'val');
             // handleChange(val.id);
+            if (!val) return;
             updateData({
               key: 'subject',
               value: val,
@@ -223,9 +228,9 @@ function courseInfo(props) {
           }}
           data={subjectData}
           renderData={subjectData?.map((item) => {
-            return item.ename;
+            return item?.ename;
           })}
-        ></CCourseInput>
+        ></CCourseInputMemo>
         {/* <select onChange={(val)=>{
           console.log(val.target.value,"subjectData")
         }} className="select  hover:outline-none text-right font-medium	 text-gray-500 text-xs ">
@@ -243,29 +248,30 @@ function courseInfo(props) {
         <span className="bg-white  font-medium text-blueTitle text-sm">
           <NessIcon className="mr-1"></NessIcon> 课程代码
         </span>
-        <CCourseInput
+        <CCourseInputMemo
           value={{
-            value: data.data?.course?.id,
-            label: data.data?.course?.label,
+            value: data?.data?.course?.id,
+            label: data?.data?.course?.label,
           }}
           change={(val: { id: any; label: any }) => {
+            if (!val) return;
             updateData({
               key: 'course',
               value: val,
             });
           }}
-          data={courseData?.data}
-          renderData={courseData?.data?.map((item) => {
-            return item.ename;
+          data={courseData}
+          renderData={courseData?.map((item) => {
+            return item?.code;
           })}
-        ></CCourseInput>
+        ></CCourseInputMemo>
       </label>
       <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
       <label className="input-group bg-white w-full flex justify-between h-12">
         <span className="bg-white font-medium text-blueTitle text-sm">
           <NessIcon className="mr-1"></NessIcon> 选择教授
         </span>
-        <CCourseInput
+        <CCourseInputMemo
           value={{
             value: data.data?.professor?.id,
             label: data.data?.professor?.label,
@@ -280,14 +286,14 @@ function courseInfo(props) {
           renderData={ProfessorList?.map((item) => {
             return item.name;
           })}
-        ></CCourseInput>
+        ></CCourseInputMemo>
       </label>
       <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
       <label className="input-group bg-white w-full flex justify-between h-12">
         <span className="bg-white font-medium text-blueTitle text-sm">
           <NessIcon className="mr-1"></NessIcon> 课程形式
         </span>
-        <CCourseInput
+        <CCourseInputMemo
           value={{
             value: data.data?.mode?.id,
             label: data.data?.mode?.label,
@@ -302,7 +308,7 @@ function courseInfo(props) {
           renderData={ModeList?.map((item) => {
             return item[useLanguage('name')];
           })}
-        ></CCourseInput>
+        ></CCourseInputMemo>
       </label>
       <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
     </div>

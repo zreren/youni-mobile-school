@@ -52,11 +52,31 @@ import DeliveryRadio from './assets/actives/deliveryRadio.svg';
 import { set } from 'react-hook-form';
 import { json } from 'stream/consumers';
 import { useRouter } from 'next/router';
+import AddCourse from './addCourse';
 
 export default function addPost() {
+
   const Footer = () => {
+    const getDomAndHide  = ()=>{
+      const dom = document.getElementById('bottom-navigation')
+      if(!dom) return
+      dom.style.display = 'none'
+    }
+    useEffect(()=>{
+      const dom = document.getElementById('bottom-navigation')
+      if(!dom) {
+        setTimeout(() => {
+          getDomAndHide()
+        }, 500);
+        return;
+      };
+      dom.style.display = 'none'
+      return ()=>{
+        dom.style.display = 'block'
+      }
+    },[])
     return (
-      <div className="w-full bg-white h-[60px] space-x-4 flex justify-between fixed bottom-12 px-5 py-2">
+      <div className="w-full shadow-footer bg-white h-[60px] space-x-4 flex justify-between fixed bottom-2 px-5 py-2">
         <div
           className="flex flex-col items-center  w-[40px]"
           onClick={() => {
@@ -120,6 +140,10 @@ export default function addPost() {
       key: 'carpool',
     },
     {
+      label: '课程配置',
+      key: 'course_recommend',
+    },
+    {
       label: '二手书',
       key: 'book',
     },
@@ -161,8 +185,22 @@ export default function addPost() {
     if (router.query.type) {
       setType(router.query.type as string);
     }
-  },[router])
+  }, [router]);
+  const { data: campusData, mutate: campusDataMutate } = useFetch(
+    '/campus/query',
+    'get',
+    {
+      name: router.query.campus,
+    },
+  );
+  const [topicVisible, setTopicVisible] = useState(false);
 
+  useEffect(() => {
+    campusDataMutate();
+  }, [router.query.campus]);
+  const campusID = useMemo(() => {
+    return campusData?.data?.[0]?.id;
+  }, [campusData, router, topicVisible]);
   const [previews, setPreviews] = React.useState([]);
   // useEffect(() => {
   //   // if(form.get){
@@ -191,15 +229,7 @@ export default function addPost() {
         const { data } = await mapRequest.get(
           `geocoding/v5/mapbox.places/${theLocation}.json?access_token=${TOKEN}`,
         );
-        // const { data } = await mapRequest.get(
-        //   `matching/v5/mapbox/driving/${theLocation};${theLocation}?access_token=${TOKEN}`,
-        // );
 
-        // console.log(res,"res")
-        // form.setFieldValue('location', JSON.stringify({
-        //   point:item.center,
-        //   placename:item?.place_name
-        // }));
         console.log(data, 'defaultData');
         const defaultData = JSON.stringify({
           point: data?.features[0].center,
@@ -241,8 +271,10 @@ export default function addPost() {
             setLocal(true);
           }}
         >
-          {placeName || 'locate...'}
-          {/* {form.getFieldValue('location').length > 6 ? JSON?.parse(form.getFieldValue('location')).placename : null || 'locate...'} */}
+          {/* {'located'} */}
+          {form.getFieldValue('location')?.length > 6
+            ? JSON?.parse(form.getFieldValue('location')).placename
+            : null || 'locate...'}
         </div>
         <div>
           <SwipeableDrawer
@@ -394,7 +426,14 @@ export default function addPost() {
     };
   }
   const submitPost = async (form, draft) => {
-    console.log({ ...form }, 'form');
+    console.log(
+      topic?.map((item) => {
+        return {
+          id: item.id || null,
+          name: item.name,
+        };
+      }),
+    );
     // if (
     //   !Object.keys(form).some((element) => {
     //     if (
@@ -420,25 +459,51 @@ export default function addPost() {
       Toast.fail('请完善表单');
       return;
     }
-    try {
-      const { data } = await useRequest.post('/api/post/create', {
-        form: { ...form },
-        draft: draft,
-        title: title,
-        body: content,
-        topic: topic,
-        preview: previews,
-        type: type,
-        contact: form.contact?.filter((item) => item.public === true),
-      });
-      if (data.message === 'success') {
-        Toast.success('发布成功');
-      } else {
-        Toast.fail('发布失败');
+    if(router.query.isEdit){
+      try {
+        const { data } = await useRequest.post('/api/post/update', {
+          id: router.query.id,
+          form: { ...form },
+          draft: draft,
+          title: title,
+          body: content,
+          topics: topic?.map((item) => item.name),
+          preview: previews,
+          type: type,
+          contact: form.contact?.filter((item) => item.public === true),
+          campusId: campusID,
+        });
+        if (data.message === 'success') {
+          Toast.success('修改成功');
+        } else {
+          Toast.fail('修改失败');
+        }
+      } catch (error) {
+        Toast.fail(error);
+      } 
+    }else{
+      try {
+        const { data } = await useRequest.post('/api/post/create', {
+          form: { ...form },
+          draft: draft,
+          title: title,
+          body: content,
+          topics: topic?.map((item) => item.name),
+          preview: previews,
+          type: type,
+          contact: form.contact?.filter((item) => item.public === true),
+          campusId: campusID,
+        });
+        if (data.message === 'success') {
+          Toast.success('发布成功');
+        } else {
+          Toast.fail('发布失败');
+        }
+      } catch (error) {
+        Toast.fail(error);
       }
-    } catch (error) {
-      Toast.fail(error);
     }
+    
   };
   const changeCategory = (val) => {
     setType(val);
@@ -1209,47 +1274,200 @@ export default function addPost() {
       </SwipeableDrawer>
     );
   };
-  const DeliveryRadioMenu = ()=>{
-    const [state, setState] = useState('实体书')
-    useEffect(()=>{
-      form.setFieldValue('delivery',state)
-    },[state])
+
+  const ActivePricesModel = (props) => {
+    const { visible, open, close, confirm } = props;
+    const [currentInPut, setCurrentInPut] = useState<string>();
+    const [state, updateState] = hooks.useSetState({
+      text: form?.getFieldValue('prices')?.text || '',
+      unit: form?.getFieldValue('prices')?.unit || '',
+      pricesUnit: form?.getFieldValue('prices')?.pricesUnit || pricesUnit,
+      oldPrice: form?.getFieldValue('prices')?.oldPrice || '',
+      showOldPrice: form?.getFieldValue('prices')?.showOldPrice || false,
+      service: form?.getFieldValue('prices')?.service || [],
+    });
+    useEffect(() => {
+      console.log(form.getFieldValue('prices'), 'form');
+      // updateState({
+      //   text: form.getFieldValue('text'),
+      //   unit: form.getFieldValue('unit'),
+      //   oldPrice: form.getFieldValue('oldPrice'),
+      //   showOldPrice: form.getFieldValue('showOldPrice'),
+      //   service: form.getFieldValue('service'),
+      // });
+    }, [form]);
+    const deleteInput = () => {
+      if (!currentInPut) return;
+      updateState({
+        [currentInPut]: state[currentInPut]?.slice(
+          0,
+          state[currentInPut].length - 1,
+        ),
+      });
+    };
+    const onInput = (v) => {
+      // Toast.success(v);
+      if (v === 'CAD') {
+        updateState({ pricesUnit: 'USD' });
+        setPricesUnit('USD');
+      }
+      if (v === 'USD') {
+        setPricesUnit('CAD');
+        updateState({ pricesUnit: 'CAD' });
+      }
+      if (v === '完成') {
+        close();
+      }
+      updateState({
+        [currentInPut]: state[currentInPut] + v,
+      });
+    };
+    const serviceList = [
+      { title: '当面交易' },
+      { title: '包邮' },
+      { title: '快递' },
+    ];
+    const ServicesItem = (props) => {
+      const { title, defaultSelect, change } = props;
+      const [select, setSelect] = useState(defaultSelect);
+      useEffect(() => {
+        if (select) {
+          props.change(title);
+        } else {
+          props.remove(title);
+        }
+      }, [select]);
+      return (
+        <div
+          onClick={() => {
+            setSelect(!select);
+          }}
+          className={classnames(
+            'bg-bg m-1  text-xs font-light h-6 px-1 py-1  rounded',
+            {
+              'text-yellow-500': select,
+              'text-gray-600': !select,
+            },
+          )}
+        >
+          {title}
+        </div>
+      );
+    };
+    const columns = [
+      { text: '日', value: 0 },
+      { text: '周', value: 1 },
+      { text: '月', value: 2 },
+      { text: '季', value: 3 },
+      { text: '年', value: 4 },
+      // { text: '南通', value: 5 },
+      // { text: '宿迁', value: 6 },
+      // { text: '泰州', value: 7 },
+      // { text: '无锡', value: 8 },
+    ];
+    return (
+      <SwipeableDrawer
+        className="z-10 "
+        disableDiscovery={true}
+        disableSwipeToOpen={true}
+        onClose={close}
+        onOpen={open}
+        open={visible}
+        anchor="bottom"
+      >
+        <div className="h-[380px] ">
+          <Puller></Puller>
+          <div className="p-5 mt-2 ">
+            <div className="h-1 m-0 mt-2 mb-2 divider opacity-30"></div>
+            <div className="flex justify-between items-center">
+              <div className="flex w-full space-x-4 items-center">
+                <div className="whitespace-nowrap text-[#37455C] text-sm">
+                  活动价格
+                </div>
+                <div className="flex items-end">
+                  <div className="w-[70px]">
+                    <Input
+                      onFocus={() => {
+                        setCurrentInPut('oldPrice');
+                      }}
+                      type={'number'}
+                      value={state.oldPrice}
+                      readOnly
+                      onChange={(text) => updateState({ oldPrice: text })}
+                      placeholder={
+                        currentInPut === 'oldPrice' ? '|' : '活动价格'
+                      }
+                      className="text-lg text-[#798195]"
+                    />
+                  </div>
+                  <div className="text-sm text-[#798195]">{pricesUnit}</div>
+                </div>
+              </div>
+              {/* swith */}
+            </div>
+            <div className="h-1 m-0 mt-2 divider opacity-30"></div>
+          </div>
+          <NumberKeyboard
+            theme="custom"
+            onDelete={() => {
+              deleteInput();
+            }}
+            extraKey={[pricesUnit, '.']}
+            closeButtonText="完成"
+            visible={true}
+            onClose={() => {
+              confirm(state);
+              close();
+            }}
+            className="-translate-y-8"
+            // onChange={()=>{close();Toast.success('完成')}}
+            onInput={onInput}
+            // onDelete={onDelete}
+          />
+          {/* <div className='h-[20px]'></div> */}
+        </div>
+      </SwipeableDrawer>
+    );
+  };
+  const DeliveryRadioMenu = () => {
+    const [state, setState] = useState('实体书');
+    useEffect(() => {
+      form.setFieldValue('delivery', state);
+    }, [state]);
     return (
       <div className="ml-8 h-full flex items-center justify-end pr-1 rounded-lg">
-      <div className="border-[#DCDDE1] border  overflow-hidden  rounded-lg  h-[28px]   flex ">
-        <div
-          onClick={() => {
-            setState( '实体书' );
-          }}
-          className={classnames(
-            'w-full whitespace-nowrap flex justify-center px-2 items-center text-center text-[#A9B0C0]',
-            {
-              'bg-slate-50 text-[#FFD036]':
-                state === '实体书',
-            },
-          )}
-        >
-          实体书
+        <div className="border-[#DCDDE1] border  overflow-hidden  rounded-lg  h-[28px]   flex ">
+          <div
+            onClick={() => {
+              setState('实体书');
+            }}
+            className={classnames(
+              'w-full whitespace-nowrap flex justify-center px-2 items-center text-center text-[#A9B0C0]',
+              {
+                'bg-slate-50 text-[#FFD036]': state === '实体书',
+              },
+            )}
+          >
+            实体书
+          </div>
+          <div
+            onClick={() => {
+              setState('电子书');
+            }}
+            className={classnames(
+              'w-full  flex justify-center px-2 items-center text-center text-[#A9B0C0]',
+              {
+                'bg-slate-50 text-[#FFD036]': state === '电子书',
+              },
+            )}
+          >
+            电子书
+          </div>
+          <div></div>
         </div>
-        <div
-          onClick={() => {
-            setState(  '电子书' );
-          }}
-          className={classnames(
-            'w-full  flex justify-center px-2 items-center text-center text-[#A9B0C0]',
-            {
-              'bg-slate-50 text-[#FFD036]':
-                state === '电子书',
-            },
-          )}
-        >
-          电子书
-        </div>
-        <div></div>
       </div>
-    </div>
-    )
-  }
+    );
+  };
   const [placeName, setPlaceName] = useState();
   const dynamicFormData = React.useMemo(
     () => dynamicForm?.data ?? [],
@@ -1257,10 +1475,36 @@ export default function addPost() {
   );
   const [pricesVisible, setPricesVisible] = useState(false);
   const [contactVisible, setContactVisible] = useState(false);
+  const [activePricesVisible, setActivePricesVisible] = useState(false);
   const [ideaPricesVisible, setIdeaPricesVisible] = useState(false);
+  const [switchValue, setSwitchValue] = useState(false);
+
   const StartTimeData = React.useMemo(() => {
     console.log('StartTime render count ++');
-  },[form])
+  }, [form]);
+  const { data, mutate: detailMutate } = useFetch('/post/detail', 'get', {
+    id: router.query.id,
+  });
+  useEffect(() => {
+    if (router.query.isEdit) {
+      setType(router.query.type as string);
+      detailMutate();
+    }
+  }, []);
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue(data?.data?.form);
+      setSwitchValue(data?.data?.form?.map);
+      setTopic(
+        data?.data?.topics.map((item) => {
+          return { id: item.id, name: item.name };
+        }),
+      );
+      setTitle(data?.data?.title);
+      setContent(data?.data?.body);
+      setPreviews(data?.data?.preview);
+    }
+  }, [data]);
   const DynamicForm = React.useCallback(
     (props: any) => {
       const data = React.useMemo(
@@ -1271,7 +1515,7 @@ export default function addPost() {
         console.log('DynamicForm render count ++');
       }, []);
       return data?.map((item) => {
-       const [state,setState] = useState(form.getFieldValue(item.dataIndex))
+        const [state, setState] = useState(form.getFieldValue(item.dataIndex));
         // const Node = React.useCallback(()=>{
         //   console.log('render count ++')
         //   return customComponents[item.type]
@@ -1298,20 +1542,26 @@ export default function addPost() {
             // children={()=>{
             //   return <Node></Node>
             // }}
-            trigger='onConfirm'
+            trigger="onConfirm"
             valuePropName="checked"
             onClick={
               item.type === 'time'
                 ? (_, action) => {
-                    console.log(_,"action")
+                    console.log(_, 'action');
                     action.current?.open();
                   }
                 : () => {
                     if (item.type === 'prices' && type === 'sublet') {
                       setPricesVisible(true);
                     }
-                    if (item.type === 'prices' && type !== 'sublet') {
+                    if (item.type === 'prices' && type === 'idle') {
                       setIdeaPricesVisible(true);
+                    }
+                    if (item.type === 'prices' && type === 'book') {
+                      setIdeaPricesVisible(true);
+                    }
+                    if (item.type === 'prices' && type === 'activity') {
+                      setActivePricesVisible(true);
                     }
                     if (item.type === 'contact') {
                     }
@@ -1323,16 +1573,28 @@ export default function addPost() {
             )}
             {item.type === 'time' && (
               <DatetimePicker
-              minDate={new Date()}
-              onChange={(data)=>{
-                console.log(data,"DatetimePicker")
-                setState(data)
-              }} value={state} popup type="datetime">
-                {(val: Date,_,actions) => (val ? val.toDateString() : <div onClick={()=>{
-                    actions.open()
-                }}>
-                {"请选择日期" || val.toDateString()}
-                </div>)}
+                minDate={new Date()}
+                onChange={(data) => {
+                  console.log(data, 'DatetimePicker');
+                  setState(data);
+                }}
+                value={state}
+                popup
+                type="datetime"
+              >
+                {(val: Date, _, actions) =>
+                  val ? (
+                    val.toDateString()
+                  ) : (
+                    <div
+                      onClick={() => {
+                        actions.open();
+                      }}
+                    >
+                      {'请选择日期' || val.toDateString()}
+                    </div>
+                  )
+                }
               </DatetimePicker>
             )}
             {item.type === 'Switch' && (
@@ -1340,6 +1602,8 @@ export default function addPost() {
                 onChange={(e) => {
                   form.setFieldValue(item.dataIndex, e);
                 }}
+                defaultChecked={form.getFieldValue(item.dataIndex)}
+                // checked={form.getFieldValue(item.index)}
                 activeColor="#FFD036"
                 size={20}
                 inactiveColor="#dcdee0"
@@ -1347,22 +1611,22 @@ export default function addPost() {
             )}
             {item.type === 'input' && (
               <Input
+                defaultValue={form.getFieldValue(item.dataIndex)}
+                placeholder="请输入"
+                value={form.getFieldValue(item.dataIndex)}
+                onChange={(v) => {
+                  form.setFieldValue(item.dataIndex, v);
+                }}
+              ></Input>
+            )}
+            {item.type === 'type' && (
+              <Input
                 placeholder="请输入"
                 onChange={(v) => {
                   form.setFieldValue(item.dataIndex, v);
                 }}
               ></Input>
             )}
-            {
-              item.type === 'type' && (
-                <Input
-                placeholder="请输入"
-                onChange={(v) => {
-                  form.setFieldValue(item.dataIndex, v);
-                }}
-              ></Input>
-              )
-            }
             {item.type === 'contact' && (
               <div
                 onClick={() => {
@@ -1380,22 +1644,19 @@ export default function addPost() {
                   : form.getFieldValue('prices')?.text || '点击输入价格信息'}
               </div>
             )}
-            {
-              item.type === 'deliveryRadio' && (
-                <DeliveryRadioMenu></DeliveryRadioMenu>
-              )
-            }
+            {item.type === 'deliveryRadio' && (
+              <DeliveryRadioMenu></DeliveryRadioMenu>
+            )}
             {/* {
             ite
           } */}
           </Form.Item>
         );
       });
-    }
+    },
     // (pre) => {if(form.validateFields)}
-    ,[dynamicForm, placeName, form,form.getFieldValue('startTime')],
+    [dynamicForm, placeName, form, form.getFieldValue('startTime')],
   );
-  const [topicVisible, setTopicVisible] = useState(false);
   const TopicDrawer = useCallback(
     (props: any) => {
       const { data, visible } = props;
@@ -1412,24 +1673,50 @@ export default function addPost() {
         // }
         setTopic((pre) => {
           if (!pre) return [item];
-          if(pre.indexOf(item)>=0){
+          if (pre.indexOf(item) >= 0) {
             Toast.fail('已移除该话题');
             return pre.filter((value, index, self) => {
-              return value !== item
-            })
+              return value !== item;
+            });
           }
           // const uniqueArray = pre.filter((value, index, self) => {
           //   return self.indexOf(value) === index;
           // });
-          Toast.success(`已加入${item}话题`);
-          return [...pre,item];
+          Toast.success(`已加入${item.name}话题`);
+          return [...pre, item];
         });
-       
+
         // form.setFieldValue('location', obj);
         // setPlaceName(item?.place_name);
         setLocal(false);
       };
-      const topList = ['# 热门话题', '# 最新话题', '# 最热话题', '# 闲置'];
+      // const topList = ['# 热门话题', '# 最新话题', '# 最热话题', '# 闲置'];
+      const [topName, setTopName] = useState('');
+      // const campusID = useMemo(() => {
+      //   return campusData?.data?.[0]?.id;
+      // }, [campusData,router,topicVisible]);
+      const { data: _topicList, mutate: _topicListMutate } = useFetch(
+        '/campus/topic/list',
+        'page',
+        {
+          pageSize: 100,
+          campusId: campusID,
+          name: topName,
+        },
+      );
+      useEffect(() => {
+        _topicListMutate();
+      }, [campusID, topName, topicVisible]);
+      const topList = React.useMemo(
+        () =>
+          _topicList
+            ? topList
+              ? [...topList].concat(..._topicList)
+              : [].concat(..._topicList)
+            : null,
+        [_topicList, campusID, topName, router, topicVisible],
+      );
+
       const placeName = useMemo(() => {
         try {
           const res = JSON.parse(form.getFieldValue('location'));
@@ -1446,7 +1733,6 @@ export default function addPost() {
               setLocal(true);
             }}
           >
-            {placeName || 'locate...'}
             {/* {form.getFieldValue('location').length > 6 ? JSON?.parse(form.getFieldValue('location')).placename : null || 'locate...'} */}
           </div>
           <div>
@@ -1466,24 +1752,33 @@ export default function addPost() {
                 {/* <SignIn></SignIn> */}
                 <div className="p-5">
                   <div className="h-1 mt-3 mb-2 divider opacity-30"></div>
-                  {topList?.map((item) => {
-                    return (
-                      <div
-                        className="w-full flex flex-col justify-center "
-                        onClick={() => {
-                          selectPoint(item);
-                        }}
-                      >
-                        <div className="text-gray-500 font-semibold text-sm">
-                          {item}
-                        </div>
-                        {/* <div className="text-gray-400 font-medium text-sm">
+                  <input
+                    className="bg-bg mb-3 h-10 hover:outline-none  input border-none input-bordered w-full input-md"
+                    value={topName}
+                    onChange={(e) => {
+                      setTopName(e.target.value);
+                    }}
+                  ></input>
+                  {topList?.length > 1
+                    ? topList?.map((item) => {
+                        return (
+                          <div
+                            className="w-full flex flex-col justify-center "
+                            onClick={() => {
+                              selectPoint(item);
+                            }}
+                          >
+                            <div className="text-gray-500 font-semibold text-sm">
+                              # {item?.name}
+                            </div>
+                            {/* <div className="text-gray-400 font-medium text-sm">
                         {item.place_name}
                       </div> */}
-                        <div className="h-1 m-0 divider opacity-30 mt-3 mb-3"></div>
-                      </div>
-                    );
-                  })}
+                            <div className="h-1 m-0 divider opacity-30 mt-3 mb-3"></div>
+                          </div>
+                        );
+                      })
+                    : null}
                 </div>
               </div>
             </SwipeableDrawer>
@@ -1496,211 +1791,416 @@ export default function addPost() {
   const handleSetTitle = React.useCallback((value) => {
     setTitle(value);
   }, []);
+
+  const submitCourseConfig = async (e, draft?) => {
+    console.log(
+      {
+        ...e,
+        draft: draft,
+        title: title,
+        body: content,
+        topics: topic?.map((item) => item.name),
+        preview: ['/upload/bg-202303091736764.png'],
+        type: type,
+        contact: [],
+      },
+      'submitCourseConfig',
+    );
+    if (!title || !content) {
+      Toast.fail('请完善标题和内容');
+      return;
+    }
+    if (!topic) {
+      Toast.fail('至少添加一个话题');
+      return;
+    }
+    if (!topic) {
+      Toast.fail('至少添加一个话题');
+      return;
+    }
+    if (!e.form.term) {
+      Toast.fail('至少选择一学期');
+      return;
+    }
+    try {
+      const { data } = await useRequest.post('/api/post/create', {
+        ...e,
+        draft: draft,
+        title: title,
+        body: content,
+        topics: topic?.map((item) => item.name),
+        preview: ['/upload/bg-202303091736764.png'],
+        type: type,
+        contact: ['微信'],
+        campusId: campusID,
+      });
+      if (data.message === 'success') {
+        Toast.success('发布成功');
+      } else {
+        Toast.fail('发布失败');
+      }
+    } catch (error) {
+      Toast.fail(error);
+    }
+    console.log(e, 'get form');
+  };
   return (
-    <div className="mb-14">
-      {KeyboardShow ? <Keyboard></Keyboard> : null}
-      <TopicDrawer
-        visible={topicVisible}
-        onClose={() => {
-          setTopicVisible(false);
-        }}
-      ></TopicDrawer>
-      <ContactModel
-        data={contactListTemp}
-        onClose={() => {
-          setContactVisible(false);
-        }}
-        visible={contactVisible}
-        close={() => {
-          setContactVisible(false);
-        }}
-      ></ContactModel>
-      <PricesModel
-        visible={pricesVisible}
-        onClose={() => {
-          setPricesVisible(false);
-        }}
-        close={() => {
-          setPricesVisible(false);
-        }}
-        confirm={(e) => {
-          form.setFieldValue('prices', e);
-        }}
-      ></PricesModel>
-      <IdeaPricesModel
-        visible={ideaPricesVisible}
-        onClose={() => {
-          setIdeaPricesVisible(false);
-        }}
-        close={() => {
-          setIdeaPricesVisible(false);
-        }}
-        confirm={(e) => {
-          form.setFieldValue('prices', e);
-        }}
-      ></IdeaPricesModel>
-      {/* <Keyboard></Keyboard> */}
-      <Header className="shadow-none"></Header>
-      {/* <div>
-        <div>width: {width}</div>
-        <div>height: {height}</div>
-      </div> */}
-      <div className="items-start justify-between p-5 py-0 pt-6">
-        <div className="flex justify-between">
-          <div className="flex items-center space-x-2">
-            <CateGoryIcon></CateGoryIcon>
-            {/* {item.Icon ? <Icon className="mt-1"></Icon> : null} */}
-            <div className="text-blueTitle">{item.title}</div>
+    <>
+      <div className="mb-0 mt-12">
+        <Header className="shadow-none"></Header>
+
+        <div className="items-start justify-between p-5 py-0 pt-6">
+          <div className="flex justify-between">
+            <div className="flex items-center space-x-2">
+              <CateGoryIcon></CateGoryIcon>
+              {/* {item.Icon ? <Icon className="mt-1"></Icon> : null} */}
+              <div className="text-blueTitle">{item.title}</div>
+            </div>
+            <div>{item.action}</div>
           </div>
-          <div>{item.action}</div>
+          <div className="text-xs text-gray-300">{item.intro}</div>
         </div>
-        <div className="text-xs text-gray-300">{item.intro}</div>
-      </div>
-      <div className="p-5 pt-3">
-        <PostCategory
-          change={(e) => {
-            changeCategory(headerMenuList[e].key);
-          }}
-          id={headerMenuList.map((item,index) => {
-            if(item.key === type){
-              return index
-            }
-          }).filter((item)=> item !== undefined)[0]}
-          // value={type}
-          headerMenuList={headerMenuList}
-          className="mt-0"
-        ></PostCategory>
-      </div>
-      <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
-      <div className="px-5 py-3">
-        <Uploader
-          accept="*"
-          upload={upload}
-          uploadIcon={<AddUploaderIcon></AddUploaderIcon>}
-          onChange={(items) => {
-            addPreviews(items);
-          }}
-        />
-      </div>
-      <div className="px-5 post-title">
-        <Input
-          placeholder="填写标题获得更多流量～"
-          value={title}
-          onChange={handleSetTitle}
-          clearable
-          clearTrigger="always"
-          className="text-2xl font-bold"
-        />
-      </div>
-      <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
-      <div className="px-5 mt-4">
-        <Input.TextArea
-          placeholder="添加正文"
-          value={content}
-          onChange={setContent}
-          autoSize={{ minHeight: 180, maxHeight: 180 }}
-        />
-        <div className="flex items-center my-2 space-x-2">
-          {topic?.map((item) => {
-            return <div className="text-[#2347D9] text-sm">{item}</div>;
-          })}
-        </div>
-        <div className="flex space-x-[10px] mb-2 ">
-          <div
-            onClick={() => {
-              setTopicVisible(true);
+        <div className="p-5">
+          <PostCategory
+            change={(e) => {
+              changeCategory(headerMenuList[e].key);
             }}
-            className="text-[#B38314] rounded bg-[#FFFBD9] px-2 text-xs py-1"
-          >
-            # 话题{' '}
-          </div>
-          <div onClick={()=>{
-            setTopic((pre) => {
-              if (!pre) return ['# 约克大学'];
-              if(pre.indexOf('# 约克大学')>=0){
-                Toast.fail('已移除该话题');
-                return pre.filter((value, index, self) => {
-                  return value !== '# 约克大学'
+            id={
+              headerMenuList
+                .map((item, index) => {
+                  if (item.key === type) {
+                    return index;
+                  }
                 })
-              }
-              // const uniqueArray = pre.filter((value, index, self) => {
-              //   return self.indexOf(value) === index;
-              // });
-              Toast.success(`已加入# 约克大学 话题`);
-              return [...pre,'# 约克大学'];
-            })
-          }} className="text-[#798195] rounded bg-[#F3F4F6] px-2 text-xs py-1">
-            # 约克大学{' '}
-          </div>
+                .filter((item) => item !== undefined)[0]
+            }
+            // value={type}
+            headerMenuList={headerMenuList}
+            className="mt-0"
+          ></PostCategory>
         </div>
+        {/* <AddCourse></AddCourse> */}
       </div>
-      <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
-      <div className="px-5 mt-4 post-form pb-10">
-        <Form
-          form={form}
-          onFinish={(v) => {
-            submitPost(v, false);
-            console.log(v);
-          }}
-        >
-          {
-            //  dynamicFormData?.map((item) => {
-            //   const Node = ()=>{
-            //     return customComponents[item.type]
-            //   };
-            //   const Label = () => {
-            //     const Icon = () => {
-            //       return IconList[item.icon] ? IconList[item.icon] : <div></div>;
-            //     };
-            //     return (
-            //       <div className="flex items-center space-x-4">
-            //         <Icon></Icon>
-            //         <div>{item.label}</div>
-            //       </div>
-            //     );
-            //   };
-            //   return (
-            //     <Form.Item
-            //       name={item.dataIndex}
-            //       label={<Label></Label>}
-            //       key={item.dataIndex}
-            //       // children={()=>{
-            //       //   return <Node></Node>
-            //       // }}
-            //       valuePropName="checked"
-            //       onClick={
-            //         item.type === 'time'
-            //           ? (_, action) => {
-            //               action.current?.open();
-            //             }
-            //           : () => {
-            //               if (item.type === 'prices') {
-            //                 setPricesVisible(true);
-            //               }
-            //               if (item.dataIndex === 'contact') {
-            //                 setContactVisible(true);
-            //               }
-            //             }
-            //       }
-            //     >
-            //       {/* {item.type === 'location' && (
-            //         <PickLocation location={''} placeName={placeName}></PickLocation>
-            //       )}
-            //       {item.type !== 'location' && customComponents[item.type]} */}
-            //       {customComponents[item.type]}
-            //     </Form.Item>
-            //   );
-            // })
-          }
-          <DynamicForm
-            data={form}
-            placeName={placeName}
-            dynamicForm={dynamicForm}
-          ></DynamicForm>
-        </Form>
-        <div className='mb-8'></div>
-      </div>
-      <Footer></Footer>
-    </div>
+      <>
+        {type === 'course_recommend' ? (
+          <div className="min-h-screen ">
+            <TopicDrawer
+              visible={topicVisible}
+              onClose={() => {
+                setTopicVisible(false);
+              }}
+            ></TopicDrawer>
+            <div className="px-5 post-title">
+              <Input
+                placeholder="填写标题获得更多流量～"
+                value={title}
+                onChange={handleSetTitle}
+                clearable
+                clearTrigger="always"
+                className="text-2xl font-bold"
+              />
+            </div>
+            <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
+            <div className="px-5 mt-4">
+              <Input.TextArea
+                placeholder="添加正文"
+                value={content}
+                onChange={setContent}
+                autoSize={{ minHeight: 180, maxHeight: 180 }}
+              />
+              <div className="flex items-center my-2 space-x-2">
+                {topic?.map((item) => {
+                  return (
+                    <div
+                      onClick={() => {
+                        setTopic((pre) => {
+                          if (!pre) return [item];
+                          if (pre.indexOf(item) >= 0) {
+                            return pre.filter((value, index, self) => {
+                              return value !== item;
+                            });
+                          }
+                        });
+                      }}
+                      className="text-[#2347D9] text-sm"
+                    >
+                      {`# ${item.name}`}
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="flex space-x-[10px] mb-2 ">
+                <div
+                  onClick={() => {
+                    setTopicVisible(true);
+                  }}
+                  className="text-[#B38314] rounded bg-[#FFFBD9] px-2 text-xs py-1"
+                >
+                  # 话题{' '}
+                </div>
+                <div
+                  onClick={() => {
+                    setTopic((pre) => {
+                      if (!pre) return [{ id: null, name: '# 约克大学' }];
+                      if (pre.indexOf({ id: null, name: '# 约克大学' }) >= 0) {
+                        Toast.fail('已移除该话题');
+                        return pre.filter((value, index, self) => {
+                          return value.name !== '# 约克大学';
+                        });
+                      }
+                      // const uniqueArray = pre.filter((value, index, self) => {
+                      //   return self.indexOf(value) === index;
+                      // });
+                      Toast.success(`已加入# 约克大学 话题`);
+                      return [...pre, { id: null, name: '# 约克大学' }];
+                    });
+                  }}
+                  className="text-[#798195] rounded bg-[#F3F4F6] px-2 text-xs py-1"
+                >
+                  # 约克大学{' '}
+                </div>
+              </div>
+            </div>
+            <div className="bg-[#F6F6F6] w-full h-3"></div>
+            <AddCourse
+              submit={(e) => {
+                submitCourseConfig(e);
+              }}
+            ></AddCourse>
+          </div>
+        ) : (
+          <div className="mb-0 pb-10">
+            {KeyboardShow ? <Keyboard></Keyboard> : null}
+            <TopicDrawer
+              visible={topicVisible}
+              onClose={() => {
+                setTopicVisible(false);
+              }}
+            ></TopicDrawer>
+            <ContactModel
+              data={contactListTemp}
+              onClose={() => {
+                setContactVisible(false);
+              }}
+              visible={contactVisible}
+              close={() => {
+                setContactVisible(false);
+              }}
+            ></ContactModel>
+            <PricesModel
+              visible={pricesVisible}
+              onClose={() => {
+                setPricesVisible(false);
+              }}
+              close={() => {
+                setPricesVisible(false);
+              }}
+              confirm={(e) => {
+                form.setFieldValue('prices', e);
+              }}
+            ></PricesModel>
+            <IdeaPricesModel
+              visible={ideaPricesVisible}
+              onClose={() => {
+                setIdeaPricesVisible(false);
+              }}
+              close={() => {
+                setIdeaPricesVisible(false);
+              }}
+              confirm={(e) => {
+                form.setFieldValue('prices', e);
+              }}
+            ></IdeaPricesModel>
+            <ActivePricesModel
+              visible={activePricesVisible}
+              onClose={() => {
+                setActivePricesVisible(false);
+              }}
+              close={() => {
+                setActivePricesVisible(false);
+              }}
+              confirm={(e) => {
+                form.setFieldValue('prices', e);
+              }}
+            ></ActivePricesModel>
+            {/* <Keyboard></Keyboard> */}
+            {/* <div className="p-5">
+              <PostCategory
+                change={(e) => {
+                  changeCategory(headerMenuList[e].key);
+                }}
+                id={
+                  headerMenuList
+                    .map((item, index) => {
+                      if (item.key === type) {
+                        return index;
+                      }
+                    })
+                    .filter((item) => item !== undefined)[0]
+                }
+                // value={type}
+                headerMenuList={headerMenuList}
+                className="mt-0"
+              ></PostCategory>
+            </div> */}
+            <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
+            <div className="px-5 py-3">
+              <Uploader
+                accept="*"
+                upload={upload}
+                value={previews?.map( (item, index) => {
+                  return {
+                    name: item,
+                    url: `${Cons.BASEURL}${item}`,
+                  };
+                })}
+                uploadIcon={<AddUploaderIcon></AddUploaderIcon>}
+                onChange={(items) => {
+                  addPreviews(items);
+                }}
+              />
+            </div>
+            <div className="px-5 post-title">
+              <Input
+                placeholder="填写标题获得更多流量～"
+                value={title}
+                onChange={handleSetTitle}
+                clearable
+                clearTrigger="always"
+                className="text-2xl font-bold"
+              />
+            </div>
+            <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
+            <div className="px-5 mt-4">
+              <Input.TextArea
+                placeholder="添加正文"
+                value={content}
+                onChange={setContent}
+                autoSize={{ minHeight: 180, maxHeight: 180 }}
+              />
+              <div className="flex items-center my-2 space-x-2">
+                {topic?.map((item) => {
+                  return (
+                    <div
+                      onClick={() => {
+                        setTopic((pre) => {
+                          if (!pre) return [item];
+                          if (pre.indexOf(item) >= 0) {
+                            return pre.filter((value, index, self) => {
+                              return value !== item;
+                            });
+                          }
+                        });
+                      }}
+                      className="text-[#2347D9] text-sm"
+                    >
+                      # {item.name}
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="flex space-x-[10px] mb-2 ">
+                <div
+                  onClick={() => {
+                    setTopicVisible(true);
+                  }}
+                  className="text-[#B38314] rounded bg-[#FFFBD9] px-2 text-xs py-1"
+                >
+                  # 话题{' '}
+                </div>
+                <div
+                  onClick={() => {
+                    setTopic((pre) => {
+                      if (!pre) return [{ id: null, name: '约克大学' }];
+                      if (pre.indexOf({ id: null, name: '约克大学' }) >= 0) {
+                        Toast.fail('已移除该话题');
+                        return pre.filter((value, index, self) => {
+                          return value.name !== '约克大学';
+                        });
+                      }
+                      // const uniqueArray = pre.filter((value, index, self) => {
+                      //   return self.indexOf(value) === index;
+                      // });
+                      Toast.success(`已加入 # 约克大学 话题`);
+                      return [...pre, { id: null, name: '约克大学' }];
+                    });
+                  }}
+                  className="text-[#798195] rounded bg-[#F3F4F6] px-2 text-xs py-1"
+                >
+                  # 约克大学{' '}
+                </div>
+              </div>
+            </div>
+            <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
+            <div className="px-5 mt-4 post-form pb-10">
+              <Form
+                form={form}
+                onFinish={(v) => {
+                  submitPost(v, false);
+                  console.log(v);
+                }}
+              >
+                {
+                  //  dynamicFormData?.map((item) => {
+                  //   const Node = ()=>{
+                  //     return customComponents[item.type]
+                  //   };
+                  //   const Label = () => {
+                  //     const Icon = () => {
+                  //       return IconList[item.icon] ? IconList[item.icon] : <div></div>;
+                  //     };
+                  //     return (
+                  //       <div className="flex items-center space-x-4">
+                  //         <Icon></Icon>
+                  //         <div>{item.label}</div>
+                  //       </div>
+                  //     );
+                  //   };
+                  //   return (
+                  //     <Form.Item
+                  //       name={item.dataIndex}
+                  //       label={<Label></Label>}
+                  //       key={item.dataIndex}
+                  //       // children={()=>{
+                  //       //   return <Node></Node>
+                  //       // }}
+                  //       valuePropName="checked"
+                  //       onClick={
+                  //         item.type === 'time'
+                  //           ? (_, action) => {
+                  //               action.current?.open();
+                  //             }
+                  //           : () => {
+                  //               if (item.type === 'prices') {
+                  //                 setPricesVisible(true);
+                  //               }
+                  //               if (item.dataIndex === 'contact') {
+                  //                 setContactVisible(true);
+                  //               }
+                  //             }
+                  //       }
+                  //     >
+                  //       {/* {item.type === 'location' && (
+                  //         <PickLocation location={''} placeName={placeName}></PickLocation>
+                  //       )}
+                  //       {item.type !== 'location' && customComponents[item.type]} */}
+                  //       {customComponents[item.type]}
+                  //     </Form.Item>
+                  //   );
+                  // })
+                }
+                <DynamicForm
+                  data={form}
+                  placeName={placeName}
+                  dynamicForm={dynamicForm}
+                ></DynamicForm>
+              </Form>
+              <div className="mb-8"></div>
+            </div>
+            <Footer></Footer>
+          </div>
+        )}
+      </>
+    </>
   );
 }

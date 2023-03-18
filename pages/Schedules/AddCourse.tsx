@@ -21,6 +21,7 @@ import classnames from 'classnames';
 import useFetch from '../../hooks/useFetch';
 import useLanguage from '@/hooks/useLanguage';
 import useCurriculum from '@/hooks/useCurriculum';
+import useRequest from '@/libs/request';
 
 const CCourseTime = (props) => {
   return (
@@ -85,6 +86,10 @@ const CCourseColor = ({ setColor }) => {
 
 const dayOfWeekList = [
   {
+    label: '周日',
+    value: '0',
+  },
+  {
     label: '周一',
     value: '1',
   },
@@ -108,22 +113,23 @@ const dayOfWeekList = [
     label: '周六',
     value: '6',
   },
-  {
-    label: '周日',
-    value: '0',
-  },
 ];
+
 export default function AddSchedule() {
   const router = useRouter();
   const [CourseId, setCourseId] = useState();
+  const { data: campusData } = useFetch(`/campus/query`, 'get', {
+    params: {
+      name: router.query.campus,
+    },
+  });
   const fetchData = (e) => {
     setCourseId(e);
   };
-  const submitCourse = async (values: any) => {
 
-      const { data } = await instance.post('/api/curriculum/item/create', values);
-      return data;
-    
+  const submitCourse = async (values: any) => {
+    const { data } = await instance.post('/api/curriculum/item/create', values);
+    return data;
   };
   interface ChangeType {
     id: number;
@@ -291,15 +297,14 @@ export default function AddSchedule() {
       });
     }, []);
     const submitTime = async (values) => {
-      if(values.all((item)=>{
-        item !== undefined || item !== null
-      })){
-        const { data } = await instance.post('/api/timetable/create', values);
+      console.log(values, 'submit values');
+      if (values.name && values.color && values.startTime && values.endTime) {
+        const { data } = await useRequest.post('/api/timetable/create', values);
         return data;
-      }else{
-        Toast.fail('请填写完整信息')
+      } else {
+        Toast.fail('请填写完整信息');
+        return;
       }
-
     };
     const getYYMMDD = (date: Date) => {
       // function formatDate(date: string): string {
@@ -319,31 +324,39 @@ export default function AddSchedule() {
       // }
     };
     const submitForm = async (values: any) => {
-      const requestQueen = [0].map(async (item) => {
-        const data = await submitTime({
-          ...values,
-          startTime: `${getYYMMDD(value)} ${time}:00`,
-          endTime: `${getYYMMDD(value)} ${endTime}:00`,
-          // dayOfWeek: Number(item),
-          // time: translateTime(time, endTime),
-        });
-        return data;
+      console.log(values, 'submit values');
+      // const requestQueen = [0].map(async (item) => {
+      const data = await submitTime({
+        ...values,
+        startTime: `${getYYMMDD(value)} ${time}:00`,
+        endTime: `${getYYMMDD(value)} ${endTime}:00`,
+        // dayOfWeek: Number(item),
+        // time: translateTime(time, endTime),
       });
-      Promise.all(requestQueen)
-        .then((res) => {
-          console.log(res, 'res');
-          // if(res.every((item)=>item.code===200))
-          if (res.some((item) => item.message !== 'success')) {
-            Toast.fail('添加失败');
-          } else {
-            Toast.success('添加成功');
-          }
-          // if(res.)
-          // Toast.success('添加成功');
-        })
-        .catch((err) => {
-          Toast.fail('添加失败');
-        });
+      // if()
+      console.log(data, 'getYYMMDDdata');
+      // return data;
+      // });
+      if (data?.message === 'success') {
+        Toast.success('添加成功');
+      } else {
+        Toast.fail('添加失败');
+      }
+      // Promise.all(requestQueen)
+      //   .then((res) => {
+      //     console.log(res, 'res');
+      //     // if(res.every((item)=>item.code===200))
+      //     if (res.some((item) => item.message !== 'success')) {
+      //       Toast.fail('添加失败');
+      //     } else {
+      //       Toast.success('添加成功');
+      //     }
+      //     // if(res.)
+      //     // Toast.success('添加成功');
+      //   })
+      //   .catch((err) => {
+      //     Toast.fail('添加失败');
+      //   });
     };
     return (
       <div className="w-full space-y-4 youni-form">
@@ -494,9 +507,20 @@ export default function AddSchedule() {
       </div>
     );
   };
-  const {defaultCurriculum} = useCurriculum();
+  const { defaultCurriculum } = useCurriculum();
   const AddCourse = (props) => {
     const [dayOfWeek, setDayOfWeek] = useState([]);
+    const [dayOfWeekListData, setDayOfWeekListData] = useState(
+      {
+        1: { label: '星期一', startTime: '', endTime: '' },
+        2: { label: '星期二', startTime: '', endTime: '' },
+        3: { label: '星期三', startTime: '', endTime: '' },
+        4: { label: '星期四', startTime: '', endTime: '' },
+        5: { label: '星期五', startTime: '', endTime: '' },
+        6: { label: '星期六', startTime: '', endTime: '' },
+        0: { label: '星期日', startTime: '', endTime: '' },
+      }
+    );
     const [time, setTime] = useState();
     const [endTime, setEndTime] = useState();
     const [CURRICULUM, setCURRICULUM] = useState({
@@ -519,9 +543,26 @@ export default function AddSchedule() {
         return item.id === CURRICULUM.sectionId;
       })[0];
     }, [CURRICULUM.sectionId]);
-
+    const campusId = React.useMemo(
+      () => campusData?.data[0]?.id,
+      [campusData, router],
+    );
+    const { data: _courseFormat } = useFetch(
+      `/course_mode/list?campusId=${campusId}`,
+      'get',
+    );
     const [value, setValue] = React.useState<Dayjs | null>(null);
-    const { data: courseData } = useFetch('/course/query?campusId=1', 'get');
+    const { data: _courseData } = useFetch('/course/query', 'page', {
+      campusId: campusId,
+      pageSize: 100,
+    });
+    const courseData = useMemo(() => {
+      return _courseData
+        ? courseData
+          ? [...courseData].concat(..._courseData)
+          : [].concat(..._courseData)
+        : [];
+    }, [_courseData]);
     const handleChange = useCallback((val: any, name: string) => {
       setCURRICULUM((preVal: any) => {
         return {
@@ -540,11 +581,11 @@ export default function AddSchedule() {
       return `${timeStr}-${endTimeStr}`;
     };
     const submitForm = async (values: any) => {
-      if(!values || !values.name || !values.color || !dayOfWeek){
+      if (!values || !values.name || !values.color || !dayOfWeek) {
         Toast.fail('请填写完整信息');
         return;
       }
-      if(time === endTime){
+      if (time === endTime) {
         Toast.fail('开始时间和结束时间不能相同');
         return;
       }
@@ -553,10 +594,10 @@ export default function AddSchedule() {
           ...values,
           dayOfWeek: Number(item),
           time: {
-            start: time,
-            end: endTime,
+            start: dayOfWeekListData[item].startTime,
+            end: dayOfWeekListData[item].endTime,
           },
-          curriculumId:defaultCurriculum.id,
+          curriculumId: defaultCurriculum.id,
           // translateTime(time, endTime),
         });
         return data;
@@ -578,7 +619,7 @@ export default function AddSchedule() {
         });
     };
     return (
-      <div className="w-full space-y-4">
+      <div className="w-full space-y-4 pb-10">
         <CCourseInput
           title="课程名称"
           isNess
@@ -586,8 +627,8 @@ export default function AddSchedule() {
             handleChange(val.label, 'name');
             handleChange(val.id, 'courseId');
           }}
-          renderData={courseData?.data?.map((item) => item.ename)}
-          data={courseData?.data}
+          renderData={courseData?.map((item) => item?.code)}
+          data={courseData}
         ></CCourseInput>
         <div>{CourseId}</div>
         <div className="w-full pl-2 pr-2 bg-white rounded-lg">
@@ -621,80 +662,96 @@ export default function AddSchedule() {
             </div>
           </label>
         </div>
-        <div className="w-full h-12 p-4 bg-white rounded-lg">
-          <div className="flex youni-form items-center justify-between h-full space-x-4">
-            <div className="flex items-center">
-              <NessIcon className="mr-1"></NessIcon>
-              <div className="text-sm text-blueTitle">开始时间</div>
+        {dayOfWeek?.map((item) => {
+          return (
+            <div className="p-4 bg-white rounded-lg pb-2">
+              <div className="flex space-x-1 items-center">
+                <div className="bg-[#FFC400] rounded-full w-1 h-4"></div>
+                <div className="text-sm text-blueTitle">
+                  {dayOfWeekList[item].label}
+                </div>
+              </div>
+              <div className="w-full h-10 ">
+                <div className="flex youni-form items-center justify-between h-full space-x-4">
+                  <div className="flex items-center">
+                    <NessIcon className="mr-1"></NessIcon>
+                    <div className="text-sm text-blueTitle">开始时间</div>
+                  </div>
+                  <div>
+                    <DatetimePicker
+                      popup={{
+                        round: true,
+                      }}
+                      title=""
+                      defaultValue="10:00"
+                      type="time"
+                      minHour="10"
+                      maxHour="20"
+                      value={dayOfWeekListData[item].startTime}
+                      onConfirm={(val) => {
+                        const newDayOfWeekList = { ...dayOfWeekListData };
+                        dayOfWeekListData[item].startTime = val;
+                        setDayOfWeekListData(newDayOfWeekList);
+                      }}
+                    >
+                      {(val, _, actions) => {
+                        return (
+                          <Field
+                            readOnly
+                            clickable
+                            label=""
+                            value={val}
+                            placeholder="请选择日期"
+                            onClick={() => actions.open()}
+                          />
+                        );
+                      }}
+                    </DatetimePicker>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full h-10  ">
+                <div className="flex youni-form items-center justify-between h-full space-x-4">
+                  <div className="flex items-center">
+                    <NessIcon className="mr-1"></NessIcon>
+                    <div className="text-sm text-blueTitle">结束时间</div>
+                  </div>
+                  <div>
+                    <DatetimePicker
+                      popup={{
+                        round: true,
+                      }}
+                      title=""
+                      defaultValue="12:00"
+                      type="time"
+                      minHour="10"
+                      maxHour="20"
+                      value={dayOfWeekListData[item].endTime}
+                      onConfirm={(val) => {
+                        const newDayOfWeekList = { ...dayOfWeekListData };
+                        dayOfWeekListData[item].endTime = val;
+                        setDayOfWeekListData(newDayOfWeekList);
+                      }}
+                    >
+                      {(val, _, actions) => {
+                        return (
+                          <Field
+                            readOnly
+                            clickable
+                            label=""
+                            value={val}
+                            placeholder="请选择日期"
+                            onClick={() => actions.open()}
+                          />
+                        );
+                      }}
+                    </DatetimePicker>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div>
-              <DatetimePicker
-                popup={{
-                  round: true,
-                }}
-                title=""
-                defaultValue="10:00"
-                type="time"
-                minHour="10"
-                maxHour="20"
-                value={time}
-                onConfirm={(val) => {
-                  setTime(val);
-                }}
-              >
-                {(val, _, actions) => {
-                  return (
-                    <Field
-                      readOnly
-                      clickable
-                      label=""
-                      value={val}
-                      placeholder="请选择日期"
-                      onClick={() => actions.open()}
-                    />
-                  );
-                }}
-              </DatetimePicker>
-            </div>
-          </div>
-        </div>
-        <div className="w-full h-12 p-4 bg-white rounded-lg">
-          <div className="flex youni-form items-center justify-between h-full space-x-4">
-            <div className="flex items-center">
-              <NessIcon className="mr-1"></NessIcon>
-              <div className="text-sm text-blueTitle">结束时间</div>
-            </div>
-            <div>
-              <DatetimePicker
-                popup={{
-                  round: true,
-                }}
-                title=""
-                defaultValue="12:00"
-                type="time"
-                minHour="10"
-                maxHour="20"
-                value={endTime}
-                onConfirm={(val) => {
-                  setEndTime(val);
-                }}
-              >
-                {(val, _, actions) => {
-                  return (
-                    <Field
-                      readOnly
-                      clickable
-                      label=""
-                      value={val}
-                      placeholder="请选择日期"
-                      onClick={() => actions.open()}
-                    />
-                  );
-                }}
-              </DatetimePicker>
-            </div>
-          </div>
-        </div>
+          );
+        })}
         <CCourseInput
           title="Section"
           change={(val) => {
@@ -711,8 +768,8 @@ export default function AddSchedule() {
           change={(val) => {
             handleChange(val.label, 'mode');
           }}
-          data={courseFormat?.mode}
-          renderData={courseFormat?.mode?.map(
+          data={_courseFormat?.data}
+          renderData={_courseFormat?.data?.map(
             (item) => item[useLanguage('name')],
           )}
         ></CCourseInput>
