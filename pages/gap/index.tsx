@@ -21,8 +21,7 @@ import useFetch from '../../hooks/useFetch';
 import { Cell, Dialog } from 'react-vant';
 import { useDispatch } from 'react-redux';
 import { setOpenLogin } from '../../stores/authSlice';
-import {  Input ,List} from 'react-vant';
-
+import { Input, List } from 'react-vant';
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -35,6 +34,7 @@ const Accordion = styled((props: AccordionProps) => (
     display: 'none',
   },
 }));
+
 const CScoreCard = (props) => {
   const { score, label } = props;
   return (
@@ -485,9 +485,17 @@ export default function index() {
             <div className="bg-[#F7F8F9] rounded-[4px] flex items-center mr-2 h-[22px] leading-[18px] text-[#A9B0C0] text-[10px] w-18 space-x-2 px-2  justify-center">
               <DeleteIcon></DeleteIcon>
               <div
-                onClick={(e) => {
+                onClick={async(e) => {
                   e.preventDefault();
-                  Toast.fail('当前学期为管理员设置，无法删除');
+                  const {data} = await useRequest.post('/api/user/term/delete', {
+                    id: item.term.id,
+                  });
+                  if(data?.message === 'success'){
+                    Toast.success('删除成功')
+                  }else{
+                    Toast.fail('删除失败')
+                  }
+                  // Toast.fail('当前学期为管理员设置，无法删除');
                 }}
               >
                 删除学期
@@ -558,10 +566,10 @@ export default function index() {
     '--value': 70,
   };
   const [toastAddTerm, setToastAddTerm] = React.useState(false);
-  const [addTermInfoVisible,setAddTermInfoVisible] = React.useState(false);
+  const [addTermInfoVisible, setAddTermInfoVisible] = React.useState(false);
   const [system, setSystem] = useState('system');
-  const [year,setYear] = useState('');
-  const [termName,setName] = useState('');
+  const [year, setYear] = useState('');
+  const [termName, setName] = useState('');
   const { data: campusData, mutate: campusDataMutate } = useFetch(
     '/campus/query',
     'get',
@@ -569,12 +577,14 @@ export default function index() {
       name: router.query.campus,
     },
   );
+  const [selectSystemId, setSelectSystemId] = useState<any>();
   const campusId = React.useMemo(() => {
     return campusData?.data[0]?.id;
   }, [campusData?.data, router]);
-  const { data: fetchedData } = useFetch(`/campus/term/list?campusId=${campusId}`, 'get', {
-    campusId: campusId,
-  });
+  const { data: fetchedData } = useFetch(
+    `/campus/term/list?campusId=${campusId}`,
+    'get',
+  );
   // useEffect(()=>P{})
   // const [termInfo]
   return (
@@ -585,7 +595,7 @@ export default function index() {
         showCancelButton
         onConfirm={() => {
           // Toast.info('点击确认按钮');
-          setAddTermInfoVisible(true)
+          setAddTermInfoVisible(true);
           setToastAddTerm(false);
         }}
         onCancel={() => setToastAddTerm(false)}
@@ -630,58 +640,92 @@ export default function index() {
         visible={addTermInfoVisible}
         title="添加学期"
         showCancelButton
-        onConfirm={() => {
+        onConfirm={async () => {
           // Toast.info('点击确认按钮');
           const regex = /^\d{4}-\d{4}$/;
-          
-          
-          if(system === 'custom'){
-            if(!regex.test(year)){
-              Toast.fail('请输入正确的时间格式')
-              return
+
+          if (system === 'custom') {
+            if (!regex.test(year)) {
+              Toast.fail('请输入正确的时间格式');
+              return;
             }
-            useRequest.post('/api/campus/term/create',{
-              year:year,
-              name:termName,
-              campusTermId: 1
-            })
+            const { data } = await useRequest.post('/api/user/term/create', {
+              year: year,
+              name: termName,
+            });
+            if (data?.message === 'success') {
+              Toast.success('添加学期成功');
+              mutate();
+            } else {
+              Toast.fail('添加失败');
+            }
+          } else {
+            if (!selectSystemId) {
+              Toast.fail('您还未选择学期');
+              return;
+            }
+            const { data } = await useRequest.post('/api/user/term/create', {
+              year:
+                selectSystemId!.year + '-' + (Number(selectSystemId!.year) + 1),
+              name: selectSystemId.name,
+              campusTermId: selectSystemId.id,
+            });
+            if (data?.message === 'success') {
+              Toast.success('添加学期成功');
+              mutate();
+            } else {
+              Toast.fail('添加失败');
+            }
           }
           setAddTermInfoVisible(false);
-
         }}
         onCancel={() => setAddTermInfoVisible(false)}
       >
-        {
-          system === 'custom' ? <><div className="flex flex-col p-5 pb-2  justify-center space-y-3">
-          <div className='text-xs text-[#A9B0C0]'>添加年份</div>
-          <Input
-            value={year}
-            className="bg-[#F7F8F9] p-2"
-            onChange={(text) => setYear(text) }
-            placeholder="添加年份 如: 2021-2022"
-          />
-        </div>
-        <div className="flex flex-col p-5 pt-2  justify-center space-y-3">
-          <div className='text-xs text-[#A9B0C0]'>学期名称</div>
-          <Input
-            value={termName}
-            className="bg-[#F7F8F9] p-2"
-            onChange={(text) => setName(text) }
-            placeholder="添加学期名称 如: Winter"
-          />
-        </div></> : null
-        }
-        {
-          system === 'system' ? 
-          <div>
-          {fetchedData?.data?.map((_, i) => (
-            <Cell key={i} title={i + 1} />
-          ))}
-          {
-            !fetchedData ? <div className='p-4 py-10 flex justify-center text-gray-400'>校区暂无数据</div> : null
-          }
-          </div> : null
-        }
+        {system === 'custom' ? (
+          <>
+            <div className="flex flex-col p-5 pb-2  justify-center space-y-3">
+              <div className="text-xs text-[#A9B0C0]">添加年份</div>
+              <Input
+                value={year}
+                className="bg-[#F7F8F9] p-2"
+                onChange={(text) => setYear(text)}
+                placeholder="添加年份 如: 2021-2022"
+              />
+            </div>
+            <div className="flex flex-col p-5 pt-2  justify-center space-y-3">
+              <div className="text-xs text-[#A9B0C0]">学期名称</div>
+              <Input
+                value={termName}
+                className="bg-[#F7F8F9] p-2"
+                onChange={(text) => setName(text)}
+                placeholder="添加学期名称 如: Winter"
+              />
+            </div>
+          </>
+        ) : null}
+        {system === 'system' ? (
+          <div className="h-60 overflow-y-scroll ">
+            {fetchedData?.data?.map((_, i) => (
+              <div
+                onClick={() => {
+                  setSelectSystemId(_);
+                }}
+                className={classnames('w-full h-12 p-4 text-gray-400', {
+                  'text-[#B38314]': selectSystemId?.id === _.id,
+                })}
+                key={i}
+              >
+                {' '}
+                {_.year + '-' + (Number(_.year) + 1) + '-' + _.name}
+              </div>
+            ))}
+            {!fetchedData ? (
+              <div className="p-4  py-10 flex justify-center text-gray-400">
+                校区暂无数据
+              </div>
+            ) : null}
+          </div>
+        ) : null}
       </Dialog>
       <div className="relative h-[280px] w-full gap-bg pt-4  bg-gradient-to-l to-[#EAE6FF] from-[#ECF5FF] ">
         <Header className="bg-transparent fixed top-0"></Header>
