@@ -581,6 +581,8 @@ export default function config(props) {
     },
     [professorCurrent, courseList],
   );
+
+
   const SelectCourse = useCallback((props) => {
     const [value, setValue] = useState('');
     const {
@@ -661,6 +663,9 @@ export default function config(props) {
       </SwipeableDrawer>
     );
   }, []);
+
+
+
   const CourseSelector = (props) => {
     const { isSelect, key } = props;
     return (

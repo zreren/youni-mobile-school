@@ -90,7 +90,7 @@ export default function courseEvaluation() {
           <span onClick={()=>{
             router.push({
               pathname: `/[campus]/Course/evaluation`,
-              query: { campus: router.query.campus ,id:CourseId},
+              query: { campus: router.query.campus ,id:CourseId,name:courseEvaluation?.data?.code},
             })
           }} className='text-[#3665FF]'>点击评价课程</span>
         </div>

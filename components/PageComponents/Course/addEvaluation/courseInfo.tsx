@@ -7,6 +7,7 @@ import useFetch from '@/hooks/useFetch';
 import { EvaluationForm } from '@/libs/context';
 import useLanguage from '@/hooks/useLanguage';
 import { debounce } from 'lodash';
+import { Toast } from 'react-vant';
 
 function courseInfo(props) {
   const { subjectData } = props;
@@ -22,14 +23,17 @@ function courseInfo(props) {
     change?: (data: ChangeType) => void;
     renderData?: any;
     value?: any;
+    onClick?: any;
   }
   const data = useContext(EvaluationForm);
 
   const [form, setForm] = React.useState({});
+
   const updateData = (e) => {
     data.setData({ ...data.data, [e.key]: e.value });
     console.log(data, 'courseInfo');
   };
+
   const CCourseInput = (props: CCourseInput) => {
     const { title, isNess, children, data, renderData, value } = props;
     const [_value, setValue] = useState(value);
@@ -62,9 +66,8 @@ function courseInfo(props) {
         });
       }
     };
-    
-    const debouncedChange = debounce(props.change, 300); // 设置延迟时间为 300ms
 
+    const debouncedChange = debounce(props.change, 300); // 设置延迟时间为 300ms
 
     const handleInputChange = (e) => {
       __value.current = { id: null, label: e.target.value || null };
@@ -148,12 +151,7 @@ function courseInfo(props) {
     `/course/detail?id=${data?.data?.course?.id}`,
     'get',
   );
-  useEffect(() => {
-    mutateCourse();
-  }, [data?.data?.course?.id]);
-  useEffect(() => {
-    console.log(data, 'mutateSubject');
-  }, [data]);
+
   const ProfessorList = useMemo(() => {
     return courseDetail?.data?.sections
       .map((item) => {
@@ -162,6 +160,14 @@ function courseInfo(props) {
       })
       .flat();
   }, [courseDetail, data?.data?.course?.id]);
+
+  useEffect(() => {
+    mutateCourse();
+  }, [data?.data?.course?.id]);
+  useEffect(() => {
+    console.log(data, 'mutateSubject');
+  }, [data]);
+
   const ModeList = useMemo(() => {
     return courseDetail?.data?.sections
       .map((item) => {
@@ -170,6 +176,8 @@ function courseInfo(props) {
       })
       .flat();
   }, [courseDetail, data?.data]);
+
+
   useEffect(() => {
     console.log(ProfessorList, 'ProfessorList');
   }, [ProfessorList]);
@@ -204,54 +212,28 @@ function courseInfo(props) {
         </div>
       </label>
       <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
-      <label className="input-group bg-white w-full flex justify-between h-12">
-        <span className="bg-white font-medium text-blueTitle text-sm">
-          <NessIcon className="mr-1"></NessIcon> 课程分类
-        </span>
-        <CCourseInputMemo
-          value={{
-            value: data?.data?.subject?.id,
-            label: data.data?.subject?.label,
-          }}
-          change={(val: { id: any; label: any }) => {
-            console.log(val, 'val');
-            // handleChange(val.id);
-            if (!val) return;
-            updateData({
-              key: 'subject',
-              value: val,
-            });
-            // updateData({
-            //   key: 'subjectName',
-            //   value: val.label,
-            // });
-          }}
-          data={subjectData}
-          renderData={subjectData?.map((item) => {
-            return item?.ename;
-          })}
-        ></CCourseInputMemo>
-        {/* <select onChange={(val)=>{
-          console.log(val.target.value,"subjectData")
-        }} className="select  hover:outline-none text-right font-medium	 text-gray-500 text-xs ">
-          {
-            subjectData?.map((item, index) => {
-              return (
-                    <option>{item.ename}</option>
-              )
-            })
-          }
-        </select> */}
-      </label>
       <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
       <label className="input-group bg-white w-full flex justify-between h-12">
         <span className="bg-white  font-medium text-blueTitle text-sm">
           <NessIcon className="mr-1"></NessIcon> 课程代码
         </span>
-        <CCourseInputMemo
+        <div
+          onClick={() => {
+            props.select();
+          }}
+          className='w-1/2 h-full flex justify-end items-center mr-10'
+        >{data?.data?.course?.label}</div>
+        {/* <CCourseInputMemo
           value={{
             value: data?.data?.course?.id,
             label: data?.data?.course?.label,
+          }}
+          onClick={() => {
+            if (!data?.data?.subject?.id) {
+              Toast.fail('请先选择课程分类');
+              return;
+            }
+            props.select()
           }}
           change={(val: { id: any; label: any }) => {
             if (!val) return;
@@ -264,14 +246,20 @@ function courseInfo(props) {
           renderData={courseData?.map((item) => {
             return item?.code;
           })}
-        ></CCourseInputMemo>
+        ></CCourseInputMemo> */}
       </label>
       <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
       <label className="input-group bg-white w-full flex justify-between h-12">
         <span className="bg-white font-medium text-blueTitle text-sm">
           <NessIcon className="mr-1"></NessIcon> 选择教授
         </span>
-        <CCourseInputMemo
+        <div
+          onClick={() => {
+            props.SelectProfessor();
+          }}
+          className='w-1/2 h-full flex justify-end items-center mr-10'
+        >{data?.data?.professor?.label}</div>
+        {/* <CCourseInputMemo
           value={{
             value: data.data?.professor?.id,
             label: data.data?.professor?.label,
@@ -286,14 +274,20 @@ function courseInfo(props) {
           renderData={ProfessorList?.map((item) => {
             return item.name;
           })}
-        ></CCourseInputMemo>
+        ></CCourseInputMemo> */}
       </label>
       <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
       <label className="input-group bg-white w-full flex justify-between h-12">
         <span className="bg-white font-medium text-blueTitle text-sm">
           <NessIcon className="mr-1"></NessIcon> 课程形式
         </span>
-        <CCourseInputMemo
+        <div
+          onClick={() => {
+            props.SelectMode();
+          }}
+          className='w-1/2 h-full flex justify-end items-center mr-10'
+        >{data?.data?.mode?.label}</div>
+        {/* <CCourseInputMemo
           value={{
             value: data.data?.mode?.id,
             label: data.data?.mode?.label,
@@ -308,7 +302,7 @@ function courseInfo(props) {
           renderData={ModeList?.map((item) => {
             return item[useLanguage('name')];
           })}
-        ></CCourseInputMemo>
+        ></CCourseInputMemo> */}
       </label>
       <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
     </div>

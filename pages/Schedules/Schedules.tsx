@@ -919,6 +919,10 @@ export default function Schedules() {
       </div>
     );
   };
+  const {data:calendarData} = useFetch('/campus/calendar/query','get',{
+    termId:termInfo?.data?.id
+  })
+
   const Month = () => {
     return (
       <div className="w-full min-h-screen p-5">

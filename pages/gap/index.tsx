@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 // import Header from '@/components/Header';
 import classnames from 'classnames';
 import { useRouter } from 'next/router';
@@ -21,6 +21,8 @@ import useFetch from '../../hooks/useFetch';
 import { Cell, Dialog } from 'react-vant';
 import { useDispatch } from 'react-redux';
 import { setOpenLogin } from '../../stores/authSlice';
+import {  Input ,List} from 'react-vant';
+
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -49,7 +51,7 @@ const CScoreCard = (props) => {
 
 export default function index() {
   const router = useRouter();
-  const { data, error,mutate } = useFetch('/grade/list', 'get');
+  const { data, error, mutate } = useFetch('/grade/list', 'get');
   const { data: total, error: totalError } = useFetch('/grade/stat', 'get');
 
   const deleteGapItem = async (id: number | string): Promise<any> => {
@@ -135,8 +137,12 @@ export default function index() {
     return (
       <TextField
         value={value}
-        onChange={(e)=>{setValue(e.target.value)}}
-        onBlur={()=>{props.onChange(value)}}
+        onChange={(e) => {
+          setValue(e.target.value);
+        }}
+        onBlur={() => {
+          props.onChange(value);
+        }}
         placeholder="..."
         sx={{
           '& label.Mui-focused': {
@@ -185,31 +191,41 @@ export default function index() {
     );
   };
   const AutoInput = (props) => {
-    const { data: _courseData } = useFetch('/course/query', 'page',{
-      campusId:1,
-      pageSize: 100
+    const { data: _courseData } = useFetch('/course/query', 'page', {
+      campusId: 1,
+      pageSize: 100,
     });
-    const courseData = useMemo(() => _courseData ? courseData ? [...courseData].concat(..._courseData):[].concat(..._courseData):null, [_courseData])
+    const courseData = useMemo(
+      () =>
+        _courseData
+          ? courseData
+            ? [...courseData].concat(..._courseData)
+            : [].concat(..._courseData)
+          : null,
+      [_courseData],
+    );
 
-    const changeValue = (name) =>{
-      Object.values(courseData).some((value:any)=>{
-        if(value.ename === name){
+    const changeValue = (name) => {
+      Object.values(courseData).some((value: any) => {
+        if (value.ename === name) {
           props.onChange({
-            id:value.id,
-            label:value.ename
+            id: value.id,
+            label: value.ename,
           });
         }
-      })
-    }
-    const isFocus = useMemo(()=>{
-      return props.isFocus?{minWidth:'100vw'}:{width:'40px',maxWidth:'40px'}
-    },[props.isFocus])
-    return (  
+      });
+    };
+    const isFocus = useMemo(() => {
+      return props.isFocus
+        ? { minWidth: '100vw' }
+        : { width: '40px', maxWidth: '40px' };
+    }, [props.isFocus]);
+    return (
       <Autocomplete
         id="free-solo-demo"
         freeSolo
         onChange={(event: any, newValue: string | null) => {
-            changeValue(newValue)
+          changeValue(newValue);
         }}
         placeholder="请输入"
         sx={{
@@ -223,7 +239,7 @@ export default function index() {
           boxShadow: 'none',
           '& .MuiAutocomplete-inputRoot': {
             padding: 0,
-            width:'100%',
+            width: '100%',
             height: 20,
           },
           '.MuiAutocomplete-input': {
@@ -294,21 +310,21 @@ export default function index() {
     );
   };
   const CourseGap = (props) => {
-    const { edit, color, data ,type} = props;
-    console.log(data,"CourseGap")
+    const { edit, color, data, type } = props;
+    console.log(data, 'CourseGap');
     const [editMethod, setMethod] = React.useState(edit ? edit : false);
-    const [courseId,setCourseId] = React.useState(data?.course?.id);
-    const [courseName,setCourseName] = React.useState(data?.course?.ename);
-    const [score,setScore] = React.useState(data?.score)
+    const [courseId, setCourseId] = React.useState(data?.course?.id);
+    const [courseName, setCourseName] = React.useState(data?.course?.ename);
+    const [score, setScore] = React.useState(data?.score);
     const [credit, setCredit] = React.useState(data?.credit);
     const submitChange = () => {
-      if(type === 'new'){
-        useRequest.post('/api/grade/create',{
-          courseId:courseId,
-          credit:credit,
+      if (type === 'new') {
+        useRequest.post('/api/grade/create', {
+          courseId: courseId,
+          credit: credit,
           score: score,
           termId: data.term.id,
-        })
+        });
         // setMethod(false);
       }
       setMethod(false);
@@ -341,11 +357,20 @@ export default function index() {
                         setFocus(true);
                       }}
                       isisFocus={isFocus}
-                      onChange={(value) => {setCourseId(value.id)}}
+                      onChange={(value) => {
+                        setCourseId(value.id);
+                      }}
                       className="w-full"
                     ></AutoInput>
                   ) : (
-                    <div className={'text-sm overflow-x-scroll w-14 whitespace-nowrap'} >  {data?.course?.code}</div>
+                    <div
+                      className={
+                        'text-sm overflow-x-scroll w-14 whitespace-nowrap'
+                      }
+                    >
+                      {' '}
+                      {data?.course?.code}
+                    </div>
                   )}
                 </div>
               </div>
@@ -355,7 +380,12 @@ export default function index() {
                     <div className="text-[10px] text-[#DCDDE1]">学分</div>
                     <div className={'text-sm'}>
                       {editMethod ? (
-                        <InputField value={credit} onChange={(value)=>{setCredit(value)}}></InputField>
+                        <InputField
+                          value={credit}
+                          onChange={(value) => {
+                            setCredit(value);
+                          }}
+                        ></InputField>
                       ) : (
                         <div>{data.credit}</div>
                       )}
@@ -366,10 +396,10 @@ export default function index() {
                     <div className={'text-sm'}>
                       {editMethod ? (
                         <InputField
-                        value={score}
-                        onChange={(value)=>{
-                          setScore(value)
-                        }}
+                          value={score}
+                          onChange={(value) => {
+                            setScore(value);
+                          }}
                         ></InputField>
                       ) : (
                         <div>{data.score}</div>
@@ -416,7 +446,6 @@ export default function index() {
     const colorMap = ['#FF7978', '#FFB87C', '#FED64B', '#E2DAFF'];
     const color = colorMap[index % 4];
 
-
     console.log(`bg-[${color}]`, '`bg-[${color}]`');
     console.log(props, 'props');
     const [newCourse, setNewCourse] = React.useState(false);
@@ -444,7 +473,7 @@ export default function index() {
               ></div>
               <div className={'text-blueTitle text-sm text-medium'}>
                 {/* 2021-2022 秋季 */}
-                {item.term.year}-{item.term.year + 1}
+                {item.term.year}
                 {item.term.name}
               </div>
               <div
@@ -455,16 +484,20 @@ export default function index() {
             </div>
             <div className="bg-[#F7F8F9] rounded-[4px] flex items-center mr-2 h-[22px] leading-[18px] text-[#A9B0C0] text-[10px] w-18 space-x-2 px-2  justify-center">
               <DeleteIcon></DeleteIcon>
-              <div onClick={(e)=>{
-                e.preventDefault()
-                Toast.fail('当前学期为管理员设置，无法删除')
-              }}>删除学期</div>
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  Toast.fail('当前学期为管理员设置，无法删除');
+                }}
+              >
+                删除学期
+              </div>
             </div>
           </div>
         </AccordionSummary>
         <AccordionDetails>
           <div className="space-y-2">
-            {item.gradeList.map((item, index) => {
+            {item.grades?.map((item, index) => {
               return <CourseGap data={item} color={color}></CourseGap>;
             })}
             <CSSTransition
@@ -524,8 +557,132 @@ export default function index() {
   const value = {
     '--value': 70,
   };
+  const [toastAddTerm, setToastAddTerm] = React.useState(false);
+  const [addTermInfoVisible,setAddTermInfoVisible] = React.useState(false);
+  const [system, setSystem] = useState('system');
+  const [year,setYear] = useState('');
+  const [termName,setName] = useState('');
+  const { data: campusData, mutate: campusDataMutate } = useFetch(
+    '/campus/query',
+    'get',
+    {
+      name: router.query.campus,
+    },
+  );
+  const campusId = React.useMemo(() => {
+    return campusData?.data[0]?.id;
+  }, [campusData?.data, router]);
+  const { data: fetchedData } = useFetch(`/campus/term/list?campusId=${campusId}`, 'get', {
+    campusId: campusId,
+  });
+  // useEffect(()=>P{})
+  // const [termInfo]
   return (
     <div className="min-h-screen pb-20">
+      <Dialog
+        visible={toastAddTerm}
+        title="添加学期"
+        showCancelButton
+        onConfirm={() => {
+          // Toast.info('点击确认按钮');
+          setAddTermInfoVisible(true)
+          setToastAddTerm(false);
+        }}
+        onCancel={() => setToastAddTerm(false)}
+      >
+        <div className="flex flex-col p-5 items-center justify-center space-y-3">
+          <div className="text-xs text-[#798195]">
+            可以选择导入系统默认学期或创建自定义学期
+          </div>
+          <div
+            onClick={() => {
+              setSystem('system');
+            }}
+            className={classnames(
+              'w-full text-sm  rounded-[8px]  border h-12 flex justify-center items-center',
+              {
+                'text-[#798195] border-[#DCDDE1] ': system !== 'system',
+                'text-[#B38314] border-[#FFEB87] bg-[#FFFEF0]':
+                  system === 'system',
+              },
+            )}
+          >
+            导入系统默认学期
+          </div>
+          <div
+            onClick={() => {
+              setSystem('custom');
+            }}
+            className={classnames(
+              'w-full text-sm  text-[#798195] rounded-[8px]  border border-[#DCDDE1] h-12 flex justify-center items-center',
+              {
+                'text-[#798195] border-[#DCDDE1] ': system !== 'custom',
+                'text-[#B38314] border-[#FFEB87] bg-[#FFFEF0]':
+                  system === 'custom',
+              },
+            )}
+          >
+            创建自定义学期
+          </div>
+        </div>
+      </Dialog>
+      <Dialog
+        visible={addTermInfoVisible}
+        title="添加学期"
+        showCancelButton
+        onConfirm={() => {
+          // Toast.info('点击确认按钮');
+          const regex = /^\d{4}-\d{4}$/;
+          
+          
+          if(system === 'custom'){
+            if(!regex.test(year)){
+              Toast.fail('请输入正确的时间格式')
+              return
+            }
+            useRequest.post('/api/campus/term/create',{
+              year:year,
+              name:termName,
+              campusTermId: 1
+            })
+          }
+          setAddTermInfoVisible(false);
+
+        }}
+        onCancel={() => setAddTermInfoVisible(false)}
+      >
+        {
+          system === 'custom' ? <><div className="flex flex-col p-5 pb-2  justify-center space-y-3">
+          <div className='text-xs text-[#A9B0C0]'>添加年份</div>
+          <Input
+            value={year}
+            className="bg-[#F7F8F9] p-2"
+            onChange={(text) => setYear(text) }
+            placeholder="添加年份 如: 2021-2022"
+          />
+        </div>
+        <div className="flex flex-col p-5 pt-2  justify-center space-y-3">
+          <div className='text-xs text-[#A9B0C0]'>学期名称</div>
+          <Input
+            value={termName}
+            className="bg-[#F7F8F9] p-2"
+            onChange={(text) => setName(text) }
+            placeholder="添加学期名称 如: Winter"
+          />
+        </div></> : null
+        }
+        {
+          system === 'system' ? 
+          <div>
+          {fetchedData?.data?.map((_, i) => (
+            <Cell key={i} title={i + 1} />
+          ))}
+          {
+            !fetchedData ? <div className='p-4 py-10 flex justify-center text-gray-400'>校区暂无数据</div> : null
+          }
+          </div> : null
+        }
+      </Dialog>
       <div className="relative h-[280px] w-full gap-bg pt-4  bg-gradient-to-l to-[#EAE6FF] from-[#ECF5FF] ">
         <Header className="bg-transparent fixed top-0"></Header>
         <div className="absolute p-4 bg-white rounded-full left-8 rotate-220">
@@ -590,9 +747,9 @@ export default function index() {
           <Loading color="#FED64B" />
         </div>
       ) : (
-        <div className="px-0"  >
+        <div className="px-0">
           {data?.data?.map((item, index) => {
-            return <GapGroup item={item} index={index} ></GapGroup>;
+            return <GapGroup item={item} index={index}></GapGroup>;
           })}
           <div className={'w-full h-12 mt-4'}>
             <div
@@ -601,7 +758,13 @@ export default function index() {
               }
             >
               <Session></Session>
-              <div>添加学期</div>
+              <div
+                onClick={() => {
+                  setToastAddTerm(true);
+                }}
+              >
+                添加学期
+              </div>
             </div>
           </div>
           {/* <div className={"flex justify-between items-center mb-7 mt-5"}> */}

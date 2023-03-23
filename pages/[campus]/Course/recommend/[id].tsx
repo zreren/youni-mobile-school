@@ -120,7 +120,7 @@ export default function recommend() {
               cancelStarPost(id);
             }}
             postData={data?.map((item) => {
-              return { ...item};
+              return { ...item };
             })}
           ></Waterfall>
         ) : (
@@ -187,10 +187,13 @@ export default function recommend() {
       <div className="w-screen h-[210px]">
         <div className="z-30 h-[210px] flex flex-col justify-between text-white text-lg pl-8 pr-8 pt-20">
           <div></div>
-          <div className='absolute top-10' onClick={()=>{
-            router.back()
-          }}>
-          <ReturnBackIcon></ReturnBackIcon>
+          <div
+            className="absolute top-10"
+            onClick={() => {
+              router.back();
+            }}
+          >
+            <ReturnBackIcon></ReturnBackIcon>
           </div>
           <div className="z-30 css2Overflow-ellipsis">{data?.data?.title}</div>
           {/* <div className="z-30">适用于UTSC校区</div> */}
@@ -420,15 +423,18 @@ export default function recommend() {
     return (
       <>
         <div className="flex mt-4 items-top space-x-8 w-full">
-          <div onClick={()=>{
-            router.push({
-              pathname: '/[campus]/Course/[id]',
-              query:{
-                campus : router.query.campus,
-                id: data.id
-              }
-            })
-          }} className="min-w-[44px] text-[#798195] w-11 flex items-center justify-center text-center h-11 bg-[#F7F8F9] rounded-lg text-xs">
+          <div
+            onClick={() => {
+              router.push({
+                pathname: '/[campus]/Course/[id]',
+                query: {
+                  campus: router.query.campus,
+                  id: data.id,
+                },
+              });
+            }}
+            className="min-w-[44px] text-[#798195] w-11 flex items-center justify-center text-center h-11 bg-[#F7F8F9] rounded-lg text-xs"
+          >
             {data.label}
           </div>
           <div className="w-full space-y-4">
