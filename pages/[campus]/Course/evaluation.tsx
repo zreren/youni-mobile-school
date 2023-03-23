@@ -684,8 +684,8 @@ export default function evaluation() {
       const { data: submitData } = await useRequest.post(
         '/api/evaluation/create',
         {
-          courseId: data?.course.id,
-          professorId: data?.professor?.id,
+          courseId: data?.course.value,
+          professorId: data?.professor?.value,
           professorTags: [...new Set(data?.professorTagsEvaluation)],
           content: data?.content,
           professorRating: data?.professorRating,
