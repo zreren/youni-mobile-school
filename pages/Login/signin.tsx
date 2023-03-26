@@ -226,14 +226,53 @@ export default function SignIn(props) {
     const PhoneLabel = () => {
       const [age, setAge] = React.useState('1');
       const [phoneNumber, setPhoneNumber] = useState('');
-      const [password,setPassword] = useState('');
+      const [password, setPassword] = useState('');
       const [loginWay, setLoginWay] = useState('code');
       const [school, setSchool] = useState('University of York1');
+      const [visible, setVisible] = useState(false);
+
       const handleChange = (event: SelectChangeEvent) => {
         setAge(event.target.value as string);
       };
       return (
         <div className="h-screen space-y-4">
+          <Popup
+            overlayClass={'Popup'}
+            overlay={true}
+            className="z-30 bottom-footer-theTop w-4/5 rounded-2xl shadow"
+            visible={visible}
+            onClose={() => setVisible(false)}
+          >
+            <div className="h-[232px] flex flex-col  items-center">
+              <div className="pt-4  pb-4 text-[#37455C] ">
+                Reset password with
+              </div>
+              {/* <div> */}
+              <div
+                onClick={() => {
+                  setProgress(2);
+                }}
+                className="py-4 text-[#798195]"
+              >
+                Phone number
+              </div>
+              <div
+                onClick={() => {
+                  setProgress(3);
+                }}
+                className="py-4 text-[#798195]"
+              >
+                Email
+              </div>
+              <div
+                onClick={() => setVisible(false)}
+                className="py-4 text-[#A9B0C0]"
+              >
+                Cancel
+              </div>
+              {/* </div> */}
+            </div>
+          </Popup>
           {/* <div className="flex items-center w-full">
             <Select
               labelId="demo-simple-select-label"
@@ -308,19 +347,19 @@ export default function SignIn(props) {
               />
             </label>
           </div>
-         {
-          loginWay === 'password' &&  <div className="w-full">
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full input hover:outline-none"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
-        </div>
-         }
+          {loginWay === 'password' && (
+            <div className="w-full">
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-full input hover:outline-none"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+            </div>
+          )}
           <div className="h-[1px] bg-[#EAEBEC] w-full"></div>
           {/* <div className="mb-10 text-xs text-gray-300">
             Your phone number will be used to improve your YoUni experience,
@@ -330,13 +369,34 @@ export default function SignIn(props) {
               <div className="text-blue-400">Learn more</div>
             </Link>
           </div> */}
+          <div className="flex justify-between">
+            <div
+              onClick={() => {
+                setVisible(true);
+              }}
+              className= "pl-4 text-xs text-gray-300"
+            >
+              Forgot Password?
+            </div>
+            <div
+              onClick={() => {
+                setLoginWay((pre) => (pre === 'code' ? 'password' : 'code'));
+              }}
+              className=" pl-4 text-xs text-gray-300"
+            >
+              {loginWay === 'code' ? ' Login with password' : 'Login with Code'}
+            </div>
+          </div>
           <button
-            onClick={async() => {
-              if(loginWay === 'password'){
-                const {data} = await useRequest.post('/api/auth/password_login',{
-                  account: `+${age}${phoneNumber}`,
-                  password:password
-                })
+            onClick={async () => {
+              if (loginWay === 'password') {
+                const { data } = await useRequest.post(
+                  '/api/auth/password_login',
+                  {
+                    account: `+${age}${phoneNumber}`,
+                    password: password,
+                  },
+                );
                 if (data.code === 200) {
                   if (data.data.token) {
                     Toast.success('登录成功');
@@ -348,6 +408,7 @@ export default function SignIn(props) {
                 } else {
                   Toast.fail(`登录失败${data.message}`);
                 }
+                return;
               }
               phoneNumber.length > 5 && school.length
                 ? route.push({
@@ -371,14 +432,6 @@ export default function SignIn(props) {
           >
             {loginWay === 'code' ? 'Send Code' : 'Login'}
           </button>
-          <div
-            onClick={() => {
-              setLoginWay((pre) => (pre === 'code' ? 'password' : 'code'));
-            }}
-            className="text-[#A9B0C0] text-sm  w-full flex justify-center"
-          >
-            {loginWay === 'code' ? ' Login with password' : 'Login with Code'}
-          </div>
         </div>
       );
     };

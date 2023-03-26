@@ -138,7 +138,7 @@ export default function Valid() {
         <Header className="shadow-none" title=""></Header>
         <div className="text-2xl font-medium">Phone Verification</div>
         <div>
-          Enter the 6-digit verification code you received at +
+          Enter the 6-digit verification code you received at +{router.query.prefix}
           {query?.phoneNumber}.The code are valid for 30 minutes
         </div>
         <div className="mt-6 mb-6">
@@ -402,9 +402,11 @@ export default function Valid() {
           campusId: campusId,
         });
         if (data?.message === 'success') {
+
           Toast.success('Create success');
           router.push('/Profile');
-          dispatch(setOpenLogin('login'));
+          dispatch(setOpenLogin('close'));
+          setMyItem(data.data.token);
           Toast.success('Login success');
           // router.push('/Login/signin')
         } else {
@@ -513,7 +515,7 @@ export default function Valid() {
           Toast.success('登录成功');
           setMyItem(data.data.token);
           router.push('/Profile', undefined, { shallow: true });
-          router.reload();
+          // router.reload();
           dispatch(setOpenLogin('close'));
         }
       } else {
@@ -538,7 +540,7 @@ export default function Valid() {
         <div className="mt-6 mb-6">
           <input
             type="text"
-            placeholder="Phone Number"
+            placeholder="Code"
             className="w-full input hover:outline-none"
             value={code}
             onChange={(e) => {
