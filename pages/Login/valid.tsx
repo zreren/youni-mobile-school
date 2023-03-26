@@ -64,7 +64,7 @@ export default function Valid() {
           <Header className="shadow-none" title=""></Header>
           <div className="text-2xl font-medium">Phone Verification</div>
           <div>
-            Enter the 6-digit verification code you received at +
+            Enter the 6-digit verification code you received at +{router.query.prefix}
             {query?.phoneNumber}.The code are valid for 30 minutes
           </div>
           <div className="mt-6 mb-6">
@@ -306,7 +306,7 @@ export default function Valid() {
       </div>
     );
   };
-  
+
   const Password = (props) => {
     interface State {
       amount: string;
@@ -487,7 +487,7 @@ export default function Valid() {
   const [myItem, setMyItem] = useLocalStorage('token', null);
 
   const CodeValid = (props) => {
-    const [code,setCode] = useState('');
+    const [code, setCode] = useState('');
     useEffect(() => {
       if (query?.phoneNumber) {
         useRequest
@@ -503,11 +503,11 @@ export default function Valid() {
       if (query?.mail) {
       }
     }, [query]);
-    const validCode = async()=>{
-      const {data} = await useRequest.post('/api/auth/sms_login',{
-          phone: `+${query?.prefix}${phoneNumber}`,
-          code:code
-      })
+    const validCode = async () => {
+      const { data } = await useRequest.post('/api/auth/sms_login', {
+        phone: `+${query?.prefix}${phoneNumber}`,
+        code: code,
+      });
       if (data.code === 200) {
         if (data.data.token) {
           Toast.success('登录成功');
@@ -520,7 +520,7 @@ export default function Valid() {
         Toast.fail(`登录失败${data.message}`);
       }
       // if(data.message === 'succ')
-    }
+    };
     return (
       <div className="z-30 w-full h-full p-8 bg-white h-screen">
         <Header
@@ -532,19 +532,20 @@ export default function Valid() {
         ></Header>
         <div className="text-2xl font-medium">Enter 6-digit code</div>
         <div>
-          Enter the 6-digit verification code you received at +86 133 9987
-          3321.The code are valid for 30 minutes
+          Enter the 6-digit verification code you received at +
+          {router.query?.prefix} {phoneNumber}.The code are valid for 30 minutes
         </div>
         <div className="mt-6 mb-6">
-            <input
-              type="text"
-              placeholder="Phone Number"
-              className="w-full input hover:outline-none"
-              value={code}
-              onChange={(e) => {
-                setCode(e.target.value);
-              }}
-            />    {/* <input
+          <input
+            type="text"
+            placeholder="Phone Number"
+            className="w-full input hover:outline-none"
+            value={code}
+            onChange={(e) => {
+              setCode(e.target.value);
+            }}
+          />{' '}
+          {/* <input
           type="text"
           placeholder="Type here"
           className="w-full input hover:outline-none"
@@ -578,7 +579,7 @@ export default function Valid() {
   const NodeList = [PhoneValid, MailValid, Password];
   const Node = NodeList[state];
   useEffect(() => {
-    if(signIn){
+    if (signIn) {
       setState(3);
     }
     if (mail && !signIn) {
