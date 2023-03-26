@@ -64,7 +64,8 @@ export default function Valid() {
           <Header className="shadow-none" title=""></Header>
           <div className="text-2xl font-medium">Phone Verification</div>
           <div>
-            Enter the 6-digit verification code you received at +{router.query.prefix}
+            Enter the 6-digit verification code you received at +
+            {router.query.prefix}
             {query?.phoneNumber}.The code are valid for 30 minutes
           </div>
           <div className="mt-6 mb-6">
@@ -118,6 +119,21 @@ export default function Valid() {
         Toast.fail(error);
       }
     };
+    const resendCode = async () => {
+      if (count !== 0) {
+        Toast.fail('60s内只能发送一次');
+        return;
+      }
+      const {data} = await useRequest.post('/api/send_sms_code', {
+        phone: `+${query?.prefix}${query?.phoneNumber}`,
+      });
+      if (data.message === 'success') {
+        Toast.success('重新发送成功');
+        setTime(60);
+      } else {
+        Toast.fail(data.message);
+      }
+    };
     useEffect(() => {
       if (query?.phoneNumber) {
         useRequest
@@ -138,7 +154,8 @@ export default function Valid() {
         <Header className="shadow-none" title=""></Header>
         <div className="text-2xl font-medium">Phone Verification</div>
         <div>
-          Enter the 6-digit verification code you received at +{router.query.prefix}
+          Enter the 6-digit verification code you received at +
+          {router.query.prefix}
           {query?.phoneNumber}.The code are valid for 30 minutes
         </div>
         <div className="mt-6 mb-6">
@@ -170,12 +187,13 @@ export default function Valid() {
         >
           Next
         </button>
-        <div className="w-full mt-8 text-xs text-left text-darkYellow">
+        <div onClick={resendCode} className="w-full mt-8 text-xs text-left text-darkYellow">
           No code?
         </div>
       </div>
     );
   };
+
   const MailValid = (props) => {
     const [count, setTime] = useCountDown({ mss: 60 });
     useEffect(() => {
@@ -402,7 +420,6 @@ export default function Valid() {
           campusId: campusId,
         });
         if (data?.message === 'success') {
-
           Toast.success('Create success');
           router.push('/Profile');
           dispatch(setOpenLogin('close'));
@@ -578,8 +595,6 @@ export default function Valid() {
       </div>
     );
   };
-  const NodeList = [PhoneValid, MailValid, Password];
-  const Node = NodeList[state];
   useEffect(() => {
     if (signIn) {
       setState(3);

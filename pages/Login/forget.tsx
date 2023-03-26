@@ -216,7 +216,7 @@ export default function Valid(props) {
           >
             Next
           </button>
-          <div className="w-full mt-8 text-xs text-left text-darkYellow">
+          <div  className="w-full mt-8 text-xs text-left text-darkYellow">
             No code?
           </div>
         </div>
