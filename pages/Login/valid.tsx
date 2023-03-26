@@ -18,31 +18,42 @@ import CheckIcon from './check.svg';
 import CheckedIcon from './checked.svg';
 import { setOpenLogin } from '../../stores/authSlice';
 import { useDispatch } from 'react-redux';
-
+import useLocalStorage from '@/hooks/useStore';
 
 export default function Valid() {
-  const [state, setState] = React.useState(0);
+  const [state, setState] = React.useState<any>(null);
   const router = useRouter();
   const { query } = router;
   const mail = useMemo(() => {
     return query.mail;
   }, [router]);
-  const lang = useMemo(()=>{
+
+  const phoneNumber = useMemo(() => {
+    return query.phoneNumber;
+  }, [router]);
+
+  const lang = useMemo(() => {
     return query.lang;
-  },[router])
-  const campusId = useMemo(()=>{
-    return Number(query.campusId) 
-  },[router])
+  }, [router]);
+
+  const signIn = useMemo(() => {
+    return query?.signIn;
+  }, [router]);
+
+  const campusId = useMemo(() => {
+    return Number(query.campusId);
+  }, [router]);
+
   const roleId = useMemo(() => {
-    if(query.roleId === 'Student'){
+    if (query.roleId === 'Student') {
       return 4;
     }
-    if(query.roleId === 'Graduated'){
-    return 5;
+    if (query.roleId === 'Graduated') {
+      return 5;
     }
-  },[router])
-  // const 
-  const [accessToken,setAccessToken] = useState();
+  }, [router]);
+  // const
+  const [accessToken, setAccessToken] = useState();
   const PhoneValid = (props) => {
     const [count, setTime] = useCountDown({ mss: 60 });
     const [isCodeInput, setCodeInput] = React.useState(false);
@@ -93,10 +104,11 @@ export default function Valid() {
     const validCode = async () => {
       try {
         const { data } = await useRequest.post('/api/check_code', {
-          account: query?.phoneNumber,
+          account: `+${query?.prefix}${query?.phoneNumber}`,
           code: code,
         });
         if (data?.message === 'success') {
+          setAccessToken(data?.data?.accessToken);
           Toast.success('success');
           props.setState(2);
         } else {
@@ -109,8 +121,8 @@ export default function Valid() {
     useEffect(() => {
       if (query?.phoneNumber) {
         useRequest
-          .post('/api/sendsms_code', {
-            phone: query?.phoneNumber,
+          .post('/api/send_sms_code', {
+            phone: `+${query?.prefix}${query?.phoneNumber}`,
           })
           .then((res) => {
             if (res.data.message) {
@@ -168,7 +180,6 @@ export default function Valid() {
     const [count, setTime] = useCountDown({ mss: 60 });
     useEffect(() => {
       if (mail) {
-        
       }
     }, []);
     const [isCodeInput, setCodeInput] = React.useState(false);
@@ -230,21 +241,21 @@ export default function Valid() {
       // if
     };
     const [code, setCode] = useState('');
-    const resendCode = async ()=>{
-      if(count !== 0){
-        Toast.fail('60s内只能发送一次')
-        return
+    const resendCode = async () => {
+      if (count !== 0) {
+        Toast.fail('60s内只能发送一次');
+        return;
       }
-      const {data} =  await useRequest.post('/api/send_email_code',{
-        email:mail,
-      })
-      if(data.message === 'success'){
-        Toast.success('重新发送成功')
-        setTime(60)
-        }else{
-        Toast.fail(data.message)
-    }
-    }
+      const { data } = await useRequest.post('/api/send_email_code', {
+        email: mail,
+      });
+      if (data.message === 'success') {
+        Toast.success('重新发送成功');
+        setTime(60);
+      } else {
+        Toast.fail(data.message);
+      }
+    };
     return (
       <div className="z-30 w-full h-full p-8 bg-white">
         <Header className="shadow-none" title=""></Header>
@@ -267,7 +278,7 @@ export default function Valid() {
             }}
           />
           <div className="w-full text-xs text-right">
-            {count === 0 ?   `Code sent (${count}s)` : `Code sent (${count}s)`}
+            {count === 0 ? `Code sent (${count}s)` : `Code sent (${count}s)`}
             {/* {`Code sent (${count}s)`} */}
           </div>
         </div>
@@ -284,12 +295,18 @@ export default function Valid() {
         >
           Next
         </button>
-        <div onClick={()=>{resendCode()}} className="w-full mt-8 text-xs text-left text-darkYellow">
+        <div
+          onClick={() => {
+            resendCode();
+          }}
+          className="w-full mt-8 text-xs text-left text-darkYellow"
+        >
           No code?
         </div>
       </div>
     );
   };
+  
   const Password = (props) => {
     interface State {
       amount: string;
@@ -355,26 +372,46 @@ export default function Valid() {
       }
     `;
     const dispatch = useDispatch();
-    const submitCreate = async ()=>{
-      if( isLetterAndNumber && isLength && isSpecial){
-       const {data} = await useRequest.post('/api/student/email_register',{
-          password:values.password,
-          roleId:roleId,
+
+    const submitCreate = async () => {
+      if (isLetterAndNumber && isLength && isSpecial && mail) {
+        const { data } = await useRequest.post('/api/auth/email_register', {
+          password: values.password,
+          roleId: roleId,
           lang: lang,
-          accessToken:accessToken,
-          campusId:campusId
-        })
-        if(data?.message === 'success'){
-          Toast.success('Create success')
+          accessToken: accessToken,
+          campusId: campusId,
+        });
+        if (data?.message === 'success') {
+          Toast.success('Create success');
           router.push('/Profile');
           dispatch(setOpenLogin('login'));
-          Toast.success('Login success')
+          Toast.success('Login success');
           // router.push('/Login/signin')
-        }else{
-          Toast.fail(data?.message)
+        } else {
+          Toast.fail(data?.message);
         }
       }
-    }
+
+      if (isLetterAndNumber && isLength && isSpecial && phoneNumber) {
+        const { data } = await useRequest.post('/api/auth/sms_register', {
+          password: values.password,
+          roleId: roleId,
+          lang: lang,
+          accessToken: accessToken,
+          campusId: campusId,
+        });
+        if (data?.message === 'success') {
+          Toast.success('Create success');
+          router.push('/Profile');
+          dispatch(setOpenLogin('login'));
+          Toast.success('Login success');
+          // router.push('/Login/signin')
+        } else {
+          Toast.fail(data?.message);
+        }
+      }
+    };
     return (
       <div className="z-30 w-full h-full p-8 bg-white">
         <Header className="shadow-none" title=""></Header>
@@ -426,19 +463,13 @@ export default function Valid() {
             <div>1 letter and 1 number</div>
           </div>
           <div className="flex items-center  text-xs space-x-2">
-            {
-              isSpecial ? (
-                <CheckedIcon></CheckedIcon>
-              ) : (
-                <CheckIcon></CheckIcon>
-              )
-            }
+            {isSpecial ? <CheckedIcon></CheckedIcon> : <CheckIcon></CheckIcon>}
             <div>1 special character (Example:#!$&@)</div>
           </div>
         </div>
         <button
           onClick={() => {
-            submitCreate()
+            submitCreate();
           }}
           className={classNames(
             'w-full border-0 rounded-full btn',
@@ -452,19 +483,117 @@ export default function Valid() {
       </div>
     );
   };
+  const dispatch = useDispatch();
+  const [myItem, setMyItem] = useLocalStorage('token', null);
 
+  const CodeValid = (props) => {
+    const [code,setCode] = useState('');
+    useEffect(() => {
+      if (query?.phoneNumber) {
+        useRequest
+          .post('/api/send_sms_code', {
+            phone: `+${query?.prefix}${query?.phoneNumber}`,
+          })
+          .then((res) => {
+            if (res.data.message) {
+              // beginCountDown()
+            }
+          });
+      }
+      if (query?.mail) {
+      }
+    }, [query]);
+    const validCode = async()=>{
+      const {data} = await useRequest.post('/api/auth/sms_login',{
+          phone: `+${query?.prefix}${phoneNumber}`,
+          code:code
+      })
+      if (data.code === 200) {
+        if (data.data.token) {
+          Toast.success('登录成功');
+          setMyItem(data.data.token);
+          router.push('/Profile', undefined, { shallow: true });
+          router.reload();
+          dispatch(setOpenLogin('close'));
+        }
+      } else {
+        Toast.fail(`登录失败${data.message}`);
+      }
+      // if(data.message === 'succ')
+    }
+    return (
+      <div className="z-30 w-full h-full p-8 bg-white h-screen">
+        <Header
+          returnClick={() => {
+            // returnClick();
+          }}
+          className="shadow-none bg-transparent"
+          title=""
+        ></Header>
+        <div className="text-2xl font-medium">Enter 6-digit code</div>
+        <div>
+          Enter the 6-digit verification code you received at +86 133 9987
+          3321.The code are valid for 30 minutes
+        </div>
+        <div className="mt-6 mb-6">
+            <input
+              type="text"
+              placeholder="Phone Number"
+              className="w-full input hover:outline-none"
+              value={code}
+              onChange={(e) => {
+                setCode(e.target.value);
+              }}
+            />    {/* <input
+          type="text"
+          placeholder="Type here"
+          className="w-full input hover:outline-none"
+          onChange={(e) => {
+            e.target.value.length > 3
+              ? setCodeInput(true)
+              : setCodeInput(false);
+          }}
+        /> */}
+          {/* <div className="w-full text-xs text-right">
+          {count === 0 ? <ReSentCode /> : `Code sent (${count}s)`}
+        </div> */}
+        </div>
+        <button
+          onClick={validCode}
+          className={classNames(
+            'w-full border-0 rounded-full btn ',
+            code.length >= 4
+              ? 'bg-[#FFD036] hover:bg-yellow-400 text-[#8C6008] '
+              : 'bg-gray-300 hover:bg-gray-300 ',
+          )}
+        >
+          Next
+        </button>
+        {/* <div className="w-full mt-8 text-xs text-left text-darkYellow">
+        No code?
+      </div> */}
+      </div>
+    );
+  };
   const NodeList = [PhoneValid, MailValid, Password];
   const Node = NodeList[state];
   useEffect(() => {
-    if (mail) {
+    if(signIn){
+      setState(3);
+    }
+    if (mail && !signIn) {
       setState(1);
     }
-  }, [mail]);
+    if (phoneNumber && state !== 0 && !signIn) {
+      setState(0);
+    }
+  }, [router]);
   return (
     <div>
       {state === 0 ? <PhoneValid setState={setState} /> : null}
-    {state === 1 ? <MailValid setState={setState} /> : null}
-    {state === 2 ? <Password setState={setState} /> : null}
+      {state === 1 ? <MailValid setState={setState} /> : null}
+      {state === 2 ? <Password setState={setState} /> : null}
+      {state === 3 ? <CodeValid setState={setState} /> : null}
       {/* <Password setState={setState} /> */}
     </div>
   );

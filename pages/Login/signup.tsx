@@ -196,6 +196,9 @@ export default function SignUp(props) {
           pathname: '/Login/valid',
           query: {
             phoneNumber: phoneNumber,
+            prefix : age,
+            roleId: role,
+            lang: language,
           },
         });
         dispatch(setOpenLogin('close'));

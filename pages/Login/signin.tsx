@@ -312,8 +312,16 @@ export default function SignIn(props) {
           <button
             onClick={() => {
               phoneNumber.length > 5 && school.length
-                ? route.push('./valid')
+                ? route.push({
+                  pathname:'./Login/valid',
+                  query:{
+                    signIn:true,
+                    phoneNumber: phoneNumber,
+                    prefix: age,
+                  }
+                })
                 : null;
+                dispatch(setOpenLogin('close'));
             }}
             className={classnames(
               'w-full bg-[#F7F8F9] text-[#A9B0C0]  text-[16px] font-medium border-0 rounded-full btn hover:bg-gray-300',
