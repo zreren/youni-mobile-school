@@ -226,6 +226,8 @@ export default function SignIn(props) {
     const PhoneLabel = () => {
       const [age, setAge] = React.useState('1');
       const [phoneNumber, setPhoneNumber] = useState('');
+      const [password,setPassword] = useState('');
+      const [loginWay, setLoginWay] = useState('code');
       const [school, setSchool] = useState('University of York1');
       const handleChange = (event: SelectChangeEvent) => {
         setAge(event.target.value as string);
@@ -270,7 +272,7 @@ export default function SignIn(props) {
                 id="demo-simple-select"
                 value={age}
                 sx={{
-                  zIndex:9999,
+                  zIndex: 9999,
                   boxShadow: 'none',
                   '.MuiOutlinedInput-notchedOutline': { border: 0 },
                   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
@@ -285,7 +287,13 @@ export default function SignIn(props) {
               >
                 {prefixSorted.map((item) => {
                   return (
-                    <MenuItem className='bottomPlusx' sx={{zIndex:999999999}} value={item.prefix}>+{item.prefix}</MenuItem>
+                    <MenuItem
+                      className="bottomPlusx"
+                      sx={{ zIndex: 999999999 }}
+                      value={item.prefix}
+                    >
+                      +{item.prefix}
+                    </MenuItem>
                   );
                 })}
               </Select>
@@ -300,6 +308,19 @@ export default function SignIn(props) {
               />
             </label>
           </div>
+         {
+          loginWay === 'password' &&  <div className="w-full">
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full input hover:outline-none"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+          />
+        </div>
+         }
           <div className="h-[1px] bg-[#EAEBEC] w-full"></div>
           {/* <div className="mb-10 text-xs text-gray-300">
             Your phone number will be used to improve your YoUni experience,
@@ -310,18 +331,35 @@ export default function SignIn(props) {
             </Link>
           </div> */}
           <button
-            onClick={() => {
+            onClick={async() => {
+              if(loginWay === 'password'){
+                const {data} = await useRequest.post('/api/auth/password_login',{
+                  account: `+${age}${phoneNumber}`,
+                  password:password
+                })
+                if (data.code === 200) {
+                  if (data.data.token) {
+                    Toast.success('登录成功');
+                    setMyItem(data.data.token);
+                    route.push('/Profile', undefined, { shallow: true });
+                    route.reload();
+                    dispatch(setOpenLogin('close'));
+                  }
+                } else {
+                  Toast.fail(`登录失败${data.message}`);
+                }
+              }
               phoneNumber.length > 5 && school.length
                 ? route.push({
-                  pathname:'./Login/valid',
-                  query:{
-                    signIn:true,
-                    phoneNumber: phoneNumber,
-                    prefix: age,
-                  }
-                })
+                    pathname: './Login/valid',
+                    query: {
+                      signIn: true,
+                      phoneNumber: phoneNumber,
+                      prefix: age,
+                    },
+                  })
                 : null;
-                dispatch(setOpenLogin('close'));
+              dispatch(setOpenLogin('close'));
             }}
             className={classnames(
               'w-full bg-[#F7F8F9] text-[#A9B0C0]  text-[16px] font-medium border-0 rounded-full btn hover:bg-gray-300',
@@ -331,8 +369,16 @@ export default function SignIn(props) {
               },
             )}
           >
-            Send Code
+            {loginWay === 'code' ? 'Send Code' : 'Login'}
           </button>
+          <div
+            onClick={() => {
+              setLoginWay((pre) => (pre === 'code' ? 'password' : 'code'));
+            }}
+            className="text-[#A9B0C0] text-sm  w-full flex justify-center"
+          >
+            {loginWay === 'code' ? ' Login with password' : 'Login with Code'}
+          </div>
         </div>
       );
     };
@@ -347,7 +393,7 @@ export default function SignIn(props) {
           }}
           className="pl-4 mb-6"
         >
-          <ReturnBackIcon className=''></ReturnBackIcon>
+          <ReturnBackIcon className=""></ReturnBackIcon>
         </div>
         {/* <Image src={Logo} alt=""></Image> */}
         {/* <CSSTransition classNames="title" timeout={1000}> */}
