@@ -124,9 +124,9 @@ const itemList = [
   },
   {
     name: '考试难度',
-    item: ['非常糟糕', '勉勉强强', '感觉还行', '的确不错', '强烈推荐'],
-    icon: iconList.slice().reverse(),
-    iconListActive: iconListActive.slice().reverse(),
+    item: ['能及格吗', '勉强能过', '需要认真', '学就高分', '强烈推荐'],
+    icon: iconList,
+    iconListActive: iconListActive,
     dataIndex:'examRating'
   },
 ];

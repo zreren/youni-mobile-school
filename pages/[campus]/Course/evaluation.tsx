@@ -313,8 +313,8 @@ export default function evaluation() {
       return {
         ...pre,
         course: {
-          value:router.query.id,
-          label:router.query.name
+          value: router.query.id,
+          label: router.query.name
         },
       };
     });
@@ -685,7 +685,11 @@ export default function evaluation() {
         '/api/evaluation/create',
         {
           courseId: data?.course.value,
+          courseName: data?.course?.label,
           professorId: data?.professor?.value,
+          professorName: data?.professor?.label,
+          modeName: data?.mode?.label,
+          campusId: campusId,
           professorTags: [...new Set(data?.professorTagsEvaluation)],
           content: data?.content,
           professorRating: data?.professorRating,
