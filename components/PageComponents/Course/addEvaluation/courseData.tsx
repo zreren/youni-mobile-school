@@ -110,23 +110,23 @@ const itemList = [
   },
   {
     name: '内容难度',
-    item: ['非常糟糕', '勉勉强强', '感觉还行', '的确不错', '强烈推荐'],
+    item: ['难上青天', '挑灯苦读', '难度适中', '比较简单', '比较简单'],
     icon: iconList,
     iconListActive: iconListActive,
     dataIndex:'contentRating'
   },
   {
     name: '作业难度',
-    item: ['非常糟糕', '勉勉强强', '感觉还行', '的确不错', '强烈推荐'],
+    item: ['这怎么做', '需要求助', '有点难度', '学学就行', '这也叫题'],
     icon: iconList,
     iconListActive: iconListActive,
     dataIndex:'homeworkRating'
   },
   {
     name: '考试难度',
-    item: ['非常糟糕', '勉勉强强', '感觉还行', '的确不错', '强烈推荐'],
-    icon: iconList.slice().reverse(),
-    iconListActive: iconListActive.slice().reverse(),
+    item: ['能及格吗', '勉强能过', '需要认真', '学就高分', '有手就行'],
+    icon: iconList,
+    iconListActive: iconListActive,
     dataIndex:'examRating'
   },
 ];
