@@ -650,7 +650,7 @@ export default function evaluation() {
               <div
                 onClick={() => {
                   if (!value) {
-                    Toast.fail('请输入教授名称');
+                    Toast.fail('请输入自定义形式');
                     return;
                   }
                   selectMode({
