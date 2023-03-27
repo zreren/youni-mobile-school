@@ -571,18 +571,29 @@ export default function evaluation() {
       `/course/detail?id=${data?.data?.course?.value || 1}`,
       'get',
     );
-
+    const { data: courseDetailDefault, mutate: mutateCourse } = useFetch(
+      `/course/detail?id=1`,
+      'get',
+    );
     useEffect(() => {
       mutateCourse();
     }, [data?.data?.course?.value]);
     const ModeList = useMemo(() => {
+      if (!courseData?.data?.sections?.length) {
+        return courseDetailDefault?.data?.sections
+          .map((item) => {
+            console.log(item, 'item');
+            return item.mode;
+          })
+          .flat();
+      }
       return courseDetail?.data?.sections
         .map((item) => {
           console.log(item, 'item');
           return item.mode;
         })
         .flat();
-    }, [courseDetail, data?.data]);
+    }, [courseDetail, data?.data, open]);
 
     useEffect(() => {
       console.log(ModeList, 'ModeList');
