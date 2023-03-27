@@ -170,6 +170,7 @@ export default function Valid(props) {
     const [age, setAge] = React.useState('86');
     const [phoneValue,setPhoneValue] = useState('')
     const [isCodeInput,setIsCodeInput] = useState(false)
+
     React.useEffect(() => {
       if(phoneValue.length > 3){
         setIsCodeInput(true)
@@ -284,9 +285,9 @@ export default function Valid(props) {
         </div>
         <button
           onClick={() => {
-            // useRequest.post('/api/send_sms_code',{
-            //   phone:phoneValue
-            // })
+            useRequest.post('/api/send_sms_code',{
+              phone:phoneValue
+            })
             setPhoneNumber(phoneValue);
             setPrefix(age)
             props.setState(2);
