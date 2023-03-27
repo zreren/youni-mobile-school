@@ -17,7 +17,7 @@ const getIcon = (props) => {
   return <Node></Node>;
 };
 const Item = (props: any) => {
-  const { name,itemKey, item, icon, iconListActive, updateData } = props;
+  const { name, itemKey, item, icon, iconListActive, updateData } = props;
   const [active, setActive1] = React.useState(0);
 
   const setActive = (props: any) => {
@@ -106,32 +106,32 @@ const itemList = [
     item: ['非常糟糕', '勉勉强强', '感觉还行', '的确不错', '强烈推荐'],
     icon: iconList,
     iconListActive: iconListActive,
-    dataIndex:'professorRating'
+    dataIndex: 'professorRating'
   },
   {
     name: '内容难度',
-    item: ['非常糟糕', '勉勉强强', '感觉还行', '的确不错', '强烈推荐'],
+    item: ['难上青天', '挑灯苦读', '难度适中', '比较简单', '非常简单'],
     icon: iconList,
     iconListActive: iconListActive,
-    dataIndex:'contentRating'
+    dataIndex: 'contentRating'
   },
   {
     name: '作业难度',
-    item: ['非常糟糕', '勉勉强强', '感觉还行', '的确不错', '强烈推荐'],
+    item: ['这怎么做', '需要求助', '有点难度', '学学就行', '这也叫题'],
     icon: iconList,
     iconListActive: iconListActive,
-    dataIndex:'homeworkRating'
+    dataIndex: 'homeworkRating'
   },
   {
     name: '考试难度',
-    item: ['能及格吗', '勉强能过', '需要认真', '学就高分', '强烈推荐'],
+    item: ['能及格吗', '勉强能过', '需要认真', '学就高分', '有手就行'],
     icon: iconList,
     iconListActive: iconListActive,
-    dataIndex:'examRating'
+    dataIndex: 'examRating'
   },
 ];
 export default function courseInfo() {
-  const data= useContext(EvaluationForm);
+  const data = useContext(EvaluationForm);
 
   const [form, setForm] = React.useState({});
   const updateData = (e) => {
