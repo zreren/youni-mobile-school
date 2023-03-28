@@ -571,7 +571,7 @@ export default function evaluation() {
        `/course/detail?id=${data?.data?.course?.value}`,
       'get',
     );
-    const { data: courseDetailDefault, mutate: mutateCourse } = useFetch(
+    const { data: courseDetailDefault } = useFetch(
       `/course/detail?id=1`,
       'get',
     );
