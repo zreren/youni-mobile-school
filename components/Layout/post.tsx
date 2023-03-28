@@ -163,7 +163,7 @@ function index(props) {
       replyId: pid === null ? null : id,
       content: comment,
     });
-    if (data?.message) {
+    if (data?.message === "success") {
       Toast.success('评论成功');
       mutateComment();
     }
@@ -317,6 +317,7 @@ function index(props) {
     pid: null,
   });
   const commentComment = (e) => {
+    console.log(e,"setCommentChild")
     setCommentChild(e);
   };
   function FooterDiscussionInputChild(props) {

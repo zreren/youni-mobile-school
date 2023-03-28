@@ -190,12 +190,26 @@ export default function courseEvaluation() {
       `${Cons.API.EVALUATION.LIST}?courseId=${CourseId}&campusId=${1}`,
       'get',
     );
-    const { data: evaluationData } = useFetch(
-      `/evaluation/list?courseId=${CourseId}&campusId=${1}`,
-      'get',
+    const { data: _evaluationData } = useFetch(
+      `/evaluation/list`,
+      'page',
+      {
+        campusId:campusId,
+        CourseId:CourseId,
+        pageSize: 100,
+      }
     );
-
+    const evaluationData = React.useMemo(
+      () =>
+      _evaluationData
+          ? evaluationData
+            ? [...evaluationData].concat(..._evaluationData)
+            : [].concat(..._evaluationData)
+          : null,
+      [_evaluationData, campusId,CourseId]
+    );
     const [data, setData] = React.useState(evaluationData?.data);
+    
     if (!props) {
       props = {
         rating: {
@@ -260,10 +274,10 @@ export default function courseEvaluation() {
           </Select>
         </Title>
         <div>
-          {evaluationData?.data?.length > 0 ? (
-            evaluationData?.data?.map((item, index) => {
+          {evaluationData?.length > 0 ? (
+            evaluationData.map((item, index) => {
               console.log(item, evaluationOrder, 'item');
-              return <UserComment data={item} key={item.id}></UserComment>;
+              return <UserComment data={item} key={index}></UserComment>;
             })
           ) : (
             <EmptyCourse></EmptyCourse>

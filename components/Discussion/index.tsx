@@ -126,6 +126,7 @@ export default function index(props) {
       like(id);
     };
     const defaultLike = data?.liked;
+
     const likeCount = useMemo(() => {
       if (defaultLike && !clike) {
         return Number(data?.likeCount) - 1;
@@ -247,9 +248,7 @@ export default function index(props) {
                                   className="rounded-full"
                                   src={`${Cons.BASEURL}${item?.user?.avatar}`}
                                 />
-                              ) : (
-                                <span className="text-3xl">K</span>
-                              )}
+                              ) : null}
                             </div>
                             <div className="w-full">
                               <div
@@ -261,7 +260,7 @@ export default function index(props) {
                                   });
                                 }}
                               >
-                                {item.user.nickName}
+                                {item?.user?.nickName}
                               </div>
                               <div className="text-xs text-secondGray mt-1">
                                 {item?.user?.education?.year || '未认证'} ·{' '}
