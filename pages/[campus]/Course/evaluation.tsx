@@ -313,8 +313,8 @@ export default function evaluation() {
       return {
         ...pre,
         course: {
-          value:router.query.id,
-          label:router.query.name
+          value: router.query.id,
+          label: router.query.name
         },
       };
     });
@@ -571,18 +571,22 @@ export default function evaluation() {
        `/course/detail?id=${data?.data?.course?.value}`,
       'get',
     );
-    const  { data: courseDetailDefault } = useFetch(
+    const { data: courseDetailDefault, mutate: mutateCourse } = useFetch(
       `/course/detail?id=1`,
-     'get',
-   );
+      'get',
+    );
     useEffect(() => {
       mutateCourse();
     }, [data?.data?.course?.value]);
 
     const ModeList = useMemo(() => {
-      if(!courseDetail?.data?.mode?.length){
-
-        return courseDetailDefault?.data?.sections?.map((item)=>item.mode).flat()
+      if (!courseData?.data?.sections?.length) {
+        return courseDetailDefault?.data?.sections
+          .map((item) => {
+            console.log(item, 'item');
+            return item.mode;
+          })
+          .flat();
       }
       return courseDetail?.data?.sections
         .map((item) => {
@@ -590,7 +594,7 @@ export default function evaluation() {
           return item.mode;
         })
         .flat();
-    }, [courseDetail, data?.data,open]);
+    }, [courseDetail, data?.data, open]);
 
     const {
       data: courseData,
@@ -644,7 +648,7 @@ export default function evaluation() {
               <div
                 onClick={() => {
                   if (!value) {
-                    Toast.fail('请输入形式名称');
+                    Toast.fail('请输入自定义形式');
                     return;
                   }
                   selectMode({
@@ -690,11 +694,11 @@ export default function evaluation() {
         '/api/evaluation/create',
         {
           courseId: data?.course.value,
-          campusId: campusId,
+          courseName: data?.course?.label,
           professorId: data?.professor?.value,
           professorName: data?.professor?.label,
           modeName: data?.mode?.label,
-          courseName: data?.course?.label,
+          campusId: campusId,
           professorTags: [...new Set(data?.professorTagsEvaluation)],
           content: data?.content,
           professorRating: data?.professorRating,
