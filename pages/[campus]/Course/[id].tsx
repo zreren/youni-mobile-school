@@ -171,6 +171,8 @@ export default function courseEvaluation() {
     type order = 'default' | 'positive' | 'negative';
     const [evaluationOrder, setEvaluationOrder] =
       React.useState<order>('default');
+
+
     const handleChangeEvaluationOrder = (event: SelectChangeEvent) => {
       setEvaluationOrder(event.target.value as order);
       console.log(event.target.value, 'event.target.value');
@@ -183,7 +185,7 @@ export default function courseEvaluation() {
         if (event.target.value === 'default') return a.id - b.id;
         return 0;
       };
-      evaluationData?.data?.sort(sortFunction);
+      evaluationData?.sort(sortFunction);
     };
 
     const { data: commentData } = useFetch(
@@ -209,7 +211,7 @@ export default function courseEvaluation() {
       [_evaluationData, campusId,CourseId]
     );
     const [data, setData] = React.useState(evaluationData?.data);
-    
+
     if (!props) {
       props = {
         rating: {

@@ -403,7 +403,8 @@ export default function Valid() {
         if (data?.message === 'success') {
           Toast.success('Create success');
           router.push('/Profile');
-          dispatch(setOpenLogin('login'));
+          dispatch(setOpenLogin('close'));
+          setMyItem(data.data.token);
           Toast.success('Login success');
           // router.push('/Login/signin')
         } else {
