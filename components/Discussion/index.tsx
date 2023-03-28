@@ -263,8 +263,8 @@ export default function index(props) {
                                 {item?.user?.nickName}
                               </div>
                               <div className="text-xs text-secondGray mt-1">
-                                {item?.user?.education?.year || '未认证'} ·{' '}
-                                {item.user?.education?.major || '未认证'}
+                                {/* {item?.user?.education?.year || '未认证'} ·{' '}
+                                {item.user?.education?.major || '未认证'} */}
                               </div>
                               <div className=" items-center space-x-1">
                                 {item?.reply ? (
@@ -332,8 +332,8 @@ export default function index(props) {
                                 {item?.user?.nickName}
                               </div>
                               <div className="text-xs text-secondGray mt-1">
-                                {item.user?.education?.year} ·{' '}
-                                {item?.user?.education?.major || '未认证'}
+                                {/* {item.user?.education?.year} ·{' '}
+                                {item?.user?.education?.major || '未认证'} */}
                               </div>
                               <div className=" items-center space-x-1">
                                 {item?.reply ? (
