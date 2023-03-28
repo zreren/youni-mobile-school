@@ -197,7 +197,7 @@ export default function courseEvaluation() {
       'page',
       {
         campusId:campusId,
-        CourseId:CourseId,
+        courseId:CourseId,
         pageSize: 100,
       }
     );
