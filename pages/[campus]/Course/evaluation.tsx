@@ -579,6 +579,19 @@ export default function evaluation() {
       mutateCourse();
     }, [data?.data?.course?.value]);
 
+
+
+    const {
+      data: courseData,
+      error: courseError,
+      mutate: m,
+    } = useFetch(`/course/professors`, 'get', {
+      id: data.data.course.value,
+      // keyword: value,
+      // campusId: campusId,
+      // id:props.subjectId,
+      // pageSize: 100,
+    });
     const ModeList = useMemo(() => {
       if (!courseData?.data?.sections?.length) {
         return courseDetailDefault?.data?.sections
@@ -595,18 +608,6 @@ export default function evaluation() {
         })
         .flat();
     }, [courseDetail, data?.data, open]);
-
-    const {
-      data: courseData,
-      error: courseError,
-      mutate: m,
-    } = useFetch(`/course/professors`, 'get', {
-      id: data.data.course.value,
-      // keyword: value,
-      // campusId: campusId,
-      // id:props.subjectId,
-      // pageSize: 100,
-    });
     React.useEffect(() => {
       m();
     }, [campusId, value, data.data.course.value]);
