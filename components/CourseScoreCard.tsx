@@ -26,7 +26,10 @@ export default function CourseScoreCard(props: ICourseScoreCard) {
   }
 
   const { id } = props.data;
+  
   const [school,setSchool ] = useLocalStorage('school','')
+
+
   // console.log(props,'CourseScoreCardprops')
   const router = useRouter()
   const slug = router.query;

@@ -480,16 +480,18 @@ export default function idValid() {
         cardFront: frontImg,
         cardBack: backImg,
       });
-      if(data?.code === 200){
+      if(data?.code === 200 || data?.message === 'success'){
         Toast('提交成功')
         setTimeout(() => {
           router.push({
-            pathname:'/profile',
+            pathname:'/Profile',
             query:{
               campus:router.query.campus
             }
           });
         }, 1000);
+      }else{
+        Toast('提交失败，请联系管理员')
       }
     };
     const uploadCardFront = async (file) => {

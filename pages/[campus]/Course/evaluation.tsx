@@ -12,7 +12,10 @@ import classnames from 'classnames';
 import useRequest from '@/libs/request';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Puller from '@/components/Icon/puller';
+import { Cell, Dialog } from 'react-vant';
 // import { EvaluationForm } from '@/libs/context';
+import { useDispatch } from 'react-redux';
+import { setOpenLogin } from '../../../stores/authSlice';
 
 // import { EvaluationForm } from '@/libs/context';
 import { useRouter } from 'next/router';
@@ -314,7 +317,7 @@ export default function evaluation() {
         ...pre,
         course: {
           value: router.query.id,
-          label: router.query.name
+          label: router.query.name,
         },
       };
     });
@@ -566,9 +569,9 @@ export default function evaluation() {
       selectMode: (data: any) => void;
     } = props;
     const data = useContext(EvaluationForm);
-    
+
     const { data: courseDetail, mutate: mutateCourse } = useFetch(
-       `/course/detail?id=${data?.data?.course?.value}`,
+      `/course/detail?id=${data?.data?.course?.value}`,
       'get',
     );
     const { data: courseDetailDefault } = useFetch(
@@ -578,8 +581,6 @@ export default function evaluation() {
     useEffect(() => {
       mutateCourse();
     }, [data?.data?.course?.value]);
-
-
 
     const {
       data: courseData,
@@ -687,8 +688,9 @@ export default function evaluation() {
       </SwipeableDrawer>
     );
   }, []);
-
+  const dispatch = useDispatch();
   const submitEvaluation = async () => {
+    
     // console.log('context', data);
     try {
       const { data: submitData } = await useRequest.post(
@@ -716,7 +718,28 @@ export default function evaluation() {
         //   pathname:'/[campus]/professor/detail/comment/[id]',
         //   query:{campus:router.query.campus,id:data?.professor?.id}
         // })
-      } else {
+        return;
+      }
+      if (submitData?.code === 1102) {
+        Dialog.confirm({
+          title: '登录',
+          message:
+            '登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！',
+        })
+          .then((res) => {
+            dispatch(setOpenLogin('login'));
+            // router.push("/Login/signin");
+            // console.log(res,"登录YoUni");
+          })
+          .catch((err) => {
+            //  dispatch(setOpenLogin('register'))
+          });
+      } 
+      
+      if(submitData?.code === 2003){
+        Toast.fail('提交失败,您还未认证校区');
+        // setOpenCourse(true);
+      }else {
         Toast.fail('提交失败,检查课程信息');
       }
     } catch (error) {

@@ -275,7 +275,7 @@ export default function courseEvaluation() {
             <MenuItem value="negative">评分倒序</MenuItem>
           </Select>
         </Title>
-        <div>
+        <div className='pb-20'>
           {evaluationData?.length > 0 ? (
             evaluationData.map((item, index) => {
               console.log(item, evaluationOrder, 'item');
