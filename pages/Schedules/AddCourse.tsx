@@ -262,6 +262,7 @@ export default function AddSchedule() {
                   }}
                   {...params}
                   onChange={(e) => {
+                    console.log(e.target.value,'event')
                     selectItem(e.target.value);
                   }}
                   InputProps={{

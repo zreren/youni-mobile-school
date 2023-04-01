@@ -1489,6 +1489,9 @@ export default function addPost() {
     if (router.query.isEdit) {
       setType(router.query.type as string);
       detailMutate();
+      if(router.query.type === 'course_recommend'){
+        // add course config
+      }
     }
   }, []);
   useEffect(() => {
@@ -1963,6 +1966,7 @@ export default function addPost() {
             </div>
             <div className="bg-[#F6F6F6] w-full h-3"></div>
             <AddCourse
+            value={data?.data?.form?.courseData}
               submit={(e) => {
                 submitCourseConfig(e);
               }}

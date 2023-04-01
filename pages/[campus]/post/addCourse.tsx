@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import Expiration from '@/components/courseRecommond/expiration';
 import CourseConfig from '@/components/courseRecommond/courseConfig';
 import DraftIcon from './draft.svg';
 
 export default function addCourse(props) {
-  const [term,setTerm] = useState([]);
-  const [year,setYear] = useState();
-  const [termValue,setTermValue] = useState();
+  const [term, setTerm] = useState([]);
+  const [year, setYear] = useState();
+  const [termValue, setTermValue] = useState();
 
   const [courseList, setCourseList] = useState({
     0: {
@@ -89,19 +89,48 @@ export default function addCourse(props) {
       note: null,
     },
   });
+  useEffect(() => {
+    console.log(props.value, 'props.value');
+    if(!props.value) return
+    // 将数组转为对象，并补全到10个元素
+    const obj = props.value.reduce(
+      (acc, item, index) => ({
+        ...acc,
+        [index]: item,
+      }),
+      {},
+    );
 
-  const Course = React.useCallback(
-    () => {
-     return (
-      <CourseConfig setTermValue={setTermValue} termValue={termValue} courseList={courseList} setCourseList={setCourseList} year={year} term={term}></CourseConfig>
-     )
-    },
-    [courseList,term],
-  )
+    for (let i = props.value.length; i < 10; i++) {
+      const key = `${i}`;
+      obj[key] = {
+        id: null,
+        label: null,
+        type: null,
+        professorMust: [],
+        professorOption: [],
+        note: null,
+      };
+    }
+    console.log(obj)
+    setCourseList(obj)
+  }, [props.value]);
+  const Course = React.useCallback(() => {
+    return (
+      <CourseConfig
+        setTermValue={setTermValue}
+        termValue={termValue}
+        courseList={courseList}
+        setCourseList={setCourseList}
+        year={year}
+        term={term}
+      ></CourseConfig>
+    );
+  }, [courseList, term]);
 
-  useEffect(()=>{
-    console.log(year,'year')
-  },[year])
+  useEffect(() => {
+    console.log(year, 'year');
+  }, [year]);
   const filteredData = React.useMemo(
     () =>
       Object.values(
@@ -121,7 +150,7 @@ export default function addCourse(props) {
         <div
           className="flex flex-col items-center  w-[40px]"
           onClick={() => {
-            console.log(filteredData,term,termValue,year,'courseList')
+            console.log(filteredData, term, termValue, year, 'courseList');
           }}
         >
           <DraftIcon></DraftIcon>
@@ -132,16 +161,15 @@ export default function addCourse(props) {
         <div
           onClick={() => {
             props.submit({
-              form:{
-                courseData : filteredData,
-                termList : term,
-                year:year,
+              form: {
+                courseData: filteredData,
+                termList: term,
+                year: year,
                 isLongTerm: year ? false : true,
                 term: termValue,
-                courseIds: filteredData.map((item)=>item.id)
+                courseIds: filteredData.map((item) => item.id),
               },
-              
-            })
+            });
             // console.log(filteredData,term,termValue,year,'courseList')
           }}
           className="bg-[#FFD036] cursor-pointer  text-white rounded-full w-full h-10 flex justify-center items-center"
@@ -152,17 +180,28 @@ export default function addCourse(props) {
     );
   };
   return (
-    <div className=' pt-3'>
-        <Expiration setTermList={(e)=>{
-          if(term.some((i)=>i===e)){
-            setTerm([...term.filter((item)=>item.id !== e.id)])
-            return
+    <div className=" pt-3">
+      <Expiration
+        setTermList={(e) => {
+          if (term.some((i) => i === e)) {
+            setTerm([...term.filter((item) => item.id !== e.id)]);
+            return;
           }
-          console.log('Expiration setTermList',e,term)
-          setTerm((pre)=>[...pre,e])}} year={year} term={term} selectTerm={(e)=>{setTerm(e)}} select={(e)=>{setYear(e)}}></Expiration>
-        <div className='bg-[#F6F6F6] w-full h-3'></div>
-        <Course></Course>
-        <Footer></Footer>
+          console.log('Expiration setTermList', e, term);
+          setTerm((pre) => [...pre, e]);
+        }}
+        year={year}
+        term={term}
+        selectTerm={(e) => {
+          setTerm(e);
+        }}
+        select={(e) => {
+          setYear(e);
+        }}
+      ></Expiration>
+      <div className="bg-[#F6F6F6] w-full h-3"></div>
+      <Course></Course>
+      <Footer></Footer>
     </div>
-  )
+  );
 }
