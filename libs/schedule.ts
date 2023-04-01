@@ -182,6 +182,7 @@ function addFullStartDate(array: any[], pastWeekDates: [Date, Date]) {
       section: '',
       department: '',
       online: true,
+      course: item.course
     };
     console.log(endDate,"endDate")
     item.extendedProps.section = item?.section?.name || item?.sectionName;

@@ -145,8 +145,9 @@ export default function AddSchedule() {
   }
   const CCourseInput = (props: CCourseInput) => {
     const { title, isNess, children, data, renderData } = props;
+    // if(!)
     const selectItem = (e) => {
-      console.log(e, 'selectItem');
+      console.log(e,data, 'selectItem');
       if (!data) {
         props.change({
           id: null,
@@ -157,11 +158,25 @@ export default function AddSchedule() {
       // let allValuesGreaterThanZero = true;
       if (
         !Object?.values(data)?.some((value: any) => {
+          if (value.code === e) {
+            props.change({
+              id: value.id,
+              label: value.code,
+            });
+            console.log(value," !Object?.values(data)?.some")
+            return true;
+          }
+          return false;
+        })
+      )
+      if (
+        !Object?.values(data)?.some((value: any) => {
           if (value.ename === e) {
             props.change({
               id: value.id,
               label: value.ename,
             });
+            console.log(value," !Object?.values(data)?.some")
             return true;
           }
           return false;
@@ -174,6 +189,7 @@ export default function AddSchedule() {
                 id: value.id,
                 label: value.name,
               });
+              console.log(value," !Object?.values(data)?.some")
               return true;
             }
             return false;

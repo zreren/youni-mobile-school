@@ -78,7 +78,7 @@ const CCourseInput = (props) => {
 export default function Schedules() {
   const calendarRef = useRef<any>();
   const router = useRouter();
-  const {defaultCurriculum} = useCurriculum();
+  const { defaultCurriculum } = useCurriculum();
   const [campusIdMapSchool, setCampusIdMapSchool] = useLocalStorage(
     'school',
     null,
@@ -272,7 +272,9 @@ export default function Schedules() {
               <div className="mb-4">
                 <div className="flex items-center">
                   <TimeIconActive color={borderColor}></TimeIconActive>
-                  <div className="ml-3 text-sm text-gray-400">{weekMap[extendedProps.dayOfWeek]}</div>
+                  <div className="ml-3 text-sm text-gray-400">
+                    {weekMap[extendedProps.dayOfWeek]}
+                  </div>
                   <div className="ml-10 text-sm text-gray-400 ">
                     {extendedProps.time}
                   </div>
@@ -286,62 +288,67 @@ export default function Schedules() {
                 </div>
               </div>
             </div>
-            <div className="flex justify-between">
-              <div
-                className="flex flex-col items-center space-y-2"
-                onClick={() => {
-                  const campus = router.query.campus;
-                  console.log(extendedProps)
-                  if (!extendedProps?.section?.course?.id) {
-                    Dialog.alert({
-                      message: '该课程为自定义课程',
+            <div className="flex  space-x-10">
+              {extendedProps?.course && (
+                <div
+                  className="flex flex-col items-center space-y-2"
+                  onClick={() => {
+                    const campus = router.query.campus;
+                    console.log(extendedProps);
+                    if (!extendedProps?.course) {
+                      Dialog.alert({
+                        message: '该课程为自定义课程',
+                      });
+                      return;
+                      // Toast.fail('该课程为自定义课程')
+                    }
+                    console.log(
+                      extendedProps?.section?.course?.id,
+                      'extendedProps?.section[0]?.course?.id',
+                    );
+                    router.push({
+                      pathname: '/[campus]/Course/[id]',
+                      query: {
+                        campus: campus,
+                        id: extendedProps?.course.id,
+                      },
                     });
-                    return;
-                    // Toast.fail('该课程为自定义课程')
-                  }
-                  console.log(
-                    extendedProps?.section?.course?.id,
-                    'extendedProps?.section[0]?.course?.id',
-                  );
-                  router.push({
-                    pathname: '/[campus]/Course/[id]',
-                    query: {
-                      campus: campus,
-                      id: extendedProps?.section?.course?.id,
-                    },
-                  });
-                }}
-              >
-                <div className="flex flex-col avatar placeholder">
-                  <div className="bg-[#F7F8F9] rounded-full text-neutral-content w-14">
-                    <CourseIcon1></CourseIcon1>
+                  }}
+                >
+                  <div className="flex flex-col avatar placeholder">
+                    <div className="bg-[#F7F8F9] rounded-full text-neutral-content w-14">
+                      <CourseIcon1></CourseIcon1>
+                    </div>
                   </div>
+                  <div className="text-xs text-[#798195]">课程详情</div>
                 </div>
-                <div className="text-xs text-[#798195]">课程详情</div>
-              </div>
-              <div
-                onClick={() => {
-                  if (!extendedProps?.section?.course?.id) {
-                    Dialog.alert({
-                      message: '该课程为自定义课程',
+              )}
+              {extendedProps?.course && (
+                <div
+                  onClick={() => {
+                    if (!extendedProps?.course) {
+                      Dialog.alert({
+                        message: '该课程为自定义课程',
+                      });
+                      return;
+                      // Toast.fail('该课程为自定义课程')
+                    }
+                    router.push({
+                      pathname: '/[campus]/Course/evaluation',
+                      query: { campus: 'York' },
                     });
-                    return;
-                    // Toast.fail('该课程为自定义课程')
-                  }
-                  router.push({
-                    pathname: '/[campus]/Course/evaluation',
-                    query: { campus: 'York' },
-                  });
-                }}
-                className="flex flex-col items-center space-y-2"
-              >
-                <div className="flex flex-col avatar placeholder">
-                  <div className="bg-[#F7F8F9]  rounded-full text-neutral-content w-14">
-                    <CourseIcon2></CourseIcon2>
+                  }}
+                  className="flex flex-col items-center space-y-2"
+                >
+                  <div className="flex flex-col avatar placeholder">
+                    <div className="bg-[#F7F8F9]  rounded-full text-neutral-content w-14">
+                      <CourseIcon2></CourseIcon2>
+                    </div>
                   </div>
+                  <div className="text-xs text-[#798195]">写课评</div>
                 </div>
-                <div className="text-xs text-[#798195]">写课评</div>
-              </div>
+              )}
+
               {/* <div className="flex flex-col items-center space-y-2"> */}
               {/*   <div className="flex flex-col avatar placeholder"> */}
               {/*     <div className="bg-gray-300 rounded-full text-neutral-content w-14"> */}
@@ -512,11 +519,11 @@ export default function Schedules() {
     };
     const { user } = useUser();
     const { defaultCurriculum } = useCurriculum();
-    const [historyMode,setHistory] = useState(false)
-    useEffect(()=>{
-      console.log(curriculumId,"curriculumId")
+    const [historyMode, setHistory] = useState(false);
+    useEffect(() => {
+      console.log(curriculumId, 'curriculumId');
       otherSchedulesMutate();
-    },[curriculumId])
+    }, [curriculumId]);
 
     const switchCurriculum = (id) => {
       if (id === -1) {
@@ -527,7 +534,7 @@ export default function Schedules() {
       } else {
         setStudentId(id?.user?.id);
         Toast.success('切换课表到用户' + id?.student?.nickName);
-        setCurriculumId(id?.id)
+        setCurriculumId(id?.id);
         return;
       }
     };
@@ -620,107 +627,113 @@ export default function Schedules() {
             </CCourseInput>
             <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
             <CCourseInput title="切换课表" Icon={Icon5}></CCourseInput>
-           <div className='flex items-center pb-6'>
-           <div className="flex space-x-8 justify-between w-1/2 pl-4 pr-4 mt-4 overflow-x-scroll">
-              <div
-                className="flex flex-col items-center"
-                onClick={() => {
-                  setHistory(false)
-                  switchCurriculum(-1);
-                }}
-              >
-                <div className="flex flex-col avatar placeholder">
-                  <div
-                    className={classnames(
-                      ' rounded-full text-neutral-content w-14',
-                      {
-                        'bg-[#FFD03640]': studentId === -1,
-                        'bg-[#F7F8F9]' : studentId !== -1
-                      },
-                    )}
-                  >
-                    <span
-                      className={classnames('text-xs font-medium ', {
-                        'text-[#FFD036]': studentId === -1,
-                        'text-[#A9B0C0]': studentId !== -1
-                      })}
-                    >
-                      我的
-                    </span>
-                  </div>
-                </div>
-                {/* <div className="text-xs">我的课表</div> */}
-              </div>
-              {curriculumStar?.data?.map((item) => {
-                return (
-                  <div
-                    className="flex flex-col items-center"
-                    onClick={() => {
-                      switchCurriculum(item);
-                      setHistory(false)
-                    }}
-                  >
-                    <div className="flex flex-col avatar placeholder">
-                      <div
-                        className={classnames(
-                          'rounded-full text-neutral-content w-14',
-                          {
-                            'bg-[#FFD03640]': studentId === item?.user?.id  && !historyMode,
-                            'bg-[#F7F8F9]' : studentId !== item?.user?.id
-                          },
-                        )}
-                      >
-                        <span
-                          className={classnames('text-xs font-medium ', {
-                            'text-[#FFD036]': studentId === item?.user?.id && !historyMode,
-                            'text-[#A9B0C0]': studentId !== item?.user?.id
-                          })}
-                        >
-                          {item?.user?.nickName}
-                        </span>
-                      </div>
-                    </div>
-                    {/* <div className="text-xs">课表1</div> */}
-                  </div>
-                );
-              })}
-            </div>
-            <div className="flex space-x-8 justify-between w-1/2 pl-4 pr-4 mt-4 overflow-x-scroll">
-              {curriculumHistory?.data?.map((item) => {
-                return (
-                  <div
-                    className="flex flex-col items-center"
-                    onClick={() => {
-                      setHistory(true)
-                      switchCurriculum(item);
-                    }}
-                  >
-                    <div className="flex flex-col avatar placeholder">
+            <div className="flex items-center pb-6">
+              <div className="flex space-x-8 justify-between w-1/2 pl-4 pr-4 mt-4 overflow-x-scroll">
+                <div
+                  className="flex flex-col items-center"
+                  onClick={() => {
+                    setHistory(false);
+                    switchCurriculum(-1);
+                  }}
+                >
+                  <div className="flex flex-col avatar placeholder">
                     <div
-                        className={classnames(
-                          ' rounded-full text-neutral-content w-14',
-                          {
-                            'bg-[#FFD03640]': studentId === item?.user?.id && historyMode,
-                            'bg-[#FBFCFC]' : studentId !== item?.user?.id || !historyMode
-                          },
-                        )}
+                      className={classnames(
+                        ' rounded-full text-neutral-content w-14',
+                        {
+                          'bg-[#FFD03640]': studentId === -1,
+                          'bg-[#F7F8F9]': studentId !== -1,
+                        },
+                      )}
+                    >
+                      <span
+                        className={classnames('text-xs font-medium ', {
+                          'text-[#FFD036]': studentId === -1,
+                          'text-[#A9B0C0]': studentId !== -1,
+                        })}
                       >
-                        <span
-                          className={classnames('text-xs font-medium ', {
-                            'text-[#FFD036]': studentId === item?.user?.id && historyMode,
-                            'text-[#D4D8E0]': studentId !== item?.user?.id|| !historyMode
-                          })}
-                        >
-                          {item?.user?.nickName}
-                        </span>
-                      </div>
+                        我的
+                      </span>
                     </div>
-                    {/* <div className="text-xs">课表1</div> */}
                   </div>
-                );
-              })}
+                  {/* <div className="text-xs">我的课表</div> */}
+                </div>
+                {curriculumStar?.data?.map((item) => {
+                  return (
+                    <div
+                      className="flex flex-col items-center"
+                      onClick={() => {
+                        switchCurriculum(item);
+                        setHistory(false);
+                      }}
+                    >
+                      <div className="flex flex-col avatar placeholder">
+                        <div
+                          className={classnames(
+                            'rounded-full text-neutral-content w-14',
+                            {
+                              'bg-[#FFD03640]':
+                                studentId === item?.user?.id && !historyMode,
+                              'bg-[#F7F8F9]': studentId !== item?.user?.id,
+                            },
+                          )}
+                        >
+                          <span
+                            className={classnames('text-xs font-medium ', {
+                              'text-[#FFD036]':
+                                studentId === item?.user?.id && !historyMode,
+                              'text-[#A9B0C0]': studentId !== item?.user?.id,
+                            })}
+                          >
+                            {item?.user?.nickName}
+                          </span>
+                        </div>
+                      </div>
+                      {/* <div className="text-xs">课表1</div> */}
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="flex space-x-8 justify-between w-1/2 pl-4 pr-4 mt-4 overflow-x-scroll">
+                {curriculumHistory?.data?.map((item) => {
+                  return (
+                    <div
+                      className="flex flex-col items-center"
+                      onClick={() => {
+                        setHistory(true);
+                        switchCurriculum(item);
+                      }}
+                    >
+                      <div className="flex flex-col avatar placeholder">
+                        <div
+                          className={classnames(
+                            ' rounded-full text-neutral-content w-14',
+                            {
+                              'bg-[#FFD03640]':
+                                studentId === item?.user?.id && historyMode,
+                              'bg-[#FBFCFC]':
+                                studentId !== item?.user?.id || !historyMode,
+                            },
+                          )}
+                        >
+                          <span
+                            className={classnames('text-xs font-medium ', {
+                              'text-[#FFD036]':
+                                studentId === item?.user?.id && historyMode,
+                              'text-[#D4D8E0]':
+                                studentId !== item?.user?.id || !historyMode,
+                            })}
+                          >
+                            {item?.user?.nickName}
+                          </span>
+                        </div>
+                      </div>
+                      {/* <div className="text-xs">课表1</div> */}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-           </div>
           </div>
         </div>
       </SwipeableDrawer>
@@ -734,15 +747,11 @@ export default function Schedules() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [yearMethod, setYearMethod] = useState(false);
   const [studentId, setStudentId] = useState(-1);
-  const [curriculumId,setCurriculumId] = useState();
-  const { data, error, mutate } = useFetch(
-    `/curriculum/query`,
-    'get',
-    {
-      campusId:campusIdMap
-      // id: defaultCurriculum?.id,
-    },
-  );
+  const [curriculumId, setCurriculumId] = useState();
+  const { data, error, mutate } = useFetch(`/curriculum/query`, 'get', {
+    campusId: campusIdMap,
+    // id: defaultCurriculum?.id,
+  });
   const { data: otherSchedules, mutate: otherSchedulesMutate } = useFetch(
     `/curriculum/view`,
     'get',
@@ -763,7 +772,7 @@ export default function Schedules() {
     });
   }, [data]);
 
-  const otherTemData = React.useMemo(()=>{
+  const otherTemData = React.useMemo(() => {
     if (!otherSchedules?.data) return null;
     return otherSchedules?.data?.items.map((item) => {
       return {
@@ -772,21 +781,21 @@ export default function Schedules() {
         time: item?.time?.start + '-' + item?.time?.end,
       };
     });
-  },[otherSchedules,curriculumId,studentId])
+  }, [otherSchedules, curriculumId, studentId]);
 
   // useEffect
 
-  useEffect(()=>{
-    if(visible || scheduleVisible){
+  useEffect(() => {
+    if (visible || scheduleVisible) {
       const dom = document.getElementById('bottom-navigation');
-      if(!dom) return
+      if (!dom) return;
       dom.style.display = 'none';
-    }else{
+    } else {
       const dom = document.getElementById('bottom-navigation');
-      if(!dom) return;
+      if (!dom) return;
       dom.style.display = 'block';
     }
-  },[visible,scheduleVisible])
+  }, [visible, scheduleVisible]);
 
   function getPastWeekDates(): [Date, Date] {
     const today = new Date();
@@ -797,7 +806,7 @@ export default function Schedules() {
     endDate.setDate(today.getDate() - dayOfWeek + 6);
     return [startDate, endDate];
   }
-  
+
   const weekDate = getPastWeekDates();
 
   const courseData = useMemo(() => {
@@ -821,7 +830,7 @@ export default function Schedules() {
       const all = addFullStartDate(courseData, weekDate);
       console.log(courseData, 'courseData');
     }
-  }, [data, otherSchedules, curriculumId,studentId, termInfo, weekDate]);
+  }, [data, otherSchedules, curriculumId, studentId, termInfo, weekDate]);
   useEffect(() => {
     console.log(courseData, 'courseData');
   }, [courseData]);
@@ -921,11 +930,19 @@ export default function Schedules() {
       </div>
     );
   };
-  const {data:calendarData} = useFetch('/campus/calendar/query','get',{
-    termId:termInfo?.data?.id
-  })
+  const { data: calendarData } = useFetch('/campus/calendar/query', 'get', {
+    termId: termInfo?.data?.id,
+  });
 
   const Month = () => {
+    const {data} = useFetch('/campus/calendar/query', 'get',{
+      termId : termInfo?.data?.id,
+    })
+    return (
+      <div className='h-screen text-gray-400 w-full flex justify-center mt-10'>
+        <div className='mt-10'>暂无校历事件</div>
+      </div>
+    )
     return (
       <div className="w-full min-h-screen p-5">
         <Identify></Identify>
@@ -1084,7 +1101,7 @@ export default function Schedules() {
           ></Calendar>
         </div>
       )}
-      <div className='pb-10 bg-white w-full -translate-y-2 topIndex'></div>
+      <div className="pb-10 bg-white w-full -translate-y-2 topIndex"></div>
     </div>
   );
 }
