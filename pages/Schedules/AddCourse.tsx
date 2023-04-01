@@ -510,17 +510,15 @@ export default function AddSchedule() {
   const { defaultCurriculum } = useCurriculum();
   const AddCourse = (props) => {
     const [dayOfWeek, setDayOfWeek] = useState([]);
-    const [dayOfWeekListData, setDayOfWeekListData] = useState(
-      {
-        1: { label: '星期一', startTime: '', endTime: '' },
-        2: { label: '星期二', startTime: '', endTime: '' },
-        3: { label: '星期三', startTime: '', endTime: '' },
-        4: { label: '星期四', startTime: '', endTime: '' },
-        5: { label: '星期五', startTime: '', endTime: '' },
-        6: { label: '星期六', startTime: '', endTime: '' },
-        0: { label: '星期日', startTime: '', endTime: '' },
-      }
-    );
+    const [dayOfWeekListData, setDayOfWeekListData] = useState({
+      1: { label: '星期一', startTime: '', endTime: '' },
+      2: { label: '星期二', startTime: '', endTime: '' },
+      3: { label: '星期三', startTime: '', endTime: '' },
+      4: { label: '星期四', startTime: '', endTime: '' },
+      5: { label: '星期五', startTime: '', endTime: '' },
+      6: { label: '星期六', startTime: '', endTime: '' },
+      0: { label: '星期日', startTime: '', endTime: '' },
+    });
     const [time, setTime] = useState();
     const [endTime, setEndTime] = useState();
     const [CURRICULUM, setCURRICULUM] = useState({
@@ -585,17 +583,21 @@ export default function AddSchedule() {
         Toast.fail('请填写完整信息');
         return;
       }
-      if (time === endTime) {
-        Toast.fail('开始时间和结束时间不能相同');
-        return;
-      }
+      // if (time === endTime) {
+      //   Toast.fail('开始时间和结束时间不能相同');
+      //   return;
+      // }
       const requestQueen = dayOfWeek.map(async (item) => {
+        if (dayOfWeekListData?.[item].startTime === dayOfWeekListData?.[item].endTime) {
+          Toast.fail('开始时间和结束时间不能相同');
+          return;
+        }
         const data = await submitCourse({
           ...values,
           dayOfWeek: Number(item),
           time: {
-            start: dayOfWeekListData[item].startTime,
-            end: dayOfWeekListData[item].endTime,
+            start: dayOfWeekListData?.[item].startTime,
+            end: dayOfWeekListData?.[item].endTime,
           },
           curriculumId: defaultCurriculum.id,
           // translateTime(time, endTime),

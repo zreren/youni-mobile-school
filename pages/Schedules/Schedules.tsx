@@ -128,6 +128,7 @@ export default function Schedules() {
     console.log(borderColor, 'backgroundColor');
     // if (!arg) return null;
     const background = `linear-gradient(180deg, ${props.backgroundColor} -117.9%, #FFFFFF 125.31%)`;
+    const weekMap = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
     // const darkBackground = props.border
     if (extendedProps.type === 2) {
       return (
@@ -168,7 +169,7 @@ export default function Schedules() {
                   <div className="flex items-center">
                     <TimeIconActive color={borderColor}></TimeIconActive>
                     <div className="ml-3 text-sm text-gray-400">
-                      周{extendedProps.dayOfWeek}
+                      周{weekMap[extendedProps.dayOfWeek]}
                     </div>
                     <div className="ml-10 text-sm text-gray-400 ">
                       {extendedProps.time}
@@ -271,7 +272,7 @@ export default function Schedules() {
               <div className="mb-4">
                 <div className="flex items-center">
                   <TimeIconActive color={borderColor}></TimeIconActive>
-                  <div className="ml-3 text-sm text-gray-400">周二</div>
+                  <div className="ml-3 text-sm text-gray-400">{weekMap[extendedProps.dayOfWeek]}</div>
                   <div className="ml-10 text-sm text-gray-400 ">
                     {extendedProps.time}
                   </div>
@@ -290,6 +291,7 @@ export default function Schedules() {
                 className="flex flex-col items-center space-y-2"
                 onClick={() => {
                   const campus = router.query.campus;
+                  console.log(extendedProps)
                   if (!extendedProps?.section?.course?.id) {
                     Dialog.alert({
                       message: '该课程为自定义课程',

@@ -320,8 +320,14 @@ export default function Introduce(props: {
                       <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
                       <div className="font-semibold ">前置课</div>
                     </div>
-                    <div className="p-2 text-[#798195] space-x-2 font-normal text-sm">
-                      {props.MyIntroduce.prerequisites.map((item) => item.code)}
+                    <div className="w-full grid grid-rows-2 grid-cols-2 gap-3">
+                      {props.MyIntroduce.prerequisites.map((item) => {
+                        return (
+                          <div className="bg-[#F7F8F9] font-semibold rounded-md w-full flex justify-center items-center h-8 text-xs text-[#798195]">
+                                {item.code}
+                              </div>
+                        )
+                      })}
                     </div>
                     {props.MyIntroduce.prerequisites.length === 0 ? (
                       <div className="text-xs flex text-[#798195] ml-4 -mt-2">
