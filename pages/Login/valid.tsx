@@ -53,7 +53,7 @@ export default function Valid() {
     }
   }, [router]);
   // const
-  const [accessToken, setAccessToken] = useLocalStorage();
+  const [accessToken, setAccessToken] = useState();
   const PhoneValid = (props) => {
     const [count, setTime] = useCountDown({ mss: 60 });
     const [isCodeInput, setCodeInput] = React.useState(false);
@@ -533,7 +533,7 @@ export default function Valid() {
           Toast.success('登录成功');
           setMyItem(data.data.token);
           router.push('/Profile', undefined, { shallow: true });
-          // router.reload();
+          router.reload();
           dispatch(setOpenLogin('close'));
         }
       } else {
