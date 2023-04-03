@@ -53,19 +53,19 @@ export default function userComment(props) {
             </div>
           </div>
           <div>
-            <div className="text-lg ml-4 font-medium max-w-8 text-blueTitle">
+            <div className="text-sm ml-4 font-medium max-w-8 text-blueTitle">
               {data?.user?.nickName}
             </div>
-            <div className="text-gray-200 ml-4">
-              {data?.user?.education?.year}届 · B.Com Accounting
+            <div className="text-gray-200 ml-4 text-xs">
+              {data?.user?.education?.year}届 · {data?.user?.education?.major}
             </div>
           </div>
         </div>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center text-xs">
           <div>
             <div className="flex space-x-2 mb-1 mt-1">
-              <div className="text-gray-300">课程名称:</div>
-              <div className="text-blueTitle">{data?.course.ename} 1000</div>
+              <div className="text-gray-300">教授名称:</div>
+              <div className="text-blueTitle">{data?.professorName ? data?.professorName : data?.professor?.name}</div>
             </div>
             <div className="flex space-x-2 mb-1 mt-1">
               <div className="text-gray-300">最终成绩:</div>
@@ -93,7 +93,7 @@ export default function userComment(props) {
           ></CScoreCard>
         </div>
         <div>
-          <div className="mt-2 mb-2">{data?.content}</div>
+          <div className="mt-2 mb-2 text-sm">{data?.content}</div>
           {/* <div className="pb-2">
         <div className="text-sm font-bold text-blueTile">课程内容</div>
         <div className="text-sm tracking-wide	 font-extralight  text-blueTile leading-normal">
