@@ -53,7 +53,7 @@ export default function Valid() {
     }
   }, [router]);
   // const
-  const [accessToken, setAccessToken] = useState();
+  const [accessToken, setAccessToken] = useLocalStorage();
   const PhoneValid = (props) => {
     const [count, setTime] = useCountDown({ mss: 60 });
     const [isCodeInput, setCodeInput] = React.useState(false);
