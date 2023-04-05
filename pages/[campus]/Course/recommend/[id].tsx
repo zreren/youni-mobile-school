@@ -23,11 +23,15 @@ import TopicIcon from './topic.svg';
 import Waterfall from '@/components/Layout/Waterfall';
 import { grey } from '@mui/material/colors';
 import ReturnBackIcon from './returnBack.svg';
+import { useTranslation } from 'next-i18next';
+
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export default function recommend() {
   const router = useRouter();
   const { user } = useUser();
   const [openDetail, setOpenDetail] = useState(false);
+  const [t] = useTranslation();
   const { data, mutate } = useFetch(
     `/post/detail?id=${router.query.id}`,
     'get',
@@ -90,7 +94,7 @@ export default function recommend() {
         id: id,
         collectionId: data?.id,
       });
-      Toast.success('移除成功');
+      Toast.success(t('移除成功'));
       mutate();
     };
     useEffect(() => {
@@ -125,7 +129,7 @@ export default function recommend() {
           ></Waterfall>
         ) : (
           <div className="text-[#898E97] flex justify-center">
-            该话题暂时没有内容
+            {t('该话题暂时没有内容')}
           </div>
         )}
       </div>
@@ -199,18 +203,18 @@ export default function recommend() {
             className="absolute top-10 right-4 mt-2 border border-[#fff] w-14 h-6 text-xs rounded-full text-[white] whitespace-nowrap	flex justify-center items-center"
             onClick={() => {
               router.push({
-                pathname:'/[campus]/post/addPost',
-                query:{
-                  campus:router.query.campus,
-                  id:data?.data?.id,
-                  isEdit:true,
-                  type: 'course_recommend'
-                }
-              })
+                pathname: '/[campus]/post/addPost',
+                query: {
+                  campus: router.query.campus,
+                  id: data?.data?.id,
+                  isEdit: true,
+                  type: 'course_recommend',
+                },
+              });
               // router.back();
             }}
           >
-            编辑
+            {t('编辑')}
           </div>
           <div className="z-30 css2Overflow-ellipsis">{data?.data?.title}</div>
           {/* <div className="z-30">适用于UTSC校区</div> */}
@@ -272,7 +276,7 @@ export default function recommend() {
     return (
       <div className="w-full p-2 mt-4">
         <div className="font-semibold text-lg text-[#37455C]">
-          选课 <span className="text-[#2347D9]">介绍</span>
+          {t('选课')} <span className="text-[#2347D9]">{t('介绍')}</span>
         </div>
         <div className="mt-5 font-light px-1 text-[#37455C] text-sm">
           {data?.data?.body}
@@ -343,7 +347,7 @@ export default function recommend() {
         <div className="flex items-center justify-center">
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
           <div className="whitespace-nowrap text-[#DCDDE1] text-xs mx-2">
-            必修课
+            {t('必修课')}
           </div>
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
         </div>
@@ -388,7 +392,7 @@ export default function recommend() {
         <div className="flex items-center justify-center">
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
           <div className="whitespace-nowrap text-[#DCDDE1] text-xs mx-2">
-            选修课
+            {t('选修课')}
           </div>
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
         </div>
@@ -405,7 +409,7 @@ export default function recommend() {
     return (
       <div className="w-full p-2 mt-4">
         <div className="font-semibold text-lg text-[#37455C]">
-          选课 <span className="text-[#2347D9]">推荐</span>
+          {t('选课')} <span className="text-[#2347D9]">{t('推荐')}</span>
         </div>
         <div className="flex w-full justify-between mt-5 items-center px-2 space-x-3">
           <MustStudy
@@ -456,7 +460,9 @@ export default function recommend() {
           </div>
           <div className="w-full space-y-4">
             <div className="flex items-center space-x-10 h-10">
-              <div className="text-blueTitle text-xs font-semibold">优先</div>
+              <div className="text-blueTitle text-xs font-semibold">
+                {t('优先')}
+              </div>
               {data?.professorMust.map((item) => {
                 return (
                   <div className="ml-10 w-10 text-center text-xs text-[#798195]">
@@ -467,7 +473,10 @@ export default function recommend() {
             </div>
             {data?.professorOption.length > 0 && (
               <div className="flex items-center space-x-10">
-                <div className="text-blueTitle text-xs font-semibold">可选</div>
+                <div className="text-blueTitle text-xs font-semibold">
+                  {t('可选')}
+                </div>
+
                 {data?.professorOption.map((item) => {
                   return (
                     <div className="ml-10 w-10 text-center text-xs text-[#798195]">
@@ -518,15 +527,15 @@ export default function recommend() {
                 await useRequest.post('/api/post/unstar', {
                   id: router.query.id,
                 });
-                Toast.success('取消收藏');
+                Toast.success(t('取消收藏'));
                 mutate();
-                // setStarted((pre)=>!pre)
               } else {
                 if (!user) {
                   Dialog.confirm({
-                    title: '登录',
-                    message:
+                    title: t('登录'),
+                    message: t(
                       '您还未登录，登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！',
+                    ),
                   })
                     .then((res) => {
                       dispatch(setOpenLogin('login'));
@@ -543,27 +552,27 @@ export default function recommend() {
                 await useRequest.post('/api/post/star', {
                   id: router.query.id,
                 });
-                Toast.success('收藏成功');
+                Toast.success(t('收藏成功'));
                 mutate();
                 // setStarted((pre)=>!pre)
               }
             }}
           >
-            {started ? '已收藏' : '收藏'}
+            {started ? t('已收藏') : t('收藏')}
           </div>
         </div>
         <div
           onClick={() => {
             try {
               navigator.clipboard.writeText(window.location.href);
-              Toast.success('已复制到简介板，分享给好友吧！');
+              Toast.success(t('已复制到剪贴板，分享给好友吧！'));
             } catch (error) {
-              Toast.fail('复制失败');
+              Toast.fail(t('复制失败'));
             }
           }}
           className="bg-[#F3F4F6] w-full h-10 rounded-lg  flex justify-center items-center"
         >
-          分享
+          {t('分享')}
         </div>
       </div>
       <PostGroupDrawer
@@ -590,3 +599,14 @@ export default function recommend() {
     </div>
   );
 }
+
+export async function getServerSideProps({
+  locale,
+  }){
+
+  return {
+      props: {
+          ...(await serverSideTranslations(locale, ['common',]))
+      },
+    }
+  }

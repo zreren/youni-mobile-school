@@ -7,15 +7,17 @@ import Comments from './Comments.svg';
 import Discussion from './discussion.svg';
 import { useRouter } from 'next/router';
 import useRequest from '@/libs/request';
+import { useTranslation } from 'next-i18next';
 export default function userComment(props) {
   const { data } = props;
   const router = useRouter();
+  const {t} = useTranslation();
   const like = async (id) => {
     const { data } = await useRequest.post(`/api/evaluation/like`, {
       id: id,
     });
-    if(data){
-      props.update()
+    if (data) {
+      props.update();
     }
   };
   return (
@@ -40,18 +42,18 @@ export default function userComment(props) {
               {data?.user?.nickName}
             </div>
             <div className="text-gray-200 ml-4">
-              {data?.user?.education?.year}届 · B.Com Accounting
+              {data?.user?.education?.year}届 · {data?.user?.education?.major}
             </div>
           </div>
         </div>
         <div className="flex justify-between items-center">
           <div>
             <div className="flex space-x-2 mb-1 mt-1">
-              <div className="text-gray-300">课程名称:</div>
+              <div className="text-gray-300">{t('课程名称')}: </div>
               <div className="text-blueTitle">{data?.course?.ename} 1000</div>
             </div>
             <div className="flex space-x-2 mb-1 mt-1">
-              <div className="text-gray-300">最终成绩:</div>
+              <div className="text-gray-300">{t('最终成绩')}: </div>
               <div className="text-blueTitle">{data?.finalGrade}</div>
             </div>
           </div>
@@ -120,7 +122,9 @@ export default function userComment(props) {
           </div>
           <div className="flex">
             <Comments></Comments>
-            <div className="text-xs text-gray-300">{data?.interactInfo?.commentCount}</div>
+            <div className="text-xs text-gray-300">
+              {data?.interactInfo?.commentCount}
+            </div>
           </div>
         </div>
         <div>

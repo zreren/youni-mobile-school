@@ -10,9 +10,12 @@ import { useRouter } from 'next/router';
 import useFetch from '@/hooks/useFetch';
 import { Flex, Loading } from 'react-vant';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
+import { useTranslation } from 'react-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export default function course(): JSX.Element {
   const router = useRouter();
+  const { t } = useTranslation();
   const { data: campusData, mutate: campusDataMutate } = useFetch(
     '/campus/query',
     'get',
@@ -57,16 +60,16 @@ export default function course(): JSX.Element {
           timeout={60}
           key={data}
           addEndListener={(done) => {
-            nodeRef?.current?.addEventListener("transitionend", done, false);
+            nodeRef?.current?.addEventListener('transitionend', done, false);
           }}
-
         >
           <div ref={nodeRef}>
             {data?.data ? (
               <>
-                <Header title="课程评价" />
-                <Title title="按学科查询"></Title>
-                <Search placeholder="搜索课程"></Search>
+                <Header title={t('课程评价')} />
+                <Title title={t('按学科查询')}></Title>
+                <Search placeholder={t('搜索课程')}></Search>
+
                 <div className="space-y-2 mt-4">
                   <div className="grid grid-cols-2 gap-x-2 gap-y-1">
                     {data.data || !isLoading ? (
@@ -90,7 +93,9 @@ export default function course(): JSX.Element {
                       </>
                     )}
                     {data?.data?.length === 0 ? (
-                      <div className="text-gray-500">该校区暂无学科喔~</div>
+                      <div className="text-gray-500">
+                        {t('该校区暂无学科喔~')}
+                      </div>
                     ) : null}
                   </div>
                   <button
@@ -105,21 +110,22 @@ export default function course(): JSX.Element {
                     }}
                     className="btn hover:bg-white border-none btn-sm w-full bg-white text-gray-400"
                   >
-                    查看全部
+                    {t('查看全部')}
                   </button>
                 </div>
-                <Title title="热门课程">
+                <Title title={t('热门课程')}>
                   <CButtonNoLine
                     onClick={() => {
                       hotMutate();
                     }}
                   ></CButtonNoLine>
                 </Title>
+
                 <div className="space-y-3">
                   {hotCourseData?.data?.length === 0 ? (
                     <div className="artboard phone-1">
                       <div className="text-gray-500">
-                        该课程暂无数据喔~移步其他校区吧！
+                      {t('该课程暂无数据喔~移步其他校区吧！')}
                       </div>
                     </div>
                   ) : null}
@@ -143,9 +149,9 @@ export default function course(): JSX.Element {
               </>
             ) : (
               <>
-                <Header title="课程评价" />
-                <Title title="按学科查询"></Title>
-                <Search placeholder="搜索课程"></Search>
+               <Header title={t('课程评价')} />
+                <Title title={t('按学科查询')}></Title>
+                <Search placeholder={t('搜索课程')}></Search>
                 <div className="space-y-2 mt-4">
                   <div className="grid grid-cols-2 gap-x-2 gap-y-1">
                     <>
@@ -169,10 +175,10 @@ export default function course(): JSX.Element {
                     }}
                     className="btn hover:bg-white border-none btn-sm w-full bg-white text-gray-400"
                   >
-                    查看全部
+                    {t('查看全部')}
                   </button>
                 </div>
-                <Title title="热门课程">
+                <Title title={t('热门课程')} >
                   <CButtonNoLine
                     onClick={() => {
                       hotMutate();
@@ -193,3 +199,15 @@ export default function course(): JSX.Element {
     </CommonLayout>
   );
 }
+
+
+export async function getServerSideProps({
+  locale,
+  }){
+
+  return {
+      props: {
+          ...(await serverSideTranslations(locale, ['common',]))
+      },
+    }
+  }

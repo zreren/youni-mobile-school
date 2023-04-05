@@ -14,6 +14,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import { useRouter } from 'next/router';
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -51,6 +52,7 @@ export default function account() {
   // if(typeof window === 'undefined') return (<div>ssr disable</div>);
   const [language, setLanguage] =useLocalStorage('language', 'zh');
   const [defaultLanguage, setDefaultLanguage] = useState('zh');
+  const router = useRouter();
   useEffect(()=>{
     setDefaultLanguage(language)
   },[language])
@@ -81,9 +83,10 @@ export default function account() {
         label="select school"
         onChange={(e) => {
           props.onChange(e.target.value);
+          router.push(router.asPath, router.asPath, { locale: e.target.value })
         }}
       >
-        <MenuItem value={'zh'}>
+        <MenuItem value={'cn'}>
           简体中文
         </MenuItem>
         <MenuItem value={'en'}>
@@ -125,7 +128,9 @@ export default function account() {
   const [selectedValue, setSelectedValue] = React.useState();
   return (
     <CommonLayout className="overflow-hidden">
-      <Header title="语言"></Header>
+      <Header returnClick={()=>{
+        router.push('/Profile')
+      }} title="语言"></Header>
       <Form header="语言设置" List={List1} ></Form>
       <Form header="翻译" List={List2}></Form>
     </CommonLayout>

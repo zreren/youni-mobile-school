@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import backgroundImage1 from './assets/background2.png';
 import backgroundImage2 from './assets/1.png';
 import Image from 'next/image';
@@ -34,11 +34,18 @@ import { setOpenLogin } from '../../stores/authSlice';
 import SignUp from './signup';
 import ReSetPasswordEmail from './reSetPasswordEmail';
 import ReturnBackIcon from './returnBack.svg';
+import LOGINI18N from '@/language/login';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+
 // import { useDispatch } from 'react-redux';
 
 export default function SignIn(props) {
   const [myItem, setMyItem] = useLocalStorage('token', null);
+  const [lang] = useLocalStorage('language', null);
+  const {t,i18n} = useTranslation();
   const route = useRouter();
+
   // const dispatch = useDispatch();
   const dispatch = useDispatch();
   const login = async (way: string, form: any) => {
@@ -78,45 +85,9 @@ export default function SignIn(props) {
       </div>
     );
   };
-
-  const SelectLanguage = (props) => {
-    return (
-      <div
-        className="z-10 flex flex-col w-full h-screen -appear in mt-11"
-        onClick={() => {
-          props.setProgress(2);
-        }}
-      >
-        {/* <Image src={Logo} alt=""></Image> */}
-        <div className="z-10 pl-8 pr-8 text-2xl">Select Language</div>
-        <div className="z-10 pl-8 pr-8 mb-20 text-md">
-          Choose the language you speak most often. Changing this selection is
-          possible at any time.
-        </div>
-        <div>
-          <div className="absolute z-0 w-full top-32">
-            {/* <Image
-              className="absolute z-0 w-10 h-10 opacity-80"
-              src={backgroundImage2}
-              alt="Picture of the author"
-            /> */}
-          </div>
-        </div>
-        <div className="w-full h-22"></div>
-        <div className="p-4 space-y-10">
-          <div className="flex items-center justify-center w-full h-32 text-xl rounded flex-2xl bg-bg">
-            EngLish
-          </div>
-          <div className="flex items-center justify-center w-full h-32 text-xl rounded flex-2xl bg-bg">
-            中文
-          </div>
-        </div>
-        {/* <Button variant="outlined" startIcon={<WeChat />}>
-      Delete
-    </Button> */}
-      </div>
-    );
-  };
+  useEffect(()=>{
+    console.log(i18n.language,"i18n.language")
+  },[])
   const ChooseYourRole = (props) => {
     const MailLabel = () => {
       const [visible, setVisible] = useState(false);
@@ -132,6 +103,7 @@ export default function SignIn(props) {
           };
         });
       }, []);
+
       return (
         <div className="h-screen space-y-4 bottom-footer-theTop ">
           <Popup
@@ -143,7 +115,9 @@ export default function SignIn(props) {
           >
             <div className="h-[232px] flex flex-col  items-center">
               <div className="pt-4  pb-4 text-[#37455C] ">
-                Reset password with
+                <div className="z-10 pl-8 pr-8 text-2xl">
+                  {t('Reset password with')}
+                </div>
               </div>
               {/* <div> */}
               <div
@@ -152,7 +126,8 @@ export default function SignIn(props) {
                 }}
                 className="py-4 text-[#798195]"
               >
-                Phone number
+                {t('Phone number')}
+                {/* Phone number */}
               </div>
               <div
                 onClick={() => {
@@ -374,7 +349,7 @@ export default function SignIn(props) {
               onClick={() => {
                 setVisible(true);
               }}
-              className= "pl-4 text-xs text-gray-300"
+              className="pl-4 text-xs text-gray-300"
             >
               Forgot Password?
             </div>
@@ -648,4 +623,17 @@ export default function SignIn(props) {
       )}
     </div>
   );
+}
+
+
+export async function getStaticProps({ locale }) {
+  console.log(locale,"locale")
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, [
+        'common',
+      ])),
+      // Will be passed to the page component as props
+    },
+  }
 }

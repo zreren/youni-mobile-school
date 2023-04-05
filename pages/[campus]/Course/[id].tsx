@@ -22,20 +22,22 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import useLanguage from '@/hooks/useLanguage';
 import EmptyProfessorIcon from './emptyProfessor.svg';
 import EmptyCourseIcon from './emptyCourse.svg';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 // import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function courseEvaluation() {
   const router = useRouter();
   const CourseId = router.query.id;
   const CAMPUS = router.query.campus;
-
-  const {data:campusData} = useFetch('/campus/query','get',{
+  const { t } = useTranslation();
+  const { data: campusData } = useFetch('/campus/query', 'get', {
     name: router.query.campus,
-  })
+  });
 
-  const campusId = useMemo(()=>{
-    return campusData?.data?.[0]?.id
-  },[campusData])
+  const campusId = useMemo(() => {
+    return campusData?.data?.[0]?.id;
+  }, [campusData]);
   // const router =useRouter();
   const { data: courseEvaluation, error } = useFetch(
     `${Cons.API.COURSE.DETAIL}?id=${CourseId}`,
@@ -76,45 +78,58 @@ export default function courseEvaluation() {
       <div className="flex w-full bg-white flex-col justify-center items-center py-8 h-[100vh-200px] rounded-lg">
         <EmptyProfessorIcon></EmptyProfessorIcon>
         <div className="flex text-xs mt-6 justify-center items-center text-[#A9B0C0]">
-          {useLanguage('') === 'e' ? '目前还没有教授' : '目前还没有教授'}
+          {t('目前还没有教授')}
         </div>
       </div>
     );
   };
-  const EmptyCourse= () => {
+
+  const EmptyCourse = () => {
     return (
       <div className="flex w-full bg-white flex-col justify-center items-center py-8  h-[100vh-200px]  rounded-lg">
         <EmptyCourseIcon></EmptyCourseIcon>
         <div className="flex text-xs mt-6 justify-center items-center text-[#A9B0C0]">
-          <span>{useLanguage('') === 'e' ? '目前还没有课评，' : '目前还没有课评，'}</span>
-          <span onClick={()=>{
-            router.push({
-              pathname: `/[campus]/Course/evaluation`,
-              query: { campus: router.query.campus ,id:CourseId,name:courseEvaluation?.data?.code},
-            })
-          }} className='text-[#3665FF]'>点击评价课程</span>
+          <span>{t('目前还没有课评，')}</span>
+          <span
+            onClick={() => {
+              router.push({
+                pathname: `/[campus]/Course/evaluation`,
+                query: {
+                  campus: router.query.campus,
+                  id: CourseId,
+                  name: courseEvaluation?.data?.code,
+                },
+              });
+            }}
+            className="text-[#3665FF]"
+          >
+            {t('点击评价课程')}
+          </span>
         </div>
       </div>
     );
   };
+
   function CustomIconWrapper(props) {
     return <FilterIcon {...props} style={{ transform: 'rotate(0deg)' }} />;
   }
-  const {data:professorRankList} = useFetch('/professor/hot','get',{
-    campusId:campusId
-  })
-  useEffect(()=>{
-    console.log(professorRankList,"professorRankList")
-  },[professorRankList])
+  const { data: professorRankList } = useFetch('/professor/hot', 'get', {
+    campusId: campusId,
+  });
+  useEffect(() => {
+    console.log(professorRankList, 'professorRankList');
+  }, [professorRankList]);
 
   const Evaluation = (props) => {
     console.log(props, 'Evaluation props');
     return (
       <CommonLayout>
         <Search></Search>
-        <Title title="热门教授"></Title>
-        <HotProfessorCar professorList={professorRankList?.data}></HotProfessorCar>
-        <Title title="教授列表" customClick={() => {}}>
+        <Title title={t('热门教授')}></Title>
+        <HotProfessorCar
+          professorList={professorRankList?.data}
+        ></HotProfessorCar>
+        <Title title={t('教授列表')} customClick={() => {}}>
           {/* <FilterIcon></FilterIcon> */}
           <Select
             labelId="demo-simple-select-label"
@@ -135,9 +150,9 @@ export default function courseEvaluation() {
             onChange={handleChangeOrder}
             disableUnderline
           >
-            <MenuItem value="default">默认排序</MenuItem>
-            <MenuItem value="positive">评分正序</MenuItem>
-            <MenuItem value="negative">评分倒序</MenuItem>
+            <MenuItem value="default">{t('默认排序')}</MenuItem>
+            <MenuItem value="positive">{t('评分正序')}</MenuItem>
+            <MenuItem value="negative">{t('评分倒序')}</MenuItem>
           </Select>
         </Title>
         <div className="space-y-4">
@@ -166,12 +181,14 @@ export default function courseEvaluation() {
   };
 
   const [isFilteringOut, setisFilteringOut] = React.useState(true);
-  const {data:recommendsData} = useFetch(`/course/recommends?id=${CourseId}`,'get')
+  const { data: recommendsData } = useFetch(
+    `/course/recommends?id=${CourseId}`,
+    'get',
+  );
   const CourseEva = (props) => {
     type order = 'default' | 'positive' | 'negative';
     const [evaluationOrder, setEvaluationOrder] =
       React.useState<order>('default');
-
 
     const handleChangeEvaluationOrder = (event: SelectChangeEvent) => {
       setEvaluationOrder(event.target.value as order);
@@ -192,23 +209,19 @@ export default function courseEvaluation() {
       `${Cons.API.EVALUATION.LIST}?courseId=${CourseId}&campusId=${1}`,
       'get',
     );
-    const { data: _evaluationData } = useFetch(
-      `/evaluation/list`,
-      'page',
-      {
-        campusId:campusId,
-        courseId:CourseId,
-        pageSize: 100,
-      }
-    );
+    const { data: _evaluationData } = useFetch(`/evaluation/list`, 'page', {
+      campusId: campusId,
+      courseId: CourseId,
+      pageSize: 100,
+    });
     const evaluationData = React.useMemo(
       () =>
-      _evaluationData
+        _evaluationData
           ? evaluationData
             ? [...evaluationData].concat(..._evaluationData)
             : [].concat(..._evaluationData)
           : null,
-      [_evaluationData, campusId,CourseId]
+      [_evaluationData, campusId, CourseId],
     );
     const [data, setData] = React.useState(evaluationData?.data);
 
@@ -222,35 +235,13 @@ export default function courseEvaluation() {
         },
       };
     }
-    // const evaluationListMemo = useMemo(() => {
-    //   if (!evaluationData) return
-    //   // setisFilteringOut(true)
-    //   const data = evaluationData?.data?.slice();
-    //   setData(data?.sort(sortFunction).map((item) => {
-    //     return (
-    //       {
-    //         ...item,
-    //         sort: evaluationOrder
-    //       }
-    //     )
-    //   }));
-    // }, [evaluationOrder, evaluationData?.data]);
-    // useEffect(() => {
-    //   console.log(evaluationListMemo, 'evaluationListMemo');
-    //   setisFilteringOut(false)
-    // }, [evaluationListMemo]);
-    // useEffect(() => {
-    //   if (!evaluationData?.data) return
-    //   console.log(evaluationOrder, 'evaluationOrder')
-    //   setData(evaluationData?.data)
-    //   // setisFilteringOut(false)
-    // }, [evaluationOrder])
+
     let { rating } = props;
     return (
       <div className="p-4">
-        <Title title="数据概览"></Title>
+        <Title title={t('数据概览')}></Title>
         <CDataGrip data={rating}></CDataGrip>
-        <Title title="课程点评" customClick={() => {}}>
+        <Title title={t('课程点评')} customClick={() => {}}>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
@@ -270,12 +261,12 @@ export default function courseEvaluation() {
             onChange={handleChangeEvaluationOrder}
             disableUnderline
           >
-            <MenuItem value="default">默认排序</MenuItem>
-            <MenuItem value="positive">评分正序</MenuItem>
-            <MenuItem value="negative">评分倒序</MenuItem>
+            <MenuItem value="default">{t('默认排序')}</MenuItem>
+            <MenuItem value="positive">{t('评分正序')}</MenuItem>
+            <MenuItem value="negative">{t('评分倒序')}</MenuItem>
           </Select>
         </Title>
-        <div className='pb-20'>
+        <div className="pb-20">
           {evaluationData?.length > 0 ? (
             evaluationData.map((item, index) => {
               console.log(item, evaluationOrder, 'item');
@@ -315,19 +306,19 @@ export default function courseEvaluation() {
   const [Menu, setMenu] = React.useState(-1);
   const headerMenuList = [
     {
-      label: '简介',
+      label: t('简介'),
     },
     {
-      label: '教授',
+      label: t('教授'),
     },
     {
-      label: '课评',
+      label: t('课评'),
     },
     {
-      label: '群聊',
+      label: t('群聊'),
     },
     {
-      label: '资料库',
+      label: t('资料库'),
     },
   ];
 
@@ -346,7 +337,12 @@ export default function courseEvaluation() {
       {/* <div className='mt-6'></div> */}
       {/* {!Menu ? <Menu></Menu> : null} */}
       {/* {Menu} */}
-      {Menu === 0 ? <Introduce recommendsData={recommendsData?.data} MyIntroduce={MyIntroduce}></Introduce> : null}
+      {Menu === 0 ? (
+        <Introduce
+          recommendsData={recommendsData?.data}
+          MyIntroduce={MyIntroduce}
+        ></Introduce>
+      ) : null}
       {Menu === 1 ? Evaluation(evaluationData?.data) : null}
       {Menu === 2 ? <CourseEva {...courseEvaluation?.data} /> : null}
       {Menu === 3 ? GroupChat() : null}
@@ -354,3 +350,15 @@ export default function courseEvaluation() {
     </div>
   );
 }
+
+
+export async function getServerSideProps({
+  locale,
+  }){
+
+  return {
+      props: {
+          ...(await serverSideTranslations(locale, ['common',]))
+      },
+    }
+  }

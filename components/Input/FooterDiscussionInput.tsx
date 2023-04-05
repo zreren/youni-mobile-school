@@ -11,6 +11,8 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import useFetch from '@/hooks/useFetch';
 import Image from 'next/image';
 import { Toast } from 'react-vant';
+import { useTranslation } from 'next-i18next'
+
 interface FooterType {
   data: any;
   send: (comment: string) => void;
@@ -121,6 +123,9 @@ const SelectPostGroupItem = (props): JSX.Element => {
  const  FooterDiscussionInput = forwardRef((props: FooterType,ref) =>{
   const [comment, setComment] = useState<string>('');
   const { data } = props;
+  const { t } = useTranslation('main')
+
+  console.log(t('clickme'),"clickme")
   const [star, setStar] = useState<boolean>(data?.interactInfo?.stared);
   const defaultStar = data?.interactInfo?.stared;
   const send = (comment: string): void => {

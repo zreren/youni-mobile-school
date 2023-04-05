@@ -12,7 +12,10 @@ import useLocalStorage from '@/hooks/useStore';
 import Head from 'next/head';
 import { disableZoom } from '@/libs/disableZoom';
 import { enableZoom } from '@/libs/enableZoom';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 export default function index() {
+  const {t} = useTranslation();
   // const router = useRouter();
   const router = useRouter();
   const campus = router.query.campus as string;
@@ -222,3 +225,15 @@ export default function index() {
     </div>
   );
 }
+
+
+export async function getServerSideProps({
+  locale,
+  }){
+
+  return {
+      props: {
+          ...(await serverSideTranslations(locale, ['common',]))
+      },
+    }
+  }

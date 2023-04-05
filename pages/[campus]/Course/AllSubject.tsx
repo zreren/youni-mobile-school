@@ -7,9 +7,12 @@ import SearchIcon from './search.svg';
 import { debounce } from 'lodash';
 import { useRouter } from 'next/router';
 import { InfiniteScroll, List } from 'antd-mobile';
+import { useTranslation } from 'react-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 export default function AllSubject() {
   const [value, setValue] = React.useState('');
   const router = useRouter();
+  const {t} = useTranslation();
   const { data, error, size, mutate, setSize, isLoading } = useFetch(
     '/subject/list',
     'page',
@@ -47,7 +50,7 @@ export default function AllSubject() {
   };
   return (
     <CommonLayout className="pb-16">
-      <Header title="课程评价"></Header>
+      <Header title={t('课程评价')}></Header>
       <div className="space-y-2 mt-4">
         <div className="form-control w-full rounded-xl bg-white mb-4">
           <label className="input-group input-group-md w-full rounded-xl bg-white">
@@ -63,7 +66,7 @@ export default function AllSubject() {
               onChange={(e) => {
                 handleChange(e);
               }}
-              placeholder="搜索学科"
+              placeholder={t('搜索学科')}
               className="bg-white hover:outline-none -ml-4 input border-none input-bordered w-full input-md"
             />
           </label>
@@ -109,3 +112,15 @@ export default function AllSubject() {
     </CommonLayout>
   );
 }
+
+
+export async function getServerSideProps({
+  locale,
+  }){
+
+  return {
+      props: {
+          ...(await serverSideTranslations(locale, ['common',]))
+      },
+    }
+  }

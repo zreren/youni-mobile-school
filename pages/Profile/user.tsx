@@ -56,9 +56,11 @@ import Box from '@mui/material/Box';
 import { use } from 'i18next';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import ReturnBackIcon from './returnBack.svg';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const PostGroupItem = (props): JSX.Element => {
   const { title, id } = props;
+  const {t} = useTranslation()
   return (
     <div
       onClick={() => {
@@ -79,6 +81,23 @@ function index(props) {
   const { data } = useFetch('/user/post_stared_list', 'get', {
     id: userId,
   });
+  const {t} = useTranslation()
+  const PostGroupItem = (props): JSX.Element => {
+    const { title, id } = props;
+
+    return (
+      <div
+        onClick={() => {
+          props.selectPostGroup();
+        }}
+        className="bg-[#F7F8F9] h-12 py-2 px-1 flex items-center rounded space-x-2"
+      >
+        <StarGroup></StarGroup>
+        <div className="text-[#6D7486] text-xs">{title}</div>
+        <RightIcon></RightIcon>
+      </div>
+    );
+  };
   const PostGroupDetail = (props) => {
     const { data, isEdit, mutate } = props;
     if (!data) return;
@@ -162,8 +181,8 @@ function index(props) {
           ></Waterfall>
         ) : (
           <div className="text-[#898E97] flex justify-center">
-            该文集暂时没有内容
-          </div>
+          {t('该文集暂时没有内容')}
+        </div>
         )}
       </div>
     );
@@ -280,8 +299,8 @@ function index(props) {
           <div className="w-full h-full mt-10 flex justify-center items-center flex-col">
             <PrivateIcon></PrivateIcon>
             <div className="text-[#A9B0C0] text-xs mt-4">
-              该用户隐藏了自己的收藏
-            </div>
+  {t('该用户隐藏了自己的收藏')}
+</div>
           </div>
         ) : null}
       </div>
@@ -395,3 +414,9 @@ function index(props) {
 }
 // export default withTranslation('common')(Identify)
 export default index;
+
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ['common'])),
+  },
+});

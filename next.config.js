@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const withPlugins = require('next-compose-plugins');
-const { i18n } = require('./i18n');
+const { i18n } = require('./next-i18next.config')
+
+
 // const NextI18Next = require('next-i18next').default;
 
 // const i18Next = new NextI18Next({
@@ -32,12 +34,23 @@ module.exports = withPlugins([
   {
     images: {
       domains: ['fakeimg.pl',
-       'goflash.pincman.com',"source.unsplash.com",'youni-admin.kuizuo.cn',
-       'dummyimage.com'
+        'goflash.pincman.com', "source.unsplash.com", 'youni-admin.kuizuo.cn',
+        'dummyimage.com'
       ],
     },
     compiler: {
       styledComponents: true,
+    },
+    i18n: {
+      defaultLocale: 'en',
+      locales: ['en', 'cn'],
+      localeDetection: false,
+      localePath: typeof window === 'undefined' ? 'public/locales' : 'public/locales',
+      defaultNS: 'common',
+      localeSubpaths:{      
+        cn: 'cn',    
+        en: 'en'  
+      }
     },
   },
 ]);

@@ -22,6 +22,9 @@ import { Cell, Dialog } from 'react-vant';
 import { useDispatch } from 'react-redux';
 import { setOpenLogin } from '../../stores/authSlice';
 import { Input, List } from 'react-vant';
+import { useTranslation } from 'next-i18next';
+
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -53,7 +56,7 @@ export default function index() {
   const router = useRouter();
   const { data, error, mutate } = useFetch('/grade/list', 'get');
   const { data: total, error: totalError } = useFetch('/grade/stat', 'get');
-
+  const [t] = useTranslation();
   const deleteGapItem = async (id: number | string): Promise<any> => {
     Dialog.confirm({
       title: '删除',
@@ -824,3 +827,15 @@ export default function index() {
     </div>
   );
 }
+
+
+export async function getServerSideProps({
+  locale,
+  }){
+
+  return {
+      props: {
+          ...(await serverSideTranslations(locale, ['common',]))
+      },
+    }
+  }

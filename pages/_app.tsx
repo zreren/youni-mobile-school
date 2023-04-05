@@ -44,43 +44,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [stopScroll, setStopScroll] = useState(false);
   const router = useRouter();
   const { i18n } = useTranslation();
-  console.log(i18n);
-  useEffect(() => {
-    console.log(router.pathname);
-    // setLanguage('ename')
-    // if (routerTable.indexOf(router.pathname) > -1) {
-    dispatch(setAuthState(true));
-    // }
-  }, [router.pathname]);
-  let lastTouchEnd = 0;
-  const touchEnd = (event) => {
-    const now = new Date().getTime();
-    if (now - lastTouchEnd <= 300) {
-      if (
-        openLogin === 'login' ||
-        openLogin === 'register' ||
-        router.pathname.indexOf('Search') > -1
-      ) {
-        event.preventDefault();
-      }
-    }
-    lastTouchEnd = now;
-  };
-  const touchStart = (event) => {
-    const touchEvent = event as TouchEvent & { scale: number };
-    if (touchEvent.scale !== 1) {
-      if (
-        openLogin === 'login' ||
-        openLogin === 'register' ||
-        router.pathname.indexOf('Search') > -1
-      ) {
-        event.preventDefault();
-      }
-    }
-  };
-  useEffect(() => {
-    // disableZoom()
-  }, []);
+  useEffect(()=>{
+    console.log(i18n.language,"i18n.language")
+    // i18n.changeLanguage('cn')
+  },[])
+
   const Puller = styled(Box)(({ theme }) => ({
     width: 33,
     height: 4,
@@ -90,6 +58,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     top: 8,
     left: 'calc(50% - 15px)',
   }));
+
   const LoginModel = (): JSX.Element => {
     return (
       <SwipeableDrawer

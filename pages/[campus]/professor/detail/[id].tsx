@@ -12,12 +12,15 @@ import { useRouter } from 'next/router';
 import useFetch from '@/hooks/useFetch';
 import { Loading } from 'react-vant';
 import FooterDiscussionInput from '@/components/Input/FooterDiscussionInput';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 
 export default function ProfessorDetail() {
-  const [currentSelectId, setCurrentSelectId] = useState<null|number>(0);
-  useEffect(()=>{
-    mutate()
-  },[currentSelectId])
+  const [currentSelectId, setCurrentSelectId] = useState<null | number>(0);
+  const { t } = useTranslation();
+  useEffect(() => {
+    mutate();
+  }, [currentSelectId]);
   // const [CourseID, setCourseID] = useState<null|number>(null);
   const router = useRouter();
   const Id = router.query.id;
@@ -26,25 +29,29 @@ export default function ProfessorDetail() {
     `/professor/courses?id=${Id}`,
     'get',
   );
-  const {data:_professorCommentList,error:professorCommentError,mutate} = useFetch(`/professor/evaluations`,'page',{
+  const {
+    data: _professorCommentList,
+    error: professorCommentError,
+    mutate,
+  } = useFetch(`/professor/evaluations`, 'page', {
     id: Id,
     courseId: currentSelectId,
-    pageSize:100,
-  })
-  const professorCommentList = useMemo(()=>{
-    return _professorCommentList? [].concat(..._professorCommentList):[]
-  },[_professorCommentList])
-  useEffect(()=>{
-    console.log(professorCommentList,"professorCommentList")
-  },[professorCommentList])
+    pageSize: 100,
+  });
+  const professorCommentList = useMemo(() => {
+    return _professorCommentList ? [].concat(..._professorCommentList) : [];
+  }, [_professorCommentList]);
+  useEffect(() => {
+    console.log(professorCommentList, 'professorCommentList');
+  }, [professorCommentList]);
   const professorListCopy = useMemo(() => {
     if (!professorDataList?.data) return [{ id: 0, ename: '查看全部' }];
-    const newval = professorDataList?.data.slice()
+    const newval = professorDataList?.data.slice();
     return [{ id: 0, code: '查看全部' }, ...newval];
   }, [professorDataList]);
-  useEffect(()=>{
-    console.log(professorListCopy,"professorListCopy")
-  },[professorListCopy])
+  useEffect(() => {
+    console.log(professorListCopy, 'professorListCopy');
+  }, [professorListCopy]);
   interface ScoreDistribution {
     [key: string]: number;
   }
@@ -59,42 +66,42 @@ export default function ProfessorDetail() {
   }, [data?.data?.scoreDistribution]);
   const scoreDistribution = [
     {
-      item: '非常糟糕',
-      value: data?.data?.scoreDistribution[1],
-      percent: data?.data?.scoreDistribution[1] / total,
+    item: t('非常糟糕'),
+    value: data?.data?.scoreDistribution[1],
+    percent: data?.data?.scoreDistribution[1] / total,
     },
     {
-      item: '勉勉强强',
-      value: data?.data?.scoreDistribution[2],
-      percent: data?.data?.scoreDistribution[2] / total,
+    item: t('勉勉强强'),
+    value: data?.data?.scoreDistribution[2],
+    percent: data?.data?.scoreDistribution[2] / total,
     },
     {
-      item: '感觉还行',
-      value: data?.data?.scoreDistribution[3],
-      percent: data?.data?.scoreDistribution[3] / total,
+    item: t('感觉还行'),
+    value: data?.data?.scoreDistribution[3],
+    percent: data?.data?.scoreDistribution[3] / total,
     },
     {
-      item: '感觉不错',
-      value: data?.data?.scoreDistribution[4],
-      percent: data?.data?.scoreDistribution[4] / total,
+    item: t('感觉不错'),
+    value: data?.data?.scoreDistribution[4],
+    percent: data?.data?.scoreDistribution[4] / total,
     },
     {
-      item: '强烈推荐',
-      value: data?.data?.scoreDistribution[5],
-      percent: data?.data?.scoreDistribution[5] / total,
+    item: t('强烈推荐'),
+    value: data?.data?.scoreDistribution[5],
+    percent: data?.data?.scoreDistribution[5] / total,
     },
-  ];
+    ];
   return (
     <CommonLayout className="min-h-screen pb-14">
-      <Header title="教授评价"></Header>
+      <Header title={t('教授评价')} />
       <ProfessorInfoCard data={data?.data}></ProfessorInfoCard>
-      <Title title="分值分布"></Title>
-      <div className="bg-white w-full h-auto space-y-3  p-4 flex-wrap rounded-xl">
+      <Title title={t('分值分布')}></Title>
+      <div className="bg-white w-full h-auto space-y-3 p-4 flex-wrap rounded-xl">
         {scoreDistribution.map((item, index) => {
           return <CProgress key={index} data={item}></CProgress>;
         })}
       </div>
-      <Title title="教授评价"></Title>
+      <Title title={t('教授评价')}></Title>
       <div className="flex flex-wrap">
         {professorListCopy?.map((item) => {
           return (
@@ -118,22 +125,24 @@ export default function ProfessorDetail() {
         })}
       </div>
       <div className="mb-4"></div>
-      {professorCommentList?professorCommentList?.map((item,index) => {
-        return (
-          <UserComment  data={item} key={index}></UserComment>
-        )
-      }): <Loading type="spinner" color="#FED64B" />}
-       <div className='fixed bottom-12 w-full'>
-     {/* <FooterDiscussionInput method={'course'} send={()=>{
+      {professorCommentList ? (
+        professorCommentList?.map((item, index) => {
+          return <UserComment data={item} key={index}></UserComment>;
+        })
+      ) : (
+        <Loading type="spinner" color="#FED64B" />
+      )}
+      <div className="fixed bottom-12 w-full">
+        {/* <FooterDiscussionInput method={'course'} send={()=>{
       
      }} data={data?.data}></FooterDiscussionInput> */}
-     </div>
+      </div>
       {/* <UserComment></UserComment> */}
     </CommonLayout>
   );
 }
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps({ params, locale }) {
   const post = {
     title: 'FatCoupon Refer-A-Friend: Give $15; Get $10',
     details: 'jjj',
@@ -141,6 +150,7 @@ export async function getServerSideProps({ params }) {
   return {
     props: {
       post: JSON.parse(JSON.stringify(post)),
+      ...(await serverSideTranslations(locale, ['common'])),
     },
   };
 }

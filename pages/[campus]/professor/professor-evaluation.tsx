@@ -9,9 +9,13 @@ import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import useFetch from '../../../hooks/useFetch';
 import { Flex, Loading } from 'react-vant';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 // import CourseScoreCard from '../components/CourseScoreCard'
 export default function professorEvaluation() {
   const router = useRouter();
+  const {t} = useTranslation();
+
   const { data: _professorList, error } = useFetch(
     `/professor/list`,
     'page',
@@ -28,9 +32,9 @@ export default function professorEvaluation() {
   // const { data, error } = useSWR(API_KEY.USER.get.list,fetcher);
   return (
     <CommonLayout isBottom={true}>
-      <Header title="教授列表"></Header>
-      <Search placeholder="搜索教授"></Search>
-      <Title title="教授列表"></Title>
+      <Header title={t('教授列表')} />
+<Search placeholder={t('搜索教授')}></Search>
+<Title title={t('教授列表')}></Title>
       <div className="space-y-4">
         <>
           {professorList ? (
@@ -57,3 +61,13 @@ export default function professorEvaluation() {
     </CommonLayout>
   );
 }
+export async function getServerSideProps({
+  locale,
+  }){
+
+  return {
+      props: {
+          ...(await serverSideTranslations(locale, ['common',]))
+      },
+    }
+  }

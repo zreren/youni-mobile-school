@@ -21,244 +21,190 @@ import { setOpenLogin } from '../../../stores/authSlice';
 import { useRouter } from 'next/router';
 import useLocalStorage from '@/hooks/useStore';
 import { Toast } from 'react-vant';
-const TextEvaluation = () => {
-  const data = React.useContext(EvaluationForm);
-  const updateData = (level) => {
-    data.setData({
-      ...data.data,
-      // courseDataTagsEvaluation: {
-      content: level,
-      // },
-    });
-  };
-  const [value, setValue] = useState<any>();
-  // const
-  return (
-    <div className="bg-white pb-5 mt-4 pb-10">
-      <label className="input-group bg-white w-full flex justify-between h-12 pl-4 ">
-        <div className="flex items-center ">
-          <CourseIcon className="mr-2"></CourseIcon>
-          <div className="bg-white font-medium text-blueTitle text-base">
-            文字评价
-          </div>
-        </div>
-      </label>
-      <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
-      <textarea
-        value={value}
-        onBlur={(e) => {
-          updateData(e.target.value);
-        }}
-        onChange={(e) => {
-          setValue(e.target.value);
-        }}
-        placeholder="教授讲课风格你喜欢吗？感觉考试难吗？和上课的内容关联性强吗？你是否推荐这个教授？"
-        className="p-2 whitespace-normal leading-none hover:outline-none  w-full h-20 "
-      />
-    </div>
-  );
-};
-const myScoreList = [
-  {
-    label: `91-100`,
-    value: 'A+',
-  },
-  {
-    label: '91-100',
-    value: 1,
-  },
-  {
-    label: '91-100A+',
-    value: 1,
-  },
-  {
-    label: '91-100A+',
-    value: 1,
-  },
-  {
-    label: '91-100A+',
-    value: 1,
-  },
-  {
-    label: '91-100A+',
-    value: 1,
-  },
-  {
-    label: '91-100A+',
-    value: 1,
-  },
-  {
-    label: '91-100A+',
-    value: 1,
-  },
-  {
-    label: '91-100A+',
-    value: 1,
-  },
-  {
-    label: '91-100A+',
-    value: 1,
-  },
-];
-const ResultAndTagEvaluation = (props) => {
-  const scoreList = props.data;
-  const [select, setSelect] = React.useState(0);
-  const data = React.useContext(EvaluationForm);
-  const updateData = (level) => {
-    data.setData({
-      ...data.data,
-      courseDataTagsEvaluation: {
-        score: level,
-      },
-    });
-  };
-
-  // data.data
-  return (
-    <div className="bg-white  mt-4 ">
-      <label className="input-group bg-white w-full flex justify-between h-12 pl-4 ">
-        <div className="flex items-center ">
-          <CourseIcon className="mr-2"></CourseIcon>
-          <div className="bg-white font-medium text-blueTitle text-base">
-            Results & Tag
-          </div>
-        </div>
-      </label>
-      <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
-      <label className="input-group">
-        <span className="bg-white font-medium text-blueTitle text-sm pt-2">
-          <NessIcon className="mr-1"></NessIcon> 我的最终成绩
-        </span>
-      </label>
-      <div className="grid grid-cols-4 gap-2 p-2">
-        {scoreList?.map((item) => {
-          return (
-            <div
-              onClick={() => {
-                updateData(item.level);
-              }}
-              className={classnames(
-                'w-full bg-gray-100 h-14 pt-3	 text-xs font-normal text-center align-middle	',
-                {
-                  'text-yellow-500':
-                    data.data.courseDataTagsEvaluation.score === item.level,
-                },
-              )}
-            >
-              <div> {`${item.interval[0]}-${item.interval[1]}`}</div>
-              <div>{item.level}</div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
-//     在意学生感受
-//     无趣
-//     令人尊敬的教授
-//     做好大量阅读准备
-//     幽默
-//     给分严格
-//     评分标准清晰
-//     缺勤=挂科',
-
-const tagList = [
-  {
-    label: '课程讲的不错',
-    value: 1,
-  },
-  {
-    label: '好教授',
-    value: 2,
-  },
-  {
-    label: '在意学生感受',
-    value: 4,
-  },
-  {
-    label: '无趣',
-    value: 5,
-  },
-  {
-    label: '令人尊敬的教授',
-    value: 6,
-  },
-  {
-    label: '做好大量阅读准备',
-    value: 7,
-  },
-  {
-    label: '幽默',
-    value: 8,
-  },
-  {
-    label: '给分严格',
-    value: 9,
-  },
-  {
-    label: '评分标准清晰',
-    value: 10,
-  },
-  {
-    label: '缺勤=挂科',
-    value: 11,
-  },
-];
-const ProfessorTag = (props) => {
-  // const tagList = props.data
-  const data = React.useContext(EvaluationForm);
-  const updateData = (level) => {
-    if (data.data.professorTagsEvaluation.indexOf(level) > -1) {
-      data.setData({
-        ...data.data,
-        professorTagsEvaluation: [
-          ...data.data.professorTagsEvaluation.filter((item) => item !== level),
-        ],
-      });
-      return;
-    }
-    data.setData({
-      ...data.data,
-      professorTagsEvaluation: [...data.data.professorTagsEvaluation, level],
-    });
-  };
-  return (
-    <div className="bg-white ">
-      <label className="input-group">
-        <span className="bg-white font-medium text-blueTitle text-sm pt-2">
-          教授标签
-        </span>
-      </label>
-      <div className="w-full flex flex-wrap p-4">
-        {tagList.map((item) => {
-          return (
-            <div
-              onClick={() => {
-                updateData(item.label);
-              }}
-              className={classnames('bg-gray-100 text-xs p-2 mr-2 mt-1 mb-1', {
-                'text-yellow-500': data.data.professorTagsEvaluation.includes(
-                  item.label,
-                ),
-              })}
-            >
-              {item.label}
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
+import { useTranslation } from 'react-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export default function evaluation() {
-  React.useEffect(() => {
-    console.log('EvaluationForm', EvaluationForm);
-  }, [EvaluationForm]);
   const router = useRouter();
+  const { t } = useTranslation();
+  const TextEvaluation = () => {
+    const data = React.useContext(EvaluationForm);
+    const updateData = (level) => {
+      data.setData({
+        ...data.data,
+        // courseDataTagsEvaluation: {
+        content: level,
+        // },
+      });
+    };
+    const [value, setValue] = useState<any>();
+    // const
+    return (
+      <div className="bg-white pb-5 mt-4 pb-10">
+        <label className="input-group bg-white w-full flex justify-between h-12 pl-4 ">
+          <div className="flex items-center ">
+            <CourseIcon className="mr-2"></CourseIcon>
+            <div className="bg-white font-medium text-blueTitle text-base">
+              {t('文字评价')}
+            </div>
+          </div>
+        </label>
+        <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
+        <textarea
+          value={value}
+          onBlur={(e) => {
+            updateData(e.target.value);
+          }}
+          onChange={(e) => {
+            setValue(e.target.value);
+          }}
+          placeholder={t(
+            '教授讲课风格你喜欢吗？感觉考试难吗？和上课的内容关联性强吗？你是否推荐这个教授？',
+          )}
+          className="p-2 whitespace-normal leading-none hover:outline-none  w-full h-20 "
+        />
+      </div>
+    );
+  };
 
+  const ResultAndTagEvaluation = (props) => {
+    const scoreList = props.data;
+    const [select, setSelect] = React.useState(0);
+    const data = React.useContext(EvaluationForm);
+    const updateData = (level) => {
+      data.setData({
+        ...data.data,
+        courseDataTagsEvaluation: {
+          score: level,
+        },
+      });
+    };
+
+    // data.data
+    return (
+      <div className="bg-white  mt-4 ">
+        <label className="input-group bg-white w-full flex justify-between h-12 pl-4 ">
+          <div className="flex items-center ">
+            <CourseIcon className="mr-2"></CourseIcon>
+            <div className="bg-white font-medium text-blueTitle text-base">
+              {t('Results & Tag')}
+            </div>
+          </div>
+        </label>
+        <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
+        <label className="input-group">
+          <span className="bg-white font-medium text-blueTitle text-sm pt-2">
+            <NessIcon className="mr-1"></NessIcon> {t('我的最终成绩')}
+          </span>
+        </label>
+        <div className="grid grid-cols-4 gap-2 p-2">
+          {scoreList?.map((item) => {
+            return (
+              <div
+                onClick={() => {
+                  updateData(item.level);
+                }}
+                className={classnames(
+                  'w-full bg-gray-100 h-14 pt-3	 text-xs font-normal text-center align-middle	',
+                  {
+                    'text-yellow-500':
+                      data.data.courseDataTagsEvaluation.score === item.level,
+                  },
+                )}
+              >
+                <div> {`${item.interval[0]}-${item.interval[1]}`}</div>
+                <div>{item.level}</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  const ProfessorTag = (props) => {
+    // const tagList = props.data
+    const data = React.useContext(EvaluationForm);
+    const updateData = (level) => {
+      if (data.data.professorTagsEvaluation.indexOf(level) > -1) {
+        data.setData({
+          ...data.data,
+          professorTagsEvaluation: [
+            ...data.data.professorTagsEvaluation.filter(
+              (item) => item !== level,
+            ),
+          ],
+        });
+        return;
+      }
+      data.setData({
+        ...data.data,
+        professorTagsEvaluation: [...data.data.professorTagsEvaluation, level],
+      });
+    };
+    const _tagList = [
+      {
+        label: '课程讲的不错',
+        value: 1,
+      },{
+       label:"好教授" ,
+        value:2
+      },{
+        label:"在意学生感受",
+        value:3
+      },{
+        label:"无趣",
+        value:4
+      },{
+        label:"令人尊敬的教授",
+        value:5
+      },{
+        label:"做好大量阅读准备",
+        value:6
+      },{
+        label:"幽默",
+        value:7
+      },{
+        label:"给分严格",
+        value:8
+      },{
+        label:"评分标准清晰",
+        value:9
+      },{
+        label:"缺勒=挂科",
+        value:10
+      }
+    ];
+    return (
+      <div className="bg-white ">
+        <label className="input-group">
+          <span className="bg-white font-medium text-blueTitle text-sm pt-2">
+            {t('教授标签')}
+          </span>
+        </label>
+        <div className="w-full flex flex-wrap p-4">
+          {_tagList?.map((item) => {
+            return (
+              <div
+                onClick={() => {
+                  updateData(item.label);
+                }}
+                className={classnames(
+                  'bg-gray-100 text-xs p-2 mr-2 mt-1 mb-1',
+                  {
+                    'text-yellow-500':
+                      data.data.professorTagsEvaluation.includes(item.label),
+                  },
+                )}
+              >
+                {item.label}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
   const [campusId, setCampusId] = useState<Number>();
   const {
     data: _subjectData,
@@ -398,7 +344,8 @@ export default function evaluation() {
               <div
                 onClick={() => {
                   if (!value) {
-                    Toast.fail('请输入课程名称');
+                    Toast.fail(t('请输入课程名称'));
+
                     return;
                   }
                   selectCourse({
@@ -408,7 +355,7 @@ export default function evaluation() {
                 }}
                 className="btn text-white bg-[#FFD138] border-none"
               >
-                自定义课程
+                {t('自定义课程')}
               </div>
             </div>
             {courseData?.map((item) => {
@@ -507,7 +454,7 @@ export default function evaluation() {
               <div
                 onClick={() => {
                   if (!value) {
-                    Toast.fail('请输入教授名称');
+                    Toast.fail(t('请输入教授名称'));
                     return;
                   }
                   selectProfessor({
@@ -517,7 +464,7 @@ export default function evaluation() {
                 }}
                 className="btn text-white bg-[#FFD138] border-none"
               >
-                自定义教授
+                {t('自定义教授')}
               </div>
             </div>
             {courseData?.data?.map((item) => {
@@ -541,7 +488,7 @@ export default function evaluation() {
             })}
             {!courseData?.data ? (
               <div className="flex pt-10 justify-center text-gray-300">
-                该课程无教授记录
+                {t('该课程无教授记录')}
               </div>
             ) : null}
           </div>
@@ -650,7 +597,7 @@ export default function evaluation() {
               <div
                 onClick={() => {
                   if (!value) {
-                    Toast.fail('请输入自定义形式');
+                    Toast.fail(t('请输入自定义形式'));
                     return;
                   }
                   selectMode({
@@ -660,7 +607,7 @@ export default function evaluation() {
                 }}
                 className="btn text-white bg-[#FFD138] border-none"
               >
-                自定义形式
+                {t('自定义形式')}
               </div>
             </div>
             {ModeList?.map((item) => {
@@ -690,7 +637,6 @@ export default function evaluation() {
   }, []);
   const dispatch = useDispatch();
   const submitEvaluation = async () => {
-    
     // console.log('context', data);
     try {
       const { data: submitData } = await useRequest.post(
@@ -712,7 +658,8 @@ export default function evaluation() {
         },
       );
       if (submitData?.message === 'success') {
-        Toast.success('提交成功');
+        Toast.success(t('提交成功'));
+
         // setData({})
         // router.push({
         //   pathname:'/[campus]/professor/detail/comment/[id]',
@@ -722,9 +669,10 @@ export default function evaluation() {
       }
       if (submitData?.code === 1102) {
         Dialog.confirm({
-          title: '登录',
-          message:
+          title: t('登录'),
+          message: t(
             '登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！',
+          ),
         })
           .then((res) => {
             dispatch(setOpenLogin('login'));
@@ -734,12 +682,12 @@ export default function evaluation() {
           .catch((err) => {
             //  dispatch(setOpenLogin('register'))
           });
-      } 
-      
-      if(submitData?.code === 2003){
+      }
+
+      if (submitData?.code === 2003) {
         Toast.fail('提交失败,您还未认证校区');
         // setOpenCourse(true);
-      }else {
+      } else {
         Toast.fail('提交失败,检查课程信息');
       }
     } catch (error) {
@@ -804,14 +752,14 @@ export default function evaluation() {
         open={openCourse}
       ></SelectCourse>
 
-      <Header title="添加新评价">
+      <Header title={t('添加新评价')}>
         <CButton
           size="normal"
           onClick={() => {
             submitEvaluation();
           }}
         >
-          提交
+          {t('提交')}
         </CButton>
       </Header>
       <EvaluationForm.Provider value={{ data, setData }}>
@@ -899,7 +847,7 @@ export default function evaluation() {
       rounded-full
       w-full btn-sm h-10"
         >
-          提交
+          {t('提交')}
         </button>
       </div>
       {/* <a href="/test">
@@ -926,3 +874,19 @@ export default function evaluation() {
     </CommonLayout>
   );
 }
+
+export async function getServerSideProps({
+  locale,
+  }){
+
+  return {
+      props: {
+          ...(await serverSideTranslations(locale, ['common',]))
+      },
+    }
+  }
+// export const getStaticProps = async ({ locale }) => ({
+//   props: {
+//     ...(await serverSideTranslations(locale, ['common'])),
+//   },
+// });

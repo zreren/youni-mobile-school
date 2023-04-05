@@ -19,6 +19,8 @@ import PrefixIcon from './prefix.svg';
 import RecommendIcon from './recommend.svg';
 import { useRouter } from 'next/router';
 import useFetch from '@/hooks/useFetch';
+import { useTranslation } from 'next-i18next';
+
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -68,11 +70,12 @@ export default function Introduce(props: {
   MyIntroduce: Course;
   recommendsData: any;
 }) {
-  if(!props.MyIntroduce) return;
+  if (!props.MyIntroduce) return;
   console.log(props.recommendsData, 'recommendsData');
+  const { t } = useTranslation();
   const router = useRouter();
   let porpsIntroduce = props.MyIntroduce;
-  const {code,sections,rating} = props.MyIntroduce;
+  const { code, sections, rating } = props.MyIntroduce;
   const { data } = useFetch(`/campus/query?name=${router.query.campus}`, 'get');
   if (!props) return;
   // const {  code, sections, rating } = porpsIntroduce;
@@ -108,7 +111,8 @@ export default function Introduce(props: {
   const CourseModel = () => {
     return (
       <div>
-        <Title title="课程模块"></Title>
+       <Title title={t('课程模块')}></Title>
+
         <div className="card rounded-lg w-full bg-base-100 ">
           <div className="card-body p-4 ">
             <div className="flex justify-between space-x-3">
@@ -121,7 +125,7 @@ export default function Introduce(props: {
               </div>
               <div className="flex  flex-col justify-between">
                 <div className="text-base tracking-widest  overflow-ellipsis">
-                  选课指导选课指导选课指导选课指导选课指导选课指...
+                  {t('选课指导')}...
                 </div>
                 <div className="flex">
                   <div className="flex">
@@ -199,15 +203,18 @@ export default function Introduce(props: {
       const parts = course.split(' ');
       console.log(parts); // Output: ['MATH', '1000']
       return (
-        <div onClick={()=>{
-          router.push({
-            pathname: '/[campus]/Course/[id]',
-            query: {
-              campus:router.query.campus,
-              id:props?.prefix ? prerequisites?.id : recommends?.id
-            }
-          })
-        }} className="w-1/4 min-w-[25%] h-36 py-1 flex flex-col items-center justify-center border-gray-50 border-[0.5px] rounded-md">
+        <div
+          onClick={() => {
+            router.push({
+              pathname: '/[campus]/Course/[id]',
+              query: {
+                campus: router.query.campus,
+                id: props?.prefix ? prerequisites?.id : recommends?.id,
+              },
+            });
+          }}
+          className="w-1/4 min-w-[25%] h-36 py-1 flex flex-col items-center justify-center border-gray-50 border-[0.5px] rounded-md"
+        >
           {props?.prefix ? (
             <RecommendIcon></RecommendIcon>
           ) : (
@@ -219,10 +226,12 @@ export default function Introduce(props: {
               : recommends?.label.split(' ')?.[0]}
           </div>
           <div className="text-blueTitle text-xs font-semibold">
-            {props?.prefix ? prerequisites?.no : recommends?.label.split(' ')?.[1]}
+            {props?.prefix
+              ? prerequisites?.no
+              : recommends?.label.split(' ')?.[1]}
           </div>
           <div className="bg-[#F7F8F9] text-blueTitle text-xs h-8 min-w-[40px] w-2/3 rounded-lg flex justify-center items-center ">
-            {props?.prefix ? '前置课' : '推荐课'}
+            {props?.prefix ? t('前置课') : t('推荐课')}
           </div>
         </div>
       );
@@ -252,7 +261,7 @@ export default function Introduce(props: {
               'bg-white w-full  text-[#A9B0C0]': label !== 0,
             })}
           >
-            课程简介
+            {t('课程简介')}
           </div>
           <div
             onClick={() => {
@@ -263,7 +272,7 @@ export default function Introduce(props: {
               'bg-white w-full  text-[#A9B0C0]': label !== 1,
             })}
           >
-            课程攻略
+            {t('课程攻略')}
           </div>
         </div>
         <div className="h-14 w-full"></div>
@@ -281,7 +290,8 @@ export default function Introduce(props: {
             <CourseIntroCard
               content={porpsIntroduce[useLanguage('desc')]}
             ></CourseIntroCard>
-            <Title title="数据概览"></Title>
+           <Title title={t('数据概览')}></Title>
+
             <CDataGrip data={rating}></CDataGrip>
             <Title title="Section"></Title>
             <div className={'space-y-2'}>
@@ -309,29 +319,29 @@ export default function Introduce(props: {
               titleInactiveColor={'#798195'}
               defaultActive={2}
             >
-              <Tabs.TabPane key={1} title={`要求`}>
+              <Tabs.TabPane key={1} title={t('要求')}>
                 <div>
                   <div className="w-full p-3  bg-white">
                     <div className="font-semibold mt-4 text-lg text-[#37455C]">
-                      选课 <span className="text-[#2347D9]">要求</span>
+                      {t('选课')}{' '}
+                      <span className="text-[#2347D9]">{t('要求')}</span>
                     </div>
-                    {/* <div className="flex w-full justify-between mt-5 items-center px-2 space-x-3"></div> */}
                     <div className="flex items-center space-x-2 mt-2 p-2">
                       <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
-                      <div className="font-semibold ">前置课</div>
+                      <div className="font-semibold ">{t('前置课')}</div>
                     </div>
                     <div className="w-full grid grid-rows-2 grid-cols-2 gap-3">
                       {props.MyIntroduce.prerequisites.map((item) => {
                         return (
                           <div className="bg-[#F7F8F9] font-semibold rounded-md w-full flex justify-center items-center h-8 text-xs text-[#798195]">
-                                {item.code}
-                              </div>
-                        )
+                            {item.code}
+                          </div>
+                        );
                       })}
                     </div>
                     {props.MyIntroduce.prerequisites.length === 0 ? (
                       <div className="text-xs flex text-[#798195] ml-4 -mt-2">
-                        暂无前置课
+                        {t('暂无前置课')}
                       </div>
                     ) : null}
                     <Accordion
@@ -347,7 +357,7 @@ export default function Introduce(props: {
                       >
                         <div className="flex items-center space-x-2 p-2">
                           <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
-                          <div className="font-semibold">学分排除</div>
+                          <div className="font-semibold">{t('学分排除')}</div>
                         </div>
                       </AccordionSummary>
                       <AccordionDetails sx={{ paddingLeft: 0, paddingTop: 0 }}>
@@ -364,7 +374,7 @@ export default function Introduce(props: {
                         </div>
                         {props?.MyIntroduce?.exclusions?.length === 0 ? (
                           <div className="text-xs flex text-[#798195] ml-4 -mt-2">
-                            暂无排除学分
+                            {t('暂无排除学分')}
                           </div>
                         ) : null}
                       </AccordionDetails>
@@ -372,60 +382,56 @@ export default function Introduce(props: {
                   </div>
                 </div>
               </Tabs.TabPane>
-              <Tabs.TabPane key={2} title={`详情`}>
-                <div>
-                  <div className="w-full p-3  bg-white">
-                    <div className="font-semibold mt-4 text-lg text-[#37455C]">
-                      选课 <span className="text-[#2347D9]">详情</span>
-                    </div>
-                    {/* <div className="flex w-full justify-between mt-5 items-center px-2 space-x-3"></div> */}
-                    {router.query.campus && (
-                      <>
-                        <div className="flex items-center space-x-2 mt-2 p-2">
-                          <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
-                          <div className="font-semibold">校区</div>
-                        </div>
-                        <div className="p-2  text-sm text-[#798195]">
-                          {data?.data?.[0].ename}
-                        </div>
-                      </>
-                    )}
-
-                    {props.MyIntroduce.department && (
-                      <>
-                        <div className="flex items-center space-x-2 mt-2 p-2">
-                          <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
-                          <div className="font-semibold">学部</div>
-                        </div>
-                        <div className="p-2  text-sm text-[#798195]">
-                          {props.MyIntroduce.department || 'default'}
-                        </div>
-                      </>
-                    )}
-
-                    {props.MyIntroduce.level && (
-                      <>
-                        <div className="flex items-center space-x-2 mt-2 p-2">
-                          <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
-                          <div className="font-semibold">等级</div>
-                        </div>
-                        <div className="p-2 text-sm text-[#798195]">
-                          {props.MyIntroduce.level || 'default'}
-                        </div>
-                      </>
-                    )}
-                    {props.MyIntroduce.property && (
-                      <>
-                        <div className="flex items-center space-x-2 mt-2 p-2">
-                          <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
-                          <div className="font-semibold">属性</div>
-                        </div>
-                        <div className="p-2  text-sm text-[#798195]">
-                          {props.MyIntroduce.property || 'default'}
-                        </div>
-                      </>
-                    )}
+              <Tabs.TabPane key={2} title={t('详情')}>
+                <div className="w-full p-3 bg-white">
+                  <div className="font-semibold mt-4 text-lg text-[#37455C]">
+                    {t('选课')}{' '}
+                    <span className="text-[#2347D9]">{t('详情')}</span>
                   </div>
+                  {router.query.campus && (
+                    <>
+                      <div className="flex items-center space-x-2 mt-2 p-2">
+                        <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
+                        <div className="font-semibold">{t('校区')}</div>
+                      </div>
+                      <div className="p-2 text-sm text-[#798195]">
+                        {data?.data?.[0].ename}
+                      </div>
+                    </>
+                  )}
+                  {props.MyIntroduce.department && (
+                    <>
+                      <div className="flex items-center space-x-2 mt-2 p-2">
+                        <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
+                        <div className="font-semibold">{t('学部')}</div>
+                      </div>
+                      <div className="p-2 text-sm text-[#798195]">
+                        {props.MyIntroduce.department || t('default')}
+                      </div>
+                    </>
+                  )}
+                  {props.MyIntroduce.level && (
+                    <>
+                      <div className="flex items-center space-x-2 mt-2 p-2">
+                        <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
+                        <div className="font-semibold">{t('等级')}</div>
+                      </div>
+                      <div className="p-2 text-sm text-[#798195]">
+                        {props.MyIntroduce.level || t('default')}
+                      </div>
+                    </>
+                  )}
+                  {props.MyIntroduce.property && (
+                    <>
+                      <div className="flex items-center space-x-2 mt-2 p-2">
+                        <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
+                        <div className="font-semibold">{t('属性')}</div>
+                      </div>
+                      <div className="p-2 text-sm text-[#798195]">
+                        {props.MyIntroduce.property || t('default')}
+                      </div>
+                    </>
+                  )}
                 </div>
               </Tabs.TabPane>
             </Tabs>
@@ -433,7 +439,8 @@ export default function Introduce(props: {
             {props.recommendsData.length > 0 && (
               <div className="w-full p-3  bg-white">
                 <div className="font-semibold mt-4 text-lg text-[#37455C]">
-                  选课 <span className="text-[#2347D9]">推荐</span>
+                  {t('选课')}{' '}
+                  <span className="text-[#2347D9]">{t('推荐')}</span>
                 </div>
                 <div className="mt-2 space-y-2">
                   {props.recommendsData?.map((item, index) => {
@@ -460,7 +467,7 @@ export default function Introduce(props: {
                                     {item.title}
                                   </div>
                                   <div className="text-xs text-[#A9B0C0]">
-                                    由 {item.user.nickName} 提供
+                                    {t('由')} {item.user.nickName} {t('提供')}
                                   </div>
                                 </div>
                               </div>
@@ -490,7 +497,7 @@ export default function Introduce(props: {
                                 }}
                                 className="bg-[#FFFBD9] rounded-lg text-[#D9A823] w-full h-10 flex justify-center items-center"
                               >
-                                查看全文
+                                {t('查看全文')}
                               </div>
                             </div>
                           </AccordionDetails>
@@ -505,19 +512,19 @@ export default function Introduce(props: {
             <div className="h-3 w-full bg-bg"></div>
             {props.MyIntroduce.prerequisites.length > 0 ||
             props.MyIntroduce.recommends.length > 0 ? (
-              <div className="w-full p-3  bg-white">
+              <div className="w-full p-3 bg-white">
                 <div className="font-semibold mt-4 text-lg text-[#37455C]">
-                  课程 <span className="text-[#D92B31]">关联</span>
+                  {t('课程')}{' '}
+                  <span className="text-[#D92B31]">{t('关联')}</span>
                 </div>
                 {/* <div className="flex items-center space-x-2 mt-2 p-2">
-                <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
-                <div className="font-semibold">架构图</div>
-              </div> */}
+    <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
+    <div className="font-semibold">{t('架构图')}</div>
+  </div> */}
                 <div className="flex items-center space-x-2 mt-2 p-2">
                   <div className="w-[6px] h-4 bg-yellow-300 rounded-full"></div>
-                  <div className="font-semibold">智能推荐</div>
+                  <div className="font-semibold">{t('智能推荐')}</div>
                 </div>
-
                 <RecommendCourse data={props.MyIntroduce}></RecommendCourse>
               </div>
             ) : null}

@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import useLocalStorage from '../hooks/useStore';
 import CCircleRanking from './Rating/CCircleRanking';
+import { useTranslation } from 'next-i18next';
 interface ICourseScoreCard {
   data?: {
     score: number;
@@ -24,7 +25,7 @@ export default function CourseScoreCard(props: ICourseScoreCard) {
       </div>
     )
   }
-
+  const {t} = useTranslation()
   const { id } = props.data;
   
   const [school,setSchool ] = useLocalStorage('school','')
@@ -48,22 +49,22 @@ export default function CourseScoreCard(props: ICourseScoreCard) {
           {props.data[useLanguage('name')]}
         </div>
         <div className="flex text-gray-300 w-full justify-between space-x-1">
-          <div className="space-x-1 text-xs">
-            <span>评价数</span>
-            <span>{props.data.extraInfo?.evaluationCount?props.data.extraInfo?.evaluationCount:0}</span>
-          </div>
-          <div className="space-x-1 text-xs">
-            <span>内容</span>
-            <span>{props.data.extraInfo?.contentRating?props.data.extraInfo?.contentRating:0}</span>
-          </div>
-          <div className="space-x-1 text-xs">
-            <span>作业</span>
-            <span>{props.data.extraInfo?.homeworkRating?props.data.extraInfo?.homeworkRating:0}</span>
-          </div>
-          <div className="space-x-1 text-xs">
-            <span>考试</span>
-            <span>{props.data.extraInfo?.examRating?props.data.extraInfo?.examRating:0}</span>
-          </div>
+        <div className="space-x-1 text-xs">
+  <span>{t('评价数')}</span>
+  <span>{props.data.extraInfo?.evaluationCount ? props.data.extraInfo?.evaluationCount : 0}</span>
+</div>
+<div className="space-x-1 text-xs">
+  <span>{t('内容')}</span>
+  <span>{props.data.extraInfo?.contentRating ? props.data.extraInfo?.contentRating : 0}</span>
+</div>
+<div className="space-x-1 text-xs">
+  <span>{t('作业')}</span>
+  <span>{props.data.extraInfo?.homeworkRating ? props.data.extraInfo?.homeworkRating : 0}</span>
+</div>
+<div className="space-x-1 text-xs">
+  <span>{t('考试')}</span>
+  <span>{props.data.extraInfo?.examRating ? props.data.extraInfo?.examRating : 0}</span>
+</div>
         </div>
       </div>
       <div className='h-full'>

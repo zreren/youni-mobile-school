@@ -10,6 +10,9 @@ import { useRouter } from 'next/router';
 import useFetch from '@/hooks/useFetch';
 import useRequest from '@/libs/request';
 import { InfiniteScroll, List } from 'antd-mobile';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
+
 
 export default function course() {
   const router = useRouter();
@@ -17,6 +20,7 @@ export default function course() {
     () => router.query.subjectId,
     [router.query.subjectId],
   );
+  const {t} = useTranslation();
   console.log(subjectId, 'subjectId');
   const [hotCourseData, setHotCourseData] = useState(null);
   // const { data, error } = useFetch(
@@ -51,9 +55,9 @@ export default function course() {
 
   return (
     <CommonLayout isBottom={true}>
-      <Header title="课程评价" />
-      <Title title="按学科查询"></Title>
-      <Search placeholder="搜索课程"></Search>
+   <Header title={t('课程评价')} />
+<Title title={t('按学科查询')}></Title>
+<Search placeholder={t('搜索课程')}></Search>
       <div className="space-y-3 mt-4">
         {courseData?.map((item, index) => {
           return <CourseScoreCard data={item}></CourseScoreCard>;
@@ -74,3 +78,15 @@ export default function course() {
     </CommonLayout>
   );
 }
+
+
+export async function getServerSideProps({
+  locale,
+  }){
+
+  return {
+      props: {
+          ...(await serverSideTranslations(locale, ['common',]))
+      },
+    }
+  }

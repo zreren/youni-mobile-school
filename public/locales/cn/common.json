@@ -1,3 +1,12 @@
 {
-    "profile.identify.student.certification": "学生认证"
-}
+    "my-button-text": "click me",
+    "profile.identify.student.certification": "学生认证",
+    "login":{
+      "clickme" :"Click"
+
+     
+    },
+    "clickme" :"Click",
+    "Reset password with":"重置密码",
+    "Phone number": "手机号码"
+  }
