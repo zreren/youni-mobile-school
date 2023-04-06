@@ -12,11 +12,18 @@ import { Flex, Loading } from 'react-vant';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
 import { useTranslation } from 'react-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import {
+  selectAuthState,
+  setAuthState,
+  selectOpen,
+} from '@/stores/authSlice';
+import { useDispatch } from 'react-redux';
 
 export default function course(props): JSX.Element {
   console.log(props,'course props');
   const router = useRouter();
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const { data: campusData, mutate: campusDataMutate } = useFetch(
     '/campus/query',
     'get',
@@ -24,6 +31,9 @@ export default function course(props): JSX.Element {
       name: router.query.campus,
     },
   );
+  useEffect(() => {
+    dispatch(setAuthState(true));
+  }, []);
   useEffect(() => {
     campusDataMutate();
   }, [router.query.campus]);
