@@ -41,6 +41,6 @@ module.exports = withPlugins([
     compiler: {
       styledComponents: true,
     },
-    i18n:i18n.i18n
+    i18n
   },
 ]);
