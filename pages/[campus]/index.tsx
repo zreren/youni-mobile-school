@@ -198,70 +198,70 @@ function SchoolPage(props) {
     if (loggedOut) {
       return [
         {
-          label: '闲置',
+          label: t('闲置'),
           value: 'idle',
         },
         {
-          label: '活动',
+          label: t('活动'),
           value: 'activity',
         },
         {
-          label: '新闻',
+          label: t('新闻'),
           value: 'news',
         },
         {
-          label: '转租',
+          label: t('转租'),
           value: 'sublet',
         },
         {
-          label: '拼车',
+          label: t('拼车'),
           value: 'carpool',
         },
         {
-          label: '二手书',
+          label: t('二手书'),
           value: 'book',
         },
         {
-          label: '课程配置',
+          label: t('课配'),
           value: 'course_recommend',
         },
       ];
     } else {
       return [
         {
-          label: '推荐',
+          label: t('推荐'),
           value: 'recommend_list',
         },
         {
-          label: '关注',
+          label: t('关注'),
           value: 'follow_list',
         },
         {
-          label: '闲置',
+          label: t('闲置'),
           value: 'idle',
         },
         {
-          label: '活动',
+          label: t('活动'),
           value: 'activity',
         },
         {
-          label: '新闻',
+          label: t('新闻'),
           value: 'news',
         },
         {
-          label: '转租',
+          label: t('转租'),
           value: 'sublet',
         },
         {
-          label: '拼车',
+          label: t('拼车'),
           value: 'carpool',
         },
         {
-          label: '二手书',
+          label: t('二手书'),
           value: 'book',
         },
         {
-          label: '课程配置',
+          label: t('课配'),
           value: 'course_recommend',
         },
       ];
@@ -557,7 +557,7 @@ function SchoolPage(props) {
   );
 }
 
-export async function getServerSideProps({ params,locale }) {
+export async function getServerSideProps({ params, locale }) {
   console.log(params, 'getServerSideProps params');
   const { data } = await useRequest.get(`/api/campus/query`, {
     params: {
@@ -568,7 +568,7 @@ export async function getServerSideProps({ params,locale }) {
   return {
     props: {
       post: data?.data[0],
-      ...(await serverSideTranslations(locale, ['common',]))
+      ...(await serverSideTranslations(locale, ['common'])),
     },
   };
 }

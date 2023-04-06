@@ -144,37 +144,46 @@ export default function evaluation() {
     };
     const _tagList = [
       {
-        label: '课程讲的不错',
-        value: 1,
-      },{
-       label:"好教授" ,
-        value:2
-      },{
-        label:"在意学生感受",
-        value:3
-      },{
-        label:"无趣",
-        value:4
-      },{
-        label:"令人尊敬的教授",
-        value:5
-      },{
-        label:"做好大量阅读准备",
-        value:6
-      },{
-        label:"幽默",
-        value:7
-      },{
-        label:"给分严格",
-        value:8
-      },{
-        label:"评分标准清晰",
-        value:9
-      },{
-        label:"缺勒=挂科",
-        value:10
-      }
-    ];
+      label: t('课程讲的不错'),
+      value: 1,
+      },
+      {
+      label: t('好教授'),
+      value: 2,
+      },
+      {
+      label: t('在意学生感受'),
+      value: 3,
+      },
+      {
+      label: t('无趣'),
+      value: 4,
+      },
+      {
+      label: t('令人尊敬的教授'),
+      value: 5,
+      },
+      {
+      label: t('做好大量阅读准备'),
+      value: 6,
+      },
+      {
+      label: t('幽默'),
+      value: 7,
+      },
+      {
+      label: t('给分严格'),
+      value: 8,
+      },
+      {
+      label: t('评分标准清晰'),
+      value: 9,
+      },
+      {
+      label: t('缺勒=挂科'),
+      value: 10,
+      },
+      ];
     return (
       <div className="bg-white ">
         <label className="input-group">

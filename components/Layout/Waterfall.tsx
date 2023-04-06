@@ -12,6 +12,7 @@ import { Flex, Loading } from 'react-vant';
 import { useRouter } from 'next/router';
 import EmptyPostIcon from  './emptyPost.svg';
 import CourseRC from './courserc';
+import { useTranslation } from 'next-i18next';
 const Masonry = dynamic(
   () => import('masonic').then((module) => module.Masonry),
   { ssr: false },
@@ -122,6 +123,7 @@ const dataList = [
 export default function Waterfall(props) {
   const { postData ,isEdit,cancelStarPost} = props;
   const router = useRouter();
+  const {t} = useTranslation();
   const campus = router.query.campus;
   console.log(postData, 'postData in waterfull');
   const [data, setData] = useState<any[]>(postData);
@@ -272,7 +274,7 @@ export default function Waterfall(props) {
         {
           data?.length === 0 ?  <div className='flex mt-10 flex-col space-y-4 items-center justify-center '>
             <EmptyPostIcon></EmptyPostIcon>
-          <div className='text-xs text-[#A9B0C0]'>暂无贴文</div>
+            <div className='text-xs text-[#A9B0C0]'>{t('暂无贴文')}</div>
          </div>:null
         }
       </div>

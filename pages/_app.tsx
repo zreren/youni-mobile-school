@@ -44,8 +44,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [stopScroll, setStopScroll] = useState(false);
   const router = useRouter();
   const { i18n } = useTranslation();
+  const [language, setLanguage] = useLocalStorage('language', 'cn');
+
   useEffect(()=>{
     console.log(i18n.language,"i18n.language")
+    router.push(router.asPath, router.asPath, { locale: language });
     // i18n.changeLanguage('cn')
   },[])
 

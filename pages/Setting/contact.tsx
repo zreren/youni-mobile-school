@@ -8,12 +8,13 @@ import RightIcon from '@/public/assets/right.svg';
 import useFetch from '@/hooks/useFetch';
 import { Cell, Input, hooks, Toast } from 'react-vant';
 import useLanguage from '@/hooks/useLanguage';
-import useRequest from "@/libs/request";
+import useRequest from '@/libs/request';
 import classnames from 'classnames';
 import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export default function account() {
-  const {t} = useTranslation()
+  const { t } = useTranslation();
   const { data: contactList } = useFetch('/profile/contact', 'get');
   const phoneItem = useMemo(() => {
     return contactList?.data?.filter((item, index) => {
@@ -91,49 +92,51 @@ export default function account() {
       })[0];
     }, [data]);
     const [value, setValue] = useState(data?.value || dataFetch?.value);
-    const [isPublic,setPublic] = useState<boolean>(data?.public || dataFetch?.public);
+    const [isPublic, setPublic] = useState<boolean>(
+      data?.public || dataFetch?.public,
+    );
     // useEffect(()=>{
     //   updateContactItem()
     // },[isPublic])
-    const updateContactItem =(bool?:boolean)=>{
-      console.log(bool,"bool")
+    const updateContactItem = (bool?: boolean) => {
+      console.log(bool, 'bool');
 
-      if(!value){
+      if (!value) {
         Toast.fail(`请输入${type}`);
-        setPublic(false)
+        setPublic(false);
         return;
       }
-      if(!data && !dataFetch){
-        useRequest.post("/api/profile/contact/create",{
-          type:type,
-          value:value,
-          public: bool !== null?bool:isPublic
-        })
+      if (!data && !dataFetch) {
+        useRequest.post('/api/profile/contact/create', {
+          type: type,
+          value: value,
+          public: bool !== null ? bool : isPublic,
+        });
       }
-      if(data && !dataFetch){
-        useRequest.post("/api/profile/contact/update",{
-          type:type,
-          value:value,
-          public:bool !== null?bool:isPublic,
-          id:data?.id
-        })
+      if (data && !dataFetch) {
+        useRequest.post('/api/profile/contact/update', {
+          type: type,
+          value: value,
+          public: bool !== null ? bool : isPublic,
+          id: data?.id,
+        });
       }
-      if(dataFetch && !data){
-        useRequest.post("/api/profile/contact/update",{
-          type:dataFetch?.type,
-          value:value,
-          public:bool !== null?bool:isPublic,
-          id:dataFetch?.id
-        })
+      if (dataFetch && !data) {
+        useRequest.post('/api/profile/contact/update', {
+          type: dataFetch?.type,
+          value: value,
+          public: bool !== null ? bool : isPublic,
+          id: dataFetch?.id,
+        });
       }
-    }
+    };
     return (
-      <div className={classnames("flex space-x-2 contact",
-      {
-        'contact':isPublic,
-        'contact-false':!isPublic
-      }
-      )}>
+      <div
+        className={classnames('flex space-x-2 contact', {
+          contact: isPublic,
+          'contact-false': !isPublic,
+        })}
+      >
         <Input
           value={value}
           type="tel"
@@ -144,22 +147,25 @@ export default function account() {
               : `请输入${type}`
           }
           onBlur={() => {
-            updateContactItem()
+            updateContactItem();
           }}
           align="right"
           className="text-blueTitle font-medium"
           // className='align-right'
         />
-        <IOSSwitch onChange={(e)=>{
-          // e.preventDefault();
-          if(isPublic){
-            updateContactItem(false)
-            setPublic(false)
-          }else{
-            updateContactItem(true)
-            setPublic(true)
-          }
-        }} value={isPublic}></IOSSwitch>
+        <IOSSwitch
+          onChange={(e) => {
+            // e.preventDefault();
+            if (isPublic) {
+              updateContactItem(false);
+              setPublic(false);
+            } else {
+              updateContactItem(true);
+              setPublic(true);
+            }
+          }}
+          value={isPublic}
+        ></IOSSwitch>
       </div>
     );
   };
@@ -198,13 +204,25 @@ export default function account() {
   ];
   return (
     <CommonLayout className="overflow-hidden bg-white">
-      <Header title="联系方式"></Header>
-      <div className="text-xs mt-2 font-medium text-[#A9B0C0] ">如何找到我</div>
+      <Header title={t('联系方式')}></Header>
+      <div className="text-xs mt-2 font-medium text-[#A9B0C0] ">
+        {t('如何找到我')}
+      </div>
       <div className="text-xs text-[#A9B0C0]  mt-2">
-        你可以在此页面设置自己希望公开的联系方式，该联系方式将
-        会在转闲置、Carpooli页面中向其他用户公开显示。
+        {t(
+          '你可以在此页面设置自己希望公开的联系方式，该联系方式将会在转闲置、Carpooli页面中向其他用户公开显示。',
+        )}
       </div>
       <Form header="" List={List1}></Form>
     </CommonLayout>
   );
+}
+
+
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
 }

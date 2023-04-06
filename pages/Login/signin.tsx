@@ -36,14 +36,14 @@ import ReSetPasswordEmail from './reSetPasswordEmail';
 import ReturnBackIcon from './returnBack.svg';
 import LOGINI18N from '@/language/login';
 import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 // import { useDispatch } from 'react-redux';
 
 export default function SignIn(props) {
   const [myItem, setMyItem] = useLocalStorage('token', null);
   const [lang] = useLocalStorage('language', null);
-  const {t,i18n} = useTranslation();
+  const { t, i18n } = useTranslation();
   const route = useRouter();
 
   // const dispatch = useDispatch();
@@ -57,17 +57,17 @@ export default function SignIn(props) {
       console.log(data, 'data');
       if (data.code === 200) {
         if (data.data.token) {
-          Toast.success('登录成功');
+          Toast.success(t('登录成功'));
           setMyItem(data.data.token);
           route.push('/Profile', undefined, { shallow: true });
           route.reload();
           dispatch(setOpenLogin('close'));
         }
       } else {
-        Toast.fail(`登录失败${data.message}`);
+        Toast.fail(`${t("登录失败")}`);
       }
     } catch (error) {
-      Toast.fail(`登录失败${error}`);
+      Toast.fail(`${t("登录失败")}`);
     }
   };
 
@@ -85,9 +85,9 @@ export default function SignIn(props) {
       </div>
     );
   };
-  useEffect(()=>{
-    console.log(i18n.language,"i18n.language")
-  },[])
+  useEffect(() => {
+    console.log(i18n.language, 'i18n.language');
+  }, []);
   const ChooseYourRole = (props) => {
     const MailLabel = () => {
       const [visible, setVisible] = useState(false);
@@ -115,7 +115,7 @@ export default function SignIn(props) {
           >
             <div className="h-[232px] flex flex-col  items-center">
               <div className="pt-4  pb-4 text-[#37455C] ">
-                <div className="z-10 pl-8 pr-8 text-2xl">
+                <div className="z-10 pl-8 pr-8 text-sm">
                   {t('Reset password with')}
                 </div>
               </div>
@@ -135,13 +135,13 @@ export default function SignIn(props) {
                 }}
                 className="py-4 text-[#798195]"
               >
-                Email
+                {t('邮件')}
               </div>
               <div
                 onClick={() => setVisible(false)}
                 className="py-4 text-[#A9B0C0]"
               >
-                Cancel
+                {t('取消')}
               </div>
               {/* </div> */}
             </div>
@@ -175,7 +175,7 @@ export default function SignIn(props) {
             }}
             className="mb-10 pl-4 text-xs text-gray-300"
           >
-            Forgot Password?
+            {t('忘记密码')}
           </div>
           <button
             onClick={() => {
@@ -193,7 +193,7 @@ export default function SignIn(props) {
               },
             )}
           >
-            Log in
+            {t('登录')}
           </button>
         </div>
       );
@@ -219,17 +219,14 @@ export default function SignIn(props) {
             onClose={() => setVisible(false)}
           >
             <div className="h-[232px] flex flex-col  items-center">
-              <div className="pt-4  pb-4 text-[#37455C] ">
-                Reset password with
-              </div>
-              {/* <div> */}
+              <div className="pt-4  pb-4 text-[#37455C] ">{t('重设密码')}</div>
               <div
                 onClick={() => {
                   setProgress(2);
                 }}
                 className="py-4 text-[#798195]"
               >
-                Phone number
+                {t('手机号码')}
               </div>
               <div
                 onClick={() => {
@@ -237,15 +234,14 @@ export default function SignIn(props) {
                 }}
                 className="py-4 text-[#798195]"
               >
-                Email
+                {t('邮件')}
               </div>
               <div
                 onClick={() => setVisible(false)}
                 className="py-4 text-[#A9B0C0]"
               >
-                Cancel
+                {t('取消')}
               </div>
-              {/* </div> */}
             </div>
           </Popup>
           {/* <div className="flex items-center w-full">
@@ -351,7 +347,7 @@ export default function SignIn(props) {
               }}
               className="pl-4 text-xs text-gray-300"
             >
-              Forgot Password?
+              {t('忘记密码')}
             </div>
             <div
               onClick={() => {
@@ -359,7 +355,7 @@ export default function SignIn(props) {
               }}
               className=" pl-4 text-xs text-gray-300"
             >
-              {loginWay === 'code' ? ' Login with password' : 'Login with Code'}
+             {loginWay === 'code' ? t('使用密码登录') : t('使用验证码登录')}
             </div>
           </div>
           <button
@@ -426,9 +422,9 @@ export default function SignIn(props) {
         {/* <Image src={Logo} alt=""></Image> */}
         {/* <CSSTransition classNames="title" timeout={1000}> */}
         <div className="z-10 h-20">
-          <div className="z-10 pl-8 pr-8 text-2xl title">Sign in</div>
+          <div className="z-10 pl-8 pr-8 text-2xl title">{t('登录')}</div>
           <div className="z-10 pl-8 pr-8 text-sm text-md title text-userColor">
-            Login using your preferred method
+            {t('使用您喜欢的方式登录')}
           </div>
         </div>
         {/* </CSSTransition> */}
@@ -475,7 +471,7 @@ export default function SignIn(props) {
                 },
               )}
             >
-              Phone
+              {t('手机号码')}
             </div>
             <div
               onClick={() => {
@@ -489,7 +485,7 @@ export default function SignIn(props) {
                 },
               )}
             >
-              Email
+              {t('邮件')}
             </div>
           </div>
           <SwitchTransition mode="out-in">
@@ -506,9 +502,9 @@ export default function SignIn(props) {
     return (
       <div className="z-10 flex flex-col w-full mt-11">
         {/* <Image src={Logo} alt=""></Image> */}
-        <div className="z-10 pl-8 pr-8 text-2xl">Sign in for YoUni</div>
+        <div className="z-10 pl-8 pr-8 text-2xl">{t('登录YoUni')}</div>
         <div className="z-10 pl-8 pr-8 mb-20 text-md">
-          Create a profile to unlock full functions.
+          {t('认证以解锁所有功能')}
         </div>
         <div>
           <div className="absolute z-0 w-full top-32">
@@ -542,24 +538,24 @@ export default function SignIn(props) {
           </div>
           <div className="bottom-0 z-30 w-full">
             <div className="w-full h-full p-10 pt-2 pb-2 text-xs text-center text-gray-300 bg-white">
-              By continuing, you agree to our{' '}
+              {t('继续即表示同意我们的')}
               <Link href="">
-                <span className="text-[#3665FF]">Term of Service</span>
+                <span className="text-[#3665FF]">{t('服务条款')}</span>
               </Link>{' '}
-              and acknowledge that you have read our{' '}
+              {t('并确认您已阅读我们的')}
               <Link href="">
-                <span className="text-[#3665FF]">Privacy Policy</span>
+                <span className="text-[#3665FF]">{t('隐私政策')}</span>
               </Link>{' '}
-              to learn how we collect, use and share your data.
+              {t('了解我们如何收集、使用和分享您的数据。')}
             </div>
             <div className="h-20 pt-8 space-x-2 text-sm text-center bg-bg">
-              <span className="text-blueTitle">Don’t have an account? </span>
+              <span className="text-blueTitle">{t('还没有帐号？')}</span>
               <span
                 onClick={() => {
                   dispatch(setOpenLogin('register'));
                 }}
               >
-                <span className="text-[#FFD036]"> Sign up</span>
+                <span className="text-[#FFD036]">{t('注册')}</span>
               </span>{' '}
             </div>
           </div>
@@ -625,15 +621,12 @@ export default function SignIn(props) {
   );
 }
 
-
 export async function getStaticProps({ locale }) {
-  console.log(locale,"locale")
+  console.log(locale, 'locale');
   return {
     props: {
-      ...(await serverSideTranslations(locale, [
-        'common',
-      ])),
+      ...(await serverSideTranslations(locale, ['common'])),
       // Will be passed to the page component as props
     },
-  }
+  };
 }

@@ -13,11 +13,13 @@ import { useRouter } from 'next/router';
 import { Toast } from 'react-vant';
 import classnames from "classnames";
 import useUser from '@/hooks/useUser';
+import { useTranslation } from 'next-i18next';
 export default function ProfileHeader(props) {
   const {data,myProfile,mutate} = props;
   // const data = {
   //   student: props.data,
   // }
+  const {t} = useTranslation();
   const router = useRouter();
   const {loggedOut} = useUser();
   const UserData = (props) => {
@@ -27,20 +29,20 @@ export default function ProfileHeader(props) {
     //   student: props.data,
     // }
     const follow = async (id:number):Promise<void>=>{
-      if(!isFollow){
-        const {data} = await useRequest.post('/api/friend/follow',{studentId:id});
-        console.log(data,"data")
-        if(data?.message){
-          Toast.success('关注成功');
-          mutate()
+      if (!isFollow) {
+        const { data } = await useRequest.post('/api/friend/follow', { studentId: id });
+        console.log(data, "data");
+        if (data?.message) {
+          Toast.success(t('关注成功'));
+          mutate();
         }
       }
-      if(isFollow){
-        const {data} = await useRequest.post('/api/friend/unfollow',{studentId:id});
+      if (isFollow) {
+        const { data } = await useRequest.post('/api/friend/unfollow', { studentId: id });
         // console.log(data,"data")
-        if(data?.message){
-          Toast.success('取消关注成功');
-          mutate()
+        if (data?.message) {
+          Toast.success(t('取消关注成功'));
+          mutate();
         }
       }
       
@@ -55,7 +57,7 @@ export default function ProfileHeader(props) {
         <div className="flex items-center space-x-2 ">
           <div className="flex flex-col items-center justify-center">
             <div className="font-bold text-blueTitle">{data?.user?.extraInfo?.following || 0 }</div>
-            <div className="text-xs text-gray-400">关注</div>
+            <div className="text-xs text-gray-400">{t("关注")}</div>
           </div>
           <div>
             <svg
@@ -78,7 +80,7 @@ export default function ProfileHeader(props) {
           </div>
           <div className="flex flex-col items-center">
             <div className="font-bold text-blueTitle">{data?.user?.extraInfo?.followers || 0}</div>
-            <div className="text-xs text-gray-400">粉丝</div>
+            <div className="text-xs text-gray-400">{t("粉丝")}</div>
           </div>
           <div>
             <svg
@@ -101,7 +103,7 @@ export default function ProfileHeader(props) {
           </div>
           <div className="flex flex-col items-center">
             <div className="font-bold text-blueTitle">{data?.user?.extraInfo?.likeAndStar || 0}</div>
-            <div className="text-xs text-gray-400">赞&收藏</div>
+            <div className="text-xs text-gray-400">{t("赞&收藏")}</div>
           </div>
         </div>
         { myProfile === false ? <div onClick={()=>{follow(Number(router.query.id))}} className={
@@ -111,7 +113,8 @@ export default function ProfileHeader(props) {
             'bg-[#FFD036] text-[#8C6008]': !isFollow,
             'bg-[#E5E5E5] text-[#808080]': isFollow,
             })
-        }>{isFollow?'已关注':'关注'}</div> : !loggedOut && <Link href="/Setting"><Button></Button></Link>}
+        }>{isFollow?`${t('已关注')}`:`${t('关注')}}`}</div>
+        : !loggedOut && <Link href="/Setting"><Button></Button></Link>}
       </div>
     );
   };
@@ -143,13 +146,13 @@ export default function ProfileHeader(props) {
                <>
                  <div className="flex items-center p-1 space-x-1 bg-white rounded-full px-2">
                 <Subtract></Subtract>
-                <div className="text-xs text-blueTitle font-medium ">学生认证</div>
+                <div className="text-xs text-blueTitle font-medium ">{t('学生认证')}</div>
               </div>
                 </>
               ):null}
               {
                 data?.user?  <div className="flex items-center p-1 pl-2 pr-2 space-x-1 bg-white rounded-full">
-                <div className='font-medium px-1'>用户</div>
+                <div className='font-medium px-1'>{t("用户")}</div>
               </div>:null
               }
             </div>

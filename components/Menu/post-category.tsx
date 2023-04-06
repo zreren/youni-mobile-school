@@ -138,8 +138,10 @@ export default function CustomizedTabs(props) {
             headerMenuList.map((item,index)=>{
                 return (
                     <div onClick={()=>{handleChange(index)}} 
-                    className={classnames('h-[28px]  text-sm min-w-[56px] w-14 flex justify-center  items-center rounded',
-                    {"bg-[#FFD036] text-[#8C6008] font-semibold" : value === index,"text-[#A9B0C0]":value !== index})}>{item.label}</div>
+                    className={classnames('h-[28px] whitespace-nowrap text-sm w-[56px] px-10 flex justify-center  items-center rounded',
+                    {"bg-[#FFD036] text-[#8C6008] font-semibold" : value === index,"text-[#A9B0C0]":value !== index})}>
+                      <div>{item.label}</div>
+                    </div>
                 )
             })
         }

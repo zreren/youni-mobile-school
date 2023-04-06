@@ -8,15 +8,16 @@ import useUser from '@/hooks/useUser';
 import { useTranslation } from 'next-i18next';
 import useRequest from '@/libs/request';
 import { Input, Sticky } from 'react-vant';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export default function account() {
   const { user, mutate } = useUser();
-  const { i18n,t } = useTranslation();
+  const { i18n, t } = useTranslation();
   // const {extraInfo } = user;
   const InputSelect = (props) => {
     const [isEdit, setIsEdit] = useState(false);
     const [value, setValue] = useState(props?.label);
-    const [gender,setGender] = useState(props?.value)
+    const [gender, setGender] = useState(props?.value);
     const updateInfo = async (v, k) => {
       if (!props.editable) return;
       if (props.dataIndex === 'nickName') {
@@ -30,7 +31,7 @@ export default function account() {
       }
       if (props.dataIndex === 'gender') {
         const { data } = await useRequest.post('/api/profile/update/gender', {
-          gender: v === '男' ? 0 :1,
+          gender: v === '男' ? 0 : 1,
         });
         if (data?.message === 'success') {
           setIsEdit(false);
@@ -62,10 +63,10 @@ export default function account() {
         {isEdit && props.dataIndex === 'gender' ? (
           <select
             value={value}
-            onChange={(e)=>{
-              setValue(e.target.value)
-              updateInfo(e.target.value,props.dataIndex)
-              setIsEdit(false)
+            onChange={(e) => {
+              setValue(e.target.value);
+              updateInfo(e.target.value, props.dataIndex);
+              setIsEdit(false);
             }}
             style={{
               width: '60px',
@@ -80,13 +81,11 @@ export default function account() {
               outline: 'none',
             }}
           >
-          <option value='男'>男</option>
-          <option value='女'>女</option>
+            <option value="男">男</option>
+            <option value="女">女</option>
           </select>
         ) : null}
-        {!isEdit ? (
-          <div>{props?.label ? props?.label : '未设置'}</div>
-        ) : null}
+        {!isEdit ? <div>{props?.label ? props?.label : '未设置'}</div> : null}
         <RightIcon></RightIcon>
       </div>
     );
@@ -106,13 +105,18 @@ export default function account() {
     {
       title: 'YoUni ID',
       intro: '',
-      action: <InputSelect  label={String(user?.id)}></InputSelect>,
+      action: <InputSelect label={String(user?.id)}></InputSelect>,
     },
     {
       title: '性别',
       intro: '',
       action: (
-        <InputSelect dataIndex="gender" editable={true} value={user?.gender} label={user?.gender === 0 ? '男' : '女'}></InputSelect>
+        <InputSelect
+          dataIndex="gender"
+          editable={true}
+          value={user?.gender}
+          label={user?.gender === 0 ? '男' : '女'}
+        ></InputSelect>
       ),
     },
   ];
@@ -195,7 +199,7 @@ export default function account() {
   };
   return (
     <CommonLayout className="overflow-hidden">
-      <Header title="编辑资料"></Header>
+      <Header title={t('编辑资料')}></Header>
       <input
         ref={uploadEl}
         type="file"
@@ -214,11 +218,20 @@ export default function account() {
           </div>
         </div>
         <div onClick={() => {}} className="mt-4 text-xs text-gray-500">
-          修改头像
+          {t('修改头像')}
         </div>
       </div>
-      <Form header="关于我" List={List1}></Form>
-      <Form header="教育认证" List={List2}></Form>
+      <Form header={t('关于我')} List={List1}></Form>
+      <Form header={t('教育认证')} List={List2}></Form>
     </CommonLayout>
   );
+}
+
+
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
 }

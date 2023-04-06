@@ -19,10 +19,14 @@ import CheckedIcon from './checked.svg';
 import { setOpenLogin } from '../../stores/authSlice';
 import { useDispatch } from 'react-redux';
 import useLocalStorage from '@/hooks/useStore';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export default function Valid() {
   const [state, setState] = React.useState<any>(null);
   const router = useRouter();
+  const { t } = useTranslation();
+
   const { query } = router;
   const mail = useMemo(() => {
     return query.mail;
@@ -62,11 +66,11 @@ export default function Valid() {
       return (
         <div className="z-30 w-full h-full p-8 bg-white">
           <Header className="shadow-none" title=""></Header>
-          <div className="text-2xl font-medium">Phone Verification</div>
+          <div className="text-2xl font-medium">{t('手机验证')}</div>
           <div>
-            Enter the 6-digit verification code you received at +
+            {t('请输入您收到的6位数字验证码，手机号为')}
             {router.query.prefix}
-            {query?.phoneNumber}.The code are valid for 30 minutes
+            {query?.phoneNumber}。{t('验证码有效期为30分钟')}
           </div>
           <div className="mt-6 mb-6">
             <input
@@ -94,10 +98,10 @@ export default function Valid() {
                 : 'bg-gray-300 hover:bg-gray-300 ',
             )}
           >
-            Next
+            {t('下一步')}
           </button>
           <div className="w-full mt-8 text-xs text-left text-darkYellow">
-            No code?
+            {t('没有收到验证码？')}
           </div>
         </div>
       );
@@ -121,14 +125,14 @@ export default function Valid() {
     };
     const resendCode = async () => {
       if (count !== 0) {
-        Toast.fail('60s内只能发送一次');
+        Toast.fail(t('60s内只能发送一次'));
         return;
       }
-      const {data} = await useRequest.post('/api/send_sms_code', {
+      const { data } = await useRequest.post('/api/send_sms_code', {
         phone: `+${query?.prefix}${query?.phoneNumber}`,
       });
       if (data.message === 'success') {
-        Toast.success('重新发送成功');
+        Toast.success(t('重新发送成功'));
         setTime(60);
       } else {
         Toast.fail(data.message);
@@ -152,11 +156,11 @@ export default function Valid() {
     return (
       <div className="z-30 w-full h-full p-8 bg-white">
         <Header className="shadow-none" title=""></Header>
-        <div className="text-2xl font-medium">Phone Verification</div>
+        <div className="text-2xl font-medium">{t('手机验证')}</div>
         <div>
-          Enter the 6-digit verification code you received at +
+          {t('请输入您收到的6位数字验证码，手机号为')}
           {router.query.prefix}
-          {query?.phoneNumber}.The code are valid for 30 minutes
+          {query?.phoneNumber}。{t('验证码有效期为30分钟')}
         </div>
         <div className="mt-6 mb-6">
           <input
@@ -185,10 +189,13 @@ export default function Valid() {
               : 'bg-gray-300 hover:bg-gray-300 ',
           )}
         >
-          Next
+          {t('Next')}
         </button>
-        <div onClick={resendCode} className="w-full mt-8 text-xs text-left text-darkYellow">
-          No code?
+        <div
+          onClick={resendCode}
+          className="w-full mt-8 text-xs text-left text-darkYellow"
+        >
+          {t('No code?')}
         </div>
       </div>
     );
@@ -205,10 +212,10 @@ export default function Valid() {
       return (
         <div className="z-30 w-full h-full p-8 bg-white">
           <Header className="shadow-none" title=""></Header>
-          <div className="text-2xl font-medium">Email Verification</div>
+          <div className="text-2xl font-medium">{t('邮箱验证')}</div>
           <div>
-            Enter the 6-digit verification code you received at
-            {mail}. The code are valid for 30 minutes
+            {t('请输入您收到的6位数字验证码，邮箱为')}
+            {mail}。{t('验证码有效期为30分钟')}
           </div>
           <div className="mt-6 mb-6">
             <input
@@ -236,10 +243,10 @@ export default function Valid() {
                 : 'bg-gray-300 hover:bg-gray-300 ',
             )}
           >
-            Next
+            {t('Next')}
           </button>
           <div className="w-full mt-8 text-xs text-left text-darkYellow">
-            No code?
+            {t('没有收到验证码？')}
           </div>
         </div>
       );
@@ -261,14 +268,14 @@ export default function Valid() {
     const [code, setCode] = useState('');
     const resendCode = async () => {
       if (count !== 0) {
-        Toast.fail('60s内只能发送一次');
+        Toast.fail(t('60s内只能发送一次'));
         return;
       }
       const { data } = await useRequest.post('/api/send_email_code', {
         email: mail,
       });
       if (data.message === 'success') {
-        Toast.success('重新发送成功');
+        Toast.success(t('重新发送成功'));
         setTime(60);
       } else {
         Toast.fail(data.message);
@@ -277,10 +284,10 @@ export default function Valid() {
     return (
       <div className="z-30 w-full h-full p-8 bg-white">
         <Header className="shadow-none" title=""></Header>
-        <div className="text-2xl font-medium">Email Verification</div>
+        <div className="text-2xl font-medium">{t('邮箱验证')}</div>
         <div>
-          Enter the 6-digit verification code you received at
-          {mail} The code are valid for 30 minutes
+          {t('请输入您收到的6位数字验证码，邮箱为')}
+          {mail}。{t('验证码有效期为30分钟')}
         </div>
         <div className="mt-6 mb-6">
           <input
@@ -468,25 +475,26 @@ export default function Valid() {
             label="Password"
           />
         </div>
-        <div className="mb-2">Your password must have at least:</div>
-        <div className="flex flex-col items-start space-y-2 mt-4 mb-4">
-          <div className="flex items-center text-xs space-x-2">
-            {isLength ? <CheckedIcon></CheckedIcon> : <CheckIcon></CheckIcon>}
-            <div>8 characters (20 max)</div>
-          </div>
-          <div className="flex items-center  text-xs space-x-2">
-            {isLetterAndNumber ? (
-              <CheckedIcon></CheckedIcon>
-            ) : (
-              <CheckIcon></CheckIcon>
-            )}
-            <div>1 letter and 1 number</div>
-          </div>
-          <div className="flex items-center  text-xs space-x-2">
-            {isSpecial ? <CheckedIcon></CheckedIcon> : <CheckIcon></CheckIcon>}
-            <div>1 special character (Example:#!$&@)</div>
-          </div>
-        </div>
+        <div className="mb-2">{t('您的密码必须至少包含以下内容：')}</div>
+    <div className="flex flex-col items-start space-y-2 mt-4 mb-4">
+      <div className="flex items-center text-xs space-x-2">
+        {isLength ? <CheckedIcon></CheckedIcon> : <CheckIcon></CheckIcon>}
+        <div>{t('8-20个字符')}</div>
+      </div>
+      <div className="flex items-center  text-xs space-x-2">
+        {isLetterAndNumber ? (
+          <CheckedIcon></CheckedIcon>
+        ) : (
+          <CheckIcon></CheckIcon>
+        )}
+        <div>{t('至少包含1个字母和1个数字')}</div>
+      </div>
+      <div className="flex items-center  text-xs space-x-2">
+        {isSpecial ? <CheckedIcon></CheckedIcon> : <CheckIcon></CheckIcon>}
+        <div>{t('至少包含1个特殊字符（例如：#!$&@）')}</div>
+      </div>
+    </div>
+
         <button
           onClick={() => {
             submitCreate();
@@ -498,7 +506,7 @@ export default function Valid() {
               : 'bg-gray-300 hover:bg-gray-300 ',
           )}
         >
-          Next
+          {t("Next")}
         </button>
       </div>
     );
@@ -530,15 +538,16 @@ export default function Valid() {
       });
       if (data.code === 200) {
         if (data.data.token) {
-          Toast.success('登录成功');
+          Toast.success(t('登录成功'));
           setMyItem(data.data.token);
           router.push('/Profile', undefined, { shallow: true });
           router.reload();
           dispatch(setOpenLogin('close'));
         }
       } else {
-        Toast.fail(`登录失败${data.message}`);
+        Toast.fail(`${t('登录失败')}${data.message}`);
       }
+    
       // if(data.message === 'succ')
     };
     return (
@@ -550,10 +559,10 @@ export default function Valid() {
           className="shadow-none bg-transparent"
           title=""
         ></Header>
-        <div className="text-2xl font-medium">Enter 6-digit code</div>
+        <div className="text-2xl font-medium">{t('输入6位数字验证码')}</div>
         <div>
-          Enter the 6-digit verification code you received at +
-          {router.query?.prefix} {phoneNumber}.The code are valid for 30 minutes
+          {t('请输入您收到的6位数字验证码，手机号为')}
+          {router.query?.prefix} {phoneNumber}{t('验证码有效期为30分钟')}
         </div>
         <div className="mt-6 mb-6">
           <input
@@ -588,7 +597,7 @@ export default function Valid() {
               : 'bg-gray-300 hover:bg-gray-300 ',
           )}
         >
-          Next
+          {t("Next")}
         </button>
         {/* <div className="w-full mt-8 text-xs text-left text-darkYellow">
         No code?
@@ -616,4 +625,14 @@ export default function Valid() {
       {/* <Password setState={setState} /> */}
     </div>
   );
+}
+
+export async function getStaticProps({ locale }) {
+  console.log(locale, 'locale');
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+      // Will be passed to the page component as props
+    },
+  };
 }

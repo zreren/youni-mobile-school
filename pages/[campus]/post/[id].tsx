@@ -24,6 +24,7 @@ import { useRouter } from 'next/router';
 import mapRequest from '@/libs/mapRequest';
 import useUser from '@/hooks/useUser';
 import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 
 function index(props) {
@@ -422,3 +423,15 @@ function index(props) {
 }
 
 export default index;
+
+
+export async function getServerSideProps({
+  locale,
+  }){
+
+  return {
+      props: {
+          ...(await serverSideTranslations(locale, ['common',]))
+      },
+    }
+  }

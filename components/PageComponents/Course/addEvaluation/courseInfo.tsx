@@ -8,6 +8,7 @@ import { EvaluationForm } from '@/libs/context';
 import useLanguage from '@/hooks/useLanguage';
 import { debounce } from 'lodash';
 import { Toast } from 'react-vant';
+import { useTranslation } from 'next-i18next';
 
 function courseInfo(props) {
   const { subjectData } = props;
@@ -25,6 +26,8 @@ function courseInfo(props) {
     value?: any;
     onClick?: any;
   }
+
+  const { t } = useTranslation();
   const data = useContext(EvaluationForm);
 
   const [form, setForm] = React.useState({});
@@ -177,7 +180,6 @@ function courseInfo(props) {
       .flat();
   }, [courseDetail, data?.data]);
 
-
   useEffect(() => {
     console.log(ProfessorList, 'ProfessorList');
   }, [ProfessorList]);
@@ -207,7 +209,7 @@ function courseInfo(props) {
         <div className="flex items-center ">
           <CourseIcon className="mr-2"></CourseIcon>
           <div className="bg-white font-medium text-blueTitle text-base">
-            课程分类
+            {t('课程分类')}
           </div>
         </div>
       </label>
@@ -215,14 +217,16 @@ function courseInfo(props) {
       <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
       <label className="input-group bg-white w-full flex justify-between h-12">
         <span className="bg-white  font-medium text-blueTitle text-sm">
-          <NessIcon className="mr-1"></NessIcon> 课程代码
+          <NessIcon className="mr-1"></NessIcon> {t('课程代码')}
         </span>
         <div
           onClick={() => {
             props.select();
           }}
-          className='w-1/2 h-full flex justify-end items-center mr-10'
-        >{data?.data?.course?.label}</div>
+          className="w-1/2 h-full flex justify-end items-center mr-10"
+        >
+          {data?.data?.course?.label}
+        </div>
         {/* <CCourseInputMemo
           value={{
             value: data?.data?.course?.id,
@@ -251,14 +255,16 @@ function courseInfo(props) {
       <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
       <label className="input-group bg-white w-full flex justify-between h-12">
         <span className="bg-white font-medium text-blueTitle text-sm">
-          <NessIcon className="mr-1"></NessIcon> 选择教授
+          <NessIcon className="mr-1"></NessIcon> {t('选择教授')}
         </span>
         <div
           onClick={() => {
             props.SelectProfessor();
           }}
-          className='w-1/2 h-full flex justify-end items-center mr-10'
-        >{data?.data?.professor?.label}</div>
+          className="w-1/2 h-full flex justify-end items-center mr-10"
+        >
+          {data?.data?.professor?.label}
+        </div>
         {/* <CCourseInputMemo
           value={{
             value: data.data?.professor?.id,
@@ -279,14 +285,16 @@ function courseInfo(props) {
       <div className="divider m-0 pl-4 pr-4 opacity-30 h-1"></div>
       <label className="input-group bg-white w-full flex justify-between h-12">
         <span className="bg-white font-medium text-blueTitle text-sm">
-          <NessIcon className="mr-1"></NessIcon> 课程形式
+          <NessIcon className="mr-1"></NessIcon> {t('课程形式')}
         </span>
         <div
           onClick={() => {
             props.SelectMode();
           }}
-          className='w-1/2 h-full flex justify-end items-center mr-10'
-        >{data?.data?.mode?.label}</div>
+          className="w-1/2 h-full flex justify-end items-center mr-10"
+        >
+          {data?.data?.mode?.label}
+        </div>
         {/* <CCourseInputMemo
           value={{
             value: data.data?.mode?.id,

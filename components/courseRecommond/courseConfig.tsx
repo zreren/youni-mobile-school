@@ -485,7 +485,7 @@ export default function config(props) {
                 <div className="text-sm text-[#37455C]">
                   <input
                     value={customProfessor}
-                    placeholder={t("自定义教授")}
+                    placeholder={t('自定义教授')}
                     onChange={(e) => {
                       setCustomProfessor(e.target.value);
                     }}
@@ -544,7 +544,7 @@ export default function config(props) {
                     : '选中'}
                 </div>
               </div>
-              <div className="text-[#A9B0C0] my-3">{t("非常规情况")}</div>
+              <div className="text-[#A9B0C0] my-3">{t('非常规情况')}</div>
               <div className="space-y-2">
                 <div
                   onClick={() => {
@@ -562,7 +562,7 @@ export default function config(props) {
                     },
                   )}
                 >
-                  {t("教授均可选择")}
+                  {t('教授均可选择')}
                 </div>
                 <div
                   onClick={() => {
@@ -580,7 +580,7 @@ export default function config(props) {
                     },
                   )}
                 >
-                  {t("无教授推荐")}
+                  {t('无教授推荐')}
                 </div>
               </div>
             </div>
@@ -947,7 +947,7 @@ export default function config(props) {
         <div className="flex items-center justify-center">
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
           <div className="whitespace-nowrap text-[#DCDDE1] text-xs mx-2">
-            {t("选修课")}
+            {t('选修课')}
           </div>
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
         </div>
@@ -978,7 +978,7 @@ export default function config(props) {
     return (
       <div className="flex items-center space-x-3">
         <div className="bg-[#F0F6FF] p-2 min-w-[48px] w-12 h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
-          {t("笔记")}
+          {t('笔记')}
         </div>
         <div className="w-[0.5px] h-3 bg-[#F0F6FF]"></div>
         {!open ? (
@@ -1068,7 +1068,7 @@ export default function config(props) {
           }}
           className="bg-[#FFD036] cursor-pointer  text-white rounded-full w-full h-10 flex justify-center items-center"
         >
-          {t("发布")}
+          {t('发布')}
         </div>
       </div>
     );
@@ -1165,7 +1165,7 @@ export default function config(props) {
           <div className="flex items-center space-x-2">
             <CateGoryIcon></CateGoryIcon>
             {/* {item.Icon ? <Icon className="mt-1"></Icon> : null} */}
-            <div className="text-blueTitle">{t("课程配置")}</div>
+            <div className="text-blueTitle">{t('课程配置')}</div>
           </div>
           {/* <div>{item.action}</div> */}
         </div>
@@ -1265,7 +1265,7 @@ export default function config(props) {
                               <div className="w-full space-y-4">
                                 <div className="flex items-center space-x-3">
                                   <div className="bg-[#F0F6FF] p-2 w-12 h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
-                                    类别
+                                    {t('类别')}
                                   </div>
                                   <div className="w-"></div>
                                   <div
@@ -1286,7 +1286,7 @@ export default function config(props) {
                                       },
                                     )}
                                   >
-                                    {t("必修课")}
+                                    {t('必修课')}
                                   </div>
                                   <div
                                     onClick={() => {
@@ -1306,12 +1306,12 @@ export default function config(props) {
                                       },
                                     )}
                                   >
-                                    {t("选修课")}
+                                    {t('选修课')}
                                   </div>
                                 </div>
                                 <div className="flex items-center space-x-3">
                                   <div className="bg-[#F0F6FF] p-2 min-w-[48px] h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
-                                    优先
+                                    {t('优先')}
                                   </div>
                                   <div className="w-[0.5px] h-3 bg-[#F0F6FF]"></div>
                                   <div
@@ -1342,7 +1342,7 @@ export default function config(props) {
                                 </div>
                                 <div className="flex items-center space-x-3">
                                   <div className="bg-[#F0F6FF] p-2 min-w-[48px] h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
-                                    {t("可选")}
+                                    {t('可选')}
                                   </div>
                                   <div className="w-[0.5px] h-3 bg-[#F0F6FF]"></div>
                                   <div
@@ -1393,7 +1393,7 @@ export default function config(props) {
           <div className="flex items-center space-x-2">
             <CateGoryIcon></CateGoryIcon>
             {/* {item.Icon ? <Icon className="mt-1"></Icon> : null} */}
-            <div className="text-blueTitle">{t("课表预览")}</div>
+            <div className="text-blueTitle">{t('课表预览')}</div>
           </div>
           {(mustStudyData.some((item) => item.id) ||
             optionStudyData.some((item) => item.id)) && (

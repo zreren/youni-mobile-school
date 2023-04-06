@@ -12,7 +12,7 @@ import { useTranslation } from 'next-i18next';
 
 export default function expiration(props) {
   const router = useRouter();
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
   const [value, setValue] = useState(true);
   const { data: campusData, mutate: campusDataMutate } = useFetch(
@@ -31,7 +31,7 @@ export default function expiration(props) {
   React.useEffect(() => {
     mutate();
   }, [campusId]);
-  const {year,term} = props;
+  const { year, term } = props;
   function TimeComponent(props) {
     const [selectedYearRange, setSelectedYearRange] = useState(props.year);
     React.useEffect(() => {
@@ -98,15 +98,13 @@ export default function expiration(props) {
       </div>
     );
   }
-  const submitPost = async (form, draft) => {}
+  const submitPost = async (form, draft) => {};
   const Footer = () => {
     return (
       <div className="w-full shadow-footer bg-white h-[60px] space-x-4 flex justify-between fixed bottom-12 px-5 py-2">
         <div
           className="flex flex-col items-center  w-[40px]"
-          onClick={() => {
-           
-          }}
+          onClick={() => {}}
         >
           <DraftIcon></DraftIcon>
           <div className="text-[10px] text-[#798195] whitespace-nowrap">
@@ -114,9 +112,7 @@ export default function expiration(props) {
           </div>
         </div>
         <div
-          onClick={() => {
-          
-          }}
+          onClick={() => {}}
           className="bg-[#FFD036] cursor-pointer  text-white rounded-full w-full h-10 flex justify-center items-center"
         >
           发布
@@ -124,19 +120,24 @@ export default function expiration(props) {
       </div>
     );
   };
-  const [termList,setTermList]= useState(props.term)
+  const [termList, setTermList] = useState(props.term);
   return (
-    <div onBlur={()=>{props.selectTerm(termList)}} className="items-start justify-between  py-0 bg-white p-5 pb-5">
+    <div
+      onBlur={() => {
+        props.selectTerm(termList);
+      }}
+      className="items-start justify-between  py-0 bg-white p-5 pb-5"
+    >
       <div className="flex justify-between mb-6">
         <div className="flex items-center space-x-2">
           <CateGoryIcon></CateGoryIcon>
           {/* {item.Icon ? <Icon className="mt-1"></Icon> : null} */}
-          <div className="text-blueTitle  ">有效期</div>
+          <div className="text-blueTitle  ">{t('有效期')}</div>
         </div>
         {/* <div>{item.action}</div> */}
       </div>
       <div className="flex justify-between mb-6">
-        <div className="text-[#798195] text-sm">长期有效</div>
+        <div className="text-[#798195] text-sm">{t('长期有效')}</div>
         <div className="flex items-center space-x-2">
           <JGIcon></JGIcon>
           <IOSSwitch
@@ -149,12 +150,11 @@ export default function expiration(props) {
         </div>
       </div>
       {!value && (
-
         <div className="flex justify-between mb-6">
-          <div className="text-[#798195]  text-sm">适用学年</div>
+        <div className="text-[#798195]  text-sm">{t('适用学年')}</div>
           <div className="flex items-center space-x-2">
             <TimeComponent
-            year={year}
+              year={year}
               select={(e) => {
                 props.select(e);
               }}
@@ -165,20 +165,26 @@ export default function expiration(props) {
 
       <div className="flex">
         <div className="text-[#798195] whitespace-nowrap  text-sm mr-4">
-          适用学期
+          {t('适用学期')}
         </div>
         <div className="flex  flex-wrap w-7/10 mb-0">
           {fetchedData?.data?.map((item) => {
             return (
-              <div onClick={()=>{
-                if( termList.some((i)=>i===item)){
-                  props.setTermList(item)
-                  return;
-                }
-                props.setTermList(item)
-              }} className={classnames("bg-[#F3F4F6] rounded text-[#798195] m-1  text-xs font-light h-6 px-2 flex justify-center items-center",{
-                'text-yellow-500': props.term.some((i)=>i.id===item.id)
-              })}>
+              <div
+                onClick={() => {
+                  if (termList.some((i) => i === item)) {
+                    props.setTermList(item);
+                    return;
+                  }
+                  props.setTermList(item);
+                }}
+                className={classnames(
+                  'bg-[#F3F4F6] rounded text-[#798195] m-1  text-xs font-light h-6 px-2 flex justify-center items-center',
+                  {
+                    'text-yellow-500': props.term.some((i) => i.id === item.id),
+                  },
+                )}
+              >
                 {item.name}
               </div>
             );

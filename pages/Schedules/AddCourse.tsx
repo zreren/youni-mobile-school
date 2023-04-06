@@ -643,7 +643,7 @@ export default function AddSchedule() {
     return (
       <div className="w-full space-y-4 pb-10">
         <CCourseInput
-          title="课程名称"
+          title={t("课程名称")}
           isNess
           change={(val) => {
             handleChange(val.label, 'name');
@@ -658,7 +658,7 @@ export default function AddSchedule() {
             <div className="w-full p-3">
               {' '}
               <span className="flex items-center text-sm font-medium bg-white text-blueTitle">
-                <NessIcon className="mr-1"></NessIcon>上课日期
+              <NessIcon className="mr-1"></NessIcon>{t("上课日期")}
               </span>
             </div>
             <div className="flex youni-form w-full pb-4 pl-4 pr-4 ">
@@ -697,7 +697,7 @@ export default function AddSchedule() {
                 <div className="flex youni-form items-center justify-between h-full space-x-4">
                   <div className="flex items-center">
                     <NessIcon className="mr-1"></NessIcon>
-                    <div className="text-sm text-blueTitle">开始时间</div>
+                    <div className="text-sm text-blueTitle">{t("开始时间")}</div>
                   </div>
                   <div>
                     <DatetimePicker
@@ -736,7 +736,7 @@ export default function AddSchedule() {
                 <div className="flex youni-form items-center justify-between h-full space-x-4">
                   <div className="flex items-center">
                     <NessIcon className="mr-1"></NessIcon>
-                    <div className="text-sm text-blueTitle">结束时间</div>
+                    <div className="text-sm text-blueTitle">{t('结束时间')}</div>
                   </div>
                   <div>
                     <DatetimePicker
@@ -762,7 +762,7 @@ export default function AddSchedule() {
                             clickable
                             label=""
                             value={val}
-                            placeholder="请选择日期"
+                            placeholder={t('请选择日期')}
                             onClick={() => actions.open()}
                           />
                         );
@@ -786,7 +786,7 @@ export default function AddSchedule() {
           )}
         ></CCourseInput>
         <CCourseInput
-          title="课程形式"
+          title={t('课程形式')}
           change={(val) => {
             handleChange(val.label, 'mode');
           }}
@@ -796,7 +796,7 @@ export default function AddSchedule() {
           )}
         ></CCourseInput>
         <CCourseInput
-          title="教授"
+            title={t('教授')}
           change={(val) => {
             handleChange(val.label, 'professorName');
             // handleChange(val.id, 'courseId');
@@ -805,7 +805,7 @@ export default function AddSchedule() {
           renderData={courseFormat?.professors?.map((item) => item.name)}
         ></CCourseInput>
         <CCourseInput
-          title="教室"
+            title={t('教室')}
           change={(val) => {
             console.log(val, 'classroom');
             handleChange(val.label, 'classroom');
@@ -813,7 +813,7 @@ export default function AddSchedule() {
         ></CCourseInput>
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
-            <div className="text-sm text-blueTitle">单双周</div>
+          <div className="text-xs text-blueTitle">{t('单双周')}</div>
             <div className="w-[250px] h-full flex items-center justify-end pr-1 rounded-lg">
               <div className="border-[#DCDDE1] border  overflow-hidden  rounded-lg  h-[28px]   flex ">
                 <div
@@ -827,7 +827,7 @@ export default function AddSchedule() {
                     },
                   )}
                 >
-                  全部
+                  {t('全部')}
                 </div>
                 <div
                   onClick={() => {
@@ -840,7 +840,7 @@ export default function AddSchedule() {
                     },
                   )}
                 >
-                  单周
+                   {t('单周')}
                 </div>
                 <div
                   onClick={() => {
@@ -853,7 +853,7 @@ export default function AddSchedule() {
                     },
                   )}
                 >
-                  双周
+                  {t('双周')}
                 </div>
                 <div></div>
               </div>
@@ -863,7 +863,7 @@ export default function AddSchedule() {
 
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
-            <div className="text-sm text-blueTitle">颜色</div>
+          <div className="text-sm text-blueTitle">{t("颜色")}</div>
             <CCourseColor
               setColor={(val) => {
                 console.log(val), handleChange(val, 'color');
@@ -880,7 +880,7 @@ export default function AddSchedule() {
           justify-center w-full text-[#FFD036]
           font-semibold   bg-[#FFFCF3] h-10 rounded-lg"
           >
-            关闭
+            {t('关闭')}
           </div>
           <div
             onClick={() => {
@@ -890,7 +890,7 @@ export default function AddSchedule() {
           font-semibold justify-center w-full bg-[#FFD036]
           h-10 rounded-lg"
           >
-            添加课程
+            {t("添加课程")}
           </div>
         </div>
       </div>
@@ -916,7 +916,7 @@ export default function AddSchedule() {
   const [value, setValue] = useState();
   return (
     <CommonLayout className="p-0 mb-10">
-      <Header title="添加"></Header>
+      <Header title={t("添加")}></Header>
       <HeaderMenu
         id={id}
         switchMenu={(val) => {

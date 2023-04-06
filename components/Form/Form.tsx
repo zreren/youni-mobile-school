@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTranslation } from 'next-i18next';
 
 export default function Form(props) {
+  const {t} = useTranslation();
   let { header, List } = props;
   if (!List) {
     List = [
@@ -22,7 +24,7 @@ export default function Form(props) {
             <div className="flex justify-between">
               <div className="flex space-x-2">
                  {item.Icon ? <Icon className="mt-1"></Icon> : null}
-                <div className="mb-2 text-sm font-medium text-[#798195]">{item.title}</div>
+                <div className="mb-2 text-sm font-medium text-[#798195]">{t(item.title)}</div>
               </div>
               <div className='text-sm'>{item.action}</div>
             </div>

@@ -54,28 +54,29 @@ import { json } from 'stream/consumers';
 import { useRouter } from 'next/router';
 import AddCourse from './addCourse';
 import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export default function addPost() {
-  const {t} = useTranslation()
+  const { t } = useTranslation();
   const Footer = () => {
-    const getDomAndHide  = ()=>{
-      const dom = document.getElementById('bottom-navigation')
-      if(!dom) return
-      dom.style.display = 'none'
-    }
-    useEffect(()=>{
-      const dom = document.getElementById('bottom-navigation')
-      if(!dom) {
+    const getDomAndHide = () => {
+      const dom = document.getElementById('bottom-navigation');
+      if (!dom) return;
+      dom.style.display = 'none';
+    };
+    useEffect(() => {
+      const dom = document.getElementById('bottom-navigation');
+      if (!dom) {
         setTimeout(() => {
-          getDomAndHide()
+          getDomAndHide();
         }, 500);
         return;
-      };
-      dom.style.display = 'none'
-      return ()=>{
-        dom.style.display = 'block'
       }
-    },[])
+      dom.style.display = 'none';
+      return () => {
+        dom.style.display = 'block';
+      };
+    }, []);
     return (
       <div className="w-full shadow-footer bg-white h-[60px] space-x-4 flex justify-between fixed bottom-2 px-5 py-2">
         <div
@@ -121,37 +122,37 @@ export default function addPost() {
 
   const headerMenuList = [
     {
-      label: '闲置',
+      label: t('闲置'),
       key: 'idle',
     },
     {
-      label: '活动',
+      label: t('活动'),
       key: 'activity',
     },
     {
-      label: '转租',
+      label: t('转租'),
       key: 'sublet',
     },
     {
-      label: '群聊',
+      label: t('群聊'),
       key: 'group',
     },
     {
-      label: '拼车',
+      label: t('拼车'),
       key: 'carpool',
     },
     {
-      label: '课程配置',
+      label: t('课程配置'),
       key: 'course_recommend',
     },
     {
-      label: '二手书',
+      label: t('二手书'),
       key: 'book',
     },
   ];
 
   const item = {
-    title: '选择分类',
+    title: t('选择分类'),
     intro: '',
     Icon: null,
     action: <RightIcon></RightIcon>,
@@ -301,7 +302,7 @@ export default function addPost() {
                   }}
                 >
                   <div className="text-gray-500 font-semibold text-sm">
-                    不显示
+                    {t('不显示')}
                   </div>
                 </div>
                 <div className="h-1 m-0 divider opacity-30"></div>
@@ -457,10 +458,10 @@ export default function addPost() {
     //   }
     // });
     if (!title || !previews || !content || previews.length < 1) {
-      Toast.fail('请完善表单');
+      Toast.fail(t('请完善表单'));
       return;
     }
-    if(router.query.isEdit){
+    if (router.query.isEdit) {
       try {
         const { data } = await useRequest.post('/api/post/update', {
           id: router.query.id,
@@ -475,14 +476,14 @@ export default function addPost() {
           campusId: campusID,
         });
         if (data.message === 'success') {
-          Toast.success('修改成功');
+          Toast.success(t('修改成功'));
         } else {
-          Toast.fail('修改失败');
+          Toast.fail(t('修改失败'));
         }
       } catch (error) {
         Toast.fail(error);
-      } 
-    }else{
+      }
+    } else {
       try {
         const { data } = await useRequest.post('/api/post/create', {
           form: { ...form },
@@ -496,15 +497,14 @@ export default function addPost() {
           campusId: campusID,
         });
         if (data.message === 'success') {
-          Toast.success('发布成功');
+          Toast.success(t('发布成功'));
         } else {
-          Toast.fail('发布失败');
+          Toast.fail(t('发布失败'));
         }
       } catch (error) {
         Toast.fail(error);
       }
     }
-    
   };
   const changeCategory = (val) => {
     setType(val);
@@ -558,13 +558,14 @@ export default function addPost() {
       if (!List) {
         List = [
           {
-            title: '标题',
+            title: t('标题'),
             action: 'text',
-            intro: '请输入',
+            intro: t('请输入'),
             Icon: null,
           },
         ];
       }
+
       return (
         <div className="w-full h-full">
           <div className="mb-4 text-xs text-[#798195]">{header}</div>
@@ -621,7 +622,7 @@ export default function addPost() {
         console.log(bool, 'bool');
 
         if (!value) {
-          Toast.fail(`请输入${type}`);
+          Toast.fail(`t("请输入")${type}`);
           setPublic(false);
           return;
         }
@@ -714,27 +715,27 @@ export default function addPost() {
     }, [contactList]);
     const List1 = [
       {
-        title: '电话',
+        title: t('电话'),
         intro: '',
         action: (
-          <PhoneComponent type={'电话'} data={phoneItem}></PhoneComponent>
+          <PhoneComponent type={t('电话')} data={phoneItem}></PhoneComponent>
         ),
       },
       {
-        title: '短信',
+        title: t('短信'),
         intro: '',
-        action: <PhoneComponent type={'短信'}></PhoneComponent>,
+        action: <PhoneComponent type={t('短信')}></PhoneComponent>,
       },
       {
-        title: '邮箱',
+        title: t('邮箱'),
         intro: '',
         action: (
-          <PhoneComponent type={'邮箱'} data={emailItem}></PhoneComponent>
+          <PhoneComponent type={t('邮箱')} data={emailItem}></PhoneComponent>
         ),
       },
       {
-        title: '微信',
-        action: <PhoneComponent type={'微信'}></PhoneComponent>,
+        title: t('微信'),
+        action: <PhoneComponent type={t('微信')}></PhoneComponent>,
       },
       {
         title: 'WhatsApp',
@@ -764,7 +765,7 @@ export default function addPost() {
         <div className="w-full h-2/3 bg-white p-4 pb-20">
           <Puller></Puller>
           <div className="text-xs text-[#A9B0C0] pt-3">
-            此处联系方式仅针对本次推文生效
+            {t('此处联系方式仅针对本次推文生效')}
           </div>
           <_Form header="" List={List1}></_Form>
         </div>
@@ -819,15 +820,15 @@ export default function addPost() {
       });
     };
     const serviceList = [
-      { title: '包水' },
-      { title: '包电' },
-      { title: '包网' },
-      { title: '包气' },
-      { title: '含管理费' },
-      { title: '包铲雪' },
-      { title: '包除草' },
-      { title: '包清洁' },
-      { title: '包做饭' },
+      { title: t('包水') },
+      { title: t('包电') },
+      { title: t('包网') },
+      { title: t('包气') },
+      { title: t('含管理费') },
+      { title: t('包铲雪') },
+      { title: t('包除草') },
+      { title: t('包清洁') },
+      { title: t('包做饭') },
     ];
     const ServicesItem = (props) => {
       const { title, defaultSelect, change } = props;
@@ -883,7 +884,7 @@ export default function addPost() {
             <div className="flex prices">
               <div className="flex w-full space-x-4 items-center">
                 <div className="whitespace-nowrap text-[#37455C] text-sm">
-                  价格
+                  {t('价格')}
                 </div>
                 <div className="flex items-end">
                   <div className="w-[70px]">
@@ -895,7 +896,7 @@ export default function addPost() {
                       value={state.text}
                       readOnly
                       onChange={(text) => updateState({ text })}
-                      placeholder={currentInPut === 'text' ? '|' : '输入价格'}
+                      placeholder={currentInPut === 'text' ? '|' : t('输入价格')}
                       className="text-lg"
                     />
                   </div>
@@ -904,7 +905,7 @@ export default function addPost() {
               </div>
               <div className="flex w-full space-x-4 items-center">
                 <div className="whitespace-nowrap text-[#37455C] text-sm">
-                  单位
+                  {t('单位')}
                 </div>
                 <div>
                   <Picker
@@ -926,7 +927,7 @@ export default function addPost() {
                           readOnly
                           clickable
                           value={_?.text || ''}
-                          placeholder="选择单位"
+                          placeholder={t('选择单位')}
                           onClick={() => actions.open()}
                         />
                       );
@@ -939,7 +940,7 @@ export default function addPost() {
             <div className="flex justify-between items-center">
               <div className="flex w-full space-x-4 items-center">
                 <div className="whitespace-nowrap text-[#37455C] text-sm">
-                  原价
+                  {t('原价')}
                 </div>
                 <div className="flex items-end">
                   <div className="w-[70px]">
@@ -962,7 +963,7 @@ export default function addPost() {
               </div>
               <div className="flex items-center space-x-2">
                 <div className="whitespace-nowrap text-[#798195] text-sm">
-                  显示原价
+                  {t('显示原价')}
                 </div>
                 <Switch
                   onChange={(val) => {
@@ -979,7 +980,7 @@ export default function addPost() {
             <div className="h-1 m-0 mt-2 divider opacity-30"></div>
             <div className="flex items-center mt-2">
               <div className="whitespace-nowrap text-[#37455C] text-sm mr-4">
-                服务
+                {t('服务')}
               </div>
               <div className="flex  flex-wrap w-6/10 mb-3">
                 {serviceList.map((item) => {
@@ -1135,7 +1136,7 @@ export default function addPost() {
             <div className="flex prices">
               <div className="flex w-full space-x-4 items-center">
                 <div className="whitespace-nowrap text-[#37455C] text-sm">
-                  价格
+                  {t('价格')}
                 </div>
                 <div className="flex items-end">
                   <div className="w-[70px]">
@@ -1159,7 +1160,7 @@ export default function addPost() {
             <div className="flex justify-between items-center">
               <div className="flex w-full space-x-4 items-center">
                 <div className="whitespace-nowrap text-[#37455C] text-sm">
-                  原价
+                  {t('原价')}
                 </div>
                 <div className="flex items-end">
                   <div className="w-[70px]">
@@ -1182,7 +1183,7 @@ export default function addPost() {
               </div>
               <div className="flex items-center space-x-2">
                 <div className="whitespace-nowrap text-[#798195] text-sm">
-                  显示原价
+                  {t('显示原价')}
                 </div>
                 <Switch
                   onChange={(val) => {
@@ -1199,7 +1200,7 @@ export default function addPost() {
             <div className="h-1 m-0 mt-2 divider opacity-30"></div>
             <div className="flex items-center mt-2">
               <div className="whitespace-nowrap text-[#37455C] text-sm mr-4">
-                方式
+                {t('方式')}
               </div>
               <div className="flex items-center   h-full space-x-4">
                 {/* <div className="text-sm text-blueTittle]">当面交易</div> */}
@@ -1217,7 +1218,7 @@ export default function addPost() {
                         },
                       )}
                     >
-                      当面交易
+                     {t('当面交易')}
                     </div>
                     <div
                       onClick={() => {
@@ -1231,7 +1232,7 @@ export default function addPost() {
                         },
                       )}
                     >
-                      包邮
+                      {t("包邮")}
                     </div>
                     <div
                       onClick={() => {
@@ -1245,7 +1246,7 @@ export default function addPost() {
                         },
                       )}
                     >
-                      快递
+                      {t('快递')}
                     </div>
                     <div></div>
                   </div>
@@ -1259,7 +1260,7 @@ export default function addPost() {
               deleteInput();
             }}
             extraKey={[pricesUnit, '.']}
-            closeButtonText="完成"
+            closeButtonText={t('完成')}
             visible={true}
             onClose={() => {
               confirm(state);
@@ -1383,7 +1384,7 @@ export default function addPost() {
             <div className="flex justify-between items-center">
               <div className="flex w-full space-x-4 items-center">
                 <div className="whitespace-nowrap text-[#37455C] text-sm">
-                  活动价格
+                {t('活动价格')}
                 </div>
                 <div className="flex items-end">
                   <div className="w-[70px]">
@@ -1414,7 +1415,7 @@ export default function addPost() {
               deleteInput();
             }}
             extraKey={[pricesUnit, '.']}
-            closeButtonText="完成"
+            closeButtonText={t("完成")}
             visible={true}
             onClose={() => {
               confirm(state);
@@ -1431,7 +1432,7 @@ export default function addPost() {
     );
   };
   const DeliveryRadioMenu = () => {
-    const [state, setState] = useState('实体书');
+    const [state, setState] = useState(t('实体书'));
     useEffect(() => {
       form.setFieldValue('delivery', state);
     }, [state]);
@@ -1440,29 +1441,29 @@ export default function addPost() {
         <div className="border-[#DCDDE1] border  overflow-hidden  rounded-lg  h-[28px]   flex ">
           <div
             onClick={() => {
-              setState('实体书');
+              setState(t('实体书'));
             }}
             className={classnames(
               'w-full whitespace-nowrap flex justify-center px-2 items-center text-center text-[#A9B0C0]',
               {
-                'bg-slate-50 text-[#FFD036]': state === '实体书',
+                'bg-slate-50 text-[#FFD036]': state === t('实体书'),
               },
             )}
           >
-            实体书
+            {t('实体书')}
           </div>
           <div
             onClick={() => {
-              setState('电子书');
+              setState(t('电子书'));
             }}
             className={classnames(
               'w-full  flex justify-center px-2 items-center text-center text-[#A9B0C0]',
               {
-                'bg-slate-50 text-[#FFD036]': state === '电子书',
+                'bg-slate-50 text-[#FFD036]': state === t('电子书'),
               },
             )}
           >
-            电子书
+            {t('电子书')}
           </div>
           <div></div>
         </div>
@@ -1490,7 +1491,7 @@ export default function addPost() {
     if (router.query.isEdit) {
       setType(router.query.type as string);
       detailMutate();
-      if(router.query.type === 'course_recommend'){
+      if (router.query.type === 'course_recommend') {
         // add course config
       }
     }
@@ -1534,7 +1535,7 @@ export default function addPost() {
           return (
             <div className="flex items-center space-x-4">
               <Icon></Icon>
-              <div>{item.label}</div>
+              <div>{(t(item.label))}</div>
             </div>
           );
         };
@@ -1637,17 +1638,18 @@ export default function addPost() {
                   setContactVisible(true);
                 }}
               >
-                请选择联系方式
+                {t('请选择联系方式')}
               </div>
             )}
             {item.type === 'prices' && (
               <div>
                 {form.getFieldValue('prices')?.text === 0 ||
                 form.getFieldValue('prices')?.text === '0'
-                  ? '免费'
-                  : form.getFieldValue('prices')?.text || '点击输入价格信息'}
+                  ? t('免费')
+                  : form.getFieldValue('prices')?.text || t('点击输入价格信息')}
               </div>
             )}
+
             {item.type === 'deliveryRadio' && (
               <DeliveryRadioMenu></DeliveryRadioMenu>
             )}
@@ -1678,15 +1680,15 @@ export default function addPost() {
         setTopic((pre) => {
           if (!pre) return [item];
           if (pre.indexOf(item) >= 0) {
-            Toast.fail('已移除该话题');
+            Toast.fail(t('已移除该话题'));
             return pre.filter((value, index, self) => {
               return value !== item;
             });
           }
           // const uniqueArray = pre.filter((value, index, self) => {
-          //   return self.indexOf(value) === index;
+          // return self.indexOf(value) === index;
           // });
-          Toast.success(`已加入${item.name}话题`);
+          Toast.success(`${t('已加入')}${item.name}${t('话题')}`);
           return [...pre, item];
         });
 
@@ -1811,19 +1813,15 @@ export default function addPost() {
       'submitCourseConfig',
     );
     if (!title || !content) {
-      Toast.fail('请完善标题和内容');
+      Toast.fail(t('请完善标题和内容'));
       return;
     }
     if (!topic) {
-      Toast.fail('至少添加一个话题');
-      return;
-    }
-    if (!topic) {
-      Toast.fail('至少添加一个话题');
+      Toast.fail(t('至少添加一个话题'));
       return;
     }
     if (!e.form.term) {
-      Toast.fail('至少选择一学期');
+      Toast.fail(t('至少选择一学期'));
       return;
     }
     try {
@@ -1896,7 +1894,7 @@ export default function addPost() {
             ></TopicDrawer>
             <div className="px-5 post-title">
               <Input
-                placeholder="填写标题获得更多流量～"
+                placeholder={t('填写标题获得更多流量～')}
                 value={title}
                 onChange={handleSetTitle}
                 clearable
@@ -1907,11 +1905,12 @@ export default function addPost() {
             <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
             <div className="px-5 mt-4">
               <Input.TextArea
-                placeholder="添加正文"
+                placeholder={t('添加正文')}
                 value={content}
                 onChange={setContent}
                 autoSize={{ minHeight: 180, maxHeight: 180 }}
               />
+
               <div className="flex items-center my-2 space-x-2">
                 {topic?.map((item) => {
                   return (
@@ -1940,34 +1939,36 @@ export default function addPost() {
                   }}
                   className="text-[#B38314] rounded bg-[#FFFBD9] px-2 text-xs py-1"
                 >
-                  # 话题{' '}
+                  {t('# 话题 ')}
                 </div>
                 <div
                   onClick={() => {
                     setTopic((pre) => {
-                      if (!pre) return [{ id: null, name: '# 约克大学' }];
-                      if (pre.indexOf({ id: null, name: '# 约克大学' }) >= 0) {
-                        Toast.fail('已移除该话题');
+                      if (!pre) return [{ id: null, name: t('# 约克大学') }];
+                      if (
+                        pre.indexOf({ id: null, name: t('# 约克大学') }) >= 0
+                      ) {
+                        Toast.fail(t('已移除该话题'));
                         return pre.filter((value, index, self) => {
-                          return value.name !== '# 约克大学';
+                          return value.name !== t('# 约克大学');
                         });
                       }
                       // const uniqueArray = pre.filter((value, index, self) => {
                       //   return self.indexOf(value) === index;
                       // });
-                      Toast.success(`已加入# 约克大学 话题`);
-                      return [...pre, { id: null, name: '# 约克大学' }];
+                      Toast.success(t(`已加入${'# 约克大学'} ${t('话题')}`));
+                      return [...pre, { id: null, name: t('# 约克大学') }];
                     });
                   }}
                   className="text-[#798195] rounded bg-[#F3F4F6] px-2 text-xs py-1"
                 >
-                  # 约克大学{' '}
+                  {t('# 约克大学')}{' '}
                 </div>
               </div>
             </div>
             <div className="bg-[#F6F6F6] w-full h-3"></div>
             <AddCourse
-            value={data?.data?.form?.courseData}
+              value={data?.data?.form?.courseData}
               submit={(e) => {
                 submitCourseConfig(e);
               }}
@@ -2053,7 +2054,7 @@ export default function addPost() {
               <Uploader
                 accept="*"
                 upload={upload}
-                value={previews?.map( (item, index) => {
+                value={previews?.map((item, index) => {
                   return {
                     name: item,
                     url: `${Cons.BASEURL}${item}`,
@@ -2067,7 +2068,7 @@ export default function addPost() {
             </div>
             <div className="px-5 post-title">
               <Input
-                placeholder="填写标题获得更多流量～"
+                placeholder={t('填写标题获得更多流量～')}
                 value={title}
                 onChange={handleSetTitle}
                 clearable
@@ -2078,7 +2079,7 @@ export default function addPost() {
             <div className="h-[1px] w-full  px-5 bg-[#F3F4F6]"></div>
             <div className="px-5 mt-4">
               <Input.TextArea
-                placeholder="添加正文"
+                placeholder={t('添加正文')}
                 value={content}
                 onChange={setContent}
                 autoSize={{ minHeight: 180, maxHeight: 180 }}
@@ -2111,28 +2112,28 @@ export default function addPost() {
                   }}
                   className="text-[#B38314] rounded bg-[#FFFBD9] px-2 text-xs py-1"
                 >
-                  # 话题{' '}
+                  {t('# 话题 ')}
                 </div>
                 <div
                   onClick={() => {
                     setTopic((pre) => {
-                      if (!pre) return [{ id: null, name: '约克大学' }];
-                      if (pre.indexOf({ id: null, name: '约克大学' }) >= 0) {
-                        Toast.fail('已移除该话题');
+                      if (!pre) return [{ id: null, name: t('约克大学') }];
+                      if (pre.indexOf({ id: null, name: t('约克大学') }) >= 0) {
+                        Toast.fail(t('已移除该话题'));
                         return pre.filter((value, index, self) => {
-                          return value.name !== '约克大学';
+                          return value.name !== t('约克大学');
                         });
                       }
                       // const uniqueArray = pre.filter((value, index, self) => {
                       //   return self.indexOf(value) === index;
                       // });
-                      Toast.success(`已加入 # 约克大学 话题`);
-                      return [...pre, { id: null, name: '约克大学' }];
+                      Toast.success(t(`已加入 # ${'约克大学'} ${t('话题')}`));
+                      return [...pre, { id: null, name: t('约克大学') }];
                     });
                   }}
                   className="text-[#798195] rounded bg-[#F3F4F6] px-2 text-xs py-1"
                 >
-                  # 约克大学{' '}
+                  {t('# 约克大学 ')}
                 </div>
               </div>
             </div>
@@ -2209,3 +2210,15 @@ export default function addPost() {
     </>
   );
 }
+
+
+export async function getServerSideProps({
+  locale,
+  }){
+
+  return {
+      props: {
+          ...(await serverSideTranslations(locale, ['common',]))
+      },
+    }
+  }

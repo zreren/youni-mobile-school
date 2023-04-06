@@ -497,7 +497,7 @@ export default function AddSchedule(props) {
                       clickable
                       label=""
                       value={val}
-                      placeholder="请选择日期"
+                      placeholder={t("请选择日期")}
                       onClick={() => actions.open()}
                     />
                   );

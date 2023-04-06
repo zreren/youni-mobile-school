@@ -46,10 +46,7 @@ import useUser from '@/hooks/useUser';
 import useCurriculum from '@/hooks/useCurriculum';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import {
-  selectAuthState,
-  setAuthState,
-} from '@/stores/authSlice';
+import { selectAuthState, setAuthState } from '@/stores/authSlice';
 
 // import { stringify } from 'querystring';
 const Puller = styled(Box)(({ theme }) => ({
@@ -86,7 +83,7 @@ export default function Schedules() {
   const calendarRef = useRef<any>();
   const dispatch = useDispatch();
   const router = useRouter();
-  const {t} = useTranslation()
+  const { t } = useTranslation();
   useEffect(() => {
     dispatch(setAuthState(true));
   }, []);
@@ -454,7 +451,7 @@ export default function Schedules() {
       reader.onload = function () {
         const base64 = reader.result;
         setCustomImg(String(base64));
-        Toast.success('设置成功，即将为您重新加载');
+        Toast.success(t('设置成功，即将为您重新加载'));
         setTimeout(() => {
           router.reload();
         }, 1500);
@@ -484,7 +481,7 @@ export default function Schedules() {
                 },
               )}
             >
-              五天
+              {t("五天")}
             </div>
             <div
               onClick={() => {
@@ -497,7 +494,7 @@ export default function Schedules() {
                 },
               )}
             >
-              周
+              {t("周")}
             </div>
             <div
               onClick={() => {
@@ -510,7 +507,7 @@ export default function Schedules() {
                 },
               )}
             >
-              日
+              {t("日")}
             </div>
             <div
               onClick={() => {
@@ -523,7 +520,7 @@ export default function Schedules() {
                 },
               )}
             >
-              校历
+             {t("校历")}
             </div>
           </div>
         </div>
@@ -540,16 +537,17 @@ export default function Schedules() {
     const switchCurriculum = (id) => {
       if (id === -1) {
         setStudentId(-1);
-        Toast.success('切换课表为本人');
+        Toast.success(t('切换课表为本人'));
         otherSchedulesMutate();
         return;
       } else {
         setStudentId(id?.user?.id);
-        Toast.success('切换课表到用户' + id?.student?.nickName);
+        Toast.success(t('切换课表到用户') + id?.student?.nickName);
         setCurriculumId(id?.id);
         return;
       }
     };
+    
     return (
       <SwipeableDrawer
         anchor="bottom"
@@ -568,11 +566,11 @@ export default function Schedules() {
           <div className="flex w-full space-x-2">
             <SaveToLibButton
               onClick={() => {
-                exportAsImage(calendarRef.current, '课表');
+                exportAsImage(calendarRef.current, t('课表'));
               }}
               color="#3665FF"
               icon="wechat"
-              title="保存到相册"
+              title={t('保存到相册')}
             ></SaveToLibButton>
             <SaveToLibButton
               onClick={() => {
@@ -587,18 +585,18 @@ export default function Schedules() {
               }}
               color="#FFD036"
               icon="share"
-              title="分享课表"
+              title={t('分享课表')}
             ></SaveToLibButton>
           </div>
           <div className="w-full p-2 mt-2">
-            <CCourseInput Icon={Icon1} title="打开时显示">
+            <CCourseInput Icon={Icon1} title={t('打开时显示')}>
               <div className={'w-[55%]'}>
                 {' '}
                 <Menu></Menu>
               </div>
             </CCourseInput>
             <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
-            <CCourseInput title="课表视图显示日程" Icon={Icon2}>
+            <CCourseInput title={t('课表视图显示日程')} Icon={Icon2}>
               <div>
                 <FormControlLabel
                   control={<IOSSwitch defaultChecked />}
@@ -611,7 +609,7 @@ export default function Schedules() {
               onClick={() => {
                 router.push('/Schedules/AddCourse');
               }}
-              title="添加课程/日程"
+              title={t('添加课程/日程')}
               Icon={Icon3}
             >
               {' '}
@@ -620,7 +618,7 @@ export default function Schedules() {
             <div className="h-1 pl-4 pr-4 m-0 divider opacity-30 relative"></div>
 
             <CCourseInput
-              title="自定义背景"
+              title={t('自定义背景')}
               Icon={Icon4}
               onClick={() => {
                 uploadEl.current.click();
@@ -638,7 +636,7 @@ export default function Schedules() {
               <RightIcon className="mr-2"></RightIcon>
             </CCourseInput>
             <div className="h-1 pl-4 pr-4 m-0 divider opacity-30"></div>
-            <CCourseInput title="切换课表" Icon={Icon5}></CCourseInput>
+            <CCourseInput title={t('切换课表')} Icon={Icon5}></CCourseInput>
             <div className="flex items-center pb-6">
               <div className="flex space-x-8 justify-between w-1/2 pl-4 pr-4 mt-4 overflow-x-scroll">
                 <div
@@ -664,7 +662,7 @@ export default function Schedules() {
                           'text-[#A9B0C0]': studentId !== -1,
                         })}
                       >
-                        我的
+                        {t("我的")}
                       </span>
                     </div>
                   </div>
@@ -947,14 +945,14 @@ export default function Schedules() {
   });
 
   const Month = () => {
-    const {data} = useFetch('/campus/calendar/query', 'get',{
-      termId : termInfo?.data?.id,
-    })
+    const { data } = useFetch('/campus/calendar/query', 'get', {
+      termId: termInfo?.data?.id,
+    });
     return (
-      <div className='h-screen text-gray-400 w-full flex justify-center mt-10'>
-        <div className='mt-10'>暂无校历事件</div>
+      <div className="h-screen text-gray-400 w-full flex justify-center mt-10">
+        <div className="mt-10">{t('暂无校历事件')}</div>
       </div>
-    )
+    );
     return (
       <div className="w-full min-h-screen p-5">
         <Identify></Identify>
@@ -997,13 +995,13 @@ export default function Schedules() {
         className="shadow-xl z-10  backdrop-opacity-50  backdrop-filter backdrop-blur-2xl"
       >
         <div className="text-[#798195] text-sm p-8">
-          登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！
+          {t('登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！')}
         </div>
       </Dialog>
 
       <div className="pl-5 text-left f-11 ">
         <div className="text-base font-bold text-blueTitle">
-          第 {getWeekNumber(termInfo?.data?.startDate)} 周
+          {t('第')} {getWeekNumber(termInfo?.data?.startDate)} {t('周')}
         </div>
         <div className="text-xs text-gray-400 flex space-x-2 items-center">
           <div>
@@ -1026,7 +1024,7 @@ export default function Schedules() {
               },
             )}
           >
-            近五天
+            {t('近五天')}
           </button>
           <button
             onClick={() => {
@@ -1039,7 +1037,7 @@ export default function Schedules() {
               },
             )}
           >
-            近一周
+            {t('近一周')}
           </button>
           <button
             onClick={() => {
@@ -1052,7 +1050,7 @@ export default function Schedules() {
               },
             )}
           >
-            今日
+            {t('今日')}
           </button>
           <button
             onClick={() => {
@@ -1065,7 +1063,7 @@ export default function Schedules() {
               },
             )}
           >
-            校历
+            {t('校历')}
           </button>
         </div>
         <div className="flex items-center space-x-2">
@@ -1082,7 +1080,7 @@ export default function Schedules() {
               console.log('addCourse');
             }}
           >
-            <CButton size="normal">添加</CButton>
+            <CButton size="normal">{t('添加')}</CButton>
           </Tooltips>
         </div>
       </div>
@@ -1117,7 +1115,6 @@ export default function Schedules() {
     </div>
   );
 }
-
 
 export const getStaticProps = async ({ locale }) => ({
   props: {

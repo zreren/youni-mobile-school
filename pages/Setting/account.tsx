@@ -8,6 +8,7 @@ import RightIcon from '@/public/assets/right.svg';
 import { Input, Sticky } from 'react-vant';
 import useRequest from '@/libs/request';
 import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export default function account() {
   const { user, mutate } = useUser();
@@ -98,4 +99,13 @@ export default function account() {
       <Form header="绑定信息" List={List2}></Form>
     </CommonLayout>
   );
+}
+
+
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
 }

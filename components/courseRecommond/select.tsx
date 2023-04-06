@@ -40,7 +40,7 @@ export default function MySelect(props) {
             })
         }
         {
-            props?.data?.length === 0 && <option>请选择学期</option>
+          props?.data?.length === 0 && <option>{t('请选择学期')}</option>
         }
     </select>
   );

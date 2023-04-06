@@ -7,6 +7,7 @@ import Divider from '@mui/material/Divider';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -15,7 +16,7 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
     backgroundColor: '#ffffff',
     color: 'rgba(121, 129, 149, 1)',
     Width: 144,
-    marginRight:'10px',
+    marginRight: '10px',
     textAlign: 'center',
     fontSize: theme.typography.pxToRem(14),
     // border: '1px solid #F3F4F6',
@@ -30,6 +31,7 @@ const style = {
 export default function Tooltips(props) {
   const { children } = props;
   const [open, setOpen] = useState(props.open);
+  const {t} = useTranslation();
   const router = useRouter();
   useEffect(() => {
     setOpen(props.open);
@@ -46,20 +48,40 @@ export default function Tooltips(props) {
           <HtmlTooltip
             title={
               <React.Fragment>
-                <List sx={style} component="nav" aria-label="mailbox folders" > 
+                <List sx={style} component="nav" aria-label="mailbox folders">
                   <ListItem button onClick={props.add}>
-                    <ListItemText className='order-opacity-40	' onClick={()=>{router.push({
-                      pathname:'/Schedules/reorganize',
-                      query:{campus:router.query.campus}
-                    })}} primary="一键导入课表" />
+                    <ListItemText
+                      className="order-opacity-40"
+                      onClick={() => {
+                        router.push({
+                          pathname: '/Schedules/reorganize',
+                          query: { campus: router.query.campus },
+                        });
+                      }}
+                      primary={t('一键导入课表')}
+                    />
                   </ListItem>
                   <Divider />
-                  <ListItem button  onClick={()=>{router.push('/Schedules/AddCourse?id=1')}} className='border-opacity-40'>
-                    <ListItemText className=' border-opacity-40	' primary="添加课程" />
+                  <ListItem
+                    button
+                    onClick={() => {
+                      router.push('/Schedules/AddCourse?id=1');
+                    }}
+                    className="border-opacity-40"
+                  >
+                    <ListItemText
+                      className=" border-opacity-40 "
+                      primary={t('_添加课程')}
+                    />
                   </ListItem>
                   <Divider />
-                  <ListItem button onClick={()=>{router.push('/Schedules/AddCourse?id=2')}}>
-                    <ListItemText className='' primary="添加日程" />
+                  <ListItem
+                    button
+                    onClick={() => {
+                      router.push('/Schedules/AddCourse?id=2');
+                    }}
+                  >
+                    <ListItemText className="" primary={t('添加日程')} />
                   </ListItem>
                   <Divider light />
                 </List>
@@ -77,7 +99,13 @@ export default function Tooltips(props) {
             }}
             className="rounded-2xl shadow-lg "
           >
-            <div onClick={()=>{setOpen(true)}}>{children}</div>
+            <div
+              onClick={() => {
+                setOpen(true);
+              }}
+            >
+              {children}
+            </div>
           </HtmlTooltip>
         </div>
       </ClickAwayListener>

@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import classnames from 'classnames';
 import { Dialog } from 'react-vant';
+import { useTranslation } from 'next-i18next';
 const AntTabs = styled(Tabs)({
   borderBottom: '1px solid #e8e8e8',
   '& .MuiTabs-indicator': {
@@ -123,6 +124,7 @@ export default function CustomizedTabs(props) {
   if (!id) {
     id = 0;
   }
+  const {t} = useTranslation()
   React.useEffect(() => {
     console.log(id, 'id');
   }, [id]);
@@ -134,9 +136,9 @@ export default function CustomizedTabs(props) {
   const { headerMenuList, className } = props;
   const handleChange = (newValue: number): void => {
     Dialog.confirm({
-      title: '切换分类',
-      message: '切换分类将导致部分自定义参数重置，确定要进行分类切换吗？',
-    })
+      title: t('切换分类'),
+      message: t('切换分类将导致部分自定义参数重置，确定要进行分类切换吗？'),
+      })
       .then(() => {
         setValue(newValue);
         props.change(newValue);
@@ -162,7 +164,7 @@ export default function CustomizedTabs(props) {
               handleChange(index);
             }}
             className={classnames(
-              'h-[28px]  text-sm min-w-[68px] px-4 whitespace-nowrap  flex justify-center  items-center rounded-full',
+              'h-[28px]  text-sm w-[102px] px-4 whitespace-nowrap  flex justify-center  items-center rounded-full',
               {
                 'bg-[#FFD036] text-[#8C6008] ': value === index,
                 'text-[#A9B0C0] border-[#DCDDE1] border ': value !== index,

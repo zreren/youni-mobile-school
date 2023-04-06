@@ -31,7 +31,8 @@ import SignIn from './signin';
 import ReturnBackIcon from './returnBack.svg';
 import { disableZoom } from '@/libs/disableZoom';
 import { enableZoom } from '@/libs/enableZoom';
-
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const SignUpButton = (props) => {
   const { title, icon: Icon, label } = props;
@@ -52,12 +53,13 @@ export default function SignUp(props) {
   const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
   const [language, setLanguage] = useState('');
-  useEffect(()=>{
-    disableZoom()
-    return ()=>{
-      enableZoom()
-    }
-  },[])
+  const { t } = useTranslation();
+  useEffect(() => {
+    disableZoom();
+    return () => {
+      enableZoom();
+    };
+  }, []);
   const ChooseYourRole = (props) => {
     const route = useRouter();
     const MailLabel = () => {
@@ -169,8 +171,7 @@ export default function SignUp(props) {
             />
           </div>
           <div className="mb-10 text-xs text-gray-300">
-            By continuing, you agree to YoUni’s Term of Service and confirm that
-            you have read our Privacy Policy.
+            {t('继续即表示同意YoUni的服务条款并确认已阅读我们的隐私政策')}
           </div>
           <button
             onClick={() => {
@@ -196,7 +197,7 @@ export default function SignUp(props) {
           pathname: '/Login/valid',
           query: {
             phoneNumber: phoneNumber,
-            prefix : age,
+            prefix: age,
             roleId: role,
             lang: language,
           },
@@ -245,12 +246,11 @@ export default function SignUp(props) {
             </label>
           </div>
           <div className="mb-10 text-xs text-gray-300">
-            Your phone number will be used to improve your YoUni experience,
-            including connecting you with people you may know, personalizing
-            your ads experience, and more. If you sign up with SMS, SMS fees may
-            apply.
+            {t(
+              '我们会使用您的手机号码来改善您的YoUni体验，包括为您推荐您可能认识的人、个性化广告体验等。如果您使用短信注册，可能会产生短信费用。',
+            )}
             <Link href="#">
-              <div className="text-blue-400">Learn more</div>
+              <div className="text-blue-400">{t('了解更多')}</div>
             </Link>
           </div>
           <button
@@ -275,19 +275,19 @@ export default function SignUp(props) {
     const Node = React.useMemo(() => list[label], [label]);
     return (
       <div className="z-10 flex flex-col w-full h-full overflow-hidden transition mt-11">
-         <div
+        <div
           onClick={() => {
             props.setProgress(1);
           }}
           className="pl-4 z-30 mb-6"
         >
-          <ReturnBackIcon className=''></ReturnBackIcon>
+          <ReturnBackIcon className=""></ReturnBackIcon>
         </div>
         {/* <Image src={Logo} alt=""></Image> */}
         {/* <CSSTransition classNames="title" timeout={1000}> */}
-        <div className="z-10 pl-8 pr-8 text-2xl title">Choose your role</div>
+        <div className="z-10 pl-8 pr-8 text-2xl title">{t('选择您的角色')}</div>
         <div className="z-10 pl-8 pr-8 text-md title">
-          Select the role best suits you.
+          {t('选择最适合您的角色。')}
         </div>
         {/* </CSSTransition> */}
         <div className="z-10 flex w-full p-8 space-x-4">
@@ -305,7 +305,7 @@ export default function SignUp(props) {
                 },
               )}
             ></div>
-            <div className="text-gray-400">Student</div>
+            <div className="text-gray-400">{t('学生')}</div>
           </div>
           <div
             className="flex flex-col items-center w-full space-y-4"
@@ -322,7 +322,7 @@ export default function SignUp(props) {
                 },
               )}
             ></div>
-            <div className="text-gray-400">Graduated</div>
+            <div className="text-gray-400">{t('毕业生')}</div>
           </div>
         </div>
         <div className="w-full h-22"></div>
@@ -367,19 +367,18 @@ export default function SignUp(props) {
   const SelectLanguage = (props) => {
     return (
       <div className="z-10 flex flex-col w-full h-screen -appear in mt-11">
-       <div
+        <div
           onClick={() => {
             props.setProgress(0);
           }}
           className="pl-4 mb-6 z-30"
         >
-          <ReturnBackIcon className=''></ReturnBackIcon>
+          <ReturnBackIcon className=""></ReturnBackIcon>
         </div>
         {/* <Image src={Logo} alt=""></Image> */}
         <div className="z-10 pl-8 pr-8 text-2xl">Select Language</div>
         <div className="z-10 pl-8 pr-8 mb-20 text-sm text-md text-userColor">
-          Choose the language you speak most often. Changing this selection is
-          possible at any time.
+          {t('选择您最常使用的语言。您可以随时更改此选择。')}
         </div>
         <div>
           <div className="absolute z-0 w-full top-32">
@@ -421,9 +420,9 @@ export default function SignUp(props) {
     return (
       <div className="z-10 flex flex-col w-full mt-11">
         {/* <Image src={Logo} alt=""></Image> */}
-        <div className="z-10 pl-8 pr-8 text-2xl">Sign up for YoUni</div>
+        <div className="z-10 pl-8 pr-8 text-2xl">{t('注册 YoUni')}</div>
         <div className="z-10 pl-8 pr-8 mb-20 text-md">
-          Create a profile to unlock full functions.
+          {t('创建个人资料以解锁全部功能。')}
         </div>
         <div className="">
           <div className="absolute z-0 w-full top-32">
@@ -459,24 +458,24 @@ export default function SignUp(props) {
           </div>
           <div className=" bottom-0 z-30 w-full">
             <div className="w-full h-full p-10 pt-2 pb-2 text-xs text-center text-gray-300 bg-white">
-              By continuing, you agree to our{' '}
+              {t('继续即表示您同意我们的')}
               <Link href="">
-                <span className="text-[#3665FF]">Term of Service</span>
+                <span className="text-[#3665FF]">{t('服务条款')}</span>
               </Link>{' '}
-              and acknowledge that you have read our{' '}
+              {t('并确认您已阅读我们的')}
               <Link href="">
-                <span className="text-[#3665FF]">Privacy Policy</span>
+                <span className="text-[#3665FF]">{t('隐私政策')}</span>
               </Link>{' '}
-              to learn how we collect, use and share your data.
+              {t('以了解我们如何收集、使用和共享您的数据。')}
             </div>
             <div className="h-20 pt-8 space-x-2 text-sm text-center bg-bg">
-              <span className="text-blueTitle">Already have an account? </span>
+              <span className="text-blueTitle">{t('已经有账号了？')}</span>
               <span
                 onClick={() => {
                   dispatch(setOpenLogin('login'));
                 }}
               >
-                <span className="text-[#FFD036]"> Log in</span>
+                <span className="text-[#FFD036]"> {t('登录')}</span>
               </span>{' '}
             </div>
           </div>
@@ -534,4 +533,14 @@ export default function SignUp(props) {
       )}
     </div>
   );
+}
+
+export async function getStaticProps({ locale }) {
+  console.log(locale, 'locale');
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+      // Will be passed to the page component as props
+    },
+  };
 }
