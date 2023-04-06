@@ -207,7 +207,13 @@ export async function getServerSideProps({
 
   return {
       props: {
-          ...(await serverSideTranslations(locale, ['common',]))
+          ...(await serverSideTranslations(locale || 'en', ['common',]))
       },
     }
   }
+
+// export const getStaticProps = async ({ locale }) => ({
+//   props: {
+//     ...(await serverSideTranslations(locale || 'en', ['common'])),
+//   },
+// });

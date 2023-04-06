@@ -53,18 +53,24 @@ import useRequest from '@/libs/request';
 import EmptyPostIcon from './emptyPost.svg';
 import ReturnBackIcon from './returnBack.svg';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-
+import {  useSelector } from 'react-redux';
+import {
+  selectAuthState,
+  setAuthState,
+  selectOpen,
+} from '@/stores/authSlice';
 // import Waterfall from '@/components/Layout/Waterfall';
 
 function index(props) {
   const { user, loggedOut } = useUser();
   console.log(props, 'SignIn');
   const { t, i18n } = useTranslation('');
-
+  const authState = useSelector(selectAuthState);
   useEffect(() => {
     console.log(t('my-button-text'), i18n.language, router.locales, 't i18n');
   });
   useEffect(() => {
+    dispatch(setAuthState(true));
     console.log(i18n.language, 'i18n.language');
   }, []);
 

@@ -2,9 +2,9 @@
   "my-button-text": "点击我",
   "profile.identify.student.certification": "学生认证",
   "login": {
-  "clickme": "点击",
-  "Phone number": "手机号码",
-  "Reset password with": "使用以下方式重置密码："
+    "clickme": "点击",
+    "Phone number": "手机号码",
+    "Reset password with": "使用以下方式重置密码："
   },
   "clickme": "点击",
   "学生认证": "学生认证",
@@ -158,14 +158,14 @@
   "考试": "考试",
   "换一批": "换一批",
   "Language": "语言",
-"Language Settings": "语言设置",
-"Translation": "翻译",
-"Default Language": "应用语言",
-"Select the default application language": "选择默认应用语言",
-"Preferred Languages": "偏好语言",
-"Select the languages you are familiar with. Contents published in these languages will not be automatically translated.": "选择你熟悉的语言，以这些语言发布的内容将不会自动翻译。",
-"Translation Language": "翻译语言",
-"Which language do you want the content to be translated into?": "你希望内容被翻译成哪一种语言？",
-"Always Show Translation": "始终显示翻译",
-"When turned on, the content that supports translation will always be displayed in the selected translation language.": "开启后，支持翻译的内容将始终以所选的翻译语言显示。"
+  "Language Settings": "语言设置",
+  "Translation": "翻译",
+  "Default Language": "应用语言",
+  "Select the default application language": "选择默认应用语言",
+  "Preferred Languages": "偏好语言",
+  "Select the languages you are familiar with. Contents published in these languages will not be automatically translated.": "选择你熟悉的语言，以这些语言发布的内容将不会自动翻译。",
+  "Translation Language": "翻译语言",
+  "Which language do you want the content to be translated into?": "你希望内容被翻译成哪一种语言？",
+  "Always Show Translation": "始终显示翻译",
+  "When turned on, the content that supports translation will always be displayed in the selected translation language.": "开启后，支持翻译的内容将始终以所选的翻译语言显示。"
 }
