@@ -8,10 +8,12 @@ import Icon5 from './5.svg';
 import Subtract from './Subtract.svg';
 import { useRouter } from 'next/router';
 import { useLocalStorage } from 'react-use';
+import { useTranslation } from 'next-i18next';
 
 export default function index(props) {
   const router = useRouter();
   const [selectSchool,setSelectSchool] = useLocalStorage('school',null)
+  const {t} = useTranslation()
   let body = document.body;
   return (
     <div
@@ -40,7 +42,7 @@ export default function index(props) {
         className={styles.element}
       >
         <Icon4></Icon4>
-        <div className='text-[#8C6008] text-xs font-medium'>加课表</div>
+        <div className='text-[#8C6008] text-xs font-medium'>{t('加课表')}</div>
       </div>
       <div
         onClick={() => {
@@ -53,7 +55,7 @@ export default function index(props) {
         className={styles.element}
       >
         <Icon5></Icon5>
-        <div className='text-[#8C6008] text-xs font-medium'>加提醒</div>
+        <div className='text-[#8C6008] text-xs font-medium'>{t('加提醒')}</div>
       </div>
       <div
         className={styles.element}
@@ -66,7 +68,7 @@ export default function index(props) {
         }}
       >
         <Icon1></Icon1>
-        <div className='text-[#8C6008] text-xs font-medium'>写课评</div>
+        <div className='text-[#8C6008] text-xs font-medium'>{t('写课评')}</div>
       </div>
       <div
         onClick={() => {
@@ -79,7 +81,7 @@ export default function index(props) {
         className={styles.element}
       >
         <Icon2></Icon2>
-        <div className='text-[#8C6008] text-xs font-medium'>二手书</div>
+        <div className='text-[#8C6008] text-xs font-medium'>{t('二手书')}</div>
       </div>
       <div
         onClick={() => {
