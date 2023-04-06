@@ -30,6 +30,7 @@ import { enableZoom } from '@/libs/enableZoom';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
 import useUser from '@/hooks/useUser';
 import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 function SchoolPage(props) {
   console.log(props, 'SchoolPage');
@@ -556,7 +557,7 @@ function SchoolPage(props) {
   );
 }
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps({ params,locale }) {
   console.log(params, 'getServerSideProps params');
   const { data } = await useRequest.get(`/api/campus/query`, {
     params: {
@@ -567,6 +568,7 @@ export async function getServerSideProps({ params }) {
   return {
     props: {
       post: data?.data[0],
+      ...(await serverSideTranslations(locale, ['common',]))
     },
   };
 }

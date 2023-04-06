@@ -45,6 +45,11 @@ import { Uploader } from 'react-vant';
 import useUser from '@/hooks/useUser';
 import useCurriculum from '@/hooks/useCurriculum';
 import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import {
+  selectAuthState,
+  setAuthState,
+} from '@/stores/authSlice';
 
 // import { stringify } from 'querystring';
 const Puller = styled(Box)(({ theme }) => ({
@@ -79,9 +84,12 @@ const CCourseInput = (props) => {
 
 export default function Schedules() {
   const calendarRef = useRef<any>();
+  const dispatch = useDispatch();
   const router = useRouter();
   const {t} = useTranslation()
-
+  useEffect(() => {
+    dispatch(setAuthState(true));
+  }, []);
   const { defaultCurriculum } = useCurriculum();
   const [campusIdMapSchool, setCampusIdMapSchool] = useLocalStorage(
     'school',
@@ -743,7 +751,7 @@ export default function Schedules() {
       </SwipeableDrawer>
     );
   };
-  const dispatch = useDispatch();
+
   const [visible, setVisible] = useState(false);
 
   const [scheduleVisible, setScheduleVisible] = useState(false);
@@ -1109,3 +1117,10 @@ export default function Schedules() {
     </div>
   );
 }
+
+
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ['common'])),
+  },
+});

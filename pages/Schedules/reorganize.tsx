@@ -22,6 +22,7 @@ import DeleteIcon from './deleteicon.svg';
 import { useLocalStorage } from 'react-use';
 import useCurriculum from '@/hooks/useCurriculum';
 import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 interface ChangeType {
   id: number;
@@ -773,7 +774,8 @@ export default function reorganize() {
           <div className="w-full bg-white  text-right rounded-xl">
             <label className="flex items-center justify-between w-full h-12 input-group ">
               <span className="text-sm font-medium bg-white text-blueTitle">
-                {`${(<NessIcon className="mr-1"></NessIcon>)} ${t(
+                <NessIcon className="mr-1"></NessIcon>
+                {`${t(
                   '学年&学期',
                 )}`}
               </span>
@@ -818,3 +820,10 @@ export default function reorganize() {
     </div>
   );
 }
+
+
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ['common'])),
+  },
+});

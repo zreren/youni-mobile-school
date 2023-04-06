@@ -21,6 +21,7 @@ import classnames from 'classnames';
 import useFetch from '../../hooks/useFetch';
 import useLanguage from '@/hooks/useLanguage';
 import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const CCourseTime = (props) => {
   return (
@@ -427,7 +428,7 @@ export default function AddSchedule(props) {
     return (
       <div className="w-full space-y-4">
         <CCourseInput
-          title="课程名称"
+          title={t("课程名称")}
           isNess
           value={CURRICULUM?.name}
           change={(val) => {
@@ -443,7 +444,7 @@ export default function AddSchedule(props) {
             <div className="w-full p-3">
               {' '}
               <span className="flex items-center text-sm font-medium bg-white text-blueTitle">
-                <NessIcon className="mr-1"></NessIcon>上课日期
+                <NessIcon className="mr-1"></NessIcon>{t("上课日期")}
               </span>
             </div>
             <div className="flex youni-form w-full pb-4 pl-4 pr-4 ">
@@ -472,7 +473,7 @@ export default function AddSchedule(props) {
           <div className="flex youni-form items-center justify-between h-full space-x-4">
             <div className="flex items-center">
               <NessIcon className="mr-1"></NessIcon>
-              <div className="text-sm text-blueTitle">开始时间</div>
+              <div className="text-sm text-blueTitle">{t("开始时间")}</div>
             </div>
             <div>
               <DatetimePicker
@@ -576,7 +577,7 @@ export default function AddSchedule(props) {
           renderData={courseFormat?.professors?.map((item) => item.name)}
         ></CCourseInput>
         <CCourseInput
-          title="{t(教室)"
+          title={t('教室')}
           value={CURRICULUM?.classroom}
           change={(val) => {
             console.log(val, 'classroom');
@@ -636,7 +637,7 @@ export default function AddSchedule(props) {
 
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
-            <div className="text-sm text-blueTitle">颜色</div>
+            <div className="text-sm text-blueTitle">{t("颜色")}</div>
             <CCourseColor
               value={CURRICULUM?.color}
               setColor={(val) => {
@@ -701,3 +702,10 @@ export default function AddSchedule(props) {
     </CommonLayout>
   );
 }
+
+
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ['common'])),
+  },
+});
