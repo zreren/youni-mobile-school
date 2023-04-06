@@ -48,6 +48,7 @@ module.exports = withPlugins([
       localeDetection: false,
       localePath: path.resolve("./public/locales"),
       defaultNS: 'common',
+      reloadOnPrerender: process.env.NODE_ENV === 'development',
       localeSubpaths:{      
         cn: 'cn',    
         en: 'en'  
