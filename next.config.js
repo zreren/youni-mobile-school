@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const withPlugins = require('next-compose-plugins');
 const { i18n } = require('./next-i18next.config')
-const path = require("path");
 
 
 // const NextI18Next = require('next-i18next').default;
@@ -42,18 +41,6 @@ module.exports = withPlugins([
     compiler: {
       styledComponents: true,
     },
-    i18n: {
-      defaultLocale: 'en',
-      locales: ['en', 'cn'],
-      localeDetection: false,
-      localePath: path.resolve("./public/locales"),
-      defaultNS: 'common',
-      reloadOnPrerender: process.env.NODE_ENV === 'development',
-      fallbackLng: ["en"],
-      localeSubpaths:{      
-        cn: 'cn',    
-        en: 'en'  
-      }
-    },
+    i18n:i18n.i18n
   },
 ]);

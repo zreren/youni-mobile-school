@@ -6,8 +6,13 @@ module.exports = {
         defaultLocale: 'en',
         locales: ['en', 'cn'],
         localeDetection: false,
-        localePath: typeof window === 'undefined' ? 'public/locales' : 'locales',
+        localePath: path.resolve("./public/locales"),
         defaultNS: 'common',
-
+        reloadOnPrerender: process.env.NODE_ENV === 'development',
+        fallbackLng: ["en"],
+        localeSubpaths:{      
+          cn: 'cn',    
+          en: 'en'  
+        }
     },
 }
