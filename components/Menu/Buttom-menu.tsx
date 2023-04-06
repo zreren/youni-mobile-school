@@ -10,8 +10,12 @@ import UserAddMenu from '@/components/UserAddMenu';
 import { selectAuthState, setAuthState } from '@/stores/authSlice';
 import IconClose from "./close.svg";
 import { useLocalStorage } from 'react-use';
+import { useTranslation } from 'next-i18next';
+
+
 export default function LabelBottomNavigation(props) {
   const dispatch = useDispatch();
+  const {t} = useTranslation();
   const router = useRouter();
   const [selectSchool,setSelectSchool] = useLocalStorage('school',null)
   React.useEffect(()=>{
@@ -142,22 +146,22 @@ export default function LabelBottomNavigation(props) {
         </div>
       ) : (
         <BottomNavigation
-          className="fixed bottomPlus -bottom-1 left-0 z-30 bottom-theTop w-full  text-sm transition-all "
-          value={value}
-          id="bottom-menu"
-          showLabels={true}
-          onChange={handleChange}
+        className="fixed bottomPlus -bottom-1 left-0 z-30 bottom-theTop w-full text-sm transition-all"
+        value={value}
+        id="bottom-menu"
+        showLabels={true}
+        onChange={handleChange}
         >
-          <MyAction className="transition-all " label="看看" value={1} />
-          <MyAction label="课表" value={2} />
-          <MyAction
-            className="transition ease-in-out duration-2000"
-            label=" "
-            icon={<Icon type="add"></Icon>}
-            value={3}
-          />
-          <MyAction label="课评" value={4} />
-          <MyAction label="我" value={5} />
+        <MyAction className="transition-all" label={t('看看')} value={1} />
+        <MyAction label={t('课表')} value={2} />
+        <MyAction
+        className="transition ease-in-out duration-2000"
+        label=" "
+        icon={<Icon type="add"></Icon>}
+        value={3}
+        />
+        <MyAction label={t('课评')} value={4} />
+        <MyAction label={t('我')} value={5} />
         </BottomNavigation>
       )}
     </div>

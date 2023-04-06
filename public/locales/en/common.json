@@ -167,5 +167,9 @@
   "翻译语言": "Translation Language",
   "你希望内容被翻译成哪一种语言": "Which language do you want the content to be translated into?",
   "始终显示翻译": "Always Show Translation",
-  "开启后，支持翻译的内容将始终以所选的翻译语言显示。": "When turned on, the content that supports translation will always be displayed in the selected translation language."
+  "开启后，支持翻译的内容将始终以所选的翻译语言显示。": "When turned on, the content that supports translation will always be displayed in the selected translation language.",
+  "看看": "Explore",
+  "课表": "Schedule",
+  "课": "Course",
+  "我": "Me"
 }
