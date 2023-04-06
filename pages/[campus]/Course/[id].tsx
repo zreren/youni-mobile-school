@@ -88,9 +88,9 @@ export default function courseEvaluation() {
     return (
       <div className="flex w-full bg-white flex-col justify-center items-center py-8  h-[100vh-200px]  rounded-lg">
         <EmptyCourseIcon></EmptyCourseIcon>
-        <div className="flex text-xs mt-6 justify-center items-center text-[#A9B0C0]">
+        <div className="flex text-xs flex-col mt-6 justify-center items-center text-[#A9B0C0]">
           <span>{t('目前还没有课评，')}</span>
-          <span
+          <div
             onClick={() => {
               router.push({
                 pathname: `/[campus]/Course/evaluation`,
@@ -104,7 +104,7 @@ export default function courseEvaluation() {
             className="text-[#3665FF]"
           >
             {t('点击评价课程')}
-          </span>
+          </div>
         </div>
       </div>
     );

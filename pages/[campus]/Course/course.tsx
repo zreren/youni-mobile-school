@@ -13,7 +13,8 @@ import { SwitchTransition, CSSTransition } from 'react-transition-group';
 import { useTranslation } from 'react-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-export default function course(): JSX.Element {
+export default function course(props): JSX.Element {
+  console.log(props,'course props');
   const router = useRouter();
   const { t } = useTranslation();
   const { data: campusData, mutate: campusDataMutate } = useFetch(
