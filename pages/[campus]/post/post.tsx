@@ -13,7 +13,11 @@ import FooterDiscussionInput from '@/components/Input/FooterDiscussionInput';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { useTranslation } from 'next-i18next';
+
 export default function index() {
+  const {t} = useTranslation()
+
   const Map = () => {
     return (
       <div className="w-full relative h-[185px] bg-white px-5 py-4 rounded-xl overflow-hidden 	">

@@ -1,6 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import styles from './index.module.css';
+import { useTranslation } from 'next-i18next';
 
 interface TCRating {
   children?: React.ReactNode;
@@ -9,6 +10,8 @@ interface TCRating {
 }
 export default function CRating(props: TCRating) {
   const { score } = props;
+  const {t} = useTranslation()
+
   const colorTable = (Score: number | undefined | null): string => {
     if (!Score || Score < 0) {
       return 'score5';

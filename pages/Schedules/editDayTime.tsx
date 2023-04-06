@@ -20,8 +20,9 @@ import instance from '@/libs/request';
 import classnames from 'classnames';
 import useFetch from '../../hooks/useFetch';
 import useLanguage from '@/hooks/useLanguage';
+import { useTranslation } from 'next-i18next';
 
-const CCourseTime = (props:any) => {
+const CCourseTime = (props: any) => {
   return (
     <div className="w-full text-center rounded-md bg-bg text-blueTitle">
       {props.title}
@@ -29,83 +30,84 @@ const CCourseTime = (props:any) => {
   );
 };
 
-const CCourseColor = (props) => {
-  const { setColor, value } = props;
-  const colorList = [
-    {
-      light: '#D9E7FF',
-      dark: '#3A66FF',
-      id: 1,
-    },
-    {
-      light: '#FFE7E3',
-      dark: '#FF8A00',
-      id: 2,
-    },
-    {
-      light: '#FFF0D6',
-      dark: '#FFB800',
-      id: 3,
-    },
-    {
-      light: '#FFFBD9',
-      dark: '#FFD800',
-      id: 4,
-    },
-    {
-      light: '#E7CCFF',
-      dark: '#A800FF',
-      id: 5,
-    },
-  ];
-  const colorId = useMemo(() => {
-    if (!value) return;
-    console.log(value, 'value');
-    return colorList?.filter((item) => {
-      return item.dark === value;
-    })[0];
-  }, [value]);
-  const [select, setSelect] = useState(colorId?.id);
-  useEffect(()=>{
-    // if(!colorId) return;
-    console.log(colorId,"colorId")
-    setSelect(colorId?.id)
-    // setSelect(colorId?.id)
-    // setColor(colorId?.dark);
-  },[colorId])
-  useEffect(() => {
-    setColor(colorList[0].dark);
-  }, []);
-  return (
-    <div className="flex space-x-2">
-      {colorList.map((item) => {
-        return (
-          <div
-            onClick={() => {
-              setSelect(item.id);
-              setColor(item.dark);
-            }}
-            style={{
-              background: item.light,
-              border: item.id === select ? '1px solid #FFD036' : 'none',
-            }}
-            className="w-6 h-6 rounded-full "
-          ></div>
-        );
-      })}
-    </div>
-  );
-};
-
 export default function AddSchedule() {
   const router = useRouter();
   const [CourseId, setCourseId] = useState();
+  const { t } = useTranslation();
   const fetchData = (e) => {
     setCourseId(e);
   };
   const { data: dayTimeData, mutate } = useFetch('/timetable/detail', 'get', {
     id: router.query.id,
   });
+  const CCourseColor = (props) => {
+    const { setColor, value } = props;
+    const colorList = [
+      {
+        light: '#D9E7FF',
+        dark: '#3A66FF',
+        id: 1,
+      },
+      {
+        light: '#FFE7E3',
+        dark: '#FF8A00',
+        id: 2,
+      },
+      {
+        light: '#FFF0D6',
+        dark: '#FFB800',
+        id: 3,
+      },
+      {
+        light: '#FFFBD9',
+        dark: '#FFD800',
+        id: 4,
+      },
+      {
+        light: '#E7CCFF',
+        dark: '#A800FF',
+        id: 5,
+      },
+    ];
+    const colorId = useMemo(() => {
+      if (!value) return;
+      console.log(value, 'value');
+      return colorList?.filter((item) => {
+        return item.dark === value;
+      })[0];
+    }, [value]);
+    const [select, setSelect] = useState(colorId?.id);
+    useEffect(() => {
+      // if(!colorId) return;
+      console.log(colorId, 'colorId');
+      setSelect(colorId?.id);
+      // setSelect(colorId?.id)
+      // setColor(colorId?.dark);
+    }, [colorId]);
+    useEffect(() => {
+      setColor(colorList[0].dark);
+    }, []);
+    return (
+      <div className="flex space-x-2">
+        {colorList.map((item) => {
+          return (
+            <div
+              onClick={() => {
+                setSelect(item.id);
+                setColor(item.dark);
+              }}
+              style={{
+                background: item.light,
+                border: item.id === select ? '1px solid #FFD036' : 'none',
+              }}
+              className="w-6 h-6 rounded-full "
+            ></div>
+          );
+        })}
+      </div>
+    );
+  };
+
   const submitCourse = async (values: any) => {
     const { data } = await instance.post('/api/curriculum/create', values);
     return data;
@@ -121,10 +123,10 @@ export default function AddSchedule() {
     data?: any;
     change?: (data: ChangeType) => void;
     renderData?: any;
-    value?:any
+    value?: any;
   }
   const CCourseInput = (props: CCourseInput) => {
-    const { title, isNess, children, data, renderData,value } = props;
+    const { title, isNess, children, data, renderData, value } = props;
     const selectItem = (e) => {
       console.log(e, 'selectItem');
       if (!data) {
@@ -260,9 +262,9 @@ export default function AddSchedule() {
     );
   };
   const AddDaySchedule = (props) => {
-    const {data} = props;
-    if(!mutate) {
-      mutate()
+    const { data } = props;
+    if (!mutate) {
+      mutate();
     }
     const { register, handleSubmit } = useForm({
       shouldUseNativeValidation: true,
@@ -270,13 +272,23 @@ export default function AddSchedule() {
     const [value, setValue] = useState(new Date());
     const [time, setTime] = useState('12:00');
     const [endTime, setEndTime] = useState('12:00');
-    useEffect(()=>{
-      const date = new Date(data?.startTime)
-      const endDate = new Date(data?.endTime)
+    useEffect(() => {
+      const date = new Date(data?.startTime);
+      const endDate = new Date(data?.endTime);
       setValue(new Date(date.getFullYear(), date.getMonth(), date.getDate()));
-      setTime(`${ date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`)
-      setEndTime(`${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`)
-    },[])
+      setTime(
+        `${date.getHours().toString().padStart(2, '0')}:${date
+          .getMinutes()
+          .toString()
+          .padStart(2, '0')}`,
+      );
+      setEndTime(
+        `${endDate.getHours().toString().padStart(2, '0')}:${endDate
+          .getMinutes()
+          .toString()
+          .padStart(2, '0')}`,
+      );
+    }, []);
     const [timetable, setTimetable] = useState(data);
     const handleChange = useCallback((val: any, name: string) => {
       setTimetable((preVal: any) => {
@@ -323,15 +335,15 @@ export default function AddSchedule() {
           console.log(res, 'res');
           // if(res.every((item)=>item.code===200))
           if (res.some((item) => item.message !== 'success')) {
-            Toast.fail('添加失败');
+            Toast.fail(`${t('添加失败')}`);
           } else {
-            Toast.success('添加成功');
+            Toast.success(`${t('添加成功')}`);
           }
           // if(res.)
-          // Toast.success('添加成功');
+          // Toast.success(`${t('添加成功')}`);
         })
         .catch((err) => {
-          Toast.fail('添加失败');
+          Toast.fail(`${t('添加失败')}`);
         });
     };
     return (
@@ -341,14 +353,15 @@ export default function AddSchedule() {
             handleChange(val.label, 'name');
           }}
           value={data?.name}
-          title="日程名称"
+          title={`${t('日程名称')}`}
           isNess
         ></CCourseInput>
+
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
             <div className="flex items-center">
               <NessIcon className="mr-1"></NessIcon>
-              <div>日期</div>
+              <div>{`${t('日期')}`}</div>
             </div>
             <div className="youni-form">
               <DatetimePicker
@@ -369,7 +382,7 @@ export default function AddSchedule() {
                       clickable
                       label=""
                       value={val.toLocaleDateString()}
-                      placeholder="请选择日期"
+                      placeholder={`${t('请选择日期')}`}
                       onClick={() => actions.open()}
                     />
                   );
@@ -388,7 +401,7 @@ export default function AddSchedule() {
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
             <div className="flex items-center">
-              <div>开始时间</div>
+              <div>{`${t('开始时间')}`}</div>
             </div>
             <div>
               <DatetimePicker
@@ -422,7 +435,7 @@ export default function AddSchedule() {
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
             <div className="flex items-center">
-              <div>结束时间</div>
+              <div>{`${t('结束时间')}`}</div>
             </div>
             <div>
               <DatetimePicker
@@ -444,7 +457,7 @@ export default function AddSchedule() {
                       clickable
                       label=""
                       value={val}
-                      placeholder="请选择日期"
+                      placeholder={`${t('请选择日期')}`}
                       onClick={() => actions.open()}
                     />
                   );
@@ -455,9 +468,10 @@ export default function AddSchedule() {
         </div>
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
-            <div>颜色</div>
+            <div>{`${t('颜色')}`}</div>
+
             <CCourseColor
-             value={data?.color}
+              value={data?.color}
               setColor={(val) => {
                 handleChange(val, 'color');
               }}
@@ -469,9 +483,9 @@ export default function AddSchedule() {
             onClick={() => {
               router.back();
             }}
-            className="flex items-center justify-center w-full text-[#FFD036] font-semibold   bg-[#FFFCF3] h-10 rounded-lg"
+            className="flex items-center justify-center w-full text-[#FFD036] font-semibold bg-[#FFFCF3] h-10 rounded-lg"
           >
-            关闭
+            {`${t('关闭')}`}
           </div>
           <div
             onClick={() => {
@@ -479,7 +493,7 @@ export default function AddSchedule() {
             }}
             className="flex items-center text-[#8C6008] font-semibold justify-center w-full bg-[#FFD036] h-10 rounded-lg"
           >
-            编辑日程
+            {`${t('编辑日程')}`}
           </div>
         </div>
       </div>
@@ -488,18 +502,20 @@ export default function AddSchedule() {
 
   const headerMenuList = [
     {
-      label: '编辑日程',
+      label: `${t('编辑日程')}`,
     },
   ];
   const [value, setValue] = useState(dayTimeData?.data);
   return (
     <CommonLayout className="p-0 mb-10">
-      <Header title="添加"></Header>
-      <HeaderMenu
-        headerMenuList={headerMenuList}
-      ></HeaderMenu>
+      <Header title={`${t('添加')}`}></Header>
+      <HeaderMenu headerMenuList={headerMenuList}></HeaderMenu>
       <div className="p-4">
-          <AddDaySchedule data={dayTimeData?.data} value={value} setValue={setValue}></AddDaySchedule>
+        <AddDaySchedule
+          data={dayTimeData?.data}
+          value={value}
+          setValue={setValue}
+        ></AddDaySchedule>
       </div>
     </CommonLayout>
   );

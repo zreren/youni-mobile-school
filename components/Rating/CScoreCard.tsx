@@ -1,8 +1,11 @@
 import React from 'react';
 import classnames from 'classnames';
 import styles from './index.module.css';
+import { useTranslation } from 'next-i18next';
 
 export default function CScoreCard(props) {
+    const {t} = useTranslation()
+
   const { color, type, title, score } = props;
   const colorStyle = [`${styles[`light-${color}`]}`];
   const classNames = classnames(
@@ -21,7 +24,7 @@ export default function CScoreCard(props) {
             {score||0.0}
           </div>
           <div className={classnames('text-xs', textColorTable[color])}>
-            {title || '教授综合评分'}
+          {title || t('教授综合评分')}
           </div>
         </div>
       );

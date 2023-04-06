@@ -8,9 +8,12 @@ import { Picker } from 'react-vant';
 import { DatetimePicker, Field, Toast } from 'react-vant';
 import classnames from 'classnames';
 import DraftIcon from './draft.svg';
+import { useTranslation } from 'next-i18next';
 
 export default function expiration(props) {
   const router = useRouter();
+  const {t} = useTranslation()
+
   const [value, setValue] = useState(true);
   const { data: campusData, mutate: campusDataMutate } = useFetch(
     '/campus/query',

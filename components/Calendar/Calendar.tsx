@@ -22,9 +22,13 @@ import SaveToLibButton from '@/components/Button/SaveToLibButton';
 import useLanguage from '@/hooks/useLanguage';
 import useLocalStorage from '@/hooks/useStore';
 import type { CourseData } from '@/types/course';
+import { useTranslation } from 'next-i18next';
+
 // import { url } from 'inspector';
 
 function Calendar(props) {
+  const {t} = useTranslation()
+
   interface Event {
     dayOfWeek: number;
     // other properties
@@ -462,7 +466,7 @@ function Calendar(props) {
           <>
             {todayItemCount?.length === 0 && timeTable.length === 0 ? (
               <div className="w-full text-center bg-white rounded-lg p-4 text-[#A9B0C0] text-sm font-medium">
-                今日暂无课程或日程安排
+                     {t('今日暂无课程或日程安排')}
               </div>
             ) : null}
             {/* <div className='btn btn-primary w-full '>前往添加</div> */}

@@ -11,7 +11,7 @@ import { Input, Sticky } from 'react-vant';
 
 export default function account() {
   const { user, mutate } = useUser();
-  const { i18n } = useTranslation();
+  const { i18n,t } = useTranslation();
   // const {extraInfo } = user;
   const InputSelect = (props) => {
     const [isEdit, setIsEdit] = useState(false);

@@ -12,8 +12,12 @@ import Header from '@/components/Header';
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuthState, setAuthState } from "@/stores/authSlice";
 import Waterfall from '@/components/Layout/Waterfall';
+import { useTranslation } from 'next-i18next';
+
 const RedCountyList = (props) => {
   const { arg } = props;
+  const {t} = useTranslation()
+
   const [select, setSelect] = useState('Canada');
   const CountryButton = (props1) => {
     const { title } = props1;

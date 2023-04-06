@@ -53,9 +53,10 @@ import { set } from 'react-hook-form';
 import { json } from 'stream/consumers';
 import { useRouter } from 'next/router';
 import AddCourse from './addCourse';
+import { useTranslation } from 'next-i18next';
 
 export default function addPost() {
-
+  const {t} = useTranslation()
   const Footer = () => {
     const getDomAndHide  = ()=>{
       const dom = document.getElementById('bottom-navigation')
@@ -85,7 +86,7 @@ export default function addPost() {
         >
           <DraftIcon></DraftIcon>
           <div className="text-[10px] text-[#798195] whitespace-nowrap">
-            存草稿
+            {t('存草稿')}
           </div>
         </div>
         <div
@@ -94,7 +95,7 @@ export default function addPost() {
           }}
           className="bg-[#FFD036] cursor-pointer  text-white rounded-full w-full h-10 flex justify-center items-center"
         >
-          发布
+          {t('发布')}
         </div>
       </div>
     );

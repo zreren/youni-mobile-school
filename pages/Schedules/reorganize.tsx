@@ -21,6 +21,7 @@ import TextField from '@mui/material/TextField';
 import DeleteIcon from './deleteicon.svg';
 import { useLocalStorage } from 'react-use';
 import useCurriculum from '@/hooks/useCurriculum';
+import { useTranslation } from 'next-i18next';
 
 interface ChangeType {
   id: number;
@@ -36,6 +37,8 @@ interface CCourseInput {
   value?: string;
 }
 export default function reorganize() {
+  const { t } = useTranslation();
+
   const CCourseInput = (props: CCourseInput) => {
     const { title, isNess, children, data, renderData, value } = props;
     const selectItem = (e) => {
@@ -225,7 +228,7 @@ export default function reorganize() {
       </div>
     );
   };
-  const {defaultCurriculum} = useCurriculum();
+  const { defaultCurriculum } = useCurriculum();
 
   const [reorganizeData, setReorganizeData] = React.useState<any>([]);
   // const upload = async (file: File) => {
@@ -234,14 +237,15 @@ export default function reorganize() {
   // };
   const [begin, setBegin] = React.useState(false);
   const beginRecognize = () => {
-    if(!termId){
-      Toast.fail('请选择学期')
+    if (!termId) {
+      Toast.fail(`${t('请选择学期')}`);
       return;
     }
-    if(!image){
-      Toast.fail('请上传图片')
+    if (!image) {
+      Toast.fail(`${t('请上传图片')}`);
       return;
     }
+
     setBegin(true);
     const body = new FormData();
     body.append('image', image[0].file);
@@ -249,26 +253,37 @@ export default function reorganize() {
     console.log(image[0].file, 'image', body, 'body');
     useRequest.post('/api/curriculum/ocr', body).then((res) => {
       setBegin(false);
-      const {data} = res;
-      if(!data){
-        Toast.fail('识别失败')
+      const { data } = res;
+      if (!data) {
+        Toast.fail(`${t('识别失败')}`);
         // return;
       }
-      const result = data?.data?.items?.slice()?.filter((item)=>{
-        return item?.name.indexOf("undefined") < 0 
-      }).map((item,index)=>{
-        return {
-          ...item,
-          id:index,
-        }
-      })
-      setReorganizeData({curriculums:result});
+      const result = data?.data?.items
+        ?.slice()
+        ?.filter((item) => {
+          return item?.name.indexOf('undefined') < 0;
+        })
+        .map((item, index) => {
+          return {
+            ...item,
+            id: index,
+          };
+        });
+      setReorganizeData({ curriculums: result });
       console.log(result);
     });
   };
   const AddCourse = (props) => {
     const { data } = props;
-    const { name, dayOfWeek: dayOfWeeksItem,sectionName,mode,classroom,time:courseTime,id} = data;
+    const {
+      name,
+      dayOfWeek: dayOfWeeksItem,
+      sectionName,
+      mode,
+      classroom,
+      time: courseTime,
+      id,
+    } = data;
     // const timeSpirit = useMemo(()=>{
     //   console.log(courseTime,"courseTime")
     //     // const pattern =  /^(\d{1,2}:\d{2})-(\d{1,2}:\d{2})$/;
@@ -277,11 +292,11 @@ export default function reorganize() {
     //     // if (!match) return;
     //     return [CURRICULUM.time.start, CURRICULUM.time.end];
     // },[courseTime])
-    useEffect(()=>{
+    useEffect(() => {
       // console.log(timeSpirit,"timeSpirit")
-      setTime(courseTime?.start)
-      setEndTime(courseTime?.end)
-    },[courseTime])
+      setTime(courseTime?.start);
+      setEndTime(courseTime?.end);
+    }, [courseTime]);
     const [dayOfWeek, setDayOfWeek] = useState([String(dayOfWeeksItem)]);
     const [time, setTime] = useState();
     const [endTime, setEndTime] = useState();
@@ -295,7 +310,7 @@ export default function reorganize() {
       sectionId: null,
       sectionName: sectionName,
       professorName: '',
-      mode:'',
+      mode: '',
     });
 
     const [value, setValue] = React.useState<Dayjs | null>(null);
@@ -347,31 +362,35 @@ export default function reorganize() {
       return `${timeStr}-${endTimeStr}`;
     };
     const submitCourse = async (values: any) => {
-      const { data } = await instance.post('/api/curriculum/item/create', values);
+      const { data } = await instance.post(
+        '/api/curriculum/item/create',
+        values,
+      );
       return data;
     };
 
-    useEffect(()=>{
-      console.log(defaultCurriculum,"defaultCurriculum")
-    },[defaultCurriculum])
+    useEffect(() => {
+      console.log(defaultCurriculum, 'defaultCurriculum');
+    }, [defaultCurriculum]);
     const submitForm = async (values: any) => {
       // return;
-      if(!defaultCurriculum){
-        Toast.fail('请先创建课程表')
+      if (!defaultCurriculum) {
+        Toast.fail(`${t('请先创建课程表')}`);
+
         return;
       }
       const requestQueen = dayOfWeek.map(async (item) => {
         const data = await submitCourse({
           ...values,
           dayOfWeek: Number(item),
-          termId:termId,
+          termId: termId,
           // time: translateTime(time, endTime),
           time: {
             start: time,
             end: endTime,
           },
-          curriculumId:defaultCurriculum?.id,
-          mode:mode
+          curriculumId: defaultCurriculum?.id,
+          mode: mode,
         });
         return data;
       });
@@ -380,43 +399,44 @@ export default function reorganize() {
           console.log(res, 'res');
           // if(res.every((item)=>item.code===200))
           if (res.some((item) => item.message !== 'success')) {
-            Toast.fail(`添加失败`);
+            Toast.fail(`${t('添加失败')}`);
           } else {
-            Toast.success('添加成功');
+            Toast.success(`${t('添加成功')}`);
             const data = reorganizeData.curriculums.slice().filter((item) => {
               return item.id !== values.id;
             });
             setReorganizeData({
               ...reorganizeData,
               curriculums: data,
-            })
+            });
           }
+
           // if(res.)
           // Toast.success('添加成功');
         })
         .catch((err) => {
-          Toast.fail('添加失败');
+          Toast.fail(`${t('添加失败')}`);
         });
     };
     const deleteCourse = (id) => {
-      try{
+      try {
         const data = reorganizeData.curriculums.slice().filter((item) => {
           return item.id !== id;
         });
         setReorganizeData({
           ...reorganizeData,
           curriculums: data,
-        })
-        Toast.success('删除成功');
-      }catch (error){
-        Toast.fail('删除失败')
+        });
+        Toast.success(`${t('删除成功')}`);
+      } catch (error) {
+        Toast.fail(`${t('删除失败')}`);
       }
-
     };
+
     return (
       <div className="w-full space-y-4">
         <CCourseInput
-          title="课程名称"
+          title={`${t('课程名称')}`}
           isNess
           value={name}
           change={(val) => {
@@ -430,7 +450,8 @@ export default function reorganize() {
             <div className="w-full p-3">
               {' '}
               <span className="flex items-center text-sm font-medium bg-white text-[#A9B0C0]">
-                <NessIcon className="mr-1"></NessIcon>上课日期
+                <NessIcon className="mr-1"></NessIcon>
+                {`${t('上课日期')}`}
               </span>
             </div>
             <div className="flex youni-form w-full pb-4 pl-4 pr-4 ">
@@ -459,7 +480,7 @@ export default function reorganize() {
           <div className="flex youni-form items-center justify-between h-full space-x-4">
             <div className="flex items-center">
               <NessIcon className="mr-1"></NessIcon>
-              <div className="text-sm text-[#A9B0C0]">开始时间</div>
+              <div className="text-sm text-[#A9B0C0]">{t('开始时间')}</div>
             </div>
             <div>
               <DatetimePicker
@@ -483,7 +504,7 @@ export default function reorganize() {
                       clickable
                       label=""
                       value={val}
-                      placeholder="请选择日期"
+                      placeholder={t('请选择日期')}
                       onClick={() => actions.open()}
                     />
                   );
@@ -496,7 +517,7 @@ export default function reorganize() {
           <div className="flex youni-form items-center justify-between h-full space-x-4">
             <div className="flex items-center">
               <NessIcon className="mr-1"></NessIcon>
-              <div className="text-sm text-[#A9B0C0]">结束时间</div>
+              <div className="text-sm text-[#A9B0C0]">{t('结束时间')}</div>
             </div>
             <div>
               <DatetimePicker
@@ -520,7 +541,7 @@ export default function reorganize() {
                       clickable
                       label=""
                       value={val}
-                      placeholder="请选择日期"
+                      placeholder={t('请选择日期')}
                       onClick={() => actions.open()}
                     />
                   );
@@ -538,21 +559,21 @@ export default function reorganize() {
           }}
         ></CCourseInput>
         <CCourseInput
-          title="课程形式"
+          title={t('课程形式')}
           value={mode}
           change={(val) => {
             handleChange(val.label, 'mode');
           }}
         ></CCourseInput>
         <CCourseInput
-          title="教授"
+          title={t('教授')}
           change={(val) => {
             handleChange(val.label, 'professorName');
             // handleChange(val.id, 'courseId');
           }}
         ></CCourseInput>
         <CCourseInput
-          title="教室"
+          title={t('教室')}
           value={classroom}
           change={(val) => {
             console.log(val, 'classroom');
@@ -561,7 +582,7 @@ export default function reorganize() {
         ></CCourseInput>
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
-            <div className="text-sm text-blueTittle]">单双周</div>
+            <div className="text-sm text-blueTittle]">{t('单双周')}</div>
             <div className="w-[250px] h-full flex items-center justify-end pr-1 rounded-lg">
               <div className="border-[#DCDDE1] border  overflow-hidden  rounded-lg  h-[28px]   flex ">
                 <div
@@ -575,7 +596,7 @@ export default function reorganize() {
                     },
                   )}
                 >
-                  全部
+                  {t('全部')}
                 </div>
                 <div
                   onClick={() => {
@@ -588,7 +609,7 @@ export default function reorganize() {
                     },
                   )}
                 >
-                  单周
+                  {t('单周')}
                 </div>
                 <div
                   onClick={() => {
@@ -601,7 +622,7 @@ export default function reorganize() {
                     },
                   )}
                 >
-                  双周
+                  {t('双周')}
                 </div>
                 <div></div>
               </div>
@@ -611,7 +632,7 @@ export default function reorganize() {
 
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
-            <div className="text-sm text-[#A9B0C0]">颜色</div>
+            <div className="text-sm text-[#A9B0C0]">{t('颜色')}</div>
             <CCourseColor
               setColor={(val) => {
                 handleChange(val, 'color');
@@ -629,7 +650,9 @@ export default function reorganize() {
           </div>
           <div className="bg-[#3665FF] h-11 w-24 rounded-full flex justify-center items-center">
             <ConfirmIcon
-            onClick={()=>{submitForm({id,...CURRICULUM})}}
+              onClick={() => {
+                submitForm({ id, ...CURRICULUM });
+              }}
             ></ConfirmIcon>
           </div>
         </div>
@@ -652,20 +675,21 @@ export default function reorganize() {
       <div className="w-full pb-14  space-y-6 overflow-hidden h-full flex flex-col justify-center items-center p-4">
         <div className="w-full px-6 py-5  overflow-hidden bg-white h-[92px] relative youni-boxShadow  rounded-[10px]">
           <div className="mb-2">
-            <span className="text-[#37455C]">成功识别</span>
+            <span className="text-[#37455C]">{`${t('成功识别')}`}</span>
             <span className="text-[#4FB0FE]">
               {reorganizeData?.curriculums?.length}
             </span>
-            <span className="text-[#37455C]">课程</span>
+            <span className="text-[#37455C]">{`${t('课程')}`}</span>
           </div>
           <div className="text-sm text-[#A9B0C0] font-medium z-20 relative">
-            点击左侧按钮删除 点击右侧按钮保存
+            {`${t('点击左侧按钮删除')} ${t('点击右侧按钮保存')}`}
           </div>
           <img
             src={'/resultimg.png'}
             className="absolute z-0 w-40 h-[140px] -top-0 -right-12"
           ></img>
         </div>
+
         {reorganizeData?.curriculums?.map((item, index) => {
           return (
             <ResultItemComponent data={item} key={index}></ResultItemComponent>
@@ -689,14 +713,14 @@ export default function reorganize() {
   const CPicker = (props) => {
     const [loading, setLoading] = React.useState(false);
     const [value, setValue] = useState(termId);
-    if(!termList?.data) return
+    if (!termList?.data) return;
     return (
       <Picker
         popup={{
           round: true,
         }}
         value={value}
-        title="请选择"
+        title={`${t('请选择')}`}
         columns={termList?.data}
         className="text-right"
         onConfirm={setTermIdValue}
@@ -722,7 +746,7 @@ export default function reorganize() {
               readOnly
               clickable
               value={_?.name || ''}
-              placeholder="选择学期"
+              placeholder={`${t('选择学期')}`}
               onClick={() => actions.open()}
             />
           );
@@ -749,7 +773,9 @@ export default function reorganize() {
           <div className="w-full bg-white  text-right rounded-xl">
             <label className="flex items-center justify-between w-full h-12 input-group ">
               <span className="text-sm font-medium bg-white text-blueTitle">
-                {<NessIcon className="mr-1"></NessIcon>} 学年&学期
+                {`${(<NessIcon className="mr-1"></NessIcon>)} ${t(
+                  '学年&学期',
+                )}`}
               </span>
               <div className="term-pick">
                 <CPicker change={() => {}}></CPicker>
@@ -758,11 +784,12 @@ export default function reorganize() {
           </div>
           <div className="h-[170px] w-full bg-white p-3 rounded-lg">
             <div className="text-[#37455C] text-sm font-medium">
-              上传课表图片
+              {`${t('上传课表图片')}`}
             </div>
             <div className="text-xs text-[#A9B0C0] mt-2">
-              上传清晰，图片内仅包含课表主要内容的图片，可以大
-              大提升识别成功率哦！
+              {`${t(
+                '上传清晰，图片内仅包含课表主要内容的图片，可以大大提升识别成功率哦！',
+              )}`}
             </div>
             <div className="mt-2 preview w-16 h-16 overflow-hidden">
               <Uploader
@@ -784,7 +811,7 @@ export default function reorganize() {
             }}
             className="w-full rounded-md h-10 bg-[#FFD036] text-[#8C6008] text-center flex justify-center items-center"
           >
-            下一步
+            {`${t('下一步')}`}
           </div>
         </div>
       ) : null}

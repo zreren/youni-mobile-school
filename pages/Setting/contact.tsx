@@ -10,7 +10,10 @@ import { Cell, Input, hooks, Toast } from 'react-vant';
 import useLanguage from '@/hooks/useLanguage';
 import useRequest from "@/libs/request";
 import classnames from 'classnames';
+import { useTranslation } from 'next-i18next';
+
 export default function account() {
+  const {t} = useTranslation()
   const { data: contactList } = useFetch('/profile/contact', 'get');
   const phoneItem = useMemo(() => {
     return contactList?.data?.filter((item, index) => {

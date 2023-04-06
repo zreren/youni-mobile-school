@@ -29,48 +29,23 @@ import { useRouter } from 'next/router';
 import { enableZoom } from '@/libs/enableZoom';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
 import useUser from '@/hooks/useUser';
-const PostDetail = (props) => {
-  return (
-    <SwipeableDrawer
-      anchor="right"
-      open={props.visible}
-      onClose={() => {
-        props.setVisible(false);
-      }}
-      onOpen={() => {
-        props.setVisible(true);
-      }}
-      className="h-screen"
-    >
-      <div className="w-screen h-screen">
-        <Post></Post>
-      </div>
-    </SwipeableDrawer>
-  );
-};
+import { useTranslation } from 'next-i18next';
 
-const RedCountyList = (props) => {
-  const { arg, data, otherData } = props;
-  const [select, setSelect] = useState('Canada');
-  const CountryButton = (props1) => {
-    const { title, id } = props1;
+function SchoolPage(props) {
+  console.log(props, 'SchoolPage');
+  const { t } = useTranslation();
+  const [isSelect, setIsSelect] = useState(false);
+  const [schoolSelect, setSelectSchool] = useState(false);
+  const [postDetailShow, setPostDetailShow] = useState(false);
+  const [campusIdMap, setCampusIdMap] = useLocalStorage(
+    props?.post?.alias,
+    props?.post?.id,
+  );
+  const { user, loggedOut } = useUser();
+  const PostDetail = (props) => {
     return (
-      <div
-        onClick={() => {
-          props.setCountryId(id);
-          props.setVisible(false);
-          props.setSelectSchool(true);
-        }}
-        className="z-50 p-2 text-sm text-center h-9 bg-bg"
-      >
-        {title}
-      </div>
-    );
-  };
-  return (
-    <div className="">
       <SwipeableDrawer
-        anchor="left"
+        anchor="right"
         open={props.visible}
         onClose={() => {
           props.setVisible(false);
@@ -80,69 +55,96 @@ const RedCountyList = (props) => {
         }}
         className="h-screen"
       >
-        <Header
-          returnClick={() => {
-            props.setVisible(false);
-          }}
-          title={'选择国家和地区'}
-          className="shadow-none"
-        ></Header>
-        <div className="w-screen h-screen p-4 pt-6 space-y-4 bg-bg">
-          <div className="w-full h-auto overflow-visible red-gradient card">
-            <div className="relative w-full h-full p-4">
-              <div className="absolute right-3 -top-3">
-                <Image src="/assets/hot.png" width={73} height={83}></Image>
-              </div>
-              <div className="text-base font-medium text-white">
-                热门国家和地区
-              </div>
-              <div className="z-50 grid grid-cols-3 gap-2 pt-2">
-                {data?.map((item) => {
-                  return (
-                    <CountryButton
-                      id={item.id}
-                      title={item.name}
-                    ></CountryButton>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-          {otherData?.map((item) => {
-            return (
-              <div className="w-full h-auto overflow-visible bg-white card">
-                <div className="relative w-full h-full p-4">
-                  <div className="text-base font-medium ">{item.name}</div>
-                  <div className="z-50 grid grid-cols-3 gap-2 pt-2">
-                    {item.countries.map((item) => {
-                      return (
-                        <CountryButton
-                          title={item.name}
-                          id={item.id}
-                        ></CountryButton>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+        <div className="w-screen h-screen">
+          <Post></Post>
         </div>
       </SwipeableDrawer>
-    </div>
-  );
-};
+    );
+  };
 
-function SchoolPage(props) {
-  console.log(props, 'SchoolPage');
-  const [isSelect, setIsSelect] = useState(false);
-  const [schoolSelect, setSelectSchool] = useState(false);
-  const [postDetailShow, setPostDetailShow] = useState(false);
-  const [campusIdMap, setCampusIdMap] = useLocalStorage(
-    props?.post?.alias,
-    props?.post?.id,
-  );
-  const { user ,loggedOut} = useUser();
+  const RedCountyList = (props) => {
+    const { arg, data, otherData } = props;
+    const [select, setSelect] = useState('Canada');
+    const CountryButton = (props1) => {
+      const { title, id } = props1;
+      return (
+        <div
+          onClick={() => {
+            props.setCountryId(id);
+            props.setVisible(false);
+            props.setSelectSchool(true);
+          }}
+          className="z-50 p-2 text-sm text-center h-9 bg-bg"
+        >
+          {title}
+        </div>
+      );
+    };
+    return (
+      <div className="">
+        <SwipeableDrawer
+          anchor="left"
+          open={props.visible}
+          onClose={() => {
+            props.setVisible(false);
+          }}
+          onOpen={() => {
+            props.setVisible(true);
+          }}
+          className="h-screen"
+        >
+          <Header
+            returnClick={() => {
+              props.setVisible(false);
+            }}
+            title={t('选择国家和地区')}
+            className="shadow-none"
+          ></Header>
+          <div className="w-screen h-screen p-4 pt-6 space-y-4 bg-bg">
+            <div className="w-full h-auto overflow-visible red-gradient card">
+              <div className="relative w-full h-full p-4">
+                <div className="absolute right-3 -top-3">
+                  <Image src="/assets/hot.png" width={73} height={83}></Image>
+                </div>
+                <div className="text-base font-medium text-white">
+                  {t('热门国家和地区')}
+                </div>
+                <div className="z-50 grid grid-cols-3 gap-2 pt-2">
+                  {data?.map((item) => {
+                    return (
+                      <CountryButton
+                        id={item.id}
+                        title={item.name}
+                      ></CountryButton>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+            {otherData?.map((item) => {
+              return (
+                <div className="w-full h-auto overflow-visible bg-white card">
+                  <div className="relative w-full h-full p-4">
+                    <div className="text-base font-medium ">{item.name}</div>
+                    <div className="z-50 grid grid-cols-3 gap-2 pt-2">
+                      {item.countries.map((item) => {
+                        return (
+                          <CountryButton
+                            title={item.name}
+                            id={item.id}
+                          ></CountryButton>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </SwipeableDrawer>
+      </div>
+    );
+  };
 
   const [category, setCategory] = useState('idle');
   const pathname = useMemo(() => {
@@ -167,11 +169,15 @@ function SchoolPage(props) {
     pageSize: 20,
   });
 
-  useEffect(()=>{
-    console.log(loggedOut,"loggedOut")
-  },[loggedOut])
+  useEffect(() => {
+    console.log(loggedOut, 'loggedOut');
+  }, [loggedOut]);
   const postData = useMemo(() => {
-    return _postData ? postData ? [...postData].concat(..._postData) : [].concat(..._postData) : null;
+    return _postData
+      ? postData
+        ? [...postData].concat(..._postData)
+        : [].concat(..._postData)
+      : null;
   }, [_postData, category]);
   useEffect(() => {
     console.log(postData, 'postData');
@@ -187,90 +193,90 @@ function SchoolPage(props) {
   //     )
   //   }
   // },
-  const headerMenuList = useMemo(()=>{
-    if(loggedOut){
+  const headerMenuList = useMemo(() => {
+    if (loggedOut) {
       return [
-          {
-            label: '闲置',
-            value: 'idle',
-          },
-          {
-            label: '活动',
-            value: 'activity',
-          },
-          {
-            label: '新闻',
-            value: 'news',
-          },
-          {
-            label: '转租',
-            value: 'sublet',
-          },
-          {
-            label: '拼车',
-            value: 'carpool',
-          },
-          {
-            label: '二手书',
-            value: 'book',
-          },
-          {
-            label: '课程配置',
-            value: 'course_recommend',
-          },
-        ]
-      }else{
-        return [
-          {
-            label: '推荐',
-            value: 'recommend_list',
-          },
-          {
-            label: '关注',
-            value: 'follow_list',
-          },
-          {
-            label: '闲置',
-            value: 'idle',
-          },
-          {
-            label: '活动',
-            value: 'activity',
-          },
-          {
-            label: '新闻',
-            value: 'news',
-          },
-          {
-            label: '转租',
-            value: 'sublet',
-          },
-          {
-            label: '拼车',
-            value: 'carpool',
-          },
-          {
-            label: '二手书',
-            value: 'book',
-          },
-          {
-            label: '课程配置',
-            value: 'course_recommend',
-          },
-        ]
-      }
-  },[loggedOut])
-  useEffect(()=>{
-    console.log(headerMenuList,"headerMenuList")
+        {
+          label: '闲置',
+          value: 'idle',
+        },
+        {
+          label: '活动',
+          value: 'activity',
+        },
+        {
+          label: '新闻',
+          value: 'news',
+        },
+        {
+          label: '转租',
+          value: 'sublet',
+        },
+        {
+          label: '拼车',
+          value: 'carpool',
+        },
+        {
+          label: '二手书',
+          value: 'book',
+        },
+        {
+          label: '课程配置',
+          value: 'course_recommend',
+        },
+      ];
+    } else {
+      return [
+        {
+          label: '推荐',
+          value: 'recommend_list',
+        },
+        {
+          label: '关注',
+          value: 'follow_list',
+        },
+        {
+          label: '闲置',
+          value: 'idle',
+        },
+        {
+          label: '活动',
+          value: 'activity',
+        },
+        {
+          label: '新闻',
+          value: 'news',
+        },
+        {
+          label: '转租',
+          value: 'sublet',
+        },
+        {
+          label: '拼车',
+          value: 'carpool',
+        },
+        {
+          label: '二手书',
+          value: 'book',
+        },
+        {
+          label: '课程配置',
+          value: 'course_recommend',
+        },
+      ];
+    }
+  }, [loggedOut]);
+  useEffect(() => {
+    console.log(headerMenuList, 'headerMenuList');
     // setCategory(headerMenuList[0].label)
-  },[headerMenuList])
+  }, [headerMenuList]);
   const [reRender, setreRender] = useState(1);
   const onRefresh = (showToast) => {
     return new Promise((resolve) => {
       setTimeout(() => {
         if (showToast) {
           mutate();
-          Toast.info('刷新成功');
+          Toast.info(t('刷新成功'));
         }
         resolve(true);
       }, 1000);
@@ -411,13 +417,13 @@ function SchoolPage(props) {
   const helloRef = React.useRef(null);
   const goodbyeRef = React.useRef(null);
   const nodeRef = postData ? helloRef : goodbyeRef;
-  const [loadingState,setLoadingState] = useState(false)
-  useEffect(()=>{
+  const [loadingState, setLoadingState] = useState(false);
+  useEffect(() => {
     setLoadingState(true);
     setTimeout(() => {
-      setLoadingState(false)
+      setLoadingState(false);
     }, 1000);
-  },[category,postData])
+  }, [category, postData]);
   return (
     <div className="w-screen  pb-10">
       <PostDetail
@@ -509,7 +515,11 @@ function SchoolPage(props) {
               timeout={60}
               key={category}
               addEndListener={(done) => {
-                nodeRef?.current?.addEventListener("transitionend", done, false);
+                nodeRef?.current?.addEventListener(
+                  'transitionend',
+                  done,
+                  false,
+                );
               }}
             >
               <div ref={nodeRef}>
@@ -523,16 +533,18 @@ function SchoolPage(props) {
                     }}
                     onClick={() => {}}
                   ></Waterfall>
-                ) : <LoadingWaterfall
-                key={category}
-                show={() => {
-                  setPostDetailShow(true);
-                }}
-                onClick={() => {}}
-              ></LoadingWaterfall>}
+                ) : (
+                  <LoadingWaterfall
+                    key={category}
+                    show={() => {
+                      setPostDetailShow(true);
+                    }}
+                    onClick={() => {}}
+                  ></LoadingWaterfall>
+                )}
                 {!postData && !isLoading ? (
                   <div className="text-[#A9B0C0] mt-10 flex justify-center items-center w-full">
-                    暂无内容
+                    {t('暂无内容')}
                   </div>
                 ) : null}
               </div>

@@ -22,6 +22,7 @@ import useFetch from '../../hooks/useFetch';
 import useLanguage from '@/hooks/useLanguage';
 import useCurriculum from '@/hooks/useCurriculum';
 import useRequest from '@/libs/request';
+import { useTranslation } from 'next-i18next';
 
 const CCourseTime = (props) => {
   return (
@@ -127,6 +128,7 @@ export default function AddSchedule() {
     setCourseId(e);
   };
 
+  const {t} = useTranslation()
   const submitCourse = async (values: any) => {
     const { data } = await instance.post('/api/curriculum/item/create', values);
     return data;

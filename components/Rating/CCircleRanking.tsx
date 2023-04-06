@@ -2,6 +2,8 @@ import React from 'react';
 import classnames from 'classnames';
 import styles from './index.module.css';
 import useLanguage from '@/hooks/useLanguage';
+import { useTranslation } from 'next-i18next';
+
 
 interface TCCRating {
   children?: React.ReactNode;
@@ -10,6 +12,7 @@ interface TCCRating {
 }
 export default function CCircleRanking(props: TCCRating) {
   const { score } = props;
+  const {t} = useTranslation()
   const colorTable = (Score: number | undefined | null): string => {
     if (!Score || Score < 0) {
       return 'score5';
@@ -35,17 +38,14 @@ export default function CCircleRanking(props: TCCRating) {
   const text2ClassNames = classnames('text-xs', [
     `${styles[`DScore${String(score).substring(0, 1)}`]}`,
   ]);
-  const without = {
-    cname: '暂无评价',
-    ename: 'No Rating',
-  }
+
   return (
     <>
       {/* @ts-ignore */}
       <div className={classNames1} style={{ '--value': score * 20 }}>
         <div className="w-16 h-16 flex flex-col justify-center items-center  bg-white rounded-full">
           <div className={textClassNames}>{score}</div>
-          <div className={text2ClassNames}>综合评分</div>
+          <div className={text2ClassNames}> {t('综合评分')}</div>
         </div>
       </div>
     </>

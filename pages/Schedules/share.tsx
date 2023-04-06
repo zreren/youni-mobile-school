@@ -46,6 +46,7 @@ import SchedulesIcon from './schedulesIcon.svg';
 import LoveIcon from './heart.svg';
 // import classnames from 'classnames';
 import LovedIcon from './hearted.svg';
+import { useTranslation } from 'next-i18next';
 
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
@@ -76,6 +77,8 @@ export default function Schedules() {
   const calendarRef = useRef<any>();
   const router = useRouter();
   const [menu, setMenu] = useState(0);
+  const {t} = useTranslation()
+
   const curriculumId = React.useMemo(() => router.query.curriculumId, [router.query.curriculumId])
   useEffect(()=>{
     setStudentId(router.query.id)

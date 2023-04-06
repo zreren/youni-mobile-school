@@ -1,6 +1,8 @@
 import React, { ReactNode, FC } from 'react';
 import classnames from 'classnames';
 import classNames from 'classnames';
+import { useTranslation } from 'next-i18next';
+
 type TSize = 'normal' | 'full';
 interface TCButton {
   // [x: string]: ReactNode;
@@ -12,6 +14,8 @@ interface TCButton {
   children:ReactNode;
 }
 export const CButton: React.FunctionComponent<TCButton> = function (Props) {
+  const {t} = useTranslation()
+
   const { className, size, type, color } = Props;
   // const classes = classNames('btn', className, {
   //     [`btn-${btnType}`]: btnType,

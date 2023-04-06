@@ -21,6 +21,10 @@ import useRequest from '@/libs/request';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Toast } from 'react-vant';
+import { useTranslation } from 'next-i18next';
+
+
+
 const Icon =new Array(3).map((item,index) => require("@/public/assets/setting/" + index + 1 + ".svg"));
 const IconRender = (props) =>{
     const IconGetter= Icon[props]
@@ -36,6 +40,8 @@ const InputSelect = (props) => {
 };
 export default function index() {
   const router = useRouter();
+  const {t} = useTranslation()
+
   const List5 = [
     {
       Icon: Icon1,

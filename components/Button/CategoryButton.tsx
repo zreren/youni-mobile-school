@@ -3,8 +3,12 @@ import classnames from 'classnames';
 import styles from './index.module.css';
 import { useRouter } from 'next/router';
 import { useLocalStorage } from 'react-use';
+import { useTranslation } from 'next-i18next';
+
 export default function CategoryButton(props) {
   const { color,data } = props;
+  const {t} = useTranslation()
+
   const [selectSchool,setSelectSchool] = useLocalStorage('school',null)
 
   const router = useRouter();

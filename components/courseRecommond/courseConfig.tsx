@@ -21,10 +21,12 @@ import { selectOpen } from '@/stores/authSlice';
 import Select from './select';
 import DraftIcon from './draft.svg';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { useTranslation } from 'next-i18next';
 
 export default function config(props) {
   const router = useRouter();
   const [current, setCurrent] = React.useState(0);
+  const { t } = useTranslation();
   function usePersistentState(key, defaultValue) {
     const isBrowser = typeof window !== 'undefined';
     const [state, setState] = useState(() => {
@@ -36,16 +38,19 @@ export default function config(props) {
       }
       return defaultValue;
     });
-  
+
     React.useEffect(() => {
       if (isBrowser) {
         localStorage.setItem(key, JSON.stringify(state));
       }
     }, [isBrowser, key, state]);
-  
+
     return [state, setState];
   }
-  const [expandedItems, setExpandedItems] = usePersistentState('expandedItems', []);
+  const [expandedItems, setExpandedItems] = usePersistentState(
+    'expandedItems',
+    [],
+  );
 
   const [semesterData, setSemesterData] = useState(null);
   const { data: campusData, mutate: campusDataMutate } = useFetch(
@@ -91,7 +96,10 @@ export default function config(props) {
           </div>
           <div className="w-full space-y-4">
             <div className="flex items-center space-x-10 h-10">
-              <div className="text-blueTitle text-xs font-semibold">优先</div>
+              <div className="text-blueTitle text-xs font-semibold">
+                {' '}
+                {t('优先')}
+              </div>
               {data?.professorMust.map((item) => {
                 return (
                   <div className="ml-10 w-10 text-center text-xs text-[#798195]">
@@ -102,7 +110,9 @@ export default function config(props) {
             </div>
             {data?.professorOption.length > 0 && (
               <div className="flex items-center space-x-10">
-                <div className="text-blueTitle text-xs font-semibold">可选</div>
+                <div className="text-blueTitle text-xs font-semibold">
+                  {t('可选')}
+                </div>
                 {data?.professorOption.map((item) => {
                   return (
                     <div className="ml-10 w-10 text-center text-xs text-[#798195]">
@@ -184,7 +194,7 @@ export default function config(props) {
             <div className="p-4">
               <div>
                 <div className="text-[#A9B0C0] text-xs mb-3">
-                  本课程历史教授
+                  {t('本课程历史教授')}
                 </div>
                 {props?.data?.map((item) => {
                   const isSelect = selectList?.some((i) => i.id === item.id);
@@ -242,8 +252,8 @@ export default function config(props) {
                           )}
                         >
                           {selectList?.some((i) => i.id === item.id)
-                            ? '取消选中'
-                            : '选中'}
+                            ? t('取消选中')
+                            : t('选中')}
                         </div>
                       </div>
                       <div className="w-full h-[0.8px] bg-[#F3F4F6] rounded-md "></div>
@@ -255,7 +265,7 @@ export default function config(props) {
                 <div className="text-sm text-[#37455C]">
                   <input
                     value={customProfessor}
-                    placeholder="自定义教授"
+                    placeholder={t('自定义教授')}
                     onChange={(e) => {
                       setCustomProfessor(e.target.value);
                     }}
@@ -314,7 +324,7 @@ export default function config(props) {
                     : '选中'}
                 </div>
               </div>
-              <div className="text-[#A9B0C0] my-3">非常规情况</div>
+              <div className="text-[#A9B0C0] my-3">{t('非常规情况')}</div>
               <div className="space-y-2">
                 <div
                   onClick={() => {
@@ -332,7 +342,7 @@ export default function config(props) {
                     },
                   )}
                 >
-                  教授均可选择
+                  {t('教授均可选择')}
                 </div>
                 <div
                   onClick={() => {
@@ -350,7 +360,7 @@ export default function config(props) {
                     },
                   )}
                 >
-                  无教授推荐
+                  {t('无教授推荐')}
                 </div>
               </div>
             </div>
@@ -404,7 +414,7 @@ export default function config(props) {
             <div className="p-4">
               <div>
                 <div className="text-[#A9B0C0] text-xs mb-3">
-                  本课程历史教授
+                  {t('本课程历史教授')}
                 </div>
                 {props?.data?.map((item) => {
                   const isSelect = selectList?.some((i) => i.id === item.id);
@@ -462,8 +472,8 @@ export default function config(props) {
                           )}
                         >
                           {selectList?.some((i) => i.id === item.id)
-                            ? '取消选中'
-                            : '选中'}
+                            ? t('取消选中')
+                            : t('选中')}
                         </div>
                       </div>
                       <div className="w-full h-[0.8px] bg-[#F3F4F6] rounded-md "></div>
@@ -475,7 +485,7 @@ export default function config(props) {
                 <div className="text-sm text-[#37455C]">
                   <input
                     value={customProfessor}
-                    placeholder="自定义教授"
+                    placeholder={t("自定义教授")}
                     onChange={(e) => {
                       setCustomProfessor(e.target.value);
                     }}
@@ -534,43 +544,43 @@ export default function config(props) {
                     : '选中'}
                 </div>
               </div>
-              <div className="text-[#A9B0C0] my-3">非常规情况</div>
+              <div className="text-[#A9B0C0] my-3">{t("非常规情况")}</div>
               <div className="space-y-2">
                 <div
                   onClick={() => {
-                    setSelectList([{ id: -1, label: '均可选择' }]);
+                    setSelectList([{ id: -1, label: t('均可选择') }]);
                   }}
                   className={classnames(
                     'text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10',
                     {
                       'text-[#798195] ': !selectList?.some(
-                        (i) => i.label === '均可选择' && i.id === -1,
+                        (i) => i.label === t('均可选择') && i.id === -1,
                       ),
                       'text-[#C8A655] ': selectList?.some(
-                        (i) => i.label === '均可选择' && i.id === -1,
+                        (i) => i.label === t('均可选择') && i.id === -1,
                       ),
                     },
                   )}
                 >
-                  教授均可选择
+                  {t("教授均可选择")}
                 </div>
                 <div
                   onClick={() => {
-                    setSelectList([{ id: -1, label: '无教授推荐' }]);
+                    setSelectList([{ id: -1, label: t('无教授推荐') }]);
                   }}
                   className={classnames(
                     'text-xs flex justify-center items-center border-[0.5px] border-[#F3F4F6] rounded-md w-full h-10',
                     {
                       'text-[#798195] ': !selectList?.some(
-                        (i) => i.label === '无教授推荐' && i.id === -1,
+                        (i) => i.label === t('无教授推荐') && i.id === -1,
                       ),
                       'text-[#C8A655] ': selectList?.some(
-                        (i) => i.label === '无教授推荐' && i.id === -1,
+                        (i) => i.label === t('无教授推荐') && i.id === -1,
                       ),
                     },
                   )}
                 >
-                  无教授推荐
+                  {t("无教授推荐")}
                 </div>
               </div>
             </div>
@@ -581,7 +591,6 @@ export default function config(props) {
     },
     [professorCurrent, courseList],
   );
-
 
   const SelectCourse = useCallback((props) => {
     const [value, setValue] = useState('');
@@ -663,8 +672,6 @@ export default function config(props) {
       </SwipeableDrawer>
     );
   }, []);
-
-
 
   const CourseSelector = (props) => {
     const { isSelect, key } = props;
@@ -940,7 +947,7 @@ export default function config(props) {
         <div className="flex items-center justify-center">
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
           <div className="whitespace-nowrap text-[#DCDDE1] text-xs mx-2">
-            选修课
+            {t("选修课")}
           </div>
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
         </div>
@@ -971,7 +978,7 @@ export default function config(props) {
     return (
       <div className="flex items-center space-x-3">
         <div className="bg-[#F0F6FF] p-2 min-w-[48px] w-12 h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
-          笔记
+          {t("笔记")}
         </div>
         <div className="w-[0.5px] h-3 bg-[#F0F6FF]"></div>
         {!open ? (
@@ -1061,7 +1068,7 @@ export default function config(props) {
           }}
           className="bg-[#FFD036] cursor-pointer  text-white rounded-full w-full h-10 flex justify-center items-center"
         >
-          发布
+          {t("发布")}
         </div>
       </div>
     );
@@ -1083,32 +1090,31 @@ export default function config(props) {
       return { ...obj, [index]: item };
     }, {});
     setCourseList(newCourseList);
-     // Update expandedItems to match the new order of courseListArray
-  const newExpandedItems = expandedItems.map((expandedIndex) => {
-    if (expandedIndex === sourceIndex) {
-      return destinationIndex;
-    } else if (sourceIndex < destinationIndex) {
-      if (expandedIndex > sourceIndex && expandedIndex <= destinationIndex) {
-        return expandedIndex - 1;
+    // Update expandedItems to match the new order of courseListArray
+    const newExpandedItems = expandedItems.map((expandedIndex) => {
+      if (expandedIndex === sourceIndex) {
+        return destinationIndex;
+      } else if (sourceIndex < destinationIndex) {
+        if (expandedIndex > sourceIndex && expandedIndex <= destinationIndex) {
+          return expandedIndex - 1;
+        } else {
+          return expandedIndex;
+        }
       } else {
-        return expandedIndex;
+        if (expandedIndex >= destinationIndex && expandedIndex < sourceIndex) {
+          return expandedIndex + 1;
+        } else {
+          return expandedIndex;
+        }
       }
-    } else {
-      if (expandedIndex >= destinationIndex && expandedIndex < sourceIndex) {
-        return expandedIndex + 1;
-      } else {
-        return expandedIndex;
-      }
-    }
-  });
-  setExpandedItems(newExpandedItems);
+    });
+    setExpandedItems(newExpandedItems);
     setDraggedItemId(null);
   };
   React.useEffect(() => {
     console.log(expandedItems, 'expandedItems');
+  }, [expandedItems]);
 
-  }, [expandedItems])
-  
   return (
     <div className="pb-20">
       <div className="items-start justify-between  py-0 bg-white p-5">
@@ -1159,7 +1165,7 @@ export default function config(props) {
           <div className="flex items-center space-x-2">
             <CateGoryIcon></CateGoryIcon>
             {/* {item.Icon ? <Icon className="mt-1"></Icon> : null} */}
-            <div className="text-blueTitle">课程配置</div>
+            <div className="text-blueTitle">{t("课程配置")}</div>
           </div>
           {/* <div>{item.action}</div> */}
         </div>
@@ -1280,7 +1286,7 @@ export default function config(props) {
                                       },
                                     )}
                                   >
-                                    必修课
+                                    {t("必修课")}
                                   </div>
                                   <div
                                     onClick={() => {
@@ -1300,7 +1306,7 @@ export default function config(props) {
                                       },
                                     )}
                                   >
-                                    选修课
+                                    {t("选修课")}
                                   </div>
                                 </div>
                                 <div className="flex items-center space-x-3">
@@ -1336,7 +1342,7 @@ export default function config(props) {
                                 </div>
                                 <div className="flex items-center space-x-3">
                                   <div className="bg-[#F0F6FF] p-2 min-w-[48px] h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
-                                    可选
+                                    {t("可选")}
                                   </div>
                                   <div className="w-[0.5px] h-3 bg-[#F0F6FF]"></div>
                                   <div
@@ -1387,7 +1393,7 @@ export default function config(props) {
           <div className="flex items-center space-x-2">
             <CateGoryIcon></CateGoryIcon>
             {/* {item.Icon ? <Icon className="mt-1"></Icon> : null} */}
-            <div className="text-blueTitle">课表预览</div>
+            <div className="text-blueTitle">{t("课表预览")}</div>
           </div>
           {(mustStudyData.some((item) => item.id) ||
             optionStudyData.some((item) => item.id)) && (

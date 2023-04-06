@@ -44,6 +44,8 @@ import { useSelector } from 'react-redux';
 import { Uploader } from 'react-vant';
 import useUser from '@/hooks/useUser';
 import useCurriculum from '@/hooks/useCurriculum';
+import { useTranslation } from 'next-i18next';
+
 // import { stringify } from 'querystring';
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,
@@ -78,6 +80,8 @@ const CCourseInput = (props) => {
 export default function Schedules() {
   const calendarRef = useRef<any>();
   const router = useRouter();
+  const {t} = useTranslation()
+
   const { defaultCurriculum } = useCurriculum();
   const [campusIdMapSchool, setCampusIdMapSchool] = useLocalStorage(
     'school',

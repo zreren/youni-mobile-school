@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Expiration from '@/components/courseRecommond/expiration';
 import CourseConfig from '@/components/courseRecommond/courseConfig';
 import DraftIcon from './draft.svg';
+import { useTranslation } from 'next-i18next';
 
 export default function addCourse(props) {
   const [term, setTerm] = useState([]);
   const [year, setYear] = useState();
   const [termValue, setTermValue] = useState();
-
+  const {t} = useTranslation()
   const [courseList, setCourseList] = useState({
     0: {
       id: null,
@@ -91,7 +92,7 @@ export default function addCourse(props) {
   });
   useEffect(() => {
     console.log(props.value, 'props.value');
-    if(!props.value) return
+    if (!props.value) return;
     // 将数组转为对象，并补全到10个元素
     const obj = props.value.reduce(
       (acc, item, index) => ({
@@ -112,8 +113,8 @@ export default function addCourse(props) {
         note: null,
       };
     }
-    console.log(obj)
-    setCourseList(obj)
+    console.log(obj);
+    setCourseList(obj);
   }, [props.value]);
   const Course = React.useCallback(() => {
     return (
@@ -155,7 +156,7 @@ export default function addCourse(props) {
         >
           <DraftIcon></DraftIcon>
           <div className="text-[10px] text-[#798195] whitespace-nowrap">
-            存草稿
+            {t('存草稿')}
           </div>
         </div>
         <div
@@ -174,7 +175,7 @@ export default function addCourse(props) {
           }}
           className="bg-[#FFD036] cursor-pointer  text-white rounded-full w-full h-10 flex justify-center items-center"
         >
-          发布
+            {t('发布')}
         </div>
       </div>
     );

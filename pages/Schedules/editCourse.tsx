@@ -20,6 +20,7 @@ import instance from '@/libs/request';
 import classnames from 'classnames';
 import useFetch from '../../hooks/useFetch';
 import useLanguage from '@/hooks/useLanguage';
+import { useTranslation } from 'next-i18next';
 
 const CCourseTime = (props) => {
   return (
@@ -65,13 +66,13 @@ const CCourseColor = (props) => {
       return item.dark === value;
     })[0];
   }, [value]);
-  useEffect(()=>{
+  useEffect(() => {
     // if(!colorId) return;
-    console.log(colorId,"colorId")
-    setSelect(colorId?.id)
+    console.log(colorId, 'colorId');
+    setSelect(colorId?.id);
     // setSelect(colorId?.id)
     // setColor(colorId?.dark);
-  },[colorId])
+  }, [colorId]);
   const [select, setSelect] = useState(colorId?.id);
   return (
     <div className="flex space-x-2">
@@ -131,9 +132,14 @@ export default function AddSchedule(props) {
   const fetchData = (e) => {
     setCourseId(e);
   };
-  const { data: courseData, mutate } = useFetch('/curriculum/item/detail', 'get', {
-    id: router.query.id,
-  });
+  const { t } = useTranslation();
+  const { data: courseData, mutate } = useFetch(
+    '/curriculum/item/detail',
+    'get',
+    {
+      id: router.query.id,
+    },
+  );
   const submitCourse = async (values: any) => {
     const { data } = await instance.post('/api/curriculum/update', values);
     return data;
@@ -319,33 +325,33 @@ export default function AddSchedule(props) {
       sectionId: null,
       sectionName: null,
       professorName: '',
-      time:{
-        start:'',
-        end:''
+      time: {
+        start: '',
+        end: '',
       },
-      curriculum:{
-        id:null,
-      }
+      curriculum: {
+        id: null,
+      },
       // time:''
     });
     const [dayOfWeek, setDayOfWeek] = useState([String(data?.dayOfWeek)]);
-    const timeStr = useMemo(()=>{
-      return CURRICULUM.time.start + '-' + CURRICULUM.time.end
-    },[CURRICULUM])
-    const timeSpirit = useMemo(()=>{
-      console.log(CURRICULUM.time,"courseTime")
-      if(!CURRICULUM.time) return ["7:00","7:00"];
-        const pattern =  /^(\d{1,2}:\d{2})-(\d{1,2}:\d{2})$/;
-        const match = timeStr?.match(pattern);
-        console.log(match,"match")
-        if (!match) return ["7:00","7:00"];
-        return [match[1], match[2]];
-    },[CURRICULUM])
-    useEffect(()=>{
-      console.log(timeSpirit,"timeSpirit")
+    const timeStr = useMemo(() => {
+      return CURRICULUM.time.start + '-' + CURRICULUM.time.end;
+    }, [CURRICULUM]);
+    const timeSpirit = useMemo(() => {
+      console.log(CURRICULUM.time, 'courseTime');
+      if (!CURRICULUM.time) return ['7:00', '7:00'];
+      const pattern = /^(\d{1,2}:\d{2})-(\d{1,2}:\d{2})$/;
+      const match = timeStr?.match(pattern);
+      console.log(match, 'match');
+      if (!match) return ['7:00', '7:00'];
+      return [match[1], match[2]];
+    }, [CURRICULUM]);
+    useEffect(() => {
+      console.log(timeSpirit, 'timeSpirit');
       setTime(timeSpirit[0]);
       setEndTime(timeSpirit[1]);
-    },[timeSpirit])
+    }, [timeSpirit]);
     const { data: courseDetailData } = useFetch(
       `/course/detail?id=${CURRICULUM?.courseId}`,
       'get',
@@ -357,8 +363,8 @@ export default function AddSchedule(props) {
     }, [CURRICULUM?.sectionId]);
 
     const [value, setValue] = React.useState<Dayjs | null>(null);
-    const { data: _courseData } = useFetch('/course/query?campusId=1',  'page',{
-      pageSize: 100
+    const { data: _courseData } = useFetch('/course/query?campusId=1', 'page', {
+      pageSize: 100,
     });
     const handleChange = useCallback((val: any, name: string) => {
       setCURRICULUM((preVal: any) => {
@@ -376,7 +382,7 @@ export default function AddSchedule(props) {
             ? [...courseData].concat(..._courseData)
             : [].concat(..._courseData)
           : null,
-      [_courseData]
+      [_courseData],
     );
 
     const translateTime = (time, endTime) => {
@@ -389,8 +395,8 @@ export default function AddSchedule(props) {
       return `${timeStr}-${endTimeStr}`;
     };
     const submitForm = async (values: any) => {
-      if(dayOfWeek.length > 1){
-        Toast.fail('编辑模式只能添加一天的课程');
+      if (dayOfWeek.length > 1) {
+        Toast.fail(t('编辑模式只能添加一天的课程'));
         return;
       }
       const requestQueen = dayOfWeek?.map(async (item) => {
@@ -503,7 +509,7 @@ export default function AddSchedule(props) {
           <div className="flex youni-form items-center justify-between h-full space-x-4">
             <div className="flex items-center">
               <NessIcon className="mr-1"></NessIcon>
-              <div className="text-sm text-blueTitle">结束时间</div>
+              <div className="text-sm text-blueTitle">{t('结束时间')}</div>
             </div>
             <div>
               <DatetimePicker
@@ -527,7 +533,7 @@ export default function AddSchedule(props) {
                       clickable
                       label=""
                       value={val}
-                      placeholder="请选择日期"
+                      placeholder={t('请选择日期')}
                       onClick={() => actions.open()}
                     />
                   );
@@ -549,7 +555,7 @@ export default function AddSchedule(props) {
           )}
         ></CCourseInput>
         <CCourseInput
-          title="课程形式"
+          title={t('课程形式')}
           value={CURRICULUM?.mode}
           change={(val) => {
             handleChange(val.label, 'mode');
@@ -560,7 +566,7 @@ export default function AddSchedule(props) {
           )}
         ></CCourseInput>
         <CCourseInput
-          title="教授"
+          title={t('教授')}
           value={CURRICULUM?.professorName}
           change={(val) => {
             handleChange(val.label, 'professorName');
@@ -570,7 +576,7 @@ export default function AddSchedule(props) {
           renderData={courseFormat?.professors?.map((item) => item.name)}
         ></CCourseInput>
         <CCourseInput
-          title="教室"
+          title="{t(教室)"
           value={CURRICULUM?.classroom}
           change={(val) => {
             console.log(val, 'classroom');
@@ -579,7 +585,7 @@ export default function AddSchedule(props) {
         ></CCourseInput>
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
-            <div className="text-xs text-blueTitle">单双周</div>
+            <div className="text-xs text-blueTitle">{t('单双周')}</div>
             <div className="w-[250px] h-full flex items-center justify-end pr-1 rounded-lg">
               <div className="border-[#DCDDE1] border  overflow-hidden  rounded-lg  h-[28px]   flex ">
                 <div
@@ -593,8 +599,9 @@ export default function AddSchedule(props) {
                     },
                   )}
                 >
-                  全部
+                  {t('全部')}
                 </div>
+
                 <div
                   onClick={() => {
                     handleChange(1, 'period');
@@ -606,7 +613,7 @@ export default function AddSchedule(props) {
                     },
                   )}
                 >
-                  单周
+                  {t('单周')}
                 </div>
                 <div
                   onClick={() => {
@@ -619,7 +626,7 @@ export default function AddSchedule(props) {
                     },
                   )}
                 >
-                  双周
+                  {t('双周')}
                 </div>
                 <div></div>
               </div>
@@ -647,7 +654,7 @@ export default function AddSchedule(props) {
           justify-center w-full text-[#FFD036]
           font-semibold   bg-[#FFFCF3] h-10 rounded-lg"
           >
-            关闭
+            {t('关闭')}
           </div>
           <div
             onClick={() => {
@@ -657,7 +664,7 @@ export default function AddSchedule(props) {
           font-semibold justify-center w-full bg-[#FFD036]
           h-10 rounded-lg"
           >
-            编辑课程
+            {t('编辑课程')}
           </div>
         </div>
       </div>
@@ -673,14 +680,14 @@ export default function AddSchedule(props) {
   console.log(id, 'addid');
   const headerMenuList = [
     {
-      label: '编辑课程',
+      label: t('编辑课程'),
     },
   ];
   const [menu, setMenu] = useState(id);
   const [value, setValue] = useState();
   return (
     <CommonLayout className="p-0 mb-10">
-      <Header title="课程表"></Header>
+    <Header title={t('课程表')}></Header>
       <HeaderMenu
         id={id}
         switchMenu={(val) => {

@@ -1,8 +1,10 @@
 import React,{ useState } from 'react';
 import { Select, MenuItem } from '@mui/material';
+import { useTranslation } from 'next-i18next';
 
 export default function MySelect(props) {
   const [selectedOption, setSelectedOption] = useState(props.value);
+  const {t} = useTranslation()
 
   const handleChange = (event) => {
     props?.change(event.target.value)

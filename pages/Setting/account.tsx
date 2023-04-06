@@ -7,8 +7,12 @@ import IOSSwitch from '@/components/Input/ios';
 import RightIcon from '@/public/assets/right.svg';
 import { Input, Sticky } from 'react-vant';
 import useRequest from '@/libs/request';
+import { useTranslation } from 'next-i18next';
+
 export default function account() {
   const { user, mutate } = useUser();
+  const {t} = useTranslation()
+
   const InputSelect = (props) => {
     const [isEdit, setIsEdit] = useState(false);
     const [value, setValue] = useState(props?.label);
