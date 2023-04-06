@@ -5,7 +5,9 @@ import LikeActive from './like-active.svg';
 import Like from './Like.svg';
 import useRequest from '@/libs/request';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 export default function index(props) {
+  const {t} = useTranslation()
   // const comments = [
   //     {
   //       id: 1,
@@ -108,13 +110,13 @@ export default function index(props) {
     console.log(timeDiff / (1000 * 60 * 60), date, 'time');
     if (hours < 1)
       return timeDiff / (1000 * 60) > 1
-        ? `${parseInt(String(timeDiff / (1000 * 60)))}分钟`
-        : '刚刚';
+        ? `${parseInt(String(timeDiff / (1000 * 60)))}${t('分钟')}`
+        : t('刚刚');
     return hours > 24
-      ? `${Math.floor(hours / 24)}天`
-      : `${parseInt(String(hours))}小时`;
-    // return timeDiff / (1000 * 60 * 60);
+      ? `${Math.floor(hours / 24)}${t('天')}`
+      : `${parseInt(String(hours))}${t('小时')}`;
   };
+
   const DiscussionComponentFooter = (props) => {
     const { data, id, user, isChild, parent, time } = props;
     const [clike, setLike] = useState(data?.liked);
@@ -393,14 +395,19 @@ export default function index(props) {
       </div>
       <div className="w-full mb-3 bg-border h-px1"></div>
       {comments?.length === 0 ? (
-        <div onClick={()=>{
-          props.callDiscussion()
-        }} className="w-full h-[300px] flex flex-col justify-center items-center">
+        <div
+          onClick={() => {
+            props.callDiscussion();
+          }}
+          className="w-full h-[300px] flex flex-col justify-center items-center"
+        >
           <EmptyIcon></EmptyIcon>
           <div className="mt-8">
             {' '}
-            <span className="text-[#A9B0C0] text-xs">目前还没有评论，</span>
-            <span className="text-[#3665FF] text-xs">点击评论</span>
+            <span className="text-[#A9B0C0] text-xs">
+              {t('目前还没有评论，')}
+            </span>
+            <span className="text-[#3665FF] text-xs">{t('点击评论')}</span>
           </div>
         </div>
       ) : (

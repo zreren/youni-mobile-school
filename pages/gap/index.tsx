@@ -121,7 +121,7 @@ export default function index() {
         <div className="w-full  gap-card-shadow absolute top-0  justify-center items-center bg-white left-2 mr-4  h-16  flex">
           <div className="flex rounded-full px-6 py-1  items-center space-x-2 bg-[#F7F8F9]">
             <Session></Session>
-            <div className="text-[#798195] font-medium">添加课程</div>
+            <div className="text-[#798195] font-medium">{t('添加课程')}</div>
           </div>
         </div>
       </div>
@@ -130,7 +130,7 @@ export default function index() {
   const TotalGap = () => {
     return (
       <div className="flex justify-between items-center bg-white border border-[#F7F8F9] p-2 ">
-        <div className="text-[#A9B0C0] text-xs">学期总GPA</div>
+        <div className="text-[#A9B0C0] text-xs">{t("学期总GPA")}</div>
         <div className="text-[#37455C] text-sm">6.67</div>
       </div>
     );
@@ -230,7 +230,7 @@ export default function index() {
         onChange={(event: any, newValue: string | null) => {
           changeValue(newValue);
         }}
-        placeholder="请输入"
+        placeholder={t("请输入")}
         sx={{
           display: 'block',
           height: 20,
@@ -255,7 +255,7 @@ export default function index() {
         options={courseData?.map((option) => option?.ename)}
         renderInput={(params) => (
           <TextField
-            placeholder="请输入"
+          placeholder={t("请输入")}
             onBlur={() => {
               props.onBlur();
             }}
@@ -345,7 +345,7 @@ export default function index() {
           <div className={'mx-4 w-full'}>
             <div className="flex items-center space-x-4 w-full">
               <div className={classnames({ 'w-screen': isFocus })}>
-                <div className="text-[10px] text-[#DCDDE1]">课程</div>
+              <div className="text-[10px] text-[#DCDDE1]">{t('课程')}</div>
                 <div
                   className={classnames('text-[14px] overflow-hidden', {
                     'w-full': isFocus,
@@ -380,7 +380,7 @@ export default function index() {
               {isFocus ? null : (
                 <>
                   <div>
-                    <div className="text-[10px] text-[#DCDDE1]">学分</div>
+                  <div className="text-[10px] text-[#DCDDE1]">{t('学分')}</div>
                     <div className={'text-sm'}>
                       {editMethod ? (
                         <InputField
@@ -395,7 +395,7 @@ export default function index() {
                     </div>
                   </div>
                   <div>
-                    <div className="text-[10px] text-[#DCDDE1]">成绩</div>
+                  <div className="text-[10px] text-[#DCDDE1]">{t('成绩')}</div>
                     <div className={'text-sm'}>
                       {editMethod ? (
                         <InputField
@@ -414,7 +414,7 @@ export default function index() {
             </div>
             <div className="text-xs flex">
               <div className={'bg-[#F7F8F9] text-[#798195] text-xs px-2'}>
-                选修
+                      {t("选修")}
               </div>
             </div>
           </div>
@@ -488,20 +488,23 @@ export default function index() {
             <div className="bg-[#F7F8F9] rounded-[4px] flex items-center mr-2 h-[22px] leading-[18px] text-[#A9B0C0] text-[10px] w-18 space-x-2 px-2  justify-center">
               <DeleteIcon></DeleteIcon>
               <div
-                onClick={async(e) => {
+                onClick={async (e) => {
                   e.preventDefault();
-                  const {data} = await useRequest.post('/api/user/term/delete', {
-                    id: item.term.id,
-                  });
-                  if(data?.message === 'success'){
-                    Toast.success('删除成功')
-                  }else{
-                    Toast.fail('删除失败')
+                  const { data } = await useRequest.post(
+                    '/api/user/term/delete',
+                    {
+                      id: item.term.id,
+                    },
+                  );
+                  if (data?.message === 'success') {
+                    Toast.success(t('删除成功'));
+                  } else {
+                    Toast.fail(t('删除失败'));
                   }
                   // Toast.fail('当前学期为管理员设置，无法删除');
                 }}
               >
-                删除学期
+                {t('删除学期')}
               </div>
             </div>
           </div>
@@ -551,8 +554,10 @@ export default function index() {
     // console.log(data,"useEffectdata");
     if (data?.code === 1102 || data?.code === 1101) {
       Dialog.confirm({
-        title: '登录',
-        message: '登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！',
+        title: t('登录'),
+        message: t(
+          '登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！',
+        ),
       })
         .then((res) => {
           dispatch(setOpenLogin('login'));
@@ -605,7 +610,7 @@ export default function index() {
       >
         <div className="flex flex-col p-5 items-center justify-center space-y-3">
           <div className="text-xs text-[#798195]">
-            可以选择导入系统默认学期或创建自定义学期
+            {t('可以选择导入系统默认学期或创建自定义学期')}
           </div>
           <div
             onClick={() => {
@@ -620,7 +625,7 @@ export default function index() {
               },
             )}
           >
-            导入系统默认学期
+            {t('导入系统默认学期')}
           </div>
           <div
             onClick={() => {
@@ -635,7 +640,7 @@ export default function index() {
               },
             )}
           >
-            创建自定义学期
+            {t('创建自定义学期')}
           </div>
         </div>
       </Dialog>
@@ -687,21 +692,21 @@ export default function index() {
         {system === 'custom' ? (
           <>
             <div className="flex flex-col p-5 pb-2  justify-center space-y-3">
-              <div className="text-xs text-[#A9B0C0]">添加年份</div>
+              <div className="text-xs text-[#A9B0C0]">{t('添加年份')}</div>
               <Input
                 value={year}
                 className="bg-[#F7F8F9] p-2"
                 onChange={(text) => setYear(text)}
-                placeholder="添加年份 如: 2021-2022"
+                placeholder={t('添加年份 如: 2021-2022')}
               />
             </div>
             <div className="flex flex-col p-5 pt-2  justify-center space-y-3">
-              <div className="text-xs text-[#A9B0C0]">学期名称</div>
+              <div className="text-xs text-[#A9B0C0]">{t('学期名称')}</div>
               <Input
                 value={termName}
                 className="bg-[#F7F8F9] p-2"
                 onChange={(text) => setName(text)}
-                placeholder="添加学期名称 如: Winter"
+                placeholder={t('添加学期名称 如: Winter')}
               />
             </div>
           </>
@@ -724,7 +729,7 @@ export default function index() {
             ))}
             {!fetchedData ? (
               <div className="p-4  py-10 flex justify-center text-gray-400">
-                校区暂无数据
+                {t('校区暂无数据')}
               </div>
             ) : null}
           </div>
@@ -743,7 +748,7 @@ export default function index() {
                   {total?.data?.totalGpa || 0.0}
                 </div>
                 <div className="text-xs font-medium  text-[#A9B0C0] -mt-2">
-                  总GPA
+                  {t('总GPA')}
                 </div>
                 <div className="font-light text-10 text-[#A9B0C0] flex justify-between space-x-3 absolute -bottom-4">
                   <div> 0.0</div>
@@ -763,26 +768,26 @@ export default function index() {
             <div
               className={'bg-[#FFFBD9] text-[#B38314] px-2 rounded-md py-0.5'}
             >
-              成绩计算规则
+              {t('成绩计算规则')}
             </div>
             <div
               className={'bg-[#FFFBD9] text-[#B38314] px-2 rounded-md py-0.5'}
             >
-              校区政策
+              {t('校区政策')}
             </div>
           </div>
           <div className="h-24 bg-white rounded-b-lg">
             <div className="flex justify-between p-4 space-x-2">
               <CScoreCard
-                label="专业GPA"
+                label={t('专业GPA')}
                 score={total?.data?.totalGpa}
               ></CScoreCard>
               <CScoreCard
-                label="最近2年GPA"
+                label={t('最近2年GPA')}
                 score={total?.data?.gpaAvg || 0}
               ></CScoreCard>
               <CScoreCard
-                label="已完成学分数"
+                label={t('已完成学分数')}
                 score={total?.data?.creditSum}
               ></CScoreCard>
             </div>
@@ -810,7 +815,7 @@ export default function index() {
                   setToastAddTerm(true);
                 }}
               >
-                添加学期
+                {t('添加学期')}
               </div>
             </div>
           </div>
@@ -828,14 +833,10 @@ export default function index() {
   );
 }
 
-
-export async function getServerSideProps({
-  locale,
-  }){
-
+export async function getServerSideProps({ locale }) {
   return {
-      props: {
-          ...(await serverSideTranslations(locale, ['common',]))
-      },
-    }
-  }
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
+}

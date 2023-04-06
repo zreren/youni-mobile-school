@@ -494,7 +494,7 @@ export default function Schedules() {
                 },
               )}
             >
-              {t("周")}
+              {t("周_")}
             </div>
             <div
               onClick={() => {

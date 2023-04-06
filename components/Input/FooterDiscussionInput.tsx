@@ -183,7 +183,7 @@ const SelectPostGroupItem = (props): JSX.Element => {
           {data?.comments?.length}
         </div>
         <input
-          placeholder="说点什么"
+          placeholder={t("说点什么")}
           ref={inputRef}
           value={comment}
           className="px-4 pl-12 w-full   h-9 bg-[#F7F8F9] rounded-full"
@@ -218,7 +218,7 @@ const SelectPostGroupItem = (props): JSX.Element => {
               send(comment);
             }}
           >
-            发送
+            {t("发送")}
           </div>
         )}
       </div>

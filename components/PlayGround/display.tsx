@@ -9,10 +9,11 @@ import Liked from './Liked.svg';
 import { width } from '@mui/system';
 import userequest from '@/libs/request';
 import { Minus } from '@react-vant/icons';
+import { useTranslation } from 'next-i18next';
 
 export default function Display(props) {
   // if(!props.data) return;
-
+  const {t} = useTranslation()
   const { data, isEdit } = props;
   console.log(isEdit, 'Displayprops');
   const router = useRouter();
@@ -202,7 +203,7 @@ export default function Display(props) {
               colorMap[data.type],
             )}
           >
-            {typeMap[data.type]}
+            {t(typeMap[data.type])}
           </div>
           <span className="text-sm text-blueTitle">{data.title}</span>
         </div>

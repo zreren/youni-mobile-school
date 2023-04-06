@@ -3,8 +3,10 @@ import Image from 'next/image';
 import useUser from '@/hooks/useUser';
 import { useDispatch } from 'react-redux';
 import { setOpenLogin } from '../../stores/authSlice';
+import { useTranslation } from 'next-i18next';
 
 export default function PostDiscussionInput(props) {
+  const {t} = useTranslation()
   const dispatch = useDispatch()
   const { user,loggedOut} = useUser();
   const callLogin =()=>{
@@ -32,7 +34,9 @@ export default function PostDiscussionInput(props) {
         )}
       </div>
       <input
-        placeholder={loggedOut?"立即登录，参与讨论":"看到这了，要不要说点什么..."}
+      placeholder={loggedOut?t("立即登录，参与讨论"):t("看到这了，要不要说点什么...")}
+
+
         className="px-4 w-full ml-2 h-full bg-[#F7F8F9] rounded-full"
       ></input>
     </div>
