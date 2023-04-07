@@ -12,7 +12,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export default function account() {
   const { user, mutate } = useUser();
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
   const InputSelect = (props) => {
     const [isEdit, setIsEdit] = useState(false);
@@ -61,7 +61,11 @@ export default function account() {
       title: '账号',
       intro: '',
       action: (
-        <InputSelect dataIndex="nickName" editable={true} label={user?.nickName}></InputSelect>
+        <InputSelect
+          dataIndex="nickName"
+          editable={true}
+          label={user?.nickName}
+        ></InputSelect>
       ),
     },
     {
@@ -94,13 +98,12 @@ export default function account() {
   ];
   return (
     <CommonLayout className="overflow-hidden bg-white">
-      <Header title="账号"></Header>
-      <Form header="账号信息" List={List1}></Form>
-      <Form header="绑定信息" List={List2}></Form>
+      <Header title={t('账号')}></Header>
+      <Form header={t('账号信息')} List={List1}></Form>
+      <Form header={t('绑定信息')} List={List2}></Form>
     </CommonLayout>
   );
 }
-
 
 export async function getServerSideProps({ locale }) {
   return {

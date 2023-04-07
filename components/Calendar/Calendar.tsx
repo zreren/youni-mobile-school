@@ -28,7 +28,7 @@ import { useTranslation } from 'next-i18next';
 
 function Calendar(props) {
   const {t} = useTranslation()
-
+  const [language,setLanguage] = useLocalStorage('language',null);
   interface Event {
     dayOfWeek: number;
     // other properties
@@ -103,24 +103,8 @@ function Calendar(props) {
     });
   }, [props.timeTable]);
 
-  const days = [
-    'sunday',
-    'monday',
-    'tuesday',
-    'wednesday',
-    'thursday',
-    'friday',
-    'saturday',
-  ];
-  const Puller = styled(Box)(({ theme }) => ({
-    width: 30,
-    height: 6,
-    backgroundColor: theme.palette.mode === 'light' ? grey[300] : grey[900],
-    borderRadius: 3,
-    position: 'absolute',
-    top: 8,
-    left: 'calc(50% - 15px)',
-  }));
+
+
   const Card = (props) => {
     const { title, extendedProps, dayOfWeek, students, color } = props;
     const rgba = (hex, opacity) => {
@@ -503,15 +487,7 @@ function Calendar(props) {
     setSetting(setting);
   }, [setting]);
   const day = {
-    en: [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-    ],
+    en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     cn: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
   };
   const [calendarView, setView] = useState<boolean>(true);
@@ -849,7 +825,8 @@ function Calendar(props) {
               <div
                 className={arg.isToday ? 'text-yellow-400' : 'text-gray-400'}
               >
-                <div>{day.cn[arg.date.getDay()]}</div>
+                {/* 语言设置 */}
+                <div>{day?.[language]?.[arg.date.getDay()]}</div>
                 <div className="flex items-center">
                   <div
                     className={classNames(

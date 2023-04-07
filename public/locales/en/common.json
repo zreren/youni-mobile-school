@@ -450,8 +450,8 @@
   "成绩计算规则": "Grade Policy",
   "校区政策": "Campus Policy",
   "专业GPA": "Major GPA",
-  "最近2年GPA": "Recent 2 Years GPA",
-  "已完成学分数": "Completed Credits",
+  "最近2年GPA": "Recent 2 Years",
+  "已完成学分数": "Credits",
   "添加学期": "Add Semester",
   "总GPA": "GPA",
   "校区暂无数据": "No data available for the campus",
@@ -479,5 +479,10 @@
   "打电话": "Call",
   "加微信": "Add on WeChat",
   "发短信": "Send text message",
-  "发邮件": "Send email"
+  "发邮件": "Send email",
+  "微信账号": "WeChat account",
+  "Google账号": "Google account",
+  "Apple账号": "Apple account",
+  "账号信息": "Account Information",
+  "绑定信息": "Binding Information"
 }

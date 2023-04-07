@@ -980,10 +980,10 @@ export default function Schedules() {
       </Popup>
       <Dialog
         visible={dialogVisible}
-        title="登录"
+        title={t("登录")}
         showCancelButton
-        confirmButtonText="登录"
-        cancelButtonText="注册"
+        confirmButtonText={t("登录")}
+        cancelButtonText={t("注册")}
         onConfirm={() => {
           dispatch(setOpenLogin('login'));
           // setDialogVisible(false)
