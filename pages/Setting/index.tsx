@@ -23,59 +23,62 @@ import { useRouter } from 'next/router';
 import { Toast } from 'react-vant';
 import { useTranslation } from 'next-i18next';
 
-
-
-const Icon =new Array(3).map((item,index) => require("@/public/assets/setting/" + index + 1 + ".svg"));
-const IconRender = (props) =>{
-    const IconGetter= Icon[props]
-    return (<IconGetter></IconGetter>)
-}
-const InputSelect = (props) => {
-  return (
-    <div className="flex items-center text-gray-400">
-      <div>未设置</div>
-      <RightIcon></RightIcon>
-    </div>
-  );
+const Icon = new Array(3).map((item, index) =>
+  require('@/public/assets/setting/' + index + 1 + '.svg'),
+);
+const IconRender = (props) => {
+  const IconGetter = Icon[props];
+  return <IconGetter></IconGetter>;
 };
+
 export default function index() {
   const router = useRouter();
-  const {t} = useTranslation()
-
+  const { t } = useTranslation();
+  const InputSelect = (props) => {
+    return (
+      <div className="flex items-center text-gray-400">
+       <div>{t('未设置')}</div>
+  
+        <RightIcon></RightIcon>
+      </div>
+    );
+  };
   const List5 = [
     {
       Icon: Icon1,
-      title: 'Account logout',
+      title: t('退出账户'),
       intro: '',
       action: <RightIcon></RightIcon>,
-      event:async() => {
-        const {data} = await useRequest.get('/api/account/logout')
-        if(data?.message === 'success'){
-          Toast.success('Logout successfully')
-          router.push('/Profile')
-        }else{
-          Toast.fail('network error')
+      event: async () => {
+        const { data } = await useRequest.get('/api/account/logout');
+        if (data?.message === 'success') {
+          Toast.success('Logout successfully');
+          router.push('/Profile');
+        } else {
+          Toast.fail('network error');
         }
-      }
+      },
     },
-  ]
+  ];
   const List1 = [
     {
       Icon: Icon1,
-      title: 'Manage account',
+      title: t('账户管理'),
       intro: '',
       action: <RightIcon></RightIcon>,
-      event:() => {router.push('/Setting/account')}
+      event: () => {
+        router.push('/Setting/account');
+      },
     },
     {
       Icon: Icon2,
-      title: 'Point balance',
+      title: t('积分余额'),
       intro: '',
       action: <RightIcon></RightIcon>,
     },
     {
       Icon: Icon3,
-      title: 'Share profile ',
+      title: t('分享个人资料'),
       intro: '',
       action: <RightIcon></RightIcon>,
     },
@@ -83,82 +86,83 @@ export default function index() {
   const List2 = [
     {
       Icon: Icon12,
-      title: 'Language',
+      title: t('语言'),
       intro: '',
-      event:()=>{
-        router.push('/Setting/language')
+      event: () => {
+        router.push('/Setting/language');
       },
       action: <RightIcon></RightIcon>,
     },
     {
       Icon: Icon13,
-      title: 'History',
+      title: t('历史记录'),
       intro: '',
       action: <RightIcon></RightIcon>,
     },
   ];
+
   const List3 = [
     {
       Icon: Icon4,
-      title: 'Clear cache',
+      title: t('清除缓存'),
       intro: '',
       action: <InputSelect></InputSelect>,
     },
     {
       Icon: Icon5,
-      title: 'Report a problem',
+      title: t('报告问题'),
       intro: '',
       action: <RightIcon></RightIcon>,
     },
     {
       Icon: Icon6,
-      title: 'New function request',
+      title: t('新功能请求'),
       intro: '',
       action: <RightIcon></RightIcon>,
     },
     {
       Icon: Icon7,
-      title: 'Help center ',
+      title: t('帮助中心'),
       intro: '',
       action: <RightIcon></RightIcon>,
     },
   ];
+
   const List4 = [
     {
       Icon: Icon8,
-      title: 'YoUni community guidelines',
+      title: t('YoUni社区指南'),
       intro: '',
       action: <RightIcon></RightIcon>,
     },
     {
       Icon: Icon9,
-      title: 'Terms of service',
+      title: t('服务条款'),
       intro: '',
       action: <RightIcon></RightIcon>,
     },
     {
       Icon: Icon10,
-      title: 'Privacy policy',
+      title: t('隐私政策'),
       intro: '',
       action: <RightIcon></RightIcon>,
     },
     {
       Icon: Icon11,
-      title: 'Copyright policy',
+      title: t('版权政策'),
       intro: '',
       action: <RightIcon></RightIcon>,
     },
   ];
   return (
     <CommonLayout className="overflow-hidden bg-white pb-10">
-      <Header title="Setting"></Header>
-      <Form header="Account" List={List1}></Form>
-      <Form header="Content" List={List2}></Form>
-      <Form header="Cache & support" List={List3}></Form>
-      <Form header="About" List={List4}></Form>
-      <Form header="Auth" List={List5}></Form>
+      <Header title={t('设置')}></Header>
+      <Form header={t('账户')} List={List1}></Form>
+      <Form header={t('内容')} List={List2}></Form>
+      <Form header={t('缓存 & 支持')} List={List3}></Form>
+      <Form header={t('关于')} List={List4}></Form>
+      <Form header={t('认证')} List={List5}></Form>
       {/* <Form header="翻译" List={List2}></Form> */}
-
     </CommonLayout>
   );
 }

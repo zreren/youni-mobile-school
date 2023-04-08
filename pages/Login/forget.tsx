@@ -1,4 +1,4 @@
-import React, { useState,useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import Header from '@/components/Header';
 import useCountDown from '../../hooks/useCountDown';
 import classNames from 'classnames';
@@ -21,6 +21,8 @@ import { styled } from '@mui/material/styles';
 import { setOpenLogin } from '../../stores/authSlice';
 import { Toast } from 'react-vant';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Password = (props) => {
   interface State {
@@ -118,26 +120,20 @@ const Password = (props) => {
       </div>
       <div className="mb-2">Your password must have at least:</div>
       <div className="flex flex-col items-start space-y-2 mt-4 mb-4">
-      <div className="flex items-center text-xs space-x-2">
-        {isLength ? <CheckedIcon></CheckedIcon> : <CheckIcon></CheckIcon>}
+        <div className="flex items-center text-xs space-x-2">
+          {isLength ? <CheckedIcon></CheckedIcon> : <CheckIcon></CheckIcon>}
           <div>label="Parent</div>
         </div>
         <div className="flex items-center">
-        {isLetterAndNumber ? (
-              <CheckedIcon></CheckedIcon>
-            ) : (
-              <CheckIcon></CheckIcon>
-            )}
+          {isLetterAndNumber ? (
+            <CheckedIcon></CheckedIcon>
+          ) : (
+            <CheckIcon></CheckIcon>
+          )}
           <div>label="Parent</div>
         </div>
         <div className="flex items-center">
-        {
-              isSpecial ? (
-                <CheckedIcon></CheckedIcon>
-              ) : (
-                <CheckIcon></CheckIcon>
-              )
-            }
+          {isSpecial ? <CheckedIcon></CheckedIcon> : <CheckIcon></CheckIcon>}
           <div>label="Parent</div>
         </div>
       </div>
@@ -161,25 +157,25 @@ const Password = (props) => {
 export default function Valid(props) {
   const { returnClick } = props;
   const [state, setState] = React.useState(0);
-  const router = useRouter()
-  const [phoneNumber,setPhoneNumber] = useState('')
-  const [prefix,setPrefix] = useState("");
-  const [accessToken,setAccessToken] = useState("")
+  const { t } = useTranslation();
+  const router = useRouter();
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [prefix, setPrefix] = useState('');
+  const [accessToken, setAccessToken] = useState('');
   const PhoneValid = (props) => {
     const [count] = useCountDown({ mss: 60 });
     const [age, setAge] = React.useState('86');
-    const [phoneValue,setPhoneValue] = useState('')
-    const [isCodeInput,setIsCodeInput] = useState(false)
+    const [phoneValue, setPhoneValue] = useState('');
+    const [isCodeInput, setIsCodeInput] = useState(false);
 
     React.useEffect(() => {
-      if(phoneValue.length > 3){
-        setIsCodeInput(true)
-      }else{
-        setIsCodeInput(false)
+      if (phoneValue.length > 3) {
+        setIsCodeInput(true);
+      } else {
+        setIsCodeInput(false);
       }
-      
-    }, [phoneValue])
-    
+    }, [phoneValue]);
+
     const handleChange = (event: SelectChangeEvent) => {
       setAge(event.target.value as string);
     };
@@ -187,8 +183,8 @@ export default function Valid(props) {
       return (
         <div className="z-30 w-full h-screen p-8  topIndexPlus">
           <Header className="shadow-none bg-transparent" title=""></Header>
-          <div className="text-2xl font-medium">Forget Password</div>
-          <div>We will send a code to your phone</div>
+          <div className="text-2xl font-medium">{t('忘记密码')}</div>
+          <div>{t('我们将发送一条验证码到您的手机')}</div>
           <div className="mt-6 mb-6">
             <input
               type="text"
@@ -196,7 +192,7 @@ export default function Valid(props) {
               placeholder="Type here"
               className="w-full input hover:outline-none topIndexPlus"
               onChange={(e) => {
-                setPhoneValue(e.target.value)
+                setPhoneValue(e.target.value);
               }}
             />
             <div className="w-full text-xs text-right">
@@ -205,7 +201,7 @@ export default function Valid(props) {
           </div>
           <button
             onClick={() => {
-              setPhoneNumber(phoneValue)
+              setPhoneNumber(phoneValue);
               props.setState(2);
             }}
             className={classNames(
@@ -215,10 +211,10 @@ export default function Valid(props) {
                 : 'bg-gray-300 hover:bg-gray-300 ',
             )}
           >
-            Next
+            {t('下一步')}
           </button>
-          <div  className="w-full mt-8 text-xs text-left text-darkYellow">
-            No code?
+          <div className="w-full mt-8 text-xs text-left text-darkYellow">
+            {t('没有收到验证码？')}
           </div>
         </div>
       );
@@ -233,14 +229,14 @@ export default function Valid(props) {
           className="shadow-none bg-transparent"
           title=""
         ></Header>
-        <div className="text-2xl font-medium">Forget Password</div>
-        <div>We will send a code to your phone</div>
+        <div className="text-2xl font-medium">{t('忘记密码')}</div>
+        <div>{t('我们将发送一条验证码到您的手机')}</div>
         <div className="mt-6 mb-6">
           <label className="flex items-center input-group topIndex">
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              className='topIndexPlus'
+              className="topIndexPlus"
               value={age}
               sx={{
                 boxShadow: 'none',
@@ -256,7 +252,11 @@ export default function Valid(props) {
               onChange={handleChange}
             >
               {prefixSorted.map((item) => {
-                return <MenuItem className='topIndexPlus' value={item.prefix}>+{item.prefix}</MenuItem>;
+                return (
+                  <MenuItem className="topIndexPlus" value={item.prefix}>
+                    +{item.prefix}
+                  </MenuItem>
+                );
               })}
             </Select>
             <input
@@ -265,7 +265,7 @@ export default function Valid(props) {
               placeholder="Type here"
               className="w-full input hover:outline-none topIndexPlus"
               onChange={(e) => {
-                setPhoneValue(e.target.value)
+                setPhoneValue(e.target.value);
               }}
             />
           </label>
@@ -285,11 +285,11 @@ export default function Valid(props) {
         </div>
         <button
           onClick={() => {
-            useRequest.post('/api/send_sms_code',{
-              phone:phoneValue
-            })
+            useRequest.post('/api/send_sms_code', {
+              phone: phoneValue,
+            });
             setPhoneNumber(phoneValue);
-            setPrefix(age)
+            setPrefix(age);
             props.setState(2);
           }}
           className={classNames(
@@ -299,7 +299,7 @@ export default function Valid(props) {
               : 'bg-gray-300 hover:bg-gray-300 ',
           )}
         >
-          Send code
+          {t('发送验证码')}
         </button>
         {/* <div className="w-full mt-8 text-xs text-left text-darkYellow">
           No code?
@@ -308,19 +308,19 @@ export default function Valid(props) {
     );
   };
   const CodeValid = (props) => {
-    const [code,setCode] = useState('')
-    const validCode = async ()=>{
-        const {data} = await useRequest.post('/api/check_code',{
-          account:phoneNumber,
-          code:code
-        })
-        if (data?.data?.accessToken) {
-          setState(3)
-          setAccessToken(data?.data?.accessToken);
-        }else{
-          Toast.fail(data?.message);
-        }
-    }
+    const [code, setCode] = useState('');
+    const validCode = async () => {
+      const { data } = await useRequest.post('/api/check_code', {
+        account: phoneNumber,
+        code: code,
+      });
+      if (data?.data?.accessToken) {
+        setState(3);
+        setAccessToken(data?.data?.accessToken);
+      } else {
+        Toast.fail(data?.message);
+      }
+    };
     return (
       <div className="z-30 w-full h-full p-8 bg-white h-screen">
         <Header
@@ -330,20 +330,22 @@ export default function Valid(props) {
           className="shadow-none bg-transparent"
           title=""
         ></Header>
-        <div className="text-2xl font-medium">Enter 6-digit code</div>
+        <div className="text-2xl font-medium">{t('输入6位数字代码')}</div>
         <div>
-          Enter the 6-digit verification code you received at +{prefix} {phoneNumber}.The code are valid for 30 minutes
+          {t('输入您在+')} {prefix} {phoneNumber}{' '}
+          {t('收到的6位数字验证码。该代码在30分钟内有效。')}
         </div>
         <div className="mt-6 mb-6">
-            <input
-              type="text"
-              placeholder="Code"
-              className="w-full input hover:outline-none"
-              value={code}
-              onChange={(e) => {
-                setCode(e.target.value);
-              }}
-            />    {/* <input
+          <input
+            type="text"
+            placeholder="Code"
+            className="w-full input hover:outline-none"
+            value={code}
+            onChange={(e) => {
+              setCode(e.target.value);
+            }}
+          />{' '}
+          {/* <input
           type="text"
           placeholder="Type here"
           className="w-full input hover:outline-none"
@@ -359,7 +361,7 @@ export default function Valid(props) {
         </div>
         <button
           onClick={() => {
-            validCode()
+            validCode();
             // props.setState(2);
           }}
           className={classNames(
@@ -452,7 +454,7 @@ export default function Valid(props) {
           Toast.success('Create success');
           router.push('/Profile');
           dispatch(setOpenLogin('login'));
-          Toast.success('修改成功');
+          Toast.success(t('修改成功'));
           // router.push('/Login/signin')
         } else {
           Toast.fail(data?.message);
@@ -495,11 +497,11 @@ export default function Valid(props) {
             label="Password"
           />
         </div>
-        <div className="mb-2">Your password must have at least:</div>
+        <div className="mb-2">{t('您的密码必须至少包含：')}</div>
         <div className="flex flex-col items-start space-y-2 mt-4 mb-4">
           <div className="flex items-center text-xs space-x-2">
             {isLength ? <CheckedIcon></CheckedIcon> : <CheckIcon></CheckIcon>}
-            <div>8 characters (20 max)</div>
+            <div>{t('8个字符（最多20个字符）')}</div>
           </div>
           <div className="flex items-center  text-xs space-x-2">
             {isLetterAndNumber ? (
@@ -507,11 +509,11 @@ export default function Valid(props) {
             ) : (
               <CheckIcon></CheckIcon>
             )}
-            <div>1 letter and 1 number</div>
+            <div>{t('1个字母和1个数字')}</div>
           </div>
           <div className="flex items-center  text-xs space-x-2">
             {isSpecial ? <CheckedIcon></CheckedIcon> : <CheckIcon></CheckIcon>}
-            <div>1 special character (Example:#!$&@)</div>
+            <div>{t('1个特殊字符（例如：#!$&@）')}</div>
           </div>
         </div>
         <button
@@ -530,11 +532,21 @@ export default function Valid(props) {
       </div>
     );
   };
-  const NodeList = [PhoneValid, PhoneValid, CodeValid,Password];
+  const NodeList = [PhoneValid, PhoneValid, CodeValid, Password];
   const Node = NodeList[state];
   return (
     <div className="topIndexPlus  z-30">
       <Node setState={setState}></Node>
     </div>
   );
+}
+
+export async function getStaticProps({ locale }) {
+  console.log(locale, 'locale');
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+      // Will be passed to the page component as props
+    },
+  };
 }

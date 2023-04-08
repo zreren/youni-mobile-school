@@ -64,10 +64,10 @@ export default function SignIn(props) {
           dispatch(setOpenLogin('close'));
         }
       } else {
-        Toast.fail(`${t("登录失败")}`);
+        Toast.fail(`${t('登录失败')}`);
       }
     } catch (error) {
-      Toast.fail(`${t("登录失败")}`);
+      Toast.fail(`${t('登录失败')}`);
     }
   };
 
@@ -355,7 +355,7 @@ export default function SignIn(props) {
               }}
               className=" pl-4 text-xs text-gray-300"
             >
-             {loginWay === 'code' ? t('使用密码登录') : t('使用验证码登录')}
+              {loginWay === 'code' ? t('使用密码登录') : t('使用验证码登录')}
             </div>
           </div>
           <button
@@ -525,16 +525,13 @@ export default function SignIn(props) {
           >
             <SignUpButton
               icon={Youni}
-              label="Use phone or school email"
+              label={t('使用手机或学校邮箱')}
             ></SignUpButton>
             <SignUpButton
               icon={Google}
-              label="Continue with Google"
+              label={t('使用Google账号')}
             ></SignUpButton>
-            <SignUpButton
-              icon={Wechat}
-              label="Continue with WeChat/Weixin"
-            ></SignUpButton>
+            <SignUpButton icon={Wechat} label={t('使用微信')}></SignUpButton>
           </div>
           <div className="bottom-0 z-30 w-full">
             <div className="w-full h-full p-10 pt-2 pb-2 text-xs text-center text-gray-300 bg-white">

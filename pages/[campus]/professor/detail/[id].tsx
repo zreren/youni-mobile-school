@@ -45,9 +45,9 @@ export default function ProfessorDetail() {
     console.log(professorCommentList, 'professorCommentList');
   }, [professorCommentList]);
   const professorListCopy = useMemo(() => {
-    if (!professorDataList?.data) return [{ id: 0, ename: '查看全部' }];
+    if (!professorDataList?.data) return [{ id: 0, ename: t('查看全部') }];
     const newval = professorDataList?.data.slice();
-    return [{ id: 0, code: '查看全部' }, ...newval];
+    return [{ id: 0, code: t('查看全部') }, ...newval];
   }, [professorDataList]);
   useEffect(() => {
     console.log(professorListCopy, 'professorListCopy');

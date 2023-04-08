@@ -9,7 +9,7 @@ export default function Form(props) {
       {
         title: '标题',
         action: 'text',
-        intro: '请输入',
+        intro: t('请输入'),
         Icon:null,
       },
     ];

@@ -260,10 +260,10 @@ export default function evaluation() {
     },
     content: '',
     professorTagsEvaluation: [],
-    professorRating: 1,
-    contentRating: 1,
-    homeworkRating: 1,
-    examRating: 1,
+    professorRating: null,
+    contentRating: null,
+    homeworkRating: null,
+    examRating: null,
     // [key]: value,
   });
   useEffect(() => {
@@ -679,6 +679,8 @@ export default function evaluation() {
       if (submitData?.code === 1102) {
         Dialog.confirm({
           title: t('登录'),
+          confirmButtonText: t('确定'),
+          cancelButtonText: t('取消'),
           message: t(
             '登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！',
           ),
@@ -694,11 +696,11 @@ export default function evaluation() {
       }
 
       if (submitData?.code === 2003) {
-        Toast.fail('提交失败,您还未认证校区');
+        Toast.fail(t('提交失败，您还未认证校区'));
         // setOpenCourse(true);
-      } else {
-        Toast.fail('提交失败,检查课程信息');
-      }
+        } else {
+        Toast.fail(t('提交失败，检查课程信息'));
+        }
     } catch (error) {
       Toast.fail(error);
     }

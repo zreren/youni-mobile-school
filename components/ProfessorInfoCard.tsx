@@ -3,8 +3,10 @@ import { professorList } from '@/mock/data';
 import EvaluationTags from './Tags/EvaluationTags';
 import CScoreCard from './Rating/CScoreCard';
 import Title from './Title/Title';
+import { useTranslation } from 'next-i18next';
 export default function ProfessorInfoCard(props) {
   const {data} = props;
+  const {t} = useTranslation()
   return (
     <div className="bg-white w-full  space-y-3  p-4 flex-wrap rounded-xl">
       <div className="flex items-center">
@@ -23,13 +25,13 @@ export default function ProfessorInfoCard(props) {
         })}
       </div>
       <div className="flex space-x-4 justify-between">
-        <CScoreCard score={data?.rating?.professorRating} title="教授综合评分" type={1} color="blue"></CScoreCard>
-        <CScoreCard score={data?.rating?.overallRatting}  title="课程综合评分" type={1} color="purple"></CScoreCard>
+        <CScoreCard score={data?.rating?.professorRating} title={t('教授综合评分')} type={1} color="blue"></CScoreCard>
+        <CScoreCard score={data?.rating?.overallRatting}  title={t('课程综合评分')} type={1} color="purple"></CScoreCard>
       </div>
       <div className="flex justify-between">
-        <CScoreCard title="内容评分" score={data?.rating?.contentRating} type={2}></CScoreCard>
-        <CScoreCard title="作业评分" score={data?.rating?.homeworkRating} type={2}></CScoreCard>
-        <CScoreCard title="考试评分" score={data?.rating?.examRating} type={2}></CScoreCard>
+        <CScoreCard title={t('内容评分')} score={data?.rating?.contentRating} type={2}></CScoreCard>
+        <CScoreCard title={t('作业评分')} score={data?.rating?.homeworkRating} type={2}></CScoreCard>
+        <CScoreCard title={t('考试评分')} score={data?.rating?.examRating} type={2}></CScoreCard>
       </div>
     </div>
   );

@@ -15,9 +15,13 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import FooterDiscussionInput from '@/components/Input/FooterDiscussionInput';
 import useLocalStorage from '../../../../../hooks/useStore';
+import { useDispatch } from 'react-redux';
 // import Discussion from '@/components/Discussion/index'
 import GDiscussionComponent from '@/components/Discussion';
+import { selectAuthState, setAuthState, selectOpen } from '@/stores/authSlice';
 import { Toast } from 'react-vant';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export default function userComment() {
   const router = useRouter();
@@ -27,6 +31,11 @@ export default function userComment() {
       id: id,
     });
   };
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setAuthState(true));
+  }, []);
   const [language, setLanguage] = useLocalStorage('language', 'en');
   const { id } = router.query;
   const { data, error } = useFetch(`/evaluation/detail?id=${id}`, 'get');
@@ -146,7 +155,7 @@ export default function userComment() {
                                   className="rounded-full"
                                   src={`${Cons.BASEURL}${item?.user?.avatar}`}
                                 />
-                              ) : null }
+                              ) : null}
                             </div>
                             <div className="w-full">
                               <div className="font-medium">
@@ -181,7 +190,7 @@ export default function userComment() {
                                   className="rounded-full"
                                   src={`${Cons.BASEURL}${item?.user?.avatar}`}
                                 />
-                              ) : null }
+                              ) : null}
                             </div>
                             <div className="w-full">
                               <div className="font-medium">
@@ -213,8 +222,10 @@ export default function userComment() {
                       onClick={() => [setExpand(!expand)]}
                     >
                       {expand
-                        ? '收起'
-                        : `查看全部 ${item?.children?.length} 条回复`}
+                        ? t('收起')
+                        : `${t('查看全部')}${item?.children?.length}${t(
+                            '条回复',
+                          )})`}
                     </div>
                   ) : null}
                 </div>
@@ -240,7 +251,7 @@ export default function userComment() {
       content: e,
     });
     if (data?.message) {
-      Toast.success('评论成功');
+      Toast.success(t('评论成功'));
       mutate();
     }
   };
@@ -257,7 +268,7 @@ export default function userComment() {
       content: comment,
     });
     if (data?.message) {
-      Toast.success('评论成功');
+      Toast.success(t('评论成功'));
       mutate();
     }
   };
@@ -267,7 +278,7 @@ export default function userComment() {
     pid: null,
   });
   const commentComment = (e) => {
-    console.log(e,"setCommentChild")
+    console.log(e, 'setCommentChild');
     setCommentChild(e);
   };
   function FooterDiscussionInputChild(props) {
@@ -280,7 +291,7 @@ export default function userComment() {
     return (
       <div className="sticky  z-30 bottom-10 flex   items-center w-full p-5 bg-white h-[60px]">
         <input
-          placeholder={`回复${user?.nickName}`}
+          placeholder={`${t("回复")}${user?.nickName}`}
           value={comment}
           className="px-1 pl-4 w-full   h-9 bg-[#F7F8F9] rounded-full"
           onChange={(e) => {
@@ -294,7 +305,7 @@ export default function userComment() {
             send();
           }}
         >
-          发送
+          {t("发送")}
         </div>
       </div>
     );
@@ -363,19 +374,19 @@ export default function userComment() {
           <div className="w-full   rounded-t-xl org-gradient2 relative h-8">
             <Super className="absolute right-1 bottom-0 z-10"></Super>
             <Union className="absolute right-0 bottom-0"></Union>
-            <div className="pl-4 pt-2 course-evaluation">课程评价</div>
+            <div className="pl-4 pt-2 course-evaluation">{t('课程评价')}</div>
           </div>
           <div className="bg-gradient-to-b from-yellow-50  p-4">
             <div className="flex justify-between items-center comment-detail-header to-yellow-50 w-full ">
               <div>
                 <div className="flex space-x-2 mb-1 mt-1">
-                  <div className="text-gray-300">课程名称:</div>
+                  <div className="text-gray-300">{t('课程名称')}: </div>
                   <div className="text-blueTitle">
                     {data?.data?.course.code}
                   </div>
                 </div>
                 <div className="flex space-x-2 mb-1 mt-1">
-                  <div className="text-gray-300">最终成绩:</div>
+                  <div className="text-gray-300">{t('最终成绩')}: </div>
                   <div className="text-blueTitle">{data?.data?.finalGrade}</div>
                 </div>
               </div>
@@ -384,17 +395,17 @@ export default function userComment() {
         </div>
         <div className="flex justify-between mt-4">
           <CScoreCard
-            title={'内容评分'}
+            title={t('内容评分')}
             score={data?.data?.contentRating}
             type={2}
           ></CScoreCard>
           <CScoreCard
-            title={'作业评分'}
+            title={t('作业评分')}
             score={data?.data?.homeworkRating}
             type={2}
           ></CScoreCard>
           <CScoreCard
-            title={'考试评分'}
+            title={t('考试评分')}
             score={data?.data?.examRating}
             type={2}
           ></CScoreCard>
@@ -411,9 +422,9 @@ export default function userComment() {
             callDiscussion={focusInput}
           ></PostDiscussionInput>
           <GDiscussionComponent
-          commentComment={(e) => {
-            commentComment(e);
-          }}
+            commentComment={(e) => {
+              commentComment(e);
+            }}
             callDiscussion={focusInput}
             comments={commentData}
             data={commentData}
@@ -421,25 +432,37 @@ export default function userComment() {
         </div>
       </div>
       {commentChild?.id ? (
-         <div className='fixed bottom-12 w-full'>
-        <FooterDiscussionInputChild
-          send={(comment, id, pid) => {
-            sendChild(comment, id, pid);
-          }}
-          {...commentChild}
-        ></FooterDiscussionInputChild>
+        <div className="fixed bottom-12 w-full">
+          <FooterDiscussionInputChild
+            send={(comment, id, pid) => {
+              sendChild(comment, id, pid);
+            }}
+            {...commentChild}
+          ></FooterDiscussionInputChild>
         </div>
       ) : (
-        <div className='fixed bottom-12 w-full'>
-        <FooterDiscussionInput
-         ref={inputRef}
-          send={(e) => {
-            sendComment(e);
-          }}
-          data={data?.data}
-        ></FooterDiscussionInput>
+        <div className="fixed bottom-12 w-full">
+          <FooterDiscussionInput
+            ref={inputRef}
+            send={(e) => {
+              sendComment(e);
+            }}
+            data={data?.data}
+          ></FooterDiscussionInput>
         </div>
       )}
     </>
   );
+}
+
+export async function getServerSideProps({ params, locale }) {
+  const post = {
+    title: 'FatCoupon Refer-A-Friend: Give $15; Get $10',
+    details: 'jjj',
+  };
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
 }

@@ -130,7 +130,7 @@ export default function index() {
   const TotalGap = () => {
     return (
       <div className="flex justify-between items-center bg-white border border-[#F7F8F9] p-2 ">
-        <div className="text-[#A9B0C0] text-xs">{t("学期总GPA")}</div>
+        <div className="text-[#A9B0C0] text-xs">{t('学期总GPA')}</div>
         <div className="text-[#37455C] text-sm">6.67</div>
       </div>
     );
@@ -230,7 +230,7 @@ export default function index() {
         onChange={(event: any, newValue: string | null) => {
           changeValue(newValue);
         }}
-        placeholder={t("请输入")}
+        placeholder={t('请输入')}
         sx={{
           display: 'block',
           height: 20,
@@ -255,7 +255,7 @@ export default function index() {
         options={courseData?.map((option) => option?.ename)}
         renderInput={(params) => (
           <TextField
-          placeholder={t("请输入")}
+            placeholder={t('请输入')}
             onBlur={() => {
               props.onBlur();
             }}
@@ -345,7 +345,7 @@ export default function index() {
           <div className={'mx-4 w-full'}>
             <div className="flex items-center space-x-4 w-full">
               <div className={classnames({ 'w-screen': isFocus })}>
-              <div className="text-[10px] text-[#DCDDE1]">{t('课程')}</div>
+                <div className="text-[10px] text-[#DCDDE1]">{t('课程')}</div>
                 <div
                   className={classnames('text-[14px] overflow-hidden', {
                     'w-full': isFocus,
@@ -380,7 +380,9 @@ export default function index() {
               {isFocus ? null : (
                 <>
                   <div>
-                  <div className="text-[10px] text-[#DCDDE1]">{t('学分')}</div>
+                    <div className="text-[10px] text-[#DCDDE1]">
+                      {t('学分')}
+                    </div>
                     <div className={'text-sm'}>
                       {editMethod ? (
                         <InputField
@@ -395,7 +397,9 @@ export default function index() {
                     </div>
                   </div>
                   <div>
-                  <div className="text-[10px] text-[#DCDDE1]">{t('成绩')}</div>
+                    <div className="text-[10px] text-[#DCDDE1]">
+                      {t('成绩')}
+                    </div>
                     <div className={'text-sm'}>
                       {editMethod ? (
                         <InputField
@@ -414,7 +418,7 @@ export default function index() {
             </div>
             <div className="text-xs flex">
               <div className={'bg-[#F7F8F9] text-[#798195] text-xs px-2'}>
-                      {t("选修")}
+                {t('选修')}
               </div>
             </div>
           </div>
@@ -555,6 +559,8 @@ export default function index() {
     if (data?.code === 1102 || data?.code === 1101) {
       Dialog.confirm({
         title: t('登录'),
+        confirmButtonText: t('确定'),
+        cancelButtonText: t('取消'),
         message: t(
           '登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！',
         ),
@@ -646,7 +652,7 @@ export default function index() {
       </Dialog>
       <Dialog
         visible={addTermInfoVisible}
-        title="添加学期"
+        title={t('添加学期')}
         showCancelButton
         onConfirm={async () => {
           // Toast.info('点击确认按钮');
@@ -654,7 +660,7 @@ export default function index() {
 
           if (system === 'custom') {
             if (!regex.test(year)) {
-              Toast.fail('请输入正确的时间格式');
+              Toast.fail(t('请输入正确的时间格式'));
               return;
             }
             const { data } = await useRequest.post('/api/user/term/create', {
@@ -662,14 +668,14 @@ export default function index() {
               name: termName,
             });
             if (data?.message === 'success') {
-              Toast.success('添加学期成功');
+              Toast.success(t('添加学期成功'));
               mutate();
             } else {
-              Toast.fail('添加失败');
+              Toast.fail(t('添加失败'));
             }
           } else {
             if (!selectSystemId) {
-              Toast.fail('您还未选择学期');
+              Toast.fail(t('您还未选择学期'));
               return;
             }
             const { data } = await useRequest.post('/api/user/term/create', {
@@ -679,10 +685,10 @@ export default function index() {
               campusTermId: selectSystemId.id,
             });
             if (data?.message === 'success') {
-              Toast.success('添加学期成功');
+              Toast.success(t('添加学期成功'));
               mutate();
             } else {
-              Toast.fail('添加失败');
+              Toast.fail(t('添加失败'));
             }
           }
           setAddTermInfoVisible(false);

@@ -123,7 +123,7 @@ const SelectPostGroupItem = (props): JSX.Element => {
  const  FooterDiscussionInput = forwardRef((props: FooterType,ref) =>{
   const [comment, setComment] = useState<string>('');
   const { data } = props;
-  const { t } = useTranslation('main')
+  const { t } = useTranslation()
 
   console.log(t('clickme'),"clickme")
   const [star, setStar] = useState<boolean>(data?.interactInfo?.stared);

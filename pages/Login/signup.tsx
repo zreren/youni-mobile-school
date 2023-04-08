@@ -33,6 +33,7 @@ import { disableZoom } from '@/libs/disableZoom';
 import { enableZoom } from '@/libs/enableZoom';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useLocalStorage } from 'react-use';
 
 const SignUpButton = (props) => {
   const { title, icon: Icon, label } = props;
@@ -53,6 +54,7 @@ export default function SignUp(props) {
   const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
   const [language, setLanguage] = useState('');
+  const [lang,setLang] = useLocalStorage('language',null)
   const { t } = useTranslation();
   useEffect(() => {
     disableZoom();
@@ -364,6 +366,7 @@ export default function SignUp(props) {
       </div>
     );
   };
+  const router = useRouter();
   const SelectLanguage = (props) => {
     return (
       <div className="z-10 flex flex-col w-full h-screen -appear in mt-11">
@@ -376,7 +379,7 @@ export default function SignUp(props) {
           <ReturnBackIcon className=""></ReturnBackIcon>
         </div>
         {/* <Image src={Logo} alt=""></Image> */}
-        <div className="z-10 pl-8 pr-8 text-2xl">Select Language</div>
+        <div className="z-10 pl-8 pr-8 text-2xl">{t('Select Language')}</div>
         <div className="z-10 pl-8 pr-8 mb-20 text-sm text-md text-userColor">
           {t('选择您最常使用的语言。您可以随时更改此选择。')}
         </div>
@@ -393,8 +396,10 @@ export default function SignUp(props) {
         <div
           className="z-30 h-full p-4 space-y-10 bg-white-mask"
           onClick={() => {
+            router.push(router.asPath, router.asPath, { locale: 'en' });
             props.setProgress(2);
-            setLanguage('EN');
+            setLanguage('en');
+            setLang('en')
           }}
         >
           <div className="flex items-center justify-center w-full h-32 text-xl rounded text-userColor flex-2xl bg-bg">
@@ -403,7 +408,9 @@ export default function SignUp(props) {
           <div
             onClick={() => {
               props.setProgress(2);
-              setLanguage('ZH');
+              setLanguage('cn');
+              setLang('cn')
+              router.push(router.asPath, router.asPath, { locale: 'cn' });
             }}
             className="flex items-center justify-center w-full h-32 text-xl rounded text-userColor flex-2xl bg-bg"
           >
@@ -445,16 +452,13 @@ export default function SignUp(props) {
           >
             <SignUpButton
               icon={Youni}
-              label="Use phone or school email"
+              label={t('使用手机或学校邮箱')}
             ></SignUpButton>
             <SignUpButton
               icon={Google}
-              label="Continue with Google"
+              label={t('使用Google账号')}
             ></SignUpButton>
-            <SignUpButton
-              icon={Wechat}
-              label="Continue with WeChat/Weixin"
-            ></SignUpButton>
+            <SignUpButton icon={Wechat} label={t('使用微信')}></SignUpButton>
           </div>
           <div className=" bottom-0 z-30 w-full">
             <div className="w-full h-full p-10 pt-2 pb-2 text-xs text-center text-gray-300 bg-white">

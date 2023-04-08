@@ -22,15 +22,17 @@ export default function courseInfo() {
     return <Node></Node>;
   };
   const Item = (props: any) => {
-    const { name, itemKey, item, icon, iconListActive, updateData } = props;
-    const [active, setActive1] = React.useState(0);
-
+    const { name, itemKey, item, icon, iconListActive, updateData,value } = props;
+    const [active, setActive1] = React.useState(value);
+    useEffect(()=>{
+      console.log(value,"value")
+    },[])
     const setActive = (props: any) => {
+      setActive1(props);
       updateData({
         key: itemKey,
         value: props,
       });
-      setActive1(props);
     };
     // console.log(icon, 'icon');
     return (
@@ -48,7 +50,7 @@ export default function courseInfo() {
             >
               <div>{getIcon(active === 1 ? iconListActive[0] : icon[0])}</div>
               <div className="text-xs text-gray-400">1</div>
-              <div className="text-sm text-gray-400">{item[0]}</div>
+              <div className="text-sm text-gray-400">{t(item[0])}</div>
             </div>
             <div
               className="flex flex-col items-center"
@@ -58,7 +60,7 @@ export default function courseInfo() {
             >
               {getIcon(active === 2 ? iconListActive[1] : icon[1])}
               <div className="text-xs text-gray-400">2</div>
-              <div className="text-sm text-gray-400">{item[1]}</div>
+              <div className="text-sm text-gray-400">{t(item[1])}</div>
             </div>
             <div
               className="flex flex-col items-center"
@@ -68,7 +70,7 @@ export default function courseInfo() {
             >
               {getIcon(active === 3 ? iconListActive[2] : icon[2])}
               <div className="text-xs text-gray-400">3</div>
-              <div className="text-sm text-gray-400">{item[2]}</div>
+              <div className="text-sm text-gray-400">{t(item[2])}</div>
             </div>
             <div
               className="flex flex-col items-center"
@@ -78,7 +80,7 @@ export default function courseInfo() {
             >
               {getIcon(active === 4 ? iconListActive[3] : icon[3])}
               <div className="text-xs text-gray-400">4</div>
-              <div className="text-sm text-gray-400">{item[3]}</div>
+              <div className="text-sm text-gray-400">{t(item[3])}</div>
             </div>
             <div
               className="flex flex-col items-center"
@@ -88,7 +90,7 @@ export default function courseInfo() {
             >
               {getIcon(active === 5 ? iconListActive[4] : icon[4])}
               <div className="text-xs text-gray-400">5</div>
-              <div className="text-sm text-gray-400">{item[4]}</div>
+              <div className="text-sm text-gray-400">{t(item[4])}</div>
             </div>
           </div>
         </div>
@@ -162,7 +164,8 @@ export default function courseInfo() {
             updateData={(e) => {
               updateData(e);
             }}
-            name={item.name}
+            value={data?.data?.[item?.dataIndex]}
+            name={t(item.name)}
             item={item.item}
             itemKey={item.dataIndex}
             iconListActive={item.iconListActive}

@@ -22,10 +22,12 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import TopicIcon from './topic.svg';
 import Waterfall from '@/components/Layout/Waterfall';
 import { grey } from '@mui/material/colors';
+import { useTranslation } from 'react-i18next';
 
 export default function recommend(props) {
   const router = useRouter();
   const {user} = useUser();
+  const {t} = useTranslation();
   const campus = router.query.campus;
   const id = React.useMemo(() => router.query.id || props.id, [router,props])
   const { data,mutate } = useFetch(`/post/detail?id=${id}`, 'get');
@@ -465,14 +467,14 @@ export default function recommend(props) {
                 await useRequest.post('/api/post/unstar',{
                   id: id
                 })
-                Toast.success('取消收藏');
+                Toast.success(t('取消收藏'));
                 mutate()
                 // setStarted((pre)=>!pre)
               }else{
                 if(!user) {
                   Dialog.confirm({
-                    title: '登录',
-                    message: '您还未登录，登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！',
+                    title: t('登录'),
+                    message: t('您还未登录，登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！'),
                   })
                     .then((res) => {
                       dispatch(setOpenLogin('login'));
@@ -489,7 +491,7 @@ export default function recommend(props) {
                 await useRequest.post('/api/post/star',{
                   id: id
                 })
-                Toast.success('收藏成功');
+                Toast.success(t('收藏成功'));
                 mutate()
                 // setStarted((pre)=>!pre)
               }
@@ -497,7 +499,7 @@ export default function recommend(props) {
 
             }}
           >
-            { started ? '已收藏' : '收藏'}
+            { started ? t('已收藏') : t('收藏')}
           </div>
         </div>
         <div
@@ -507,12 +509,12 @@ export default function recommend(props) {
               Toast.success('已复制到简介板，分享给好友吧！');
 
             } catch (error) {
-              Toast.fail('复制失败')
+              Toast.fail(t('复制失败'))
             }
           }}
           className="bg-[#F3F4F6] w-full h-10 rounded-lg  flex justify-center items-center"
         >
-          分享
+          {t("分享")}
         </div>
       </div>
       <Recommend></Recommend>

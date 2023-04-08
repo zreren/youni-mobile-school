@@ -3,8 +3,10 @@ import SearchInSchool from './SearchAtSchool';
 import SwiperAtSchool from './SwiperAtSchool';
 import SchoolIcon from './school.svg';
 import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
 export default function HeaderLayout(props) {
   const { school } = props;
+  const { t} = useTranslation()
   if(!school) return null
   return (
     <div
@@ -14,8 +16,8 @@ export default function HeaderLayout(props) {
         <SchoolIcon className="mr-4 "></SchoolIcon>
         <div className="text-lg font-medium ">{school}</div>
       </div>
-      <SearchInSchool placeholder={'搜索教授/课程'}></SearchInSchool>
-      {/* <SwiperAtSchool></SwiperAtSchool> */}
+      <SearchInSchool placeholder={t('搜索教授/课程')}></SearchInSchool>
+{/* <SwiperAtSchool></SwiperAtSchool> */}
     </div>
   );
 }

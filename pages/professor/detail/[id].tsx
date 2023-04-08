@@ -10,23 +10,24 @@ import { professorList } from '@/mock/data';
 import UserComment from './user-comment';
 import { useRouter } from 'next/router';
 import useFetch from '../../../hooks/useFetch';
+import { useTranslation } from 'next-i18next';
 export default function ProfessorDetail() {
   const router = useRouter();
   const Id = router.query.id;
   const {data,error} = useFetch(`/professor/detail?id=${Id}`,'get');
-
+  const {t} = useTranslation()
   const [currentSelectId, setCurrentSelectId] = useState(0);
   const professorListCopy = professorList[0].course.slice();
   professorListCopy.unshift({
     id: 0,
-    name: '查看全部',
+    name: t('查看全部'),
   });
 
   return (
     <CommonLayout className="min-h-screen pb-14">
-      <Header title="教授评价"></Header>
+     <Header title={t('教授评价')}></Header>
       <ProfessorInfoCard data={data?.data}></ProfessorInfoCard>
-      <Title title="分值分布"></Title>
+      <Title title={t('分值分布')}></Title>
       <div className="bg-white w-full h-auto space-y-3  p-4 flex-wrap rounded-xl">
         {professorList[0].scoreList.map((item) => {
           return <CProgress key={item.id} data={item}></CProgress>;

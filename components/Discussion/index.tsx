@@ -7,7 +7,7 @@ import useRequest from '@/libs/request';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 export default function index(props) {
-  const {t} = useTranslation()
+  const { t } = useTranslation();
   // const comments = [
   //     {
   //       id: 1,
@@ -147,8 +147,12 @@ export default function index(props) {
             commentComment({ user, id, pid: parent?.id });
           }}
         >
-          <div className="text-xs text-lightGray">{timeSince(time)}前</div>
-          <div className="text-xs font-semibold text-secondGray">回复</div>
+          <div className="text-xs text-lightGray">
+            {timeSince(time)} {t('前')}
+          </div>
+          <div className="text-xs font-semibold text-secondGray">
+            {t('回复')}
+          </div>
         </div>
         <div
           className="flex space-x-1 items-center"
@@ -264,14 +268,11 @@ export default function index(props) {
                               >
                                 {item?.user?.nickName}
                               </div>
-                              <div className="text-xs text-secondGray mt-1">
-                                {/* {item?.user?.education?.year || '未认证'} ·{' '}
-                                {item.user?.education?.major || '未认证'} */}
-                              </div>
+                              <div className="text-xs text-secondGray mt-1"></div>
                               <div className=" items-center space-x-1">
                                 {item?.reply ? (
                                   <span className="whitespace-nowrap text-sm">
-                                    回复
+                                    {t('回复')}
                                   </span>
                                 ) : null}
                                 <span className="text-sm mt-1 whitespace-nowrap font-medium">
@@ -340,7 +341,7 @@ export default function index(props) {
                               <div className=" items-center space-x-1">
                                 {item?.reply ? (
                                   <span className="whitespace-nowrap text-sm">
-                                    回复
+                                    {t('回复')}
                                   </span>
                                 ) : null}
 
@@ -375,8 +376,10 @@ export default function index(props) {
                       onClick={() => [setExpand(!expand)]}
                     >
                       {expand
-                        ? '收起'
-                        : `查看全部 ${item?.children?.length} 条回复`}
+                        ? t('收起')
+                        : `${t('查看全部')} ${item?.children?.length} ${t(
+                            '条回复',
+                          )}`}
                     </div>
                   ) : null}
                 </div>
@@ -391,7 +394,7 @@ export default function index(props) {
   return (
     <div>
       <div className="my-4 text-sm font-semibold text-blueTitle">
-        评论 {comments?.length || 0}
+        {t('评论')} {comments?.length || 0}
       </div>
       <div className="w-full mb-3 bg-border h-px1"></div>
       {comments?.length === 0 ? (

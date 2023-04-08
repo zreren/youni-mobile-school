@@ -115,7 +115,7 @@ function SchoolPage(props) {
                     return (
                       <CountryButton
                         id={item.id}
-                        title={item.name}
+                        title={t(item.name).slice(0,12)}
                       ></CountryButton>
                     );
                   })}
@@ -126,12 +126,12 @@ function SchoolPage(props) {
               return (
                 <div className="w-full h-auto overflow-visible bg-white card">
                   <div className="relative w-full h-full p-4">
-                    <div className="text-base font-medium ">{item.name}</div>
+                    <div className="text-base font-medium ">{t(item.name)}</div>
                     <div className="z-50 grid grid-cols-3 gap-2 pt-2">
                       {item.countries.map((item) => {
                         return (
                           <CountryButton
-                            title={item.name}
+                          title={t(item.name).slice(0,12)}
                             id={item.id}
                           ></CountryButton>
                         );
@@ -374,7 +374,7 @@ function SchoolPage(props) {
                       'text-yellow-400': select === item.id,
                     })}
                   >
-                    {item.name}
+                   {item.name}
                   </div>
                 );
               })}
@@ -431,6 +431,7 @@ function SchoolPage(props) {
         setVisible={setPostDetailShow}
         visible={postDetailShow}
       ></PostDetail>
+      {/* 地区列表 */}
       <RedCountyList
         setVisible={setIsSelect}
         visible={isSelect}
@@ -441,6 +442,7 @@ function SchoolPage(props) {
         otherData={otherCountryList?.data}
         setSelectSchool={setSelectSchool}
       ></RedCountyList>
+      {/* 学校列表 */}
       <SchoolList
         setVisible={setSelectSchool}
         countryId={countryId}

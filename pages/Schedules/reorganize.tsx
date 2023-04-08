@@ -757,7 +757,7 @@ export default function reorganize() {
   };
   return (
     <div className="w-full min-h-screen bg-[#F6F6F6]">
-      <Header title="一键导入课表&Beta Ver"></Header>
+      <Header title={t("一键导入课表")}></Header>
       <Popup
         overlayClass={'Popup'}
         className="z-30 topIndexPlus rounded-full "

@@ -36,56 +36,7 @@ export default function recommend() {
     `/post/detail?id=${router.query.id}`,
     'get',
   );
-  const CourseSelector = (props) => {
-    const { isSelect } = props;
-    return (
-      <div
-        className={classnames(
-          'flex justify-center relative items-center w-14 h-14  p-[1px] rounded-2xl',
-          {
-            'border-[2px] border-[#FFDEAD]': isSelect,
-          },
-        )}
-      >
-        <div
-          className={classnames(
-            'border-[#FFDEAD] bg-[#FFFAF0] flex flex-col justify-center items-center  border-[2px] rounded-2xl h-12 w-12',
-          )}
-        >
-          <svg height={'14px'} width={'100%'}>
-            <text
-              x="50%"
-              text-anchor="middle"
-              y="10"
-              fill="#ff9832"
-              color="#ff9832"
-              fontSize={'10px'}
-            >
-              {' '}
-              MAT
-            </text>
-          </svg>
-          <svg height={'14px'} width={'100%'}>
-            <text
-              x="50%"
-              text-anchor="middle"
-              y="10"
-              fill="#ff9832"
-              fontWeight={600}
-              color="#ff9832"
-              fontSize={'10px'}
-            >
-              {' '}
-              321
-            </text>
-          </svg>
-        </div>
-        <div className="xueqiTag absolute rounded-[6px] p-[6px] text-[white] flex justify-center items-center text-xs w-5 h-5 bottom-0 right-0">
-          秋
-        </div>
-      </div>
-    );
-  };
+
   const PostGroupDetail = (props) => {
     const { data, isEdit, mutate } = props;
     const cancelStarPost = async (id) => {
@@ -97,11 +48,7 @@ export default function recommend() {
       Toast.success(t('移除成功'));
       mutate();
     };
-    useEffect(() => {
-      console.log(isEdit, 'isEdit');
-    }, [isEdit]);
 
-    // if (!data) return;
     return (
       <div className="w-full h-screen">
         <div className="w-full h-[126px] bg-[#F7F8F9] p-5 pt-6 mb-2">
@@ -272,6 +219,8 @@ export default function recommend() {
       </div>
     );
   };
+
+
   const Recommend = () => {
     return (
       <div className="w-full p-2 mt-4">
@@ -300,6 +249,9 @@ export default function recommend() {
       </div>
     );
   };
+
+
+
   const MustStudy = (props) => {
     const { data: data1 }: { data: Course[] } = props;
     if (!data) return;
@@ -322,19 +274,6 @@ export default function recommend() {
             <div className="text-[10px] text-[#ff9832] flex justify-center text-center items-center">
               {props.data.label}
             </div>
-            {/* <svg className='whitespace-wrap' height={'14px'} width={'100%'}>
-              <text
-                x="50%"
-                text-anchor="middle"
-                y="10"
-                fill="#ff9832"
-                color="#ff9832"
-                fontSize={'10px'}
-              >
-                {' '}
-                {props.data.label}
-              </text>
-            </svg> */}
           </div>
           <div className="xueqiTag absolute rounded-[5px] p-[5px] text-[white] flex justify-center items-center text-[10px] w-4 h-4 bottom-0 right-0">
             {data?.data?.form?.term?.slice(0, 1)}
@@ -360,6 +299,8 @@ export default function recommend() {
       </div>
     );
   };
+
+
   const OptionalStudy = (props) => {
     const CourseSelector = (props) => {
       const { isSelect } = props;
@@ -405,6 +346,9 @@ export default function recommend() {
       </div>
     );
   };
+
+
+
   const CourseRecommend = () => {
     return (
       <div className="w-full p-2 mt-4">
@@ -430,7 +374,7 @@ export default function recommend() {
       </div>
     );
   };
-  // #F7F8F9
+
   interface Course {
     id: number;
     label: string;
@@ -439,6 +383,7 @@ export default function recommend() {
     type: string;
     note: string;
   }
+
   const CourseSelectFormItem = (props) => {
     const { data }: { data: Course } = props;
     return (
@@ -498,6 +443,8 @@ export default function recommend() {
       </>
     );
   };
+
+
   const started = React.useMemo(
     () => data?.data?.interactInfo?.stared,
     [data?.data?.interactInfo?.stared],
@@ -505,6 +452,7 @@ export default function recommend() {
 
   const dispatch = useDispatch();
   const [topicName, setTopicName] = useState();
+
 
   return (
     <div className="w-screen min-h-screen pb-20">
@@ -533,6 +481,8 @@ export default function recommend() {
                 if (!user) {
                   Dialog.confirm({
                     title: t('登录'),
+                    confirmButtonText: t('确定'),
+                    cancelButtonText: t('取消'),
                     message: t(
                       '您还未登录，登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！',
                     ),

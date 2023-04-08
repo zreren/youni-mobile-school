@@ -554,17 +554,6 @@ export default function idValid() {
               }}
             ></CPicker>
           </div>
-          {/* <Input
-            align="right"
-            value={ValidFormData.schoolName}
-            // onBlur={updateData}
-            key={'schoolName'}
-            onChange={(val) => {
-              updateData('schoolName', val);
-            }}
-            placeholder="请输入文本"
-            className="text-sm font-medium w-[50px] text-right text-gray-500 placeholder-gray-300 border-none input hover:outline-none"
-          /> */}
         </InputComponent>
         <InputComponent label={t('入学年份')}>
           <div className="w-1/2 flex justify-end text-right cpicker">

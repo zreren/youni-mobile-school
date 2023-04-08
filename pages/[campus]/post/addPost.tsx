@@ -1617,7 +1617,7 @@ export default function addPost() {
             {item.type === 'input' && (
               <Input
                 defaultValue={form.getFieldValue(item.dataIndex)}
-                placeholder="请输入"
+                placeholder={t("请输入")}
                 value={form.getFieldValue(item.dataIndex)}
                 onChange={(v) => {
                   form.setFieldValue(item.dataIndex, v);
