@@ -387,8 +387,7 @@ export default function Schedules() {
   const ViewListMap = ['day', 'week', 'today', 'year'];
   useEffect(() => {
     setSetting({
-      ...setting,
-      view: ViewListMap[defaultScheduleView],
+      ...setting
     });
   }, []);
   const Dayliy = (props) => {
