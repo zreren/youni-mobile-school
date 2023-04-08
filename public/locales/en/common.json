@@ -118,6 +118,7 @@
   "取消收藏": "Unstarred successfully",
   "收藏成功": "Starred successfully",
   "已收藏": "Starred",
+  "收藏": "Star",
   "已复制到剪贴板，分享给好友吧！": "Copied to clipboard, share with friends now!",
   "复制失败": "Copy failed",
   "分享": "Share",
@@ -570,6 +571,12 @@
   "认证": "Auth",
   "未设置": "Not set",
   "条回复": "replies",
-  "退出账户": "Account logout"
+  "退出账户": "Account logout",
+  "请选择收藏夹": "Please select a collection",
+  "返回我的课表": "Return to My Schedule",
+  "'已复制到简介板，分享给好友吧！'": "Copied to clipboard, share it with friends now!"
+
+
+
 
 }

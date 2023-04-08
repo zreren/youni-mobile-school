@@ -32,7 +32,7 @@ import { Cell, Dialog } from 'react-vant';
 import { useRouter } from 'next/router';
 import BgSVG from './bg.svg';
 import ArrowRight from './arrow-right.svg';
-import { setOpenLogin, selectOpen ,setAuthState} from '../../stores/authSlice';
+import { setOpenLogin, selectOpen, setAuthState } from '../../stores/authSlice';
 import { useDispatch } from 'react-redux';
 import { Loading } from 'react-vant';
 import CourseIcon1 from './courseIcon1.svg';
@@ -77,112 +77,126 @@ export default function Schedules() {
   const calendarRef = useRef<any>();
   const router = useRouter();
   const [menu, setMenu] = useState(0);
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
-  const curriculumId = React.useMemo(() => router.query.curriculumId, [router.query.curriculumId])
-  useEffect(()=>{
-    setStudentId(router.query.id)
-  },[router.query.id])
-  const { data, error, mutate } = useFetch(
-    `/curriculum/view`,
-    'get',
-    {
-      id:curriculumId
-      // campusId: 1,
-      // studentId: studentId,
-      // termId: termInfo?.data?.id,
-    }
+  const curriculumId = React.useMemo(
+    () => router.query.curriculumId,
+    [router.query.curriculumId],
   );
-  const [isStart,setIsStart] = useState(data?.data?.interactInfo?.shared || false);
-  const starCurriculum = async (id)=>{
-    if(!isStart){
+  useEffect(() => {
+    setStudentId(router.query.id);
+  }, [router.query.id]);
+  const { data, error, mutate } = useFetch(`/curriculum/view`, 'get', {
+    id: curriculumId,
+    // campusId: 1,
+    // studentId: studentId,
+    // termId: termInfo?.data?.id,
+  });
+  const [isStart, setIsStart] = useState(
+    data?.data?.interactInfo?.shared || false,
+  );
+  const starCurriculum = async (id) => {
+    if (!isStart) {
       setIsStart(true);
       // return;
-      const {data} = await useRequest.get('/api/curriculum/star',{
-        params:{
-          id
-        }
+      const { data } = await useRequest.get('/api/curriculum/star', {
+        params: {
+          id,
+        },
       });
-      if(data?.message === 'success'){
-        Toast.success('收藏成功');
+      if (data?.message === 'success') {
+        Toast.success(t('收藏成功'));
       }
-    }else{
+    } else {
       setIsStart(false);
-      const {data} = await useRequest.get('/api/curriculum/unstar',{
-        params:{
-          id
-        }
+      const { data } = await useRequest.get('/api/curriculum/unstar', {
+        params: {
+          id,
+        },
       });
-      if(data?.message === 'success'){
-        Toast.success('取消收藏成功');
+      if (data?.message === 'success') {
+        Toast.success(t('取消收藏成功'));
       }
     }
-    
-  }
+  };
   const Footer = (props) => {
-    if(isOwner){
+    if (isOwner) {
       return (
-       <div className='fixed space-x-2 bottom-0 shadow z-30 h-20 w-full bg-white px-4 flex justify-center '>
-         <div className='w-full font-semibold space-x-2 h-10 mt-2 flex justify-center items-center  text-[#8C6008]  bg-[#FFD036]'>
+        <div className="fixed space-x-2 bottom-0 shadow z-30 h-20 w-full bg-white px-4 flex justify-center ">
+          <div className="w-full font-semibold space-x-2 h-10 mt-2 flex justify-center items-center  text-[#8C6008]  bg-[#FFD036]">
             <SchedulesIcon></SchedulesIcon>
-            <div className='text-sm' onClick={()=>{
-              router.push({
-                pathname: '/Schedules/Schedules',
-                query: {
-                  campus: router.query.campus,
-                },
-              })
-            }}>返回我的课表</div>
+            <div
+              className="text-sm"
+              onClick={() => {
+                router.push({
+                  pathname: '/Schedules/Schedules',
+                  query: {
+                    campus: router.query.campus,
+                  },
+                });
+              }}
+            >
+              {t('返回我的课表')}
+            </div>
+          </div>
+          <div className="w-full font-semibold space-x-2 h-10 mt-2 flex justify-center items-center  text-[#ffffff]  bg-[#3665FF]">
+            <div
+              className="text-sm"
+              onClick={() => {
+                try {
+                  navigator.clipboard.writeText(window.location.href);
+                  Toast.success(t("'已复制到简介板，分享给好友吧！'"));
+                } catch (error) {
+                  Toast.fail(t('复制失败'));
+                }
+              }}
+            >
+              {t('分享')}
+            </div>
+          </div>
         </div>
-        <div className='w-full font-semibold space-x-2 h-10 mt-2 flex justify-center items-center  text-[#ffffff]  bg-[#3665FF]'>
-            {/* <SchedulesIcon></SchedulesIcon> */}
-            <div className='text-sm' onClick={()=>{
-              try {
-                navigator.clipboard.writeText(window.location.href);
-                Toast.success('已复制到简介板，分享给好友吧！');
-              } catch (error) {
-                Toast.fail('复制失败')
-              }
-            }}>分享</div>
-        </div>
-       </div>
-      )
-    }else{
-
+      );
+    } else {
       return (
-        <div className='fixed space-x-2 bottom-0 shadow z-30 h-20 w-full bg-white px-4 flex justify-center '>
-        <div className='w-full font-semibold space-x-2 h-10 mt-2 flex justify-center items-center  text-[#8C6008]  bg-[#FFD036]'>
-           <SchedulesIcon></SchedulesIcon>
-           <div className='text-sm' onClick={()=>{
-             router.push({
-               pathname: '/Schedules/Schedules',
-               query: {
-                 campus: router.query.campus,
-               },
-             })
-           }}>返回我的课表</div>
-       </div>
-       {/* 255,235,235 */}
-       <div className={
-          classnames('w-full font-semibold space-x-2 h-10 mt-2 flex justify-center items-center  bg-[#FFD036]',{
-            'bg-[#FF6E69] text-white':isStart,
-            'bg-[#FFEBEB] text-[#FF6E69]':!isStart,
-          })
-       } 
-       onClick={()=>{
-        // if(!isStart){
-        starCurriculum(router.query.curriculumId)
-      //  }}}
-       }}
-       >
-        {isStart?<LovedIcon></LovedIcon>:<LoveIcon></LoveIcon>}
-           <div className='text-sm' onClick={()=>{
-           }}>
-            {isStart?'已收藏课表':'收藏课表'}
-           </div>
-       </div>
-      </div>
-      )
+        <div className="fixed space-x-2 bottom-0 shadow z-30 h-20 w-full bg-white px-4 flex justify-center ">
+          <div className="w-full font-semibold space-x-2 h-10 mt-2 flex justify-center items-center  text-[#8C6008]  bg-[#FFD036]">
+            <SchedulesIcon></SchedulesIcon>
+            <div
+              className="text-sm"
+              onClick={() => {
+                router.push({
+                  pathname: '/Schedules/Schedules',
+                  query: {
+                    campus: router.query.campus,
+                  },
+                });
+              }}
+            >
+              返回我的课表
+            </div>
+          </div>
+          {/* 255,235,235 */}
+          <div
+            className={classnames(
+              'w-full font-semibold space-x-2 h-10 mt-2 flex justify-center items-center  bg-[#FFD036]',
+              {
+                'bg-[#FF6E69] text-white': isStart,
+                'bg-[#FFEBEB] text-[#FF6E69]': !isStart,
+              },
+            )}
+            onClick={() => {
+              // if(!isStart){
+              starCurriculum(router.query.curriculumId);
+              //  }}}
+            }}
+          >
+            {isStart ? <LovedIcon></LovedIcon> : <LoveIcon></LoveIcon>}
+            <div className="text-sm" onClick={() => {}}>
+              {isStart ? '已收藏课表' : '收藏课表'}
+            </div>
+          </div>
+        </div>
+      );
     }
     return (
       <div className="w-full items-center space-x-2 flex h-20 bg-white z-30 px-2 fixed bottom-0 ">
@@ -190,8 +204,8 @@ export default function Schedules() {
           <div
             onClick={() => {
               setSetting({
-                view:'day',
-                isWeekend:false,
+                view: 'day',
+                isWeekend: false,
               });
             }}
             className={classnames(
@@ -206,8 +220,8 @@ export default function Schedules() {
           <div
             onClick={() => {
               setSetting({
-                view:'week',
-                isWeekend:true,
+                view: 'week',
+                isWeekend: true,
               });
             }}
             className={classnames(
@@ -222,8 +236,8 @@ export default function Schedules() {
           <div
             onClick={() => {
               setSetting({
-                view:'today',
-                isWeekend:false,
+                view: 'today',
+                isWeekend: false,
               });
             }}
             className={classnames(
@@ -283,17 +297,17 @@ export default function Schedules() {
   const [addCourse, setAddCourse] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [yearMethod, setYearMethod] = useState(false);
-  const [studentId,setStudentId] = useState(router.query.id);
+  const [studentId, setStudentId] = useState(router.query.id);
 
   useEffect(() => {
     dispatch(setAuthState(false));
-    return ()=>{
+    return () => {
       dispatch(setAuthState(true));
-    }
-  })
-  useEffect(()=>{
-    mutate()
-  },[studentId,curriculumId])
+    };
+  });
+  useEffect(() => {
+    mutate();
+  }, [studentId, curriculumId]);
   const tempData = React.useMemo(() => {
     if (!data?.data) return null;
     return data?.data?.items.map((item) => {
@@ -307,23 +321,22 @@ export default function Schedules() {
   const weekDate = getPastWeekDates();
 
   const courseData = React.useMemo(() => {
-      const res =  getCourses(
-        tempData,
-        new Date(termInfo?.data?.startDate),
-        new Date(termInfo?.data?.endDate),
-      );
-      return addFullStartDate(res, weekDate)
-      // const all = addFullStartDate(courseData, weekDate);
-      console.log(courseData, 'courseData');
-  },[data,,studentId,termInfo,weekDate,curriculumId])
+    const res = getCourses(
+      tempData,
+      new Date(termInfo?.data?.startDate),
+      new Date(termInfo?.data?.endDate),
+    );
+    return addFullStartDate(res, weekDate);
+    // const all = addFullStartDate(courseData, weekDate);
+    console.log(courseData, 'courseData');
+  }, [data, , studentId, termInfo, weekDate, curriculumId]);
 
-  useEffect(()=>{
-    console.log(tempData,'tempData')
-  },[tempData])
-  useEffect(()=>{
-    console.log(courseData,"courseData")
-  },[courseData])
-
+  useEffect(() => {
+    console.log(tempData, 'tempData');
+  }, [tempData]);
+  useEffect(() => {
+    console.log(courseData, 'courseData');
+  }, [courseData]);
 
   function getPastWeekDates(): [Date, Date] {
     const today = new Date();
@@ -334,15 +347,15 @@ export default function Schedules() {
     endDate.setDate(today.getDate() - dayOfWeek + 6);
     return [startDate, endDate];
   }
-  const {user} = useUser();
+  const { user } = useUser();
 
   const isOwner = React.useMemo(() => {
     return user?.id === Number(router.query.id);
-  }, [user, router.query.id])
+  }, [user, router.query.id]);
 
-  useEffect(()=>{
-    console.log(isOwner,"isOwner")
-  },[isOwner])
+  useEffect(() => {
+    console.log(isOwner, 'isOwner');
+  }, [isOwner]);
   // if (data?.data) {
   //   courseData = getCourses(
   //     data?.data?.item,
