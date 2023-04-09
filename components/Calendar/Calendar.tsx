@@ -826,7 +826,7 @@ function Calendar(props) {
                 className={arg.isToday ? 'text-yellow-400' : 'text-gray-400'}
               >
                 {/* 语言设置 */}
-                <div>{day?.[language]?.[arg.date.getDay()]}</div>
+                <div>{t(day?.cn?.[arg.date.getDay()])}</div>
                 <div className="flex items-center">
                   <div
                     className={classNames(

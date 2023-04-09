@@ -113,7 +113,7 @@ export default function ProfileHeader(props) {
             'bg-[#FFD036] text-[#8C6008]': !isFollow,
             'bg-[#E5E5E5] text-[#808080]': isFollow,
             })
-        }>{isFollow?`${t('已关注')}`:`${t('关注')}}`}</div>
+        }>{isFollow?`${t('已关注')}`:`${t('关注')}`}</div>
         : !loggedOut && <Link href="/Setting"><Button></Button></Link>}
       </div>
     );

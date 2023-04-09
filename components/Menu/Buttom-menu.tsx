@@ -153,7 +153,7 @@ export default function LabelBottomNavigation(props) {
         onChange={handleChange}
         >
         <MyAction className="transition-all" label={t('看看')} value={1} />
-        <MyAction label={t('课')} value={2} />
+        <MyAction label={t('课表')} value={2} />
         <MyAction
         className="transition ease-in-out duration-2000"
         label=" "

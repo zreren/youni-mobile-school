@@ -60,7 +60,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const PostGroupItem = (props): JSX.Element => {
   const { title, id } = props;
-  const {t} = useTranslation()
+  const { t } = useTranslation();
   return (
     <div
       onClick={() => {
@@ -81,7 +81,7 @@ function index(props) {
   const { data } = useFetch('/user/post_stared_list', 'get', {
     id: userId,
   });
-  const {t} = useTranslation()
+  const { t } = useTranslation();
   const PostGroupItem = (props): JSX.Element => {
     const { title, id } = props;
 
@@ -181,8 +181,8 @@ function index(props) {
           ></Waterfall>
         ) : (
           <div className="text-[#898E97] flex justify-center">
-          {t('该文集暂时没有内容')}
-        </div>
+            {t('该文集暂时没有内容')}
+          </div>
         )}
       </div>
     );
@@ -250,7 +250,7 @@ function index(props) {
     }, [userId]);
     return (
       <div className="h-full ">
-        <div className="flex p-2">
+        <div className="flex p-2 space-x-4">
           {postGroup?.data?.map((item) => {
             return (
               <PostGroupItem
@@ -299,8 +299,8 @@ function index(props) {
           <div className="w-full h-full mt-10 flex justify-center items-center flex-col">
             <PrivateIcon></PrivateIcon>
             <div className="text-[#A9B0C0] text-xs mt-4">
-  {t('该用户隐藏了自己的收藏')}
-</div>
+              {t('该用户隐藏了自己的收藏')}
+            </div>
           </div>
         ) : null}
       </div>
@@ -365,9 +365,9 @@ function index(props) {
     <div className="w-screen min-h-screen">
       <div
         onClick={() => {
-          window.history.back()
+          window.history.back();
           setTimeout(() => {
-            router.reload() 
+            router.reload();
           }, 10);
         }}
         className="pl-4 absolute mb-6 z-30 top-6"

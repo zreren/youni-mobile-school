@@ -59,10 +59,9 @@ export default function index() {
   const [t] = useTranslation();
   const deleteGapItem = async (id: number | string): Promise<any> => {
     Dialog.confirm({
-      title: '删除',
-      message: '确定删除改gap记录吗？',
-    })
-      .then((res) => {
+      title: t('删除'),
+      message: t('确定删除改gap记录吗？'),
+    }).then((res) => {
         useRequest.post('/api/grade/delete', { id });
         mutate();
         // dispatch(setOpenLogin('login'));

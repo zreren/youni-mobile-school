@@ -109,8 +109,8 @@ export default function Schedules() {
     const [token, setToken] = useLocalStorage('token', '');
     const deleteCURRICULUM = async (id: number) => {
       Dialog.confirm({
-        title: '删除课程',
-        message: '确定删除该课程吗？',
+        title:t('删除课程'),
+        message: t('确定删除该课程吗？')
       })
         .then(async () => {
           const { data } = await useRequest.post(
@@ -121,10 +121,10 @@ export default function Schedules() {
           );
           if (data.message === 'success') {
             props.setVisible(false);
-            Toast.success('删除成功');
+            Toast.success(t('删除成功'));
             mutate();
           } else {
-            Toast.fail('删除失败');
+            Toast.fail(t('删除失败'));
           }
         })
         .catch(() => {
@@ -178,7 +178,7 @@ export default function Schedules() {
                   <div className="flex items-center">
                     <TimeIconActive color={borderColor}></TimeIconActive>
                     <div className="ml-3 text-sm text-gray-400">
-                      周{weekMap[extendedProps.dayOfWeek]}
+                      {t("周")}{weekMap[extendedProps.dayOfWeek]}
                     </div>
                     <div className="ml-10 text-sm text-gray-400 ">
                       {extendedProps.time}
@@ -203,7 +203,7 @@ export default function Schedules() {
                   }}
                   className="flex w-full rounded-lg h-10 text-[#fff] items-center bg-[#3665FF] justify-center space-y-2"
                 >
-                  <div className="text-xs  text-white  ">编辑</div>
+                  <div className="text-xs  text-white  ">{t("编辑")}</div>
                 </div>
                 <div
                   className="flex flex-col rounded-lg  bg-[#FF6E69]  items-center justify-center  space-y-2  h-10 w-full"
@@ -211,7 +211,7 @@ export default function Schedules() {
                     deleteCURRICULUM(event.id);
                   }}
                 >
-                  <div className="text-xs text-white ">删除</div>
+                  <div className="text-xs text-white ">{t("删除")}</div>
                 </div>
               </div>
             </div>
@@ -272,7 +272,7 @@ export default function Schedules() {
                 </div>
                 <div className="text-xs text-[#798195]">
                   {extendedProps?.section?.user?.length > 0
-                    ? `${extendedProps?.section?.user.length}名同学`
+                    ? `${extendedProps?.section?.user.length}${t("名同学")}`
                     : null}
                 </div>
               </div>
@@ -282,7 +282,7 @@ export default function Schedules() {
                 <div className="flex items-center">
                   <TimeIconActive color={borderColor}></TimeIconActive>
                   <div className="ml-3 text-sm text-gray-400">
-                    {weekMap[extendedProps.dayOfWeek]}
+                    {t(weekMap[extendedProps.dayOfWeek])}
                   </div>
                   <div className="ml-10 text-sm text-gray-400 ">
                     {extendedProps.time}
@@ -291,7 +291,7 @@ export default function Schedules() {
               </div>
               <div className="flex items-center">
                 <Location color={borderColor}></Location>
-                <div className="ml-3 text-sm text-gray-400">地点</div>
+                <div className="ml-3 text-sm text-gray-400">{t("地点")}</div>
                 <div className="ml-10 text-sm text-gray-400 ">
                   {extendedProps.classroom}
                 </div>
@@ -306,7 +306,7 @@ export default function Schedules() {
                     console.log(extendedProps);
                     if (!extendedProps?.course) {
                       Dialog.alert({
-                        message: '该课程为自定义课程',
+                        message: t('该课程为自定义课程')
                       });
                       return;
                       // Toast.fail('该课程为自定义课程')
@@ -329,7 +329,7 @@ export default function Schedules() {
                       <CourseIcon1></CourseIcon1>
                     </div>
                   </div>
-                  <div className="text-xs text-[#798195]">课程详情</div>
+                  <div className="text-xs text-[#798195]">{t("课程详情")}</div>
                 </div>
               )}
               {extendedProps?.course && (
@@ -337,7 +337,7 @@ export default function Schedules() {
                   onClick={() => {
                     if (!extendedProps?.course) {
                       Dialog.alert({
-                        message: '该课程为自定义课程',
+                        message: t('该课程为自定义课程'),
                       });
                       return;
                       // Toast.fail('该课程为自定义课程')
@@ -354,7 +354,7 @@ export default function Schedules() {
                       <CourseIcon2></CourseIcon2>
                     </div>
                   </div>
-                  <div className="text-xs text-[#798195]">写课评</div>
+                  <div className="text-xs text-[#798195]">{t("写课评")}</div>
                 </div>
               )}
 
@@ -380,7 +380,7 @@ export default function Schedules() {
                     <CourseIcon3></CourseIcon3>
                   </div>
                 </div>
-                <div className="text-xs text-[#798195]">编辑</div>
+                <div className="text-xs text-[#798195]">{t("编辑")}</div>
               </div>
               <div
                 className="flex flex-col items-center space-y-2"
@@ -393,7 +393,7 @@ export default function Schedules() {
                     <CourseIcon4></CourseIcon4>
                   </div>
                 </div>
-                <div className="text-xs text-[#798195]">删除</div>
+                <div className="text-xs text-[#798195]">{t("删除")}</div>
               </div>
             </div>
           </div>

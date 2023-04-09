@@ -106,7 +106,7 @@
   "添加新评价": "Add new evaluation",
   "移除成功": "Removed successfully",
   "该话题暂时没有内容": "This topic has no content at the moment",
-  "编辑": "edit",
+  "编辑": "Edit",
   "确定": "Confirm",
   "选课": "Course selection",
   "介绍": "Introduction",
@@ -170,6 +170,7 @@
   "课表": "Schedule",
   "课": "Schedule",
   "我": "Me",
+  "删除": "Delete",
   "加课表": "Add Sched",
   "加提醒": "Add Rmdr",
   "写课评": "Wrt Rev",
@@ -574,9 +575,7 @@
   "退出账户": "Account logout",
   "请选择收藏夹": "Please select a collection",
   "返回我的课表": "Return to My Schedule",
-  "'已复制到简介板，分享给好友吧！'": "Copied to clipboard, share it with friends now!"
-
-
-
-
+  "'已复制到简介板，分享给好友吧！'": "Copied to clipboard, share it with friends now!",
+  "课程详情": "Details",
+  "该课程为自定义课程": "This is a custom course"
 }
