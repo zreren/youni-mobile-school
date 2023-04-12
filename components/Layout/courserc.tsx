@@ -475,6 +475,8 @@ export default function recommend(props) {
                   Dialog.confirm({
                     title: t('登录'),
                     message: t('您还未登录，登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！'),
+                    confirmButtonText: t('登录'),
+                    cancelButtonText: t('取消'),
                   })
                     .then((res) => {
                       dispatch(setOpenLogin('login'));

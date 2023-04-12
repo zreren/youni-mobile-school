@@ -89,7 +89,7 @@ export default function expiration(props) {
                 className="flex justify-end"
                 value={selectedYearRange?.join('-')} // update the value property
                 label=""
-                placeholder="请选择日期"
+                placeholder={t("请选择日期")}
                 onClick={() => actions.open()}
               />
             );

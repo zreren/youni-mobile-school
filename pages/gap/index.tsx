@@ -61,6 +61,8 @@ export default function index() {
     Dialog.confirm({
       title: t('删除'),
       message: t('确定删除改gap记录吗？'),
+      confirmButtonText: t('确定'),
+      cancelButtonText: t('取消'),
     }).then((res) => {
         useRequest.post('/api/grade/delete', { id });
         mutate();

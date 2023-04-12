@@ -87,7 +87,7 @@ export default function Schedules() {
   useEffect(() => {
     dispatch(setAuthState(true));
   }, []);
-  const { defaultCurriculum } = useCurriculum();
+  // const { defaultCurriculum } = useCurriculum();
   const [campusIdMapSchool, setCampusIdMapSchool] = useLocalStorage(
     'school',
     null,
@@ -110,7 +110,9 @@ export default function Schedules() {
     const deleteCURRICULUM = async (id: number) => {
       Dialog.confirm({
         title:t('删除课程'),
-        message: t('确定删除该课程吗？')
+        message: t('确定删除该课程吗？'),
+        confirmButtonText: t('确定'),
+        cancelButtonText: t('取消'),
       })
         .then(async () => {
           const { data } = await useRequest.post(
@@ -122,7 +124,9 @@ export default function Schedules() {
           if (data.message === 'success') {
             props.setVisible(false);
             Toast.success(t('删除成功'));
-            mutate();
+            mutate()
+            // otherSchedulesMutate();
+            // timeTableMutate();
           } else {
             Toast.fail(t('删除失败'));
           }
@@ -415,19 +419,8 @@ export default function Schedules() {
     }
     return weekDates;
   };
-  // const getWeekDates = () => {
-  //   const weekDates = [];
-  //   const currentDate = new Date();
-  //   let day = currentDate.getUTCDay();
-  //   const diff = currentDate.getUTCDate() - day;
-  //   for (let i = 0; i < 7; i++) {
-  //     const newDate = new Date(currentDate.setUTCDate(diff + i));
-  //     const dateString = newDate.toISOString().slice(0, 10);
-  //     weekDates.push(dateString);
-  //   }
-  //   return weekDates;
-  // };
-  // 给开始时间和结束时间，计算当前属于这个时间段的第几个星期
+
+
   const getWeekNumber = (start) => {
     const startDate = new Date(start);
     // const endDate = new Date(end);
@@ -458,10 +451,7 @@ export default function Schedules() {
         console.log(base64);
       };
     };
-    useEffect(() => {
-      console.log(customImg, 'customImg');
-      // router.reload()
-    }, [customImg]);
+
     const Menu = () => {
       const [menu, setMenu] = useState(defaultScheduleView);
       useEffect(() => {
@@ -526,9 +516,12 @@ export default function Schedules() {
         </div>
       );
     };
+
     const { user } = useUser();
-    const { defaultCurriculum } = useCurriculum();
+    // const { defaultCurriculum } = useCurriculum();
     const [historyMode, setHistory] = useState(false);
+
+
     useEffect(() => {
       console.log(curriculumId, 'curriculumId');
       otherSchedulesMutate();
@@ -548,6 +541,9 @@ export default function Schedules() {
       }
     };
     
+    const { data, error, mutate } = useFetch('/curriculum/query', 'get',{
+      termId:1
+    });
     return (
       <SwipeableDrawer
         anchor="bottom"
@@ -578,7 +574,7 @@ export default function Schedules() {
                   pathname: '/Schedules/share',
                   query: {
                     id: user?.id,
-                    curriculumId: defaultCurriculum?.id,
+                    curriculumId: data?.data[0].id,
                     campus: router.query.campus,
                   },
                 });
@@ -750,18 +746,21 @@ export default function Schedules() {
     );
   };
 
-  const [visible, setVisible] = useState(false);
 
+  const [visible, setVisible] = useState(false);
   const [scheduleVisible, setScheduleVisible] = useState(false);
   const [addCourse, setAddCourse] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [yearMethod, setYearMethod] = useState(false);
   const [studentId, setStudentId] = useState(-1);
   const [curriculumId, setCurriculumId] = useState();
-  const { data, error, mutate } = useFetch(`/curriculum/query`, 'get', {
-    campusId: campusIdMap,
+  
+  const { data, error, mutate } = useFetch(`/curriculum/list`, 'get', {
+    campusId: 1,
     // id: defaultCurriculum?.id,
   });
+
+
   const { data: otherSchedules, mutate: otherSchedulesMutate } = useFetch(
     `/curriculum/view`,
     'get',
@@ -769,7 +768,8 @@ export default function Schedules() {
       id: curriculumId,
     },
   );
-  const { data: timeTableData } = useFetch(`/timetable/query`, 'get');
+  const { data: timeTableData,mutate:timeTableMutate } = useFetch(`/timetable/query`, 'get');
+
 
   const tempData = React.useMemo(() => {
     if (!data?.data) return null;
@@ -781,6 +781,8 @@ export default function Schedules() {
       };
     });
   }, [data]);
+  // 需要补充
+  // ,timeTableData,otherSchedules
 
   const otherTemData = React.useMemo(() => {
     if (!otherSchedules?.data) return null;
@@ -793,7 +795,8 @@ export default function Schedules() {
     });
   }, [otherSchedules, curriculumId, studentId]);
 
-  // useEffect
+
+
 
   useEffect(() => {
     if (visible || scheduleVisible) {
@@ -807,6 +810,8 @@ export default function Schedules() {
     }
   }, [visible, scheduleVisible]);
 
+
+
   function getPastWeekDates(): [Date, Date] {
     const today = new Date();
     const startDate = new Date();
@@ -819,32 +824,13 @@ export default function Schedules() {
 
   const weekDate = getPastWeekDates();
 
-  const courseData = useMemo(() => {
-    if (data && studentId === -1) {
-      const res = getCourses(
-        tempData,
-        new Date(termInfo?.data?.startDate),
-        new Date(termInfo?.data?.endDate),
-      );
-      return addFullStartDate(res, weekDate);
-      // const all = addFullStartDate(courseData, weekDate);
-      console.log(courseData, 'courseData');
-    }
-    if (otherSchedules?.data && studentId !== -1) {
-      const res = getCourses(
-        otherTemData,
-        new Date(termInfo?.data?.startDate),
-        new Date(termInfo?.data?.endDate),
-      );
-      return addFullStartDate(res, weekDate);
-      const all = addFullStartDate(courseData, weekDate);
-      console.log(courseData, 'courseData');
-    }
-  }, [data, otherSchedules, curriculumId, studentId, termInfo, weekDate]);
-  useEffect(() => {
-    console.log(courseData, 'courseData');
-  }, [courseData]);
+
+
+
+
   const openLogin = useSelector(selectOpen);
+
+
   React.useEffect(() => {
     if (openLogin === 'login' || openLogin === 'register') {
       setDialogVisible(false);
@@ -853,6 +839,8 @@ export default function Schedules() {
       setDialogVisible(true);
     }
   }, [openLogin]);
+
+
   React.useEffect(() => {
     if (!data && !otherSchedules) return;
     if (!data?.data && !otherSchedules?.data) {
@@ -872,6 +860,8 @@ export default function Schedules() {
     view: 'day',
     isWeekend: false,
   });
+
+
   const ViewListMap = ['day', 'week', 'today', 'year'];
   useEffect(() => {
     setSetting({
@@ -880,6 +870,38 @@ export default function Schedules() {
       isWeekend: defaultScheduleView === 1,
     });
   }, []);
+
+  const courseData = useMemo(() => {
+    // if(curriculumId){
+      if (data && studentId === -1) {
+        const res = getCourses(
+          tempData,
+          new Date("2022-11-11T11:18:49.927Z"),
+          new Date("2023-11-11T11:18:49.927Z")
+          // new Date(termInfo?.data?.startDate),
+          // new Date(termInfo?.data?.endDate),
+        );
+        return addFullStartDate(res, weekDate);
+        // const all = addFullStartDate(courseData, weekDate);
+        console.log(courseData, 'courseData');
+      }
+      if (otherSchedules?.data && studentId !== -1) {
+        const res = getCourses(
+          otherTemData,
+          new Date(termInfo?.data?.startDate),
+          new Date(termInfo?.data?.endDate),
+        );
+        return addFullStartDate(res, weekDate);
+        const all = addFullStartDate(courseData, weekDate);
+        console.log(courseData, 'courseData');
+      }
+    // }
+   
+  }, [setting,data,otherSchedules, curriculumId, studentId, termInfo, weekDate]);
+
+
+
+  
   const Dayliy = (props) => {
     const { title } = props;
     return (
@@ -940,9 +962,9 @@ export default function Schedules() {
       </div>
     );
   };
-  const { data: calendarData } = useFetch('/campus/calendar/query', 'get', {
-    termId: termInfo?.data?.id,
-  });
+  // const { data: calendarData } = useFetch('/campus/calendar/query', 'get', {
+  //   termId: termInfo?.data?.id,
+  // });
 
   const Month = () => {
     const { data } = useFetch('/campus/calendar/query', 'get', {

@@ -138,6 +138,8 @@ export default function CustomizedTabs(props) {
     Dialog.confirm({
       title: t('切换分类'),
       message: t('切换分类将导致部分自定义参数重置，确定要进行分类切换吗？'),
+      confirmButtonText: t('确定'),
+      cancelButtonText: t('取消'),
       })
       .then(() => {
         setValue(newValue);

@@ -338,7 +338,7 @@ export default function addPost() {
     input: <Input placeholder="请输入"></Input>,
     time: (
       <DatetimePicker popup type="datetime">
-        {(val: Date) => (val ? val.toDateString() : '请选择日期')}
+        {(val: Date) => (val ? val.toDateString() : t('请选择日期'))}
       </DatetimePicker>
     ),
     location: (

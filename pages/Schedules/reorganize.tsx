@@ -298,7 +298,7 @@ export default function reorganize() {
       setTime(courseTime?.start);
       setEndTime(courseTime?.end);
     }, [courseTime]);
-    const [dayOfWeek, setDayOfWeek] = useState([String(dayOfWeeksItem)]);
+    const [dayOfWeek, setDayOfWeek] = useState([String(dayOfWeeksItem + 1)]);
     const [time, setTime] = useState();
     const [endTime, setEndTime] = useState();
     const [CURRICULUM, setCURRICULUM] = useState({
@@ -747,7 +747,7 @@ export default function reorganize() {
               readOnly
               clickable
               value={_?.name || ''}
-              placeholder={`${t('选择学期')}`}
+              placeholder={`${t('请选择')}`}
               onClick={() => actions.open()}
             />
           );
