@@ -24,9 +24,14 @@ import { Toast } from 'react-vant';
 import { useTranslation } from 'react-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
+import useCampus from '@/hooks/useCampus';
+
+// import { useDebouncedCallback } from 'use-debounce';
+
 export default function evaluation() {
   const router = useRouter();
   const { t } = useTranslation();
+  const { campus } = useCampus();
   const TextEvaluation = () => {
     const data = React.useContext(EvaluationForm);
     const updateData = (level) => {
@@ -37,7 +42,20 @@ export default function evaluation() {
         // },
       });
     };
-    const [value, setValue] = useState<any>();
+    const [value, setValue] = useState<any>(data?.data?.content);
+    // const debounced = useDebouncedCallback(
+    //   // function
+    //   (value) => {
+    //     data.setData({
+    //       ...data.data,
+    //       // courseDataTagsEvaluation: {
+    //       content: value,
+    //       // },
+    //     });
+    //   },
+    //   // delay in ms
+    //   1000
+    // );
     // const
     return (
       <div className="bg-white pb-5 mt-4 pb-10">
@@ -57,6 +75,7 @@ export default function evaluation() {
           }}
           onChange={(e) => {
             setValue(e.target.value);
+            // debounced(e.target.value);
           }}
           placeholder={t(
             '教授讲课风格你喜欢吗？感觉考试难吗？和上课的内容关联性强吗？你是否推荐这个教授？',
@@ -144,46 +163,46 @@ export default function evaluation() {
     };
     const _tagList = [
       {
-      label: t('课程讲的不错'),
-      value: 1,
+        label: t('课程讲的不错'),
+        value: 1,
       },
       {
-      label: t('好教授'),
-      value: 2,
+        label: t('好教授'),
+        value: 2,
       },
       {
-      label: t('在意学生感受'),
-      value: 3,
+        label: t('在意学生感受'),
+        value: 3,
       },
       {
-      label: t('无趣'),
-      value: 4,
+        label: t('无趣'),
+        value: 4,
       },
       {
-      label: t('令人尊敬的教授'),
-      value: 5,
+        label: t('令人尊敬的教授'),
+        value: 5,
       },
       {
-      label: t('做好大量阅读准备'),
-      value: 6,
+        label: t('做好大量阅读准备'),
+        value: 6,
       },
       {
-      label: t('幽默'),
-      value: 7,
+        label: t('幽默'),
+        value: 7,
       },
       {
-      label: t('给分严格'),
-      value: 8,
+        label: t('给分严格'),
+        value: 8,
       },
       {
-      label: t('评分标准清晰'),
-      value: 9,
+        label: t('评分标准清晰'),
+        value: 9,
       },
       {
-      label: t('缺勒=挂科'),
-      value: 10,
+        label: t('缺勒=挂科'),
+        value: 10,
       },
-      ];
+    ];
     return (
       <div className="bg-white ">
         <label className="input-group">
@@ -220,23 +239,23 @@ export default function evaluation() {
     error,
     mutate: mutateSubject,
   } = useFetch(`/subject/list`, 'page', {
-    campusId: campusId,
+    campusId: campus?.id,
     pagesize: 100,
   });
 
   useEffect(() => {
     console.log(router.query, 'campus?.toLowerCase()');
     if (!router.query.campus) return;
-    const campus = router.query.campus as string;
-    const campusId = localStorage.getItem(campus?.toLowerCase()) || 1;
+    // const campus = router.query.campus as string;
+    const campusId = campus?.id || 1;
     console.log(campusId, 'campusId');
     setCampusId(campusId as Number);
     mutateSubject();
   }, [router.query]);
   // const campusId = typeof window !== undefined ?
-  const { data: tagList } = useFetch(`/campus/gpa/list?campusId=${1}`, 'get');
+  const { data: tagList } = useFetch(`/campus/gpa/list?campusId=${campus?.id}`, 'get');
   const { data: professorTagsList } = useFetch(
-    `/campus/gpa/list?campusId=${1}`,
+    `/campus/gpa/list?campusId=${campus?.id || campusId}`,
     'get',
   );
 
@@ -309,7 +328,7 @@ export default function evaluation() {
       mutate: m,
     } = useFetch(`/course/query`, 'page', {
       keyword: value,
-      campusId: campusId,
+      campusId: campus?.id || campusId,
       // id:props.subjectId,
       pageSize: 100,
     });
@@ -534,6 +553,9 @@ export default function evaluation() {
       `/course/detail?id=1`,
       'get',
     );
+    const { data: modeData } = useFetch('/campus/course_mode', 'get', {
+      id: campus?.id || 1,
+    });
     useEffect(() => {
       mutateCourse();
     }, [data?.data?.course?.value]);
@@ -550,20 +572,19 @@ export default function evaluation() {
       // pageSize: 100,
     });
     const ModeList = useMemo(() => {
-      if (!courseData?.data?.sections?.length) {
-        return courseDetailDefault?.data?.sections
-          .map((item) => {
-            console.log(item, 'item');
-            return item.mode;
+      const mergedData = courseDetailDefault?.data?.mode.concat(
+        modeData?.data || [],
+      );
+      const uniqueData = mergedData?.filter((item, index) => {
+        return (
+          index ===
+          mergedData.findIndex((obj) => {
+            return obj.ename === item.ename;
           })
-          .flat();
-      }
-      return courseDetail?.data?.sections
-        .map((item) => {
-          console.log(item, 'item');
-          return item.mode;
-        })
-        .flat();
+        );
+      });
+
+      return uniqueData;
     }, [courseDetail, data?.data, open]);
     React.useEffect(() => {
       m();
@@ -698,9 +719,9 @@ export default function evaluation() {
       if (submitData?.code === 2003) {
         Toast.fail(t('提交失败，您还未认证校区'));
         // setOpenCourse(true);
-        } else {
+      } else {
         Toast.fail(t('提交失败，检查课程信息'));
-        }
+      }
     } catch (error) {
       Toast.fail(error);
     }
@@ -886,16 +907,17 @@ export default function evaluation() {
   );
 }
 
-export async function getServerSideProps({
-  locale,
-  }){
-
+export async function getServerSideProps({ locale }) {
   return {
-      props: {
-          ...(await serverSideTranslations(locale, ['common',]))
-      },
-    }
-  }
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
+}
+
+function useDebouncedCallback(arg0: (value: any) => void, arg1: number) {
+  throw new Error('Function not implemented.');
+}
 // export const getStaticProps = async ({ locale }) => ({
 //   props: {
 //     ...(await serverSideTranslations(locale, ['common'])),

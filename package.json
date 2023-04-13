@@ -59,7 +59,8 @@
     "swr": "^1.3.0",
     "tailwind-scrollbar-hide": "^1.1.7",
     "taro-ui": "^2.3.4",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "use-debounce": "^9.0.4"
   },
   "devDependencies": {
     "@jest/globals": "^29.3.1",

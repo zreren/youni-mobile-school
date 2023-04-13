@@ -219,7 +219,10 @@ export default function Waterfall(props) {
 
   const CardWithClick = React.useCallback(
     (props) => (
-      <Display {...props} cancelStarPost={(id)=>{cancelStarPost(id)}} isEdit={isEdit} openCourseRecommend={(e)=>{setId(e); setCourseRcDetailShow(true) }} handleClick={(e) => { setId(e); setPostDetailShow(true) }} />
+      <Display {...props} 
+      cancelStarPost={(id)=>{cancelStarPost(id)}} 
+      isEdit={isEdit} openCourseRecommend={(e)=>{setId(e); setCourseRcDetailShow(true) }} 
+      handleClick={(e) => { setId(e); setPostDetailShow(true) }} />
     ),
     [],
   );

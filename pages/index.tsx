@@ -1,28 +1,31 @@
 import type { NextPage } from 'next';
 import React from 'react';
 import { Loading } from 'react-vant';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 import { Popup } from 'react-vant';
 import useLocalStorage from '@/hooks/useStore';
-import { selectAuthState, setAuthState } from "@/stores/authSlice";
+import { selectAuthState, setAuthState } from '@/stores/authSlice';
 import { useRouter } from 'next/router';
 const Home: NextPage = () => {
   const dispatch = useDispatch();
-  dispatch(setAuthState(true))
-  const [school,setSchool] = useLocalStorage("school","York")
-  const router = useRouter()
+  dispatch(setAuthState(true));
+  const [school, setSchool] = useLocalStorage('school', 'York');
+  const router = useRouter();
   enum TSize {
     normal,
     full,
   }
-  React.useEffect(()=>{
-    console.log(school)
-    setSchool("York")
-    router.push(`/${school}/home`)
-  },[])
+  React.useEffect(() => {
+    console.log(school);
+    if (!school) {
+      router.push(`/York`);
+    }else{
+      router.push(`/${school}`);
+    }
+  }, []);
   return (
     <div className="flex flex-col p-4 space-y-8 bg-gray-50">
-       <Popup
+      <Popup
         overlayClass={'Popup'}
         className="z-30 topIndexPlus rounded-full "
         visible={true}
