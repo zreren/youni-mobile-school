@@ -15,7 +15,7 @@ export default function Display(props) {
   // if(!props.data) return;
   const {t} = useTranslation()
   const { data, isEdit } = props;
-  console.log(isEdit, 'Displayprops');
+  console.log(data, 'Displayprops');
   const router = useRouter();
   const colorMap = {
     idle: 'yellow-gradient',

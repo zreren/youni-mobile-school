@@ -32,7 +32,7 @@ export default function recommend(props) {
   const id = React.useMemo(() => router.query.id || props.id, [router,props])
   const { data,mutate } = useFetch(`/post/detail?id=${id}`, 'get');
   useEffect(()=>{
-    window.history.replaceState({}, '', `/${campus}/recommend/${id}`);
+    window.history.replaceState({}, '', `/${campus}/Course/recommend/${id}`);
   },[data])
   const CourseSelector = (props) => {
     const { isSelect } = props;

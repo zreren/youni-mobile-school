@@ -146,7 +146,9 @@ export default function recommend() {
           >
             <ReturnBackIcon></ReturnBackIcon>
           </div>
-          <div
+          {
+            data?.data?.user?.id === user?.id  &&
+            <div
             className="absolute top-10 right-4 mt-2 border border-[#fff] w-14 h-6 text-xs rounded-full text-[white] whitespace-nowrap	flex justify-center items-center"
             onClick={() => {
               router.push({
@@ -163,6 +165,7 @@ export default function recommend() {
           >
             {t('编辑')}
           </div>
+          }
           <div className="z-30 css2Overflow-ellipsis">{data?.data?.title}</div>
           {/* <div className="z-30">适用于UTSC校区</div> */}
           <div className="flex justify-between mt-3 mb-4">

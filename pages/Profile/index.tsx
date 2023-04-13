@@ -64,7 +64,7 @@ import {
 function index(props) {
   const { user, loggedOut } = useUser();
   console.log(props, 'SignIn');
-  const { t, i18n } = useTranslation('');
+  const { t, i18n } = useTranslation();
   const authState = useSelector(selectAuthState);
   useEffect(() => {
     console.log(t('my-button-text'), i18n.language, router.locales, 't i18n');
@@ -580,7 +580,7 @@ function index(props) {
         ) : (
           <Waterfall
             postData={data?.data?.map((item) => {
-              return { ...item, user: { nickName: user?.nickName } };
+              return { ...item, user: { ...user,nickName: user?.nickName } };
             })}
           ></Waterfall>
         )}

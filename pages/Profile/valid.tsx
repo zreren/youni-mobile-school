@@ -349,7 +349,7 @@ export default function idValid() {
             className="text-sm font-medium w-[50px] text-right text-gray-500 placeholder-gray-300 border-none input hover:outline-none"
           />
         </InputComponent>
-        <InputComponent label={'入学年份'}>
+        <InputComponent label={t('入学年份')}>
           <div className="w-1/2 flex justify-end text-right cpicker">
             <MailPicker
               change={(val) => {

@@ -22,6 +22,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Toast } from 'react-vant';
 import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Icon = new Array(3).map((item, index) =>
   require('@/public/assets/setting/' + index + 1 + '.svg'),
@@ -166,3 +167,12 @@ export default function index() {
     </CommonLayout>
   );
 }
+
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
+}
+
