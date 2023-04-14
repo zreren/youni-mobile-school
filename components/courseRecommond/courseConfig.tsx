@@ -851,7 +851,7 @@ export default function config(props) {
             )}
           >
             <div className="text-[10px] text-[#ff9832] flex justify-center text-center items-center">
-              {props.data.label}
+              {props?.data?.label}
             </div>
             {/* <svg className='whitespace-wrap' height={'14px'} width={'100%'}>
               <text
@@ -892,6 +892,7 @@ export default function config(props) {
     );
   };
   const OptionalStudy = (props) => {
+    const { data }: { data: Course[] } = props;
     const CourseSelector = (props) => {
       const { isSelect } = props;
       return (
@@ -908,7 +909,10 @@ export default function config(props) {
               'border-[#FFDEAD] bg-[#FFFAF0] flex flex-col justify-center items-center  border-[2px] rounded-2xl h-12 w-12',
             )}
           >
-            <svg height={'14px'} width={'100%'}>
+            <div className="text-[10px] text-[#ff9832] flex justify-center text-center items-center">
+              {props?.data?.label}
+            </div>
+            {/* <svg className='whitespace-wrap' height={'14px'} width={'100%'}>
               <text
                 x="50%"
                 text-anchor="middle"
@@ -918,25 +922,11 @@ export default function config(props) {
                 fontSize={'10px'}
               >
                 {' '}
-                MAT
+                {props.data.label}
               </text>
-            </svg>
-            <svg height={'14px'} width={'100%'}>
-              <text
-                x="50%"
-                text-anchor="middle"
-                y="10"
-                fill="#ff9832"
-                fontWeight={600}
-                color="#ff9832"
-                fontSize={'10px'}
-              >
-                {' '}
-                321
-              </text>
-            </svg>
+            </svg> */}
           </div>
-          <div className="xueqiTag absolute rounded-[6px] p-[6px] text-[white] flex justify-center items-center text-xs w-5 h-5 bottom-0 right-0">
+          <div className="xueqiTag absolute rounded-[5px] p-[5px] text-[white] flex justify-center items-center text-[10px] w-4 h-4 bottom-0 right-0">
             {termValue?.slice(0, 1)}
           </div>
         </div>

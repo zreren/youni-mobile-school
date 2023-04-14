@@ -545,7 +545,7 @@ export default function SignIn(props) {
               </Link>{' '}
               {t('了解我们如何收集、使用和分享您的数据。')}
             </div>
-            <div className="h-32 pt-8 pb-8 space-x-2 text-sm text-center bg-bg">
+            <div className="h-20 pt-6 pb-6 space-x-2 text-sm text-center bg-bg">
               <span className="text-blueTitle">{t('还没有帐号？')}</span>
               <span
                 onClick={() => {

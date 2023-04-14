@@ -44,7 +44,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [stopScroll, setStopScroll] = useState(false);
   const router = useRouter();
   const { i18n } = useTranslation();
-  const [language, setLanguage] = useLocalStorage('language', 'cn');
+  const [language, setLanguage] = useLocalStorage('language', 'en');
 
   useEffect(()=>{
     console.log(i18n.language,"i18n.language")
@@ -76,7 +76,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         open={openLogin !== 'close'}
         anchor="bottom"
       >
-        <div className="h-screen">
+        <div className="h-[96vh]">
           <Puller></Puller>
           {openLogin === 'login' ? <SignIn></SignIn> : null}
           {openLogin === 'register' ? <SignUp></SignUp> : null}
