@@ -7,11 +7,16 @@ export default function MySelect(props) {
   const {t} = useTranslation()
 
   const handleChange = (event) => {
+    console.log(event.target.value,"event.target.value")
+    setSelectedOption(event.target.value)
     props?.change(event.target.value)
     // setSelectedOption(event.target.value);
   };
   React.useEffect(() => {
     // if()
+
+    console.log(props.value,'term')
+
     props?.change(props?.data?.[0]?.name)
   
 
@@ -20,6 +25,7 @@ export default function MySelect(props) {
   return (
     <select
       value={selectedOption}
+      defaultValue={props.data[0]?.name}
       onChange={handleChange}
       style={{
         width:'120px',
