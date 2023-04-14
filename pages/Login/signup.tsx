@@ -55,6 +55,7 @@ export default function SignUp(props) {
   const [isLogin, setIsLogin] = useState(false);
   const [language, setLanguage] = useState('');
   const [lang,setLang] = useLocalStorage('language',null)
+  
   const { t } = useTranslation();
   useEffect(() => {
     disableZoom();
@@ -62,6 +63,7 @@ export default function SignUp(props) {
       enableZoom();
     };
   }, []);
+
   const ChooseYourRole = (props) => {
     const route = useRouter();
     const MailLabel = () => {
@@ -367,7 +369,13 @@ export default function SignUp(props) {
     );
   };
   const router = useRouter();
+
   const SelectLanguage = (props) => {
+    useEffect(()=>{
+      if(router.locale === "cn"){
+        // props?.setProgress(2);
+      }
+    },[router])
     return (
       <div className="z-10 flex flex-col w-full h-screen -appear in mt-11">
         <div
@@ -380,7 +388,7 @@ export default function SignUp(props) {
         </div>
         {/* <Image src={Logo} alt=""></Image> */}
         <div className="z-10 pl-8 pr-8 text-2xl">{t('Select Language')}</div>
-        <div className="z-10 pl-8 pr-8 mb-20 text-sm text-md text-userColor">
+        <div className="z-10 pl-8 pr-8 mb-10 text-sm text-md text-userColor">
           {t('选择您最常使用的语言。您可以随时更改此选择。')}
         </div>
         <div>
@@ -392,25 +400,34 @@ export default function SignUp(props) {
             /> */}
           </div>
         </div>
-        <div className="w-full h-48"></div>
+        <div className="w-full h-12"></div>
         <div
           className="z-30 h-full p-4 space-y-10 bg-white-mask"
-          onClick={() => {
-            router.push(router.asPath, router.asPath, { locale: 'en' });
-            props.setProgress(2);
-            setLanguage('en');
-            setLang('en')
-          }}
+          
         >
-          <div className="flex items-center justify-center w-full h-32 text-xl rounded text-userColor flex-2xl bg-bg">
+          <div onClick={() => {
+            console.log(router.locale,"language")
+            if(router.locale === 'cn'){
+              router.push(router.asPath, router.asPath, { locale: 'en' });
+              props.setProgress(2);
+              // setLanguage('en');
+              setLang('en')
+            }else{
+              props.setProgress(2);
+            }
+           
+          }} className="flex items-center justify-center w-full h-32 text-xl rounded text-userColor flex-2xl bg-bg">
             EngLish
           </div>
           <div
             onClick={() => {
-              props.setProgress(2);
-              setLanguage('cn');
-              setLang('cn')
-              router.push(router.asPath, router.asPath, { locale: 'cn' });
+              if(router.locale === 'en'){
+                router.push(router.asPath, router.asPath, { locale: 'cn' });
+                // setLanguage('cn');
+                setLang('cn')
+              }else{
+                props.setProgress(2);
+              }
             }}
             className="flex items-center justify-center w-full h-32 text-xl rounded text-userColor flex-2xl bg-bg"
           >
