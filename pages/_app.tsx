@@ -10,7 +10,7 @@ import '@fullcalendar/timegrid/main.css';
 import LabelBottomNavigation from '@/components/Menu/Buttom-menu';
 import type { AppProps } from 'next/app';
 import { wrapper } from '../stores/store';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   selectAuthState,
@@ -62,6 +62,20 @@ function MyApp({ Component, pageProps }: AppProps) {
     left: 'calc(50% - 15px)',
   }));
 
+  
+  // const screenHeight = useMemo(()=>{
+  // //  if(typeof window !== undefined){
+  //   return document?.documentElement?.clientHeight
+  // //  }
+  // },[])
+  const [screenHeight, setScreenHeight] = useState(0);
+  useEffect(()=>{
+    // if(typeof document !== undefined){
+
+      const height = document?.documentElement?.clientHeight;
+      setScreenHeight(height)
+    // }
+  },[])
   const LoginModel = (): JSX.Element => {
     return (
       <SwipeableDrawer
@@ -76,7 +90,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         open={openLogin !== 'close'}
         anchor="bottom"
       >
-        <div className="h-[96vh]">
+        <div style={{height:screenHeight}}>
           <Puller></Puller>
           {openLogin === 'login' ? <SignIn></SignIn> : null}
           {openLogin === 'register' ? <SignUp></SignUp> : null}
