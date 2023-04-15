@@ -177,6 +177,11 @@ export default function Waterfall(props) {
       </SwipeableDrawer>
     );
   };
+  /**
+   * 课程配置
+   * @param props 
+   * @returns 
+   */
   const CourseRCDraw = (props) => {
     const PostMemo = useMemo(() => {
       return (

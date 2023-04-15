@@ -1481,9 +1481,11 @@ export default function addPost() {
   const [ideaPricesVisible, setIdeaPricesVisible] = useState(false);
   const [switchValue, setSwitchValue] = useState(false);
 
-  const StartTimeData = React.useMemo(() => {
-    console.log('StartTime render count ++');
-  }, [form]);
+
+
+  /**
+   * 获取详情
+   */
   const { data, mutate: detailMutate } = useFetch('/post/detail', 'get', {
     id: router.query.id,
   });
@@ -1969,6 +1971,7 @@ export default function addPost() {
             <div className="bg-[#F6F6F6] w-full h-3"></div>
             <AddCourse
               value={data?.data?.form?.courseData}
+              termList={data?.data?.form?.termList}
               submit={(e) => {
                 submitCourseConfig(e);
               }}

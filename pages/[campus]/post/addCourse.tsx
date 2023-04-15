@@ -6,8 +6,16 @@ import { useTranslation } from 'next-i18next';
 
 export default function addCourse(props) {
   const [term, setTerm] = useState([]);
+  useEffect(()=>{
+    if(props?.termList?.length){
+      setTerm(props?.termList);
+      setTermValue(props?.termList?.[0]?.name)
+    }
+    console.log(props.termList,'props.termList');
+    // setTerm(props.termList)
+  },[props.termList])
   const [year, setYear] = useState();
-  const [termValue, setTermValue] = useState();
+  const [termValue, setTermValue] = useState([]);
   const {t} = useTranslation()
   const [courseList, setCourseList] = useState({
     0: {
