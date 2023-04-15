@@ -967,7 +967,7 @@ export default function config(props) {
     const [value, setValue] = useState(props.data);
     return (
       <div className="flex items-center space-x-3">
-        <div className="bg-[#F0F6FF] p-2 min-w-[48px] w-12 h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
+        <div className="bg-[#F0F6FF] p-2 min-w-[64px] h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
           {t('笔记')}
         </div>
         <div className="w-[0.5px] h-3 bg-[#F0F6FF]"></div>
@@ -1254,7 +1254,7 @@ export default function config(props) {
                             <AccordionDetails sx={{ padding: 0 }}>
                               <div className="w-full space-y-4">
                                 <div className="flex items-center space-x-3">
-                                  <div className="bg-[#F0F6FF] p-2 min-w-12 w-12 h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
+                                  <div className="bg-[#F0F6FF] p-2 min-w-[64px] h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
                                     {t('类别')}
                                   </div>
                                   <div className="w-"></div>
@@ -1300,7 +1300,7 @@ export default function config(props) {
                                   </div>
                                 </div>
                                 <div className="flex items-center space-x-3">
-                                  <div className="bg-[#F0F6FF] p-2 min-w-12 w-12 h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
+                                  <div className="bg-[#F0F6FF] p-2 min-w-[64px] h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
                                     {t('优先')}
                                   </div>
                                   <div className="w-[0.5px] h-3 bg-[#F0F6FF]"></div>
@@ -1331,7 +1331,7 @@ export default function config(props) {
                                   })}
                                 </div>
                                 <div className="flex items-center space-x-3">
-                                  <div className="bg-[#F0F6FF] min-w-12 p-2 min-w-[48px] h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
+                                  <div className="bg-[#F0F6FF]  p-2 min-w-[64px] h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
                                     {t('可选')}
                                   </div>
                                   <div className="w-[0.5px] h-3 bg-[#F0F6FF]"></div>

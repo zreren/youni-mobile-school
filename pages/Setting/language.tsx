@@ -56,8 +56,8 @@ function SimpleDialog(props: SimpleDialogProps) {
 
 export default function account() {
   // if(typeof window === 'undefined') return (<div>ssr disable</div>);
-  const [language, setLanguage] = useLocalStorage('language', 'cn');
-  const [defaultLanguage, setDefaultLanguage] = useState('cn');
+  const [language, setLanguage] = useLocalStorage('language', 'en');
+  const [defaultLanguage, setDefaultLanguage] = useState('en');
   const router = useRouter();
   const { t } = useTranslation();
   useEffect(() => {
