@@ -18,7 +18,11 @@ import useLocalStorage from '../../../../../hooks/useStore';
 import { useDispatch } from 'react-redux';
 // import Discussion from '@/components/Discussion/index'
 import GDiscussionComponent from '@/components/Discussion';
-import { selectAuthState, setAuthState, selectOpen } from '@/stores/authSlice';
+import {
+  selectLoginModelState,
+  seLoginModelState,
+  selectOpen,
+} from '@/stores/authSlice';
 import { Toast } from 'react-vant';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -34,7 +38,7 @@ export default function userComment() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(setAuthState(true));
+    dispatch(seLoginModelState(true));
   }, []);
   const [language, setLanguage] = useLocalStorage('language', 'en');
   const { id } = router.query;
@@ -267,9 +271,11 @@ export default function userComment() {
       replyId: !pid ? null : id,
       content: comment,
     });
-    if (data?.message) {
+    if (data?.message === 'success') {
       Toast.success(t('评论成功'));
       mutate();
+    } else {
+      Toast.fail(t('失败'));
     }
   };
   const [commentChild, setCommentChild] = useState({
@@ -291,7 +297,7 @@ export default function userComment() {
     return (
       <div className="sticky  z-30 bottom-10 flex   items-center w-full p-5 bg-white h-[60px]">
         <input
-          placeholder={`${t("回复")}${user?.nickName}`}
+          placeholder={`${t('回复')}${user?.nickName}`}
           value={comment}
           className="px-1 pl-4 w-full   h-9 bg-[#F7F8F9] rounded-full"
           onChange={(e) => {
@@ -305,7 +311,7 @@ export default function userComment() {
             send();
           }}
         >
-          {t("发送")}
+          {t('发送')}
         </div>
       </div>
     );

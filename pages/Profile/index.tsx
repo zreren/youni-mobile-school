@@ -55,8 +55,8 @@ import ReturnBackIcon from './returnBack.svg';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import {  useSelector } from 'react-redux';
 import {
-  selectAuthState,
-  setAuthState,
+  selectLoginModelState,
+  seLoginModelState,
   selectOpen,
 } from '@/stores/authSlice';
 // import Waterfall from '@/components/Layout/Waterfall';
@@ -65,13 +65,12 @@ function index(props) {
   const { user, loggedOut } = useUser();
   console.log(props, 'SignIn');
   const { t, i18n } = useTranslation();
-  const authState = useSelector(selectAuthState);
+  const loginModelState = useSelector(selectLoginModelState);
   useEffect(() => {
     console.log(t('my-button-text'), i18n.language, router.locales, 't i18n');
   });
   useEffect(() => {
-    dispatch(setAuthState(true));
-    console.log(i18n.language, 'i18n.language');
+    dispatch(seLoginModelState(true));
   }, []);
 
   const PostGroupDetail = (props) => {
@@ -608,36 +607,10 @@ function index(props) {
     }, [liked, stard]);
     if (!liked || !stard) return null;
 
-    // const { data: collectionData, mutate } = useFetch(
-    //   '/collection/detail',
-    //   'get',
-    //   {
-    //     id: detailId,
-    //   },
-    // );
-    // useEffect(() => {
-    //   mutate();
-    // }, [detailId]);
 
-    // const [openDetail, setOpenDetail] = useState(false);
-    // const checkPostGroupDetail = (id) => {
-    //   setOpenDetail(true);
-    //   setDetailId(id);
     // };
     return (
       <div className="w-full ">
-        {/* <PostGroupDrawer
-          data={collectionData?.data}
-          mutate={()=>{mutate()}}
-          onOpen={() => {
-            setOpenDetail(true);
-          }}
-          onClose={() => {
-            setOpenDetail(false);
-          }}
-          id={detailId}
-          open={openDetail}
-        ></PostGroupDrawer> */}
         <div className="w-full px-2">
         <div className="border-[#DCDDE1] border rounded-lg	 w-full h-[28px]  flex mt-5 mb-4">
         <div

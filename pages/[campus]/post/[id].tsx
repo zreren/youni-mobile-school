@@ -25,12 +25,21 @@ import mapRequest from '@/libs/mapRequest';
 import useUser from '@/hooks/useUser';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-
+import {
+  selectLoginModelState,
+  seLoginModelState,
+  selectOpen,
+} from '@/stores/authSlice';
+import { useDispatch } from 'react-redux';
 
 function index(props) {
   const router = useRouter();
   const { t } = useTranslation();
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(seLoginModelState(true));
+  }, []);
   // const { id } = props;
   const id = router.query.id;
   const { data, mutate } = useFetch(`/post/detail?id=${id}`, 'get');
@@ -60,9 +69,11 @@ function index(props) {
       replyId: pid === null ? null : id,
       content: comment,
     });
-    if (data?.message) {
+    if (data?.message === "success") {
       Toast.success(t('评论成功'));
       mutate();
+    }else{
+      Toast.fail(t('失败'));
     }
   };
 
@@ -108,6 +119,8 @@ function index(props) {
         return false;
       }
     }, [props.data]);
+
+
     const point = useMemo(() => {
       console.log(Location, 'Location');
       if (!Location?.point) return null;
@@ -122,6 +135,8 @@ function index(props) {
       if (!point) return null;
       return [longitude1, latitude1, longitude2, latitude2];
     }, [Location]);
+
+
     if (!Location.point) return;
     if (!point) return;
 

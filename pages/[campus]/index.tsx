@@ -11,7 +11,7 @@ import { Swiper, Toast } from 'react-vant';
 import classnames from 'classnames';
 import Header from '@/components/Header';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAuthState, setAuthState } from '@/stores/authSlice';
+import { selectLoginModelState, seLoginModelState } from '@/stores/authSlice';
 import Waterfall from '@/components/Layout/Waterfall';
 import LoadingWaterfall from '@/components/Layout/WaterfallLoading';
 import PostCategory from '@/components/Menu/post-category';
@@ -307,7 +307,7 @@ function SchoolPage(props) {
   });
   React.useEffect(() => {
     setCampusIdMap(props?.post?.id);
-    dispatch(setAuthState(true));
+    dispatch(seLoginModelState(true));
   }, []);
   const [countryId, setCountryId] = useState();
   const SchoolList = (props) => {

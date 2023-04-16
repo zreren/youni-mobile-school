@@ -7,7 +7,7 @@ import { styled } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import UserAddMenu from '@/components/UserAddMenu';
-import { selectAuthState, setAuthState } from '@/stores/authSlice';
+import { selectLoginModelState, seLoginModelState } from '@/stores/authSlice';
 import IconClose from "./close.svg";
 import { useLocalStorage } from 'react-use';
 import { useTranslation } from 'next-i18next';

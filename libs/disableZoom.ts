@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  selectAuthState,
-  setAuthState,
+  selectLoginModelState,
+  seLoginModelState,
   selectOpen,
   setOpenLogin,
 } from '../stores/authSlice';

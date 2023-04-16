@@ -13,8 +13,8 @@ import { wrapper } from '../stores/store';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
-  selectAuthState,
-  setAuthState,
+  selectLoginModelState,
+  seLoginModelState,
   selectOpen,
   setOpenLogin,
 } from '../stores/authSlice';
@@ -39,7 +39,7 @@ import { disableZoom } from '@/libs/disableZoom';
 function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useDispatch();
   // const [language,setLanguage] = useLocalStorage('language','ename')
-  const authState = useSelector(selectAuthState);
+  const loginModelState = useSelector(selectLoginModelState);
   const openLogin = useSelector(selectOpen);
   const [stopScroll, setStopScroll] = useState(false);
   const router = useRouter();
@@ -63,19 +63,13 @@ function MyApp({ Component, pageProps }: AppProps) {
   }));
 
   
-  // const screenHeight = useMemo(()=>{
-  // //  if(typeof window !== undefined){
-  //   return document?.documentElement?.clientHeight
-  // //  }
-  // },[])
   const [screenHeight, setScreenHeight] = useState(0);
   useEffect(()=>{
-    // if(typeof document !== undefined){
-
       const height = document?.documentElement?.clientHeight;
       setScreenHeight(height)
-    // }
   },[])
+
+
   const LoginModel = (): JSX.Element => {
     return (
       <SwipeableDrawer
@@ -84,7 +78,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         disableSwipeToOpen={true}
         onClose={() => {
           dispatch(setOpenLogin('close'));
-          dispatch(setAuthState(true));
+          dispatch(seLoginModelState(true));
         }}
         onOpen={() => {}}
         open={openLogin !== 'close'}
@@ -113,8 +107,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           </div>
         </CSSTransition>
       </SwitchTransition>
-      {/* <LoginModel></LoginModel> */}
-      {authState ? <LabelBottomNavigation /> : null}
+      {loginModelState ? <LabelBottomNavigation /> : null}
       <Component {...pageProps} />
     </div>
   );

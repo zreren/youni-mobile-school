@@ -46,7 +46,7 @@ import useUser from '@/hooks/useUser';
 import useCurriculum from '@/hooks/useCurriculum';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { selectAuthState, setAuthState } from '@/stores/authSlice';
+import { selectLoginModelState, seLoginModelState } from '@/stores/authSlice';
 
 // import { stringify } from 'querystring';
 const Puller = styled(Box)(({ theme }) => ({
@@ -85,7 +85,7 @@ export default function Schedules() {
   const router = useRouter();
   const { t } = useTranslation();
   useEffect(() => {
-    dispatch(setAuthState(true));
+    dispatch(seLoginModelState(true));
   }, []);
   // const { defaultCurriculum } = useCurriculum();
   const [campusIdMapSchool, setCampusIdMapSchool] = useLocalStorage(

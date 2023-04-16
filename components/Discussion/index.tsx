@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import EmptyIcon from './empty.svg';
 import Image from 'next/image';
 import LikeActive from './like-active.svg';
@@ -168,6 +168,7 @@ export default function index(props) {
       </div>
     );
   };
+
   const DiscussionComponent = ({ children, data }) => {
     return (
       <div className="w-full mt-2 flex justify-start space-x-3">
@@ -222,7 +223,7 @@ export default function index(props) {
       </div>
     );
   };
-  const Discussion = ({ comments }) => {
+  const Discussion = useCallback(({ comments }) => {
     return (
       <div>
         {comments?.map((item) => {
@@ -270,16 +271,19 @@ export default function index(props) {
                               </div>
                               <div className="text-xs text-secondGray mt-1"></div>
                               <div className=" items-center space-x-1">
+
                                 {item?.reply ? (
                                   <span className="whitespace-nowrap text-sm">
                                     {t('回复')}
                                   </span>
                                 ) : null}
+
                                 <span className="text-sm mt-1 whitespace-nowrap font-medium">
                                   {item?.reply
                                     ? `@${item?.reply?.user?.nickName}`
                                     : null}
                                 </span>
+
                                 <span className="text-sm mt-1 w-full">
                                   {item.content}
                                 </span>
@@ -289,7 +293,7 @@ export default function index(props) {
                                 id={item?.id}
                                 data={item?.interactInfo}
                                 user={item?.user}
-                                parent={item?.parent}
+                                parent={item?.reply}
                                 time={item?.createdAt}
                               ></DiscussionComponentFooter>
                             </div>
@@ -358,7 +362,7 @@ export default function index(props) {
                                 id={item?.id}
                                 data={item?.interactInfo}
                                 user={item?.user}
-                                parent={item?.parent}
+                                parent={item?.reply}
                                 time={item?.createdAt}
                               ></DiscussionComponentFooter>
                             </div>
@@ -389,7 +393,7 @@ export default function index(props) {
         })}
       </div>
     );
-  };
+  },[comments]);
 
   return (
     <div>

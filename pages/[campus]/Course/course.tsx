@@ -13,8 +13,8 @@ import { SwitchTransition, CSSTransition } from 'react-transition-group';
 import { useTranslation } from 'react-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import {
-  selectAuthState,
-  setAuthState,
+  selectLoginModelState,
+  seLoginModelState,
   selectOpen,
 } from '@/stores/authSlice';
 import { useDispatch } from 'react-redux';
@@ -32,7 +32,7 @@ export default function course(props): JSX.Element {
     },
   );
   useEffect(() => {
-    dispatch(setAuthState(true));
+    dispatch(seLoginModelState(true));
   }, []);
   useEffect(() => {
     campusDataMutate();

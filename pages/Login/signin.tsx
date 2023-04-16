@@ -20,7 +20,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAuthState, setAuthState } from '@/stores/authSlice';
+import { selectLoginModelState, seLoginModelState } from '@/stores/authSlice';
 import { Router, useRouter } from 'next/router';
 import InputLabel from '@mui/material/InputLabel';
 import useFetch from '@/hooks/useFetch';
@@ -573,7 +573,7 @@ export default function SignIn(props) {
   ];
   const Node = ProgressList[progress];
   React.useEffect(() => {
-    dispatch(setAuthState(false));
+    dispatch(seLoginModelState(false));
   }, []);
 
   return (

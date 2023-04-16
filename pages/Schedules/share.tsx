@@ -32,7 +32,7 @@ import { Cell, Dialog } from 'react-vant';
 import { useRouter } from 'next/router';
 import BgSVG from './bg.svg';
 import ArrowRight from './arrow-right.svg';
-import { setOpenLogin, selectOpen, setAuthState } from '../../stores/authSlice';
+import { setOpenLogin, selectOpen, seLoginModelState } from '../../stores/authSlice';
 import { useDispatch } from 'react-redux';
 import { Loading } from 'react-vant';
 import CourseIcon1 from './courseIcon1.svg';
@@ -300,9 +300,9 @@ export default function Schedules() {
   const [studentId, setStudentId] = useState(router.query.id);
 
   useEffect(() => {
-    dispatch(setAuthState(false));
+    dispatch(seLoginModelState(false));
     return () => {
-      dispatch(setAuthState(true));
+      dispatch(seLoginModelState(true));
     };
   });
   useEffect(() => {

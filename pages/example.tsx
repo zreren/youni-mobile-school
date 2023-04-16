@@ -4,11 +4,11 @@ import Link from 'next/link';
 import CButton from '../components/Button/CButton';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from "react-redux";
-import { selectAuthState, setAuthState } from "@/stores/authSlice";
+import { selectLoginModelState, seLoginModelState } from "@/stores/authSlice";
 export default function test() {
   const  router = useRouter()
   const dispatch = useDispatch();
-  dispatch(setAuthState(true))
+  dispatch(seLoginModelState(true))
   return (
     <div className="p-8 pt-16 space-y-2">
       <Header title="测试链接页" />

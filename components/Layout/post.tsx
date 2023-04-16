@@ -188,14 +188,17 @@ function index(props) {
    * @param pid 父id
    */
   const sendChild = async (comment, id, pid) => {
+    console.log(comment, id, pid,"setCommentChild");
     const { data } = await useRequest.post('/api/comment/comment', {
-      pid: pid === null ? id : pid,
-      replyId: pid === null ? null : id,
+      pid: !pid ? id : pid,
+      replyId: !pid ? null : id,
       content: comment,
     });
     if (data?.message === 'success') {
       Toast.success('评论成功');
       mutateComment();
+    }else{
+      Toast.fail(t('失败'));
     }
   };
 

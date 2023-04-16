@@ -5,7 +5,7 @@ import { HYDRATE } from 'next-redux-wrapper';
 type OpenLogin  = 'login' | 'close' | 'register';
 // Type for our state
 export interface AuthState {
-  authState: boolean;
+  loginModelState: boolean;
   openLogin: OpenLogin;
 }
 export interface SelectOpenState {
@@ -13,7 +13,7 @@ export interface SelectOpenState {
 }
 // Initial state
 const initialState: AuthState = {
-  authState: false,
+  loginModelState: false,
   openLogin: 'close',
 };
 const selectOpenState: SelectOpenState = {
@@ -25,8 +25,8 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     // Action to set the authentication status
-    setAuthState(state, action) {
-      state.authState = action.payload;
+    seLoginModelState(state, action) {
+      state.loginModelState = action.payload;
     },
 
     // Special reducer for hydrating the state. Special case for next-redux-wrapper
@@ -50,9 +50,9 @@ export const openLogin = createSlice({
     },
   },
 });
-export const { setAuthState } = authSlice.actions;
+export const { seLoginModelState } = authSlice.actions;
 export const { setOpenLogin } = openLogin.actions;
-export const selectAuthState = (state: AppState) => state.auth.authState;
+export const selectLoginModelState = (state: AppState) => state.auth.loginModelState;
 export const selectOpen = (state: AppState) => state.openLogin.openLogin;
 
 export default authSlice.reducer;

@@ -4,11 +4,11 @@ import { Loading } from 'react-vant';
 import { useDispatch, useSelector } from 'react-redux';
 import { Popup } from 'react-vant';
 import useLocalStorage from '@/hooks/useStore';
-import { selectAuthState, setAuthState } from '@/stores/authSlice';
+import { selectLoginModelState, seLoginModelState } from '@/stores/authSlice';
 import { useRouter } from 'next/router';
 const Home: NextPage = () => {
   const dispatch = useDispatch();
-  dispatch(setAuthState(true));
+  dispatch(seLoginModelState(true));
   const [school, setSchool] = useLocalStorage('school', 'York');
   const router = useRouter();
   enum TSize {

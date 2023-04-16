@@ -22,7 +22,7 @@ import useFetch from '@/hooks/useFetch';
 import { Router, useRouter } from 'next/router';
 import InputLabel from '@mui/material/InputLabel';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAuthState, setAuthState } from '@/stores/authSlice';
+import { selectLoginModelState, seLoginModelState } from '@/stores/authSlice';
 import prefixSorted from '../../libs/phone';
 import { setOpenLogin } from '../../stores/authSlice';
 import useRequest from '@/libs/request';
@@ -514,7 +514,7 @@ export default function SignUp(props) {
   const Node = ProgressList[progress];
 
   React.useEffect(() => {
-    dispatch(setAuthState(false));
+    dispatch(seLoginModelState(false));
   }, []);
 
   return (

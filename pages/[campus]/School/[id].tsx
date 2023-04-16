@@ -10,7 +10,7 @@ import { grey } from '@mui/material/colors';
 import classnames from 'classnames';
 import Header from '@/components/Header';
 import { useDispatch, useSelector } from "react-redux";
-import { selectAuthState, setAuthState } from "@/stores/authSlice";
+import { selectLoginModelState, seLoginModelState } from "@/stores/authSlice";
 import Waterfall from '@/components/Layout/Waterfall';
 import { useTranslation } from 'next-i18next';
 
@@ -205,7 +205,7 @@ function SchoolPage(props) {
   const [schoolSelect,setSelectSchool] = useState(false);
   const dispatch = useDispatch()
   React.useEffect(()=>{
-    dispatch(setAuthState(true))
+    dispatch(seLoginModelState(true))
   },[])
   return (
     <div className="w-screen h-screen pb-36">
