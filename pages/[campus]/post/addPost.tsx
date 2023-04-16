@@ -461,7 +461,8 @@ export default function addPost() {
       Toast.fail(t('请完善表单'));
       return;
     }
-    if (router.query.isEdit) {
+    console.log(router.query.isEdit,"router.query.isEdit")
+    if (router.query.isEdit === "true" || router.query.isEdit) {
       try {
         const { data } = await useRequest.post('/api/post/update', {
           id: router.query.id,
@@ -1826,25 +1827,49 @@ export default function addPost() {
       Toast.fail(t('至少选择一学期'));
       return;
     }
-    try {
-      const { data } = await useRequest.post('/api/post/create', {
-        ...e,
-        draft: draft,
-        title: title,
-        body: content,
-        topics: topic?.map((item) => item.name),
-        preview: ['/upload/bg-202303091736764.png'],
-        type: type,
-        contact: ['微信'],
-        campusId: campusID,
-      });
-      if (data.message === 'success') {
-        Toast.success('发布成功');
-      } else {
-        Toast.fail('发布失败');
+    if(router.query.isEdit === "true"){
+      try {
+        const { data } = await useRequest.post('/api/post/update', {
+          ...e,
+          id:router.query.id,
+          draft: draft,
+          title: title,
+          body: content,
+          topics: topic?.map((item) => item.name),
+          preview: ['/upload/bg-202303091736764.png'],
+          type: type,
+          contact: ['微信'],
+          campusId: campusID,
+        });
+        if (data.message === 'success') {
+          Toast.success('更新成功');
+        } else {
+          Toast.fail('更新失败');
+        }
+      } catch (error) {
+        Toast.fail(error);
       }
-    } catch (error) {
-      Toast.fail(error);
+    }else{
+      try {
+        const { data } = await useRequest.post('/api/post/create', {
+          ...e,
+          draft: draft,
+          title: title,
+          body: content,
+          topics: topic?.map((item) => item.name),
+          preview: ['/upload/bg-202303091736764.png'],
+          type: type,
+          contact: ['微信'],
+          campusId: campusID,
+        });
+        if (data.message === 'success') {
+          Toast.success('发布成功');
+        } else {
+          Toast.fail('发布失败');
+        }
+      } catch (error) {
+        Toast.fail(error);
+      }
     }
     console.log(e, 'get form');
   };

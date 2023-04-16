@@ -309,14 +309,14 @@ export default function recommend(props) {
     return (
       <div className="w-full p-2 mt-4">
         <div className="font-semibold text-lg text-[#37455C]">
-          选课 <span className="text-[#2347D9]">推荐</span>
+          {t("选课")} <span className="text-[#2347D9]">{t("推荐")}</span>
         </div>
         <div className="flex w-full justify-between mt-5 items-center px-2 space-x-3">
         <MustStudy data={data?.data?.form?.courseData?.filter((item)=>item.type !== 'option')}></MustStudy>
         <OptionalStudy  data={data?.data?.form?.courseData?.filter((item)=>item.type !== 'must')}></OptionalStudy>
         </div>
         <div className="flex items-center space-x-2 mt-4">
-          <div className="w-1 h-4 bg-yellow-300 rounded-full"></div>
+          <div className="w-1 h-4 bg-yellow-300 rounded-full mt-2"></div>
           <div className="font-semibold">{data?.data?.form.term}</div>
         </div>
       </div>

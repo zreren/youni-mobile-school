@@ -8,8 +8,8 @@ export default function MySelect(props) {
 
   const handleChange = (event) => {
     console.log(event.target.value,"event.target.value")
-    setSelectedOption(event.target.value)
-    props?.change(event.target.value)
+    // setSelectedOption(event.target.value)
+    // props?.change(event.target.value)
     // setSelectedOption(event.target.value);
   };
   React.useEffect(() => {
@@ -26,7 +26,7 @@ export default function MySelect(props) {
     <select
       value={selectedOption}
       defaultValue={props.data[0]?.name}
-      onChange={handleChange}
+      // onChange={handleChange}
       style={{
         width:'120px',
         backgroundColor: '#F7F8F9',

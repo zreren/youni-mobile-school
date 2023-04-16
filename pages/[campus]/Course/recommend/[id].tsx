@@ -279,7 +279,7 @@ export default function recommend() {
             </div>
           </div>
           <div className="xueqiTag absolute rounded-[5px] p-[5px] text-[white] flex justify-center items-center text-[10px] w-4 h-4 bottom-0 right-0">
-            {data?.data?.form?.term?.slice(0, 1)}
+            {props.data?.term?.slice(0, 1)}
           </div>
         </div>
       );
@@ -326,7 +326,7 @@ export default function recommend() {
             </div>
           </div>
           <div className="xueqiTag absolute rounded-[6px] p-[6px] text-[white] flex justify-center items-center text-xs w-5 h-5 bottom-0 right-0">
-            {data?.data?.form?.term?.slice(0, 1)}
+          {props.data?.term?.slice(0, 1)}
           </div>
         </div>
       );
@@ -358,7 +358,7 @@ export default function recommend() {
         <div className="font-semibold text-lg text-[#37455C]">
           {t('选课')} <span className="text-[#2347D9]">{t('推荐')}</span>
         </div>
-        <div className="flex w-full justify-between mt-5 items-center px-2 space-x-3">
+        <div className="flex w-full justify-between mt-5 mb-3 items-center px-2 space-x-3">
           <MustStudy
             data={data?.data?.form?.courseData?.filter(
               (item) => item.type !== 'option',
@@ -370,10 +370,10 @@ export default function recommend() {
             )}
           ></OptionalStudy>
         </div>
-        <div className="flex items-center space-x-2 mt-4">
+        {/* <div className="flex items-center space-x-2 mt-4">
           <div className="w-1 h-4 bg-yellow-300 rounded-full"></div>
           <div className="font-semibold">{data?.data?.form.term}</div>
-        </div>
+        </div> */}
       </div>
     );
   };
@@ -389,6 +389,7 @@ export default function recommend() {
 
   const CourseSelectFormItem = (props) => {
     const { data }: { data: Course } = props;
+    console.log(data,"CourseSelectFormItem")
     return (
       <>
         <div className="flex mt-4 items-top space-x-8 w-full">

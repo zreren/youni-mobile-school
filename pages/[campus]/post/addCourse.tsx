@@ -25,6 +25,7 @@ export default function addCourse(props) {
       professorMust: [],
       professorOption: [],
       note: null,
+      term: null,
     },
     1: {
       id: null,
@@ -33,6 +34,7 @@ export default function addCourse(props) {
       professorMust: [],
       professorOption: [],
       note: null,
+      term: null,
     },
     2: {
       id: null,
@@ -41,6 +43,7 @@ export default function addCourse(props) {
       professorMust: [],
       professorOption: [],
       note: null,
+      term: null,
     },
     3: {
       id: null,
@@ -49,6 +52,7 @@ export default function addCourse(props) {
       professorMust: [],
       professorOption: [],
       note: null,
+      term: null,
     },
     4: {
       id: null,
@@ -57,6 +61,7 @@ export default function addCourse(props) {
       professorMust: [],
       professorOption: [],
       note: null,
+      term: null,
     },
     5: {
       id: null,
@@ -65,6 +70,7 @@ export default function addCourse(props) {
       professorMust: [],
       professorOption: [],
       note: null,
+      term: null,
     },
     6: {
       id: null,
@@ -72,6 +78,7 @@ export default function addCourse(props) {
       professorMust: [],
       professorOption: [],
       note: null,
+      term: null,
     },
     7: {
       id: null,
@@ -80,6 +87,7 @@ export default function addCourse(props) {
       professorMust: [],
       professorOption: [],
       note: null,
+      term: null,
     },
     8: {
       id: null,
@@ -88,6 +96,7 @@ export default function addCourse(props) {
       professorMust: [],
       professorOption: [],
       note: null,
+      term: null,
     },
     9: {
       id: null,
@@ -96,8 +105,10 @@ export default function addCourse(props) {
       professorMust: [],
       professorOption: [],
       note: null,
+      term: null,
     },
   });
+  const [_current,_setCurrent] = useState(0)
   useEffect(() => {
     console.log(props.value, 'props.value');
     if (!props.value) return;
@@ -131,6 +142,8 @@ export default function addCourse(props) {
         termValue={termValue}
         courseList={courseList}
         setCourseList={setCourseList}
+        _setCurrent={_setCurrent}
+        _current={_current}
         year={year}
         term={term}
       ></CourseConfig>
@@ -151,11 +164,28 @@ export default function addCourse(props) {
       ),
     [courseList],
   );
-
+  const getDomAndHide = () => {
+    const dom = document.getElementById('bottom-navigation');
+    if (!dom) return;
+    dom.style.display = 'none';
+  };
+  useEffect(() => {
+    const dom = document.getElementById('bottom-navigation');
+    if (!dom) {
+      setTimeout(() => {
+        getDomAndHide();
+      }, 500);
+      return;
+    }
+    dom.style.display = 'none';
+    return () => {
+      dom.style.display = 'block';
+    };
+  }, []);
   const submitPost = async (form, draft) => {};
   const Footer = () => {
     return (
-      <div className="w-full shadow-footer bg-white h-[60px] space-x-4 flex justify-between fixed bottom-12 px-5 py-2">
+      <div className="w-full shadow-footer bg-white h-[60px] space-x-4 flex justify-between fixed bottom-0 px-5 py-2">
         <div
           className="flex flex-col items-center  w-[40px]"
           onClick={() => {

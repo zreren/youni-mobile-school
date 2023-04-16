@@ -25,7 +25,9 @@ import { useTranslation } from 'next-i18next';
 
 export default function config(props) {
   const router = useRouter();
-  const [current, setCurrent] = React.useState(0);
+
+
+
   const { t } = useTranslation();
   function usePersistentState(key, defaultValue) {
     const isBrowser = typeof window !== 'undefined';
@@ -67,15 +69,6 @@ export default function config(props) {
     campusId: campusId,
   });
 
-  // React.useEffect(() => {
-  //   async function fetchData() {
-
-  //     setSemesterData(fetchedData);
-  //   }
-  //   if(campusId){
-  //     fetchData()
-  //   }
-  // }, [campusId])
 
   const Puller = styled(Box)(({ theme }) => ({
     width: 33,
@@ -142,11 +135,14 @@ export default function config(props) {
   const {
     courseList,
     setCourseList,
-  }: { courseList: Course[]; setCourseList: any } = props;
+    _setCurrent,
+    _current
+  }: { courseList: Course[]; setCourseList: any;_setCurrent:any;_current:any} = props;
   const CourseId = React.useMemo(
     () => courseList[professorCurrent]?.id,
     [professorCurrent, courseList],
   );
+  const [current, setCurrent] = React.useState(_current);
   const { data: evaluationData, mutate: evaluationDataMutate } = useFetch(
     `/course/professors?id=${CourseId}`,
     'get',
@@ -743,6 +739,7 @@ export default function config(props) {
     professorOption: { id: number; label: string }[];
     type: string;
     note: string;
+    term: string;
   }
   const courseMap: Course[] = React.useMemo(
     () =>
@@ -755,7 +752,7 @@ export default function config(props) {
   }, [courseList]);
 
   const updateForm = (data: {
-    [key: string]: { id?; label?; type?; note? };
+    [key: string]: { id?; label?; type?; note?; term? };
   }) => {
     const key = Object.keys(data);
     setCourseList((pre) => {
@@ -768,7 +765,8 @@ export default function config(props) {
         },
       };
     });
-    setCurrent((pre) => pre);
+    // setCurrent((pre) => pre);
+    _setCurrent(current);
   };
   interface Professor {
     id: any;
@@ -868,7 +866,8 @@ export default function config(props) {
             </svg> */}
           </div>
           <div className="xueqiTag absolute rounded-[5px] p-[5px] text-[white] flex justify-center items-center text-[10px] w-4 h-4 bottom-0 right-0">
-            {termValue?.slice(0, 1)}
+            {/* {termValue?.slice(0, 1)} */}
+            {props?.data?.term?.slice(0, 1)}
           </div>
         </div>
       );
@@ -927,7 +926,7 @@ export default function config(props) {
             </svg> */}
           </div>
           <div className="xueqiTag absolute rounded-[5px] p-[5px] text-[white] flex justify-center items-center text-[10px] w-4 h-4 bottom-0 right-0">
-            {termValue?.slice(0, 1)}
+            {props?.data?.term?.slice(0, 1)}
           </div>
         </div>
       );
@@ -1040,7 +1039,7 @@ export default function config(props) {
 
   const Footer = () => {
     return (
-      <div className="w-full shadow-footer bg-white h-[60px] space-x-4 flex justify-between fixed bottom-12 px-5 py-2">
+      <div className="w-full shadow-footer bg-white h-[60px] space-x-4 flex justify-between fixed bottom-0 px-5 py-2">
         <div
           className="flex flex-col items-center  w-[40px]"
           onClick={() => {
@@ -1112,6 +1111,9 @@ export default function config(props) {
           campusId={campusId}
           selectCourse={(course) => {
             updateForm({ [current]: course });
+            updateForm({ [current]: {
+              term: props?.term[0]?.name,
+            }});
             // setOpenCourse(false);
             // setCurrent(current)
           }}
@@ -1159,7 +1161,7 @@ export default function config(props) {
           </div>
           {/* <div>{item.action}</div> */}
         </div>
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <Select
             value={termValue}
             change={(e) => {
@@ -1167,7 +1169,7 @@ export default function config(props) {
             }}
             data={props?.term}
           ></Select>
-        </div>
+        </div> */}
         <div className="grid grid-cols-5 grid-rows-2 gap-y-2 gap-x-2">
           {new Array(10).fill(1).map((item, index) => {
             console.log(item, 'courseList');
@@ -1177,6 +1179,7 @@ export default function config(props) {
                 onClick={() => {
                   setOpenCourse(true);
                   setCurrent(index);
+                  // _setCurrent(index);
                 }}
                 data={courseList[index]}
                 isSelect={current === index}
@@ -1255,6 +1258,58 @@ export default function config(props) {
                               <div className="w-full space-y-4">
                                 <div className="flex items-center space-x-3">
                                   <div className="bg-[#F0F6FF] p-2 min-w-[64px] h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
+                                    {t('学期')}
+                                  </div>
+                                  <div className="w-[0.5px] h-3 bg-[#F0F6FF]"></div>
+                                  <select
+                                    value={courseList[index]?.term}
+                                    defaultValue={props?.term?.name}
+                                    onChange={(e) => {
+                                      updateForm({
+                                        [index]: {
+                                          term: e.target.value,
+                                        },
+                                      });
+                                      setCurrent(index);
+                                    }}
+                                    style={{
+                                      width: '120px',
+                                      backgroundColor: '#F7F8F9',
+                                      borderRadius: '4px',
+                                      color: '#798195',
+                                      border: 'none',
+                                      padding: '0px 12px',
+                                      height: '30px',
+                                      fontWeight: 600,
+                                      fontSize: '12px',
+                                      outline: 'none',
+                                    }}
+                                  >
+                                    {props?.term?.map((item) => {
+                                      return (
+                                        <option value={item.name}>
+                                          {item.name}
+                                        </option>
+                                      );
+                                    })}
+                                    {props?.term?.length === 0 && (
+                                      <option>{t('请选择学期')}</option>
+                                    )}
+                                  </select>
+                                  {/* <Select
+                                    value={courseList[index]?.term}
+                                    // change={(e) => {
+                                    //   updateForm({
+                                    //     [index]: {
+                                    //       term: e,
+                                    //     },
+                                    //   });
+                                    // }}
+                                    data={props?.term}
+                                  ></Select> */}
+                                </div>
+                                <div className="flex items-center space-x-3">
+                                  <div className="bg-[#F0F6FF] p-2 min-w-[64px] h-6 text-xs  text-[#2347D9] flex justify-center items-center rounded-md">
                                     {t('类别')}
                                   </div>
                                   <div className="w-"></div>
@@ -1312,7 +1367,7 @@ export default function config(props) {
                                   >
                                     +
                                   </div>
-                                  {item?.professorMust.map((item) => {
+                                  {item?.professorMust?.map((item) => {
                                     return (
                                       <div
                                         onClick={() => {
