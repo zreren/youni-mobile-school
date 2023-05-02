@@ -17,7 +17,7 @@ export default function LabelBottomNavigation(props) {
   const dispatch = useDispatch();
   const {t} = useTranslation();
   const router = useRouter();
-  const [selectSchool,setSelectSchool] = useLocalStorage('school',null)
+  const [selectSchool,setSelectSchool] = useLocalStorage('school','york')
   React.useEffect(()=>{
     setSelectSchool(router.query.campus)
   },[router.query.campus])

@@ -313,7 +313,7 @@ function SchoolPage(props) {
   const SchoolList = (props) => {
     const { arg, countryId } = props;
     const [select, setSelect] = useState();
-    const [selectSchool, setSelectSchool] = useLocalStorage('school', null);
+    const [selectSchool, setSelectSchool] = useLocalStorage('school', 'york');
     const { data: countryData, mutate } = useFetch('/country/campuses', 'get', {
       countryId: countryId,
     });

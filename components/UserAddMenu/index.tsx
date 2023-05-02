@@ -12,7 +12,7 @@ import { useTranslation } from 'next-i18next';
 
 export default function index(props) {
   const router = useRouter();
-  const [selectSchool,setSelectSchool] = useLocalStorage('school',null)
+  const [selectSchool,setSelectSchool] = useLocalStorage('school','york')
   const {t} = useTranslation()
   let body = document.body;
   return (

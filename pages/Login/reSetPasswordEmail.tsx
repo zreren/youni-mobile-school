@@ -20,9 +20,12 @@ import { setOpenLogin } from '../../stores/authSlice';
 import { useDispatch } from 'react-redux';
 import { Picker, Field } from 'react-vant';
 import useFetch from '@/hooks/useFetch';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export default function Valid() {
   const [state, setState] = React.useState(0);
+  const { t } = useTranslation();
   const router = useRouter();
   const { query } = router;
   const lang = useMemo(() => {
@@ -194,7 +197,7 @@ export default function Valid() {
         <div className="mt-6 mb-6">
           <div className="w-full">
             <CPicker
-              placeholder="select your university"
+              placeholder={t("select your university")}
               change={(val, mail) => {
                 setSelectSchool({
                   id: val,
@@ -518,4 +521,15 @@ export default function Valid() {
       {/* <Password setState={setState} /> */}
     </div>
   );
+}
+
+
+export async function getStaticProps({ locale }) {
+  console.log(locale, 'locale');
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+      // Will be passed to the page component as props
+    },
+  };
 }

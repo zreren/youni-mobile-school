@@ -9,7 +9,7 @@ export default function CategoryButton(props) {
   const { color,data } = props;
   const {t} = useTranslation()
 
-  const [selectSchool,setSelectSchool] = useLocalStorage('school',null)
+  const [selectSchool,setSelectSchool] = useLocalStorage('school','york')
 
   const router = useRouter();
   return (

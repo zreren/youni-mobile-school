@@ -26,7 +26,7 @@ export default function CourseScoreCard(props: ICourseScoreCard) {
   const { t } = useTranslation();
   const { id } = props.data;
 
-  const [school, setSchool] = useLocalStorage('school', '');
+  const [school, setSchool] = useLocalStorage('school', 'york');
 
   // console.log(props,'CourseScoreCardprops')
   const router = useRouter();

@@ -151,7 +151,7 @@ export default function SignUp(props) {
         <div className="h-screen space-y-4">
           <div className="flex items-center w-full topIndexPlus">
             <CPicker
-              placeholder="select your university"
+                placeholder={t("select your university")}
               change={(val, mail) => {
                 setSelectSchool({
                   id: val,
@@ -170,7 +170,7 @@ export default function SignUp(props) {
                 setMail(e.target.value);
               }}
               type="text"
-              placeholder="please enter your email"
+              placeholder={t("please enter your email")}
               className="w-full input"
             />
           </div>
@@ -187,7 +187,7 @@ export default function SignUp(props) {
               'bg-gray-400': !(mail && school?.id),
             })}
           >
-            Next
+           {t("Next")}
           </button>
         </div>
       );

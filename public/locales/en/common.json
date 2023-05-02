@@ -583,5 +583,8 @@
   "返回我的课表": "Return to My Schedule",
   "'已复制到简介板，分享给好友吧！'": "Copied to clipboard, share it with friends now!",
   "课程详情": "Details",
-  "该课程为自定义课程": "This is a custom course"
+  "该课程为自定义课程": "This is a custom course",
+  "select your university":"选择你的大学",
+  "please enter your email":"请输入您的邮箱",
+  "Next":"下一步"
 }
