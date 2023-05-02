@@ -143,6 +143,7 @@ export default function Introduce(props: {
   };
   const CourseSelector = (props) => {
     const { isSelect } = props;
+    console.log(props,"CourseSelector");
     return (
       <div
         className={classnames(
@@ -167,7 +168,7 @@ export default function Introduce(props: {
           </div>
         </div>
         <div className="xueqiTag absolute rounded-[5px] p-[5px] text-[white] flex justify-center items-center text-[10px] w-4 h-4 overflow-hidden bottom-0 right-0">
-          {props?.term?.slice(0, 1)}
+          {props?.data?.term?.slice(0, 1)}
         </div>
       </div>
     );

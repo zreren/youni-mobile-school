@@ -142,7 +142,7 @@ export default function AddSchedule(props) {
     },
   );
   const submitCourse = async (values: any) => {
-    const { data } = await instance.post('/api/curriculum/update', values);
+    const { data } = await instance.post('/api/curriculum/item/update', values);
     return data;
   };
   interface ChangeType {
