@@ -20,7 +20,7 @@ export default function LabelBottomNavigation(props) {
   const [selectSchool,setSelectSchool] = useLocalStorage('school','york')
   React.useEffect(()=>{
     if(router.query.campus){
-      setSelectSchool(router.query.campus)
+      setSelectSchool(router.query.campus as string)
     }
   },[router.query.campus])
   const campus =  React.useMemo(()=>{
