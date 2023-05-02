@@ -92,6 +92,7 @@ function Calendar(props) {
         extendedProps: {
           section: '',
           department: '日程',
+          type:2
         },
         start: translateTimeFormat(item.startTime),
         end: translateTimeFormat(item.endTime),
@@ -852,7 +853,7 @@ function Calendar(props) {
           eventContent={(arg: any) => {
             console.log(arg, 'course arg');
             if (arg.event.extendedProps.type === 2) {
-              return <TimeTableEvent arg={arg}></TimeTableEvent>;
+              return <TimeTableEvent clickEvent={props?.clickEvent} arg={arg}></TimeTableEvent>;
             }
             return setting.view === 'day' ? (
               <DayCourseEvent

@@ -65,7 +65,13 @@ export default function Tooltips(props) {
                   <ListItem
                     button
                     onClick={() => {
-                      router.push('/Schedules/AddCourse?id=1');
+                      router.push({
+                        pathname:'/Schedules/AddCourse',
+                        query:{
+                          campus:router.query.campus,
+                          id:1
+                        }
+                      });
                     }}
                     className="border-opacity-40"
                   >

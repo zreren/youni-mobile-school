@@ -103,13 +103,54 @@ export default function Schedules() {
   const { data: termInfo } = useFetch('/campus/term/current', 'get', {
     campusId: 1,
   });
+  interface CourseMode {
+    id: number;
+    ename: string;
+    cname: string;
+  }
 
+  interface Course {
+    id: number;
+    ename: string;
+    cname: string;
+  }
+
+  interface CourseSection {
+    id: number;
+    name: string;
+    course: Course;
+    mode: CourseMode[];
+    users: any[];
+    // user: any[];
+  }
+  interface ExtendProps {
+    section:  CourseSection;
+    department: string;
+    online: boolean;
+    createdAt: string;
+    updatedAt: string;
+    name: string;
+    sectionName: string;
+    professorName: string;
+    mode: string;
+    dayOfWeek: number;
+    period: number;
+    time: string;
+    classroom: string;
+    description: string;
+    type: number;
+    course: {
+      id: number;
+      ename: string;
+      cname: string;
+    };
+  }
   const CourseDetailCard = (props) => {
     const { event, borderColor } = props;
     const [token, setToken] = useLocalStorage('token', '');
     const deleteCURRICULUM = async (id: number) => {
       Dialog.confirm({
-        title:t('删除课程'),
+        title: t('删除课程'),
         message: t('确定删除该课程吗？'),
         confirmButtonText: t('确定'),
         cancelButtonText: t('取消'),
@@ -124,7 +165,7 @@ export default function Schedules() {
           if (data.message === 'success') {
             props.setVisible(false);
             Toast.success(t('删除成功'));
-            mutate()
+            mutate();
             // otherSchedulesMutate();
             // timeTableMutate();
           } else {
@@ -135,14 +176,46 @@ export default function Schedules() {
           console.log('catch');
         });
     };
+    const deleteTimetable = async (id:number)=>{
+      Dialog.confirm({
+        title: t('删除日程'),
+        message: t('确定删除该日程吗？'),
+        confirmButtonText: t('确定'),
+        cancelButtonText: t('取消'),
+      })
+        .then(async () => {
+          const { data } = await useRequest.post(
+            `/api/timetable/delete`,
+            {
+              id: Number(id),
+            },
+          );
+          if (data.message === 'success') {
+            props.setVisible(false);
+            Toast.success(t('删除成功'));
+            mutate();
+            // otherSchedulesMutate();
+            timeTableMutate();
+          } else {
+            Toast.fail(t('删除失败'));
+          }
+        })
+        .catch(() => {
+          console.log('catch');
+        });
+    }
     if (!event) return;
-    const { title, extendedProps } = event;
-    console.log(props, 'CourseDetailCard');
-    console.log(borderColor, 'backgroundColor');
-    // if (!arg) return null;
+    const {
+      title,
+      extendedProps,
+    }: {
+      title: string;
+      extendedProps: ExtendProps;
+    } = event;
+    console.log(event, 'CourseDetailCardevent');
     const background = `linear-gradient(180deg, ${props.backgroundColor} -117.9%, #FFFFFF 125.31%)`;
     const weekMap = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-    // const darkBackground = props.border
+
     if (extendedProps.type === 2) {
       return (
         <div className="topIndexPlus">
@@ -182,20 +255,14 @@ export default function Schedules() {
                   <div className="flex items-center">
                     <TimeIconActive color={borderColor}></TimeIconActive>
                     <div className="ml-3 text-sm text-gray-400">
-                      {t("周")}{weekMap[extendedProps.dayOfWeek]}
+                      {/* {t('周')} */}
+                      {weekMap[extendedProps.dayOfWeek]}
                     </div>
                     <div className="ml-10 text-sm text-gray-400 ">
                       {extendedProps.time}
                     </div>
                   </div>
                 </div>
-                {/* <div className="flex items-center">
-                <Location color={borderColor}></Location>
-                <div className="ml-3 text-sm text-gray-400">地点</div>
-                <div className="ml-10 text-sm text-gray-400 ">
-                  {extendedProps.classroom}
-                </div>
-              </div> */}
               </div>
               <div className="flex justify-between space-x-3">
                 <div
@@ -207,15 +274,15 @@ export default function Schedules() {
                   }}
                   className="flex w-full rounded-lg h-10 text-[#fff] items-center bg-[#3665FF] justify-center space-y-2"
                 >
-                  <div className="text-xs  text-white  ">{t("编辑")}</div>
+                  <div className="text-xs  text-white  ">{t('编辑')}</div>
                 </div>
                 <div
                   className="flex flex-col rounded-lg  bg-[#FF6E69]  items-center justify-center  space-y-2  h-10 w-full"
                   onClick={() => {
-                    deleteCURRICULUM(event.id);
+                    deleteTimetable(event.id);
                   }}
                 >
-                  <div className="text-xs text-white ">{t("删除")}</div>
+                  <div className="text-xs text-white ">{t('删除')}</div>
                 </div>
               </div>
             </div>
@@ -223,6 +290,7 @@ export default function Schedules() {
         </div>
       );
     }
+
     return (
       <div className="topIndexPlus">
         {/* <div className='w-4 h-1 bg-gray-400 rounded-xs '></div> */}
@@ -262,7 +330,7 @@ export default function Schedules() {
               </div>
               <div className="flex flex-col items-end w-1/2">
                 <div className="-space-x-2 avatar-group">
-                  {extendedProps?.section?.user
+                  {extendedProps?.section?.users
                     ?.slice(0, 3)
                     .map((item, index) => {
                       return (
@@ -275,8 +343,8 @@ export default function Schedules() {
                     })}
                 </div>
                 <div className="text-xs text-[#798195]">
-                  {extendedProps?.section?.user?.length > 0
-                    ? `${extendedProps?.section?.user.length}${t("名同学")}`
+                  {extendedProps?.section?.users?.length > 0
+                    ? `${extendedProps?.section?.users?.length}${t('名同学')}`
                     : null}
                 </div>
               </div>
@@ -295,7 +363,7 @@ export default function Schedules() {
               </div>
               <div className="flex items-center">
                 <Location color={borderColor}></Location>
-                <div className="ml-3 text-sm text-gray-400">{t("地点")}</div>
+                <div className="ml-3 text-sm text-gray-400">{t('地点')}</div>
                 <div className="ml-10 text-sm text-gray-400 ">
                   {extendedProps.classroom}
                 </div>
@@ -310,7 +378,7 @@ export default function Schedules() {
                     console.log(extendedProps);
                     if (!extendedProps?.course) {
                       Dialog.alert({
-                        message: t('该课程为自定义课程')
+                        message: t('该课程为自定义课程'),
                       });
                       return;
                       // Toast.fail('该课程为自定义课程')
@@ -333,7 +401,7 @@ export default function Schedules() {
                       <CourseIcon1></CourseIcon1>
                     </div>
                   </div>
-                  <div className="text-xs text-[#798195]">{t("课程详情")}</div>
+                  <div className="text-xs text-[#798195]">{t('课程详情')}</div>
                 </div>
               )}
               {extendedProps?.course && (
@@ -348,7 +416,7 @@ export default function Schedules() {
                     }
                     router.push({
                       pathname: '/[campus]/Course/evaluation',
-                      query: { campus: 'York' },
+                      query: { campus: router.query.campus },
                     });
                   }}
                   className="flex flex-col items-center space-y-2"
@@ -358,7 +426,7 @@ export default function Schedules() {
                       <CourseIcon2></CourseIcon2>
                     </div>
                   </div>
-                  <div className="text-xs text-[#798195]">{t("写课评")}</div>
+                  <div className="text-xs text-[#798195]">{t('写课评')}</div>
                 </div>
               )}
 
@@ -384,7 +452,7 @@ export default function Schedules() {
                     <CourseIcon3></CourseIcon3>
                   </div>
                 </div>
-                <div className="text-xs text-[#798195]">{t("编辑")}</div>
+                <div className="text-xs text-[#798195]">{t('编辑')}</div>
               </div>
               <div
                 className="flex flex-col items-center space-y-2"
@@ -397,7 +465,7 @@ export default function Schedules() {
                     <CourseIcon4></CourseIcon4>
                   </div>
                 </div>
-                <div className="text-xs text-[#798195]">{t("删除")}</div>
+                <div className="text-xs text-[#798195]">{t('删除')}</div>
               </div>
             </div>
           </div>
@@ -419,7 +487,6 @@ export default function Schedules() {
     }
     return weekDates;
   };
-
 
   const getWeekNumber = (start) => {
     const startDate = new Date(start);
@@ -471,7 +538,7 @@ export default function Schedules() {
                 },
               )}
             >
-              {t("五天")}
+              {t('五天')}
             </div>
             <div
               onClick={() => {
@@ -484,7 +551,7 @@ export default function Schedules() {
                 },
               )}
             >
-              {t("周_")}
+              {t('周_')}
             </div>
             <div
               onClick={() => {
@@ -497,7 +564,7 @@ export default function Schedules() {
                 },
               )}
             >
-              {t("日")}
+              {t('日')}
             </div>
             <div
               onClick={() => {
@@ -510,7 +577,7 @@ export default function Schedules() {
                 },
               )}
             >
-             {t("校历")}
+              {t('校历')}
             </div>
           </div>
         </div>
@@ -520,7 +587,6 @@ export default function Schedules() {
     const { user } = useUser();
     // const { defaultCurriculum } = useCurriculum();
     const [historyMode, setHistory] = useState(false);
-
 
     useEffect(() => {
       console.log(curriculumId, 'curriculumId');
@@ -540,9 +606,9 @@ export default function Schedules() {
         return;
       }
     };
-    
-    const { data, error, mutate } = useFetch('/curriculum/query', 'get',{
-      termId:1
+
+    const { data, error, mutate } = useFetch('/curriculum/query', 'get', {
+      termId: 1,
     });
     return (
       <SwipeableDrawer
@@ -658,7 +724,7 @@ export default function Schedules() {
                           'text-[#A9B0C0]': studentId !== -1,
                         })}
                       >
-                        {t("我的")}
+                        {t('我的')}
                       </span>
                     </div>
                   </div>
@@ -746,7 +812,6 @@ export default function Schedules() {
     );
   };
 
-
   const [visible, setVisible] = useState(false);
   const [scheduleVisible, setScheduleVisible] = useState(false);
   const [addCourse, setAddCourse] = useState(false);
@@ -754,12 +819,11 @@ export default function Schedules() {
   const [yearMethod, setYearMethod] = useState(false);
   const [studentId, setStudentId] = useState(-1);
   const [curriculumId, setCurriculumId] = useState();
-  
+
   const { data, error, mutate } = useFetch(`/curriculum/list`, 'get', {
     campusId: 1,
     // id: defaultCurriculum?.id,
   });
-
 
   const { data: otherSchedules, mutate: otherSchedulesMutate } = useFetch(
     `/curriculum/view`,
@@ -768,8 +832,10 @@ export default function Schedules() {
       id: curriculumId,
     },
   );
-  const { data: timeTableData,mutate:timeTableMutate } = useFetch(`/timetable/query`, 'get');
-
+  const { data: timeTableData, mutate: timeTableMutate } = useFetch(
+    `/timetable/query`,
+    'get',
+  );
 
   const tempData = React.useMemo(() => {
     if (!data?.data) return null;
@@ -795,9 +861,6 @@ export default function Schedules() {
     });
   }, [otherSchedules, curriculumId, studentId]);
 
-
-
-
   useEffect(() => {
     if (visible || scheduleVisible) {
       const dom = document.getElementById('bottom-navigation');
@@ -809,8 +872,6 @@ export default function Schedules() {
       dom.style.display = 'block';
     }
   }, [visible, scheduleVisible]);
-
-
 
   function getPastWeekDates(): [Date, Date] {
     const today = new Date();
@@ -824,12 +885,7 @@ export default function Schedules() {
 
   const weekDate = getPastWeekDates();
 
-
-
-
-
   const openLogin = useSelector(selectOpen);
-
 
   React.useEffect(() => {
     if (openLogin === 'login' || openLogin === 'register') {
@@ -839,7 +895,6 @@ export default function Schedules() {
       setDialogVisible(true);
     }
   }, [openLogin]);
-
 
   React.useEffect(() => {
     if (!data && !otherSchedules) return;
@@ -861,7 +916,6 @@ export default function Schedules() {
     isWeekend: false,
   });
 
-
   const ViewListMap = ['day', 'week', 'today', 'year'];
   useEffect(() => {
     setSetting({
@@ -873,35 +927,39 @@ export default function Schedules() {
 
   const courseData = useMemo(() => {
     // if(curriculumId){
-      if (data && studentId === -1) {
-        const res = getCourses(
-          tempData,
-          new Date("2022-11-11T11:18:49.927Z"),
-          new Date("2023-11-11T11:18:49.927Z")
-          // new Date(termInfo?.data?.startDate),
-          // new Date(termInfo?.data?.endDate),
-        );
-        return addFullStartDate(res, weekDate);
-        // const all = addFullStartDate(courseData, weekDate);
-        console.log(courseData, 'courseData');
-      }
-      if (otherSchedules?.data && studentId !== -1) {
-        const res = getCourses(
-          otherTemData,
-          new Date(termInfo?.data?.startDate),
-          new Date(termInfo?.data?.endDate),
-        );
-        return addFullStartDate(res, weekDate);
-        const all = addFullStartDate(courseData, weekDate);
-        console.log(courseData, 'courseData');
-      }
+    if (data && studentId === -1) {
+      const res = getCourses(
+        tempData,
+        new Date('2022-11-11T11:18:49.927Z'),
+        new Date('2023-11-11T11:18:49.927Z'),
+        // new Date(termInfo?.data?.startDate),
+        // new Date(termInfo?.data?.endDate),
+      );
+      return addFullStartDate(res, weekDate);
+      // const all = addFullStartDate(courseData, weekDate);
+      console.log(courseData, 'courseData');
+    }
+    if (otherSchedules?.data && studentId !== -1) {
+      const res = getCourses(
+        otherTemData,
+        new Date(termInfo?.data?.startDate),
+        new Date(termInfo?.data?.endDate),
+      );
+      return addFullStartDate(res, weekDate);
+      const all = addFullStartDate(courseData, weekDate);
+      console.log(courseData, 'courseData');
+    }
     // }
-   
-  }, [setting,data,otherSchedules, curriculumId, studentId, termInfo, weekDate]);
+  }, [
+    setting,
+    data,
+    otherSchedules,
+    curriculumId,
+    studentId,
+    termInfo,
+    weekDate,
+  ]);
 
-
-
-  
   const Dayliy = (props) => {
     const { title } = props;
     return (
@@ -1002,10 +1060,10 @@ export default function Schedules() {
       </Popup>
       <Dialog
         visible={dialogVisible}
-        title={t("登录")}
+        title={t('登录')}
         showCancelButton
-        confirmButtonText={t("登录")}
-        cancelButtonText={t("注册")}
+        confirmButtonText={t('登录')}
+        cancelButtonText={t('注册')}
         onConfirm={() => {
           dispatch(setOpenLogin('login'));
           // setDialogVisible(false)

@@ -102,27 +102,7 @@ export default function expiration(props) {
     );
   }
   const submitPost = async (form, draft) => {};
-  const Footer = () => {
-    return (
-      <div className="w-full shadow-footer bg-white h-[60px] space-x-4 flex justify-between fixed bottom-12 px-5 py-2">
-        <div
-          className="flex flex-col items-center  w-[40px]"
-          onClick={() => {}}
-        >
-          <DraftIcon></DraftIcon>
-          <div className="text-[10px] text-[#798195] whitespace-nowrap">
-            存草稿
-          </div>
-        </div>
-        <div
-          onClick={() => {}}
-          className="bg-[#FFD036] cursor-pointer  text-white rounded-full w-full h-10 flex justify-center items-center"
-        >
-          发布
-        </div>
-      </div>
-    );
-  };
+
   const [termList, setTermList] = useState(props.term);
   return (
     <div

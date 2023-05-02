@@ -1844,6 +1844,10 @@ export default function addPost() {
         if (data.message === 'success') {
           Toast.success('更新成功');
         } else {
+          if(data.code === 1102){
+            Toast.fail('请先登录');
+            return;
+          }
           Toast.fail('更新失败');
         }
       } catch (error) {
@@ -1865,6 +1869,10 @@ export default function addPost() {
         if (data.message === 'success') {
           Toast.success('发布成功');
         } else {
+          if(data.code === 1102){
+            Toast.fail('请先登录');
+            return;
+          }
           Toast.fail('发布失败');
         }
       } catch (error) {

@@ -205,7 +205,7 @@ export default function addCourse(props) {
                 termList: term,
                 year: year,
                 isLongTerm: year ? false : true,
-                term: termValue,
+                term: 'DEFAULT',
                 courseIds: filteredData.map((item) => item.id),
               },
             });

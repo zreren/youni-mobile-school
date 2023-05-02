@@ -320,7 +320,7 @@ export default function config(props) {
                     : '选中'}
                 </div>
               </div>
-              <div className="text-[#A9B0C0] my-3">{t('非常规情况')}</div>
+              <div className="text-[#A9B0C0] my-3 text-xs">{t('非常规情况')}</div>
               <div className="space-y-2">
                 <div
                   onClick={() => {
@@ -1037,31 +1037,7 @@ export default function config(props) {
     console.log(term, 'term');
   }, [term]);
 
-  const Footer = () => {
-    return (
-      <div className="w-full shadow-footer bg-white h-[60px] space-x-4 flex justify-between fixed bottom-0 px-5 py-2">
-        <div
-          className="flex flex-col items-center  w-[40px]"
-          onClick={() => {
-            console.log(filteredData, term, termValue, year, 'courseList');
-          }}
-        >
-          <DraftIcon></DraftIcon>
-          <div className="text-[10px] text-[#798195] whitespace-nowrap">
-            存草稿
-          </div>
-        </div>
-        <div
-          onClick={() => {
-            console.log(filteredData, term, termValue, year, 'courseList');
-          }}
-          className="bg-[#FFD036] cursor-pointer  text-white rounded-full w-full h-10 flex justify-center items-center"
-        >
-          {t('发布')}
-        </div>
-      </div>
-    );
-  };
+
   const [draggedItemId, setDraggedItemId] = useState(null);
 
   const handleDragEnd = (result) => {

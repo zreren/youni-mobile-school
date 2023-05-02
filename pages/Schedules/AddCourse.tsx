@@ -25,13 +25,6 @@ import useRequest from '@/libs/request';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-const CCourseTime = (props) => {
-  return (
-    <div className="w-full text-center rounded-md bg-bg text-blueTitle">
-      {props.title}
-    </div>
-  );
-};
 
 const CCourseColor = ({ setColor }) => {
   const [select, setSelect] = useState(1);
@@ -298,6 +291,7 @@ export default function AddSchedule() {
     );
   };
   const AddDaySchedule = (props) => {
+
     const { register, handleSubmit } = useForm({
       shouldUseNativeValidation: true,
     });
@@ -308,6 +302,7 @@ export default function AddSchedule() {
       name: '',
       color: null,
     });
+
     const handleChange = useCallback((val: any, name: string) => {
       setTimetable((preVal: any) => {
         return {
@@ -316,6 +311,7 @@ export default function AddSchedule() {
         };
       });
     }, []);
+
     const submitTime = async (values) => {
       console.log(values, 'submit values');
       if (values.name && values.color && values.startTime && values.endTime) {
@@ -339,7 +335,6 @@ export default function AddSchedule() {
       if (day.length < 2) {
         day = `0${day}`;
       }
-
       return `${year}-${month}-${day}`;
       // }
     };
@@ -362,21 +357,6 @@ export default function AddSchedule() {
       } else {
         Toast.fail('添加失败');
       }
-      // Promise.all(requestQueen)
-      //   .then((res) => {
-      //     console.log(res, 'res');
-      //     // if(res.every((item)=>item.code===200))
-      //     if (res.some((item) => item.message !== 'success')) {
-      //       Toast.fail('添加失败');
-      //     } else {
-      //       Toast.success('添加成功');
-      //     }
-      //     // if(res.)
-      //     // Toast.success('添加成功');
-      //   })
-      //   .catch((err) => {
-      //     Toast.fail('添加失败');
-      //   });
     };
     return (
       <div className="w-full space-y-4 youni-form">
