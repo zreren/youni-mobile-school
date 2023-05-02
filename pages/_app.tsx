@@ -44,6 +44,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const { i18n } = useTranslation();
   const [language, setLanguage] = useLocalStorage('language', 'en');
+  const [school, setSchool] = useLocalStorage('school', 'york');
 
   useEffect(()=>{
     router.push(router.asPath, router.asPath, { locale: language });
