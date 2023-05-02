@@ -54,8 +54,8 @@ export default function SignUp(props) {
   const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
   const [language, setLanguage] = useState('');
-  const [lang,setLang] = useLocalStorage('language',null)
-  
+  const [lang, setLang] = useLocalStorage('language', null);
+
   const { t } = useTranslation();
   useEffect(() => {
     disableZoom();
@@ -151,7 +151,7 @@ export default function SignUp(props) {
         <div className="h-screen space-y-4">
           <div className="flex items-center w-full topIndexPlus">
             <CPicker
-                placeholder={t("select your university")}
+              placeholder={t('select your university')}
               change={(val, mail) => {
                 setSelectSchool({
                   id: val,
@@ -170,7 +170,7 @@ export default function SignUp(props) {
                 setMail(e.target.value);
               }}
               type="text"
-              placeholder={t("please enter your email")}
+              placeholder={t('please enter your email')}
               className="w-full input"
             />
           </div>
@@ -187,7 +187,7 @@ export default function SignUp(props) {
               'bg-gray-400': !(mail && school?.id),
             })}
           >
-           {t("Next")}
+            {t('Next')}
           </button>
         </div>
       );
@@ -371,11 +371,11 @@ export default function SignUp(props) {
   const router = useRouter();
 
   const SelectLanguage = (props) => {
-    useEffect(()=>{
-      if(router.locale === "cn"){
+    useEffect(() => {
+      if (router.locale === 'cn') {
         // props?.setProgress(2);
       }
-    },[router])
+    }, [router]);
     return (
       <div className="z-10 flex flex-col w-full h-screen -appear in mt-11">
         <div
@@ -401,31 +401,30 @@ export default function SignUp(props) {
           </div>
         </div>
         <div className="w-full h-12"></div>
-        <div
-          className="z-30 h-full p-4 space-y-10 bg-white-mask"
-          
-        >
-          <div onClick={() => {
-            console.log(router.locale,"language")
-            if(router.locale === 'cn'){
-              router.push(router.asPath, router.asPath, { locale: 'en' });
-              props.setProgress(2);
-              // setLanguage('en');
-              setLang('en')
-            }else{
-              props.setProgress(2);
-            }
-           
-          }} className="flex items-center justify-center w-full h-32 text-xl rounded text-userColor flex-2xl bg-bg">
+        <div className="z-30 h-full p-4 space-y-10 bg-white-mask">
+          <div
+            onClick={() => {
+              console.log(router.locale, 'language');
+              if (router.locale === 'cn') {
+                router.push(router.asPath, router.asPath, { locale: 'en' });
+                props.setProgress(2);
+                // setLanguage('en');
+                setLang('en');
+              } else {
+                props.setProgress(2);
+              }
+            }}
+            className="flex items-center justify-center w-full h-32 text-xl rounded text-userColor flex-2xl bg-bg"
+          >
             EngLish
           </div>
           <div
             onClick={() => {
-              if(router.locale === 'en'){
+              if (router.locale === 'en') {
                 router.push(router.asPath, router.asPath, { locale: 'cn' });
                 // setLanguage('cn');
-                setLang('cn')
-              }else{
+                setLang('cn');
+              } else {
                 props.setProgress(2);
               }
             }}
