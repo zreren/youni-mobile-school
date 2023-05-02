@@ -149,7 +149,7 @@ export default function SignIn(props) {
           <div className="flex items-center w-full">
             <input
               type="text"
-              placeholder="School email address"
+              placeholder={t("School email address")}
               className="w-full input"
               value={form.mail}
               onChange={(e) => {
@@ -165,7 +165,7 @@ export default function SignIn(props) {
               onChange={(e) => {
                 handleChange(e.target.value, 'password');
               }}
-              placeholder="Password"
+              placeholder={t("Password")}
               className="w-full input"
             />
           </div>
