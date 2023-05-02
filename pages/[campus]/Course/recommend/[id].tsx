@@ -146,26 +146,25 @@ export default function recommend() {
           >
             <ReturnBackIcon></ReturnBackIcon>
           </div>
-          {
-            data?.data?.user?.id === user?.id  &&
+          {data?.data?.user?.id === user?.id && (
             <div
-            className="absolute top-10 right-4 mt-2 border border-[#fff] w-14 h-6 text-xs rounded-full text-[white] whitespace-nowrap	flex justify-center items-center"
-            onClick={() => {
-              router.push({
-                pathname: '/[campus]/post/addPost',
-                query: {
-                  campus: router.query.campus,
-                  id: data?.data?.id,
-                  isEdit: true,
-                  type: 'course_recommend',
-                },
-              });
-              // router.back();
-            }}
-          >
-            {t('编辑')}
-          </div>
-          }
+              className="absolute top-10 right-4 mt-2 border border-[#fff] w-14 h-6 text-xs rounded-full text-[white] whitespace-nowrap	flex justify-center items-center"
+              onClick={() => {
+                router.push({
+                  pathname: '/[campus]/post/addPost',
+                  query: {
+                    campus: router.query.campus,
+                    id: data?.data?.id,
+                    isEdit: true,
+                    type: 'course_recommend',
+                  },
+                });
+                // router.back();
+              }}
+            >
+              {t('编辑')}
+            </div>
+          )}
           <div className="z-30 css2Overflow-ellipsis">{data?.data?.title}</div>
           {/* <div className="z-30">适用于UTSC校区</div> */}
           <div className="flex justify-between mt-3 mb-4">
@@ -223,7 +222,6 @@ export default function recommend() {
     );
   };
 
-
   const Recommend = () => {
     return (
       <div className="w-full p-2 mt-4">
@@ -252,8 +250,6 @@ export default function recommend() {
       </div>
     );
   };
-
-
 
   const MustStudy = (props) => {
     const { data: data1 }: { data: Course[] } = props;
@@ -303,7 +299,6 @@ export default function recommend() {
     );
   };
 
-
   const OptionalStudy = (props) => {
     const CourseSelector = (props) => {
       const { isSelect } = props;
@@ -325,8 +320,8 @@ export default function recommend() {
               {props.data.label}
             </div>
           </div>
-          <div className="xueqiTag absolute rounded-[6px] p-[6px] text-[white] flex justify-center items-center text-xs w-5 h-5 bottom-0 right-0">
-          {props.data?.term?.slice(0, 1)}
+          <div className="xueqiTag absolute rounded-[6px] p-[6px] text-[white] flex justify-center items-center text-xs w-4 h-4 bottom-0 right-0">
+            {props.data?.term?.slice(0, 1)}
           </div>
         </div>
       );
@@ -349,8 +344,6 @@ export default function recommend() {
       </div>
     );
   };
-
-
 
   const CourseRecommend = () => {
     return (
@@ -389,7 +382,7 @@ export default function recommend() {
 
   const CourseSelectFormItem = (props) => {
     const { data }: { data: Course } = props;
-    console.log(data,"CourseSelectFormItem")
+    console.log(data, 'CourseSelectFormItem');
     return (
       <>
         <div className="flex mt-4 items-top space-x-8 w-full">
@@ -448,7 +441,6 @@ export default function recommend() {
     );
   };
 
-
   const started = React.useMemo(
     () => data?.data?.interactInfo?.stared,
     [data?.data?.interactInfo?.stared],
@@ -457,6 +449,21 @@ export default function recommend() {
   const dispatch = useDispatch();
   const [topicName, setTopicName] = useState();
 
+  /**
+   * for preview 归类整理
+   */
+  const previewCourseData = React.useMemo(() => {
+    const groupedCourses: { term; items }[] = [];
+    data?.data?.form?.courseData.forEach((course, index) => {
+      const group = groupedCourses.find((group) => group.term === course.term);
+      if (group) {
+        group.items.push(course);
+      } else {
+        groupedCourses.push({ term: course.term, items: [course] });
+      }
+    });
+    return groupedCourses;
+  }, [data?.data?.form?.courseData]);
 
   return (
     <div className="w-screen min-h-screen pb-20">
@@ -546,21 +553,30 @@ export default function recommend() {
         <CourseRecommend></CourseRecommend>
       ) : null}
       <div className="px-5 mt-3">
-        {data?.data?.form?.courseData?.map((item: any) => {
-          return <CourseSelectFormItem data={item}></CourseSelectFormItem>;
+        {previewCourseData?.map((item: { items: Course[]; term: string }) => {
+          return (
+            <>
+              <div className="flex items-center space-x-2 mt-6">
+                <div className="w-1 h-4 bg-yellow-300 rounded-full"></div>
+                <div className="font-semibold">{item?.term}</div>
+              </div>
+              {item?.items?.map((item) => {
+                return (
+                  <CourseSelectFormItem data={item}></CourseSelectFormItem>
+                );
+              })}
+            </>
+          );
         })}
       </div>
     </div>
   );
 }
 
-export async function getServerSideProps({
-  locale,
-  }){
-
+export async function getServerSideProps({ locale }) {
   return {
-      props: {
-          ...(await serverSideTranslations(locale, ['common',]))
-      },
-    }
-  }
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
+}

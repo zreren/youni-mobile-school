@@ -34,8 +34,7 @@ import TopicIcon from './topic.svg';
 import { useRouter } from 'next/router';
 import useUser from '@/hooks/useUser';
 import { useTranslation } from 'next-i18next';
-
-
+import { Cell, Dialog, Input } from 'react-vant';
 
 function index(props) {
   const { id } = props;
@@ -178,7 +177,7 @@ function index(props) {
     });
     if (data?.message) {
       Toast.success('评论成功');
-      mutateComment();
+      mutate();
     }
   };
   /**
@@ -188,7 +187,7 @@ function index(props) {
    * @param pid 父id
    */
   const sendChild = async (comment, id, pid) => {
-    console.log(comment, id, pid,"setCommentChild");
+    console.log(comment, id, pid, 'setCommentChild');
     const { data } = await useRequest.post('/api/comment/comment', {
       pid: !pid ? id : pid,
       replyId: !pid ? null : id,
@@ -196,8 +195,9 @@ function index(props) {
     });
     if (data?.message === 'success') {
       Toast.success('评论成功');
+      mutate();
       mutateComment();
-    }else{
+    } else {
       Toast.fail(t('失败'));
     }
   };
@@ -316,7 +316,7 @@ function index(props) {
             }}
             className="bg-[#FFD036] w-12 h-6 text-xs rounded-full text-[#8C6008] whitespace-nowrap	flex justify-center items-center"
           >
-            {t("导航")}
+            {t('导航')}
           </div>
           {/* </a> */}
         </div>
@@ -402,7 +402,7 @@ function index(props) {
           }}
           className="text-sm text-[#798195] whitespace-nowrap ml-2 mr-2"
         >
-          {t("返回")}
+          {t('返回')}
         </div>
         <div
           className="text-sm text-[#798195] whitespace-nowrap"
@@ -410,7 +410,7 @@ function index(props) {
             send();
           }}
         >
-          {t("发送")}
+          {t('发送')}
         </div>
       </div>
     );
@@ -427,8 +427,29 @@ function index(props) {
     id: detailId,
   });
 
+  const [reportShow, setReportShow] = useState(false);
+
   return (
     <div className="mb-10 ">
+      {/* <Dialog
+        visible={reportShow}
+        title="添加学期"
+        showCancelButton
+        onConfirm={() => {
+          // Toast.info('点击确认按钮');
+          // setAddTermInfoVisible(true);
+          setReportShow(false);
+        }}
+        onCancel={() => setReportShow(false)}
+      >
+        <div className="flex flex-col p-5 items-center justify-center space-y-3">
+          <Input
+            value={state.text}
+            onChange={(text) => updateState({ text })}
+            placeholder="请输入文本"
+          />
+        </div>
+      </Dialog> */}
       <PostGroupDrawer
         topicName={topicName}
         onOpen={() => {
@@ -548,7 +569,30 @@ function index(props) {
           })}
         </div>
         <div className="flex justify-end space-x-2">
-          <div className="mt-2 border border-[#DCDDE1] w-14 h-6 text-xs rounded-full text-[#A9B0C0] whitespace-nowrap	flex justify-center items-center">
+          <div
+            onClick={() => {
+              Dialog.confirm({
+                title: t('举报'),
+                message: t( '确认举报该贴文吗？'),
+              })
+                .then(async() => {
+                  const {data:resData} = await useRequest.post('/api/post/report',{
+                    id:data?.data?.id,
+                    reason:'违反社区规定'
+                  })
+                  if(resData?.message === 'success'){
+                    Toast.success('举报成功')
+                  }else{
+                    Toast.fail('举报失败')
+                  }
+                  // console.log('confirm')
+                })
+                .catch(() => {
+                  console.log('catch')
+                })
+            }}
+            className="mt-2 border border-[#DCDDE1] w-14 h-6 text-xs rounded-full text-[#A9B0C0] whitespace-nowrap	flex justify-center items-center"
+          >
             {t('举报')}
           </div>
           {data?.data?.user?.id === user?.id && (
@@ -583,7 +627,7 @@ function index(props) {
         <Map data={data?.data?.form}></Map>
       </div>
       <div className="w-full h-2 bg-bg"></div>
-      <div className="p-5">
+      <div className="p-5  pb-12">
         <PostDiscussionInput callDiscussion={focusInput}></PostDiscussionInput>
         <Discussion
           callDiscussion={focusInput}

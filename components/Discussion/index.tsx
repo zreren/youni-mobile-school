@@ -144,6 +144,11 @@ export default function index(props) {
         <div
           className="flex items-center space-x-2"
           onClick={() => {
+            if(props.type === 1){
+              console.log(id,parent?.id,props.type,'commentComment 这是二级评论')
+              commentComment({ user, id, pid: props.targetId });
+              return;
+            }
             commentComment({ user, id, pid: parent?.id });
           }}
         >
@@ -217,6 +222,7 @@ export default function index(props) {
             user={data?.user}
             parent={data?.parent}
             time={data?.createdAt}
+            type={data?.type}
           ></DiscussionComponentFooter>
           <div>{children}</div>
         </div>
@@ -295,6 +301,8 @@ export default function index(props) {
                                 user={item?.user}
                                 parent={item?.reply}
                                 time={item?.createdAt}
+                                type={item?.type}
+                                targetId={item?.targetId}
                               ></DiscussionComponentFooter>
                             </div>
                           </div>
@@ -364,6 +372,8 @@ export default function index(props) {
                                 user={item?.user}
                                 parent={item?.reply}
                                 time={item?.createdAt}
+                                type={item?.type}
+                                targetId={item?.targetId}
                               ></DiscussionComponentFooter>
                             </div>
                           </div>

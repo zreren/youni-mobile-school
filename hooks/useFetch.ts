@@ -51,7 +51,7 @@ function useFetch(path, method, body?) {
   }
   if (method !== 'get') {
     const { data, mutate, size, setSize,isValidating } = useSWRInfinite(
-      (index) => `${'https://youni-admin.kuizuo.cn/api'}${path}?page=${index + 1}`,
+      (index) => path?`${'https://youni-admin.kuizuo.cn/api'}${path}?page=${index + 1}`:null,
       (url) => {
         return instance({
           method: 'get',
@@ -88,7 +88,7 @@ function useFetch(path, method, body?) {
   }
 
   const { data, error, mutate } = useSWR(
-    `${'https://youni-admin.kuizuo.cn/api'}${path}`,
+    path?`${'https://youni-admin.kuizuo.cn/api'}${path}`:null,
     (url) => {
       return instance({
         method,

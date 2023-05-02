@@ -31,6 +31,7 @@ import {
   selectOpen,
 } from '@/stores/authSlice';
 import { useDispatch } from 'react-redux';
+import { Cell, Dialog, Input } from 'react-vant';
 
 function index(props) {
   const router = useRouter();
@@ -49,12 +50,13 @@ function index(props) {
    */
   const sendComment = async (e) => {
     const { data } = await useRequest.post('/api/post/comment', {
-      id: id,
+      id: Number(id),
       content: e,
     });
     if (data?.message) {
       Toast.success(t('评论成功'));
       mutate();
+      mutateComment();
     }
   };
   /**
@@ -65,14 +67,15 @@ function index(props) {
    */
   const sendChild = async (comment, id, pid) => {
     const { data } = await useRequest.post('/api/comment/comment', {
-      pid: pid === null ? id : pid,
-      replyId: pid === null ? null : id,
+      pid: !pid ? id : pid,
+      replyId: !pid ? null : id,
       content: comment,
     });
-    if (data?.message === "success") {
+    if (data?.message === 'success') {
       Toast.success(t('评论成功'));
       mutate();
-    }else{
+      mutateComment();
+    } else {
       Toast.fail(t('失败'));
     }
   };
@@ -120,7 +123,6 @@ function index(props) {
       }
     }, [props.data]);
 
-
     const point = useMemo(() => {
       console.log(Location, 'Location');
       if (!Location?.point) return null;
@@ -135,7 +137,6 @@ function index(props) {
       if (!point) return null;
       return [longitude1, latitude1, longitude2, latitude2];
     }, [Location]);
-
 
     if (!Location.point) return;
     if (!point) return;
@@ -161,7 +162,6 @@ function index(props) {
       }
     }, [Location?.point]);
 
-
     function openMaps(point: number[]) {
       var lat = point[1]; // 目标地点的纬度
       var lon = point[0]; // 目标地点的经度
@@ -185,7 +185,6 @@ function index(props) {
             '&lon=' +
             lon;
         }, 500);
-
       }
     }
     // if(!mapContainer.current) return;
@@ -368,7 +367,33 @@ function index(props) {
         </div>
 
         <div className="flex justify-end space-x-2">
-          <div className="mt-2 border border-[#DCDDE1] w-14 h-6 text-xs rounded-full text-[#A9B0C0] whitespace-nowrap	flex justify-center items-center">
+          <div
+            onClick={() => {
+              Dialog.confirm({
+                title: t('举报'),
+                message: t('确认举报该贴文吗？'),
+              })
+                .then(async () => {
+                  const { data: resData } = await useRequest.post(
+                    '/api/post/report',
+                    {
+                      id: data?.data?.id,
+                      reason: '违反社区规定',
+                    },
+                  );
+                  if (resData?.message === 'success') {
+                    Toast.success('举报成功');
+                  } else {
+                    Toast.fail('举报失败');
+                  }
+                  // console.log('confirm')
+                })
+                .catch(() => {
+                  console.log('catch');
+                });
+            }}
+            className="mt-2 border border-[#DCDDE1] w-14 h-6 text-xs rounded-full text-[#A9B0C0] whitespace-nowrap	flex justify-center items-center"
+          >
             {t('举报')}
           </div>
           {data?.data?.user?.id === user?.id && (
@@ -439,14 +464,10 @@ function index(props) {
 
 export default index;
 
-
-export async function getServerSideProps({
-  locale,
-  }){
-
+export async function getServerSideProps({ locale }) {
   return {
-      props: {
-          ...(await serverSideTranslations(locale, ['common',]))
-      },
-    }
-  }
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
+}

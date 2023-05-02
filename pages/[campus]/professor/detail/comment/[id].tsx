@@ -45,7 +45,7 @@ export default function userComment() {
   const { data, error } = useFetch(`/evaluation/detail?id=${id}`, 'get');
   const { data: _commentData, mutate } = useFetch('/comment/list', 'page', {
     id: data?.data?.id,
-    pageSize: 10,
+    pageSize: 100,
     type: 3,
   });
   const commentData = useMemo(
@@ -134,112 +134,7 @@ export default function userComment() {
       </div>
     );
   };
-  const Discussion = (props) => {
-    const { data } = props;
-    return (
-      <div>
-        {data?.map((item) => {
-          const [expand, setExpand] = useState(false);
-          return (
-            <div>
-              <DiscussionComponent data={item}>
-                <>
-                  {expand
-                    ? item?.children?.map((item) => {
-                        return (
-                          <div className="w-full mt-2 flex justify-start space-x-3">
-                            <div className="rounded-full">
-                              {item?.user?.avatar ? (
-                                <Image
-                                  placeholder="blur"
-                                  objectFit="cover"
-                                  blurDataURL={`${Cons.BASEURL}${item?.user.avatar}`}
-                                  width={'24px'}
-                                  height={'24px'}
-                                  className="rounded-full"
-                                  src={`${Cons.BASEURL}${item?.user?.avatar}`}
-                                />
-                              ) : null}
-                            </div>
-                            <div className="w-full">
-                              <div className="font-medium">
-                                {item?.user?.nickName}
-                              </div>
-                              <div className="text-xs text-secondGray mt-1">
-                                {item?.user?.education?.year || '未认证'} ·{' '}
-                                {item.user?.education?.major || '未认证'}
-                              </div>
-                              <div className="text-sm mt-1 w-full">
-                                {item.content}
-                              </div>
-                              <DiscussionComponentFooter
-                                id={item?.id}
-                                data={item?.interactInfo}
-                              ></DiscussionComponentFooter>
-                            </div>
-                          </div>
-                        );
-                      })
-                    : item?.children?.slice(0, 2).map((item) => {
-                        return (
-                          <div className="w-full mt-2 flex justify-start space-x-3">
-                            <div className="rounded-full">
-                              {item?.user?.avatar ? (
-                                <Image
-                                  placeholder="blur"
-                                  objectFit="cover"
-                                  blurDataURL={`${Cons.BASEURL}${item?.user.avatar}`}
-                                  width={'24px'}
-                                  height={'24px'}
-                                  className="rounded-full"
-                                  src={`${Cons.BASEURL}${item?.user?.avatar}`}
-                                />
-                              ) : null}
-                            </div>
-                            <div className="w-full">
-                              <div className="font-medium">
-                                {item?.user?.nickName}
-                              </div>
-                              <div className="text-xs text-secondGray mt-1">
-                                {item.user?.education?.year} ·{' '}
-                                {item?.user?.education?.major || '未认证'}
-                              </div>
-                              <div className="text-sm mt-1 w-full">
-                                {item?.content}
-                              </div>
-                              <DiscussionComponentFooter
-                                id={item?.id}
-                                data={item?.interactInfo}
-                              ></DiscussionComponentFooter>
-                            </div>
-                          </div>
-                        );
-                      })}
-                </>
-                <div className="flex space-x-3">
-                  <div>
-                    <div className="w-6 h-6"></div>
-                  </div>
-                  {item?.children?.length > 2 ? (
-                    <div
-                      className="font-semibold text-primary text-xs"
-                      onClick={() => [setExpand(!expand)]}
-                    >
-                      {expand
-                        ? t('收起')
-                        : `${t('查看全部')}${item?.children?.length}${t(
-                            '条回复',
-                          )})`}
-                    </div>
-                  ) : null}
-                </div>
-              </DiscussionComponent>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
+
   const inputRef = React.useRef(null);
   const focusInput = () => {
     inputRef.current.focus();
@@ -287,10 +182,15 @@ export default function userComment() {
     console.log(e, 'setCommentChild');
     setCommentChild(e);
   };
+
   function FooterDiscussionInputChild(props) {
     const [comment, setComment] = useState<string>('');
     const { user, id, pid } = props;
     const send = () => {
+      if (comment === '') {
+        Toast.fail('评论不能为空');
+        return;
+      }
       props.send(comment, id, pid);
       setComment('');
     };
@@ -304,7 +204,18 @@ export default function userComment() {
             setComment(e.target.value);
           }}
         ></input>
-
+        <div
+          onClick={() => {
+            setCommentChild({
+              id: null,
+              user: null,
+              pid: null,
+            });
+          }}
+          className="text-sm text-[#798195] whitespace-nowrap ml-2 mr-2"
+        >
+          {t('返回')}
+        </div>
         <div
           className="text-sm text-[#798195] whitespace-nowrap"
           onClick={() => {
@@ -437,6 +348,7 @@ export default function userComment() {
           ></GDiscussionComponent>
         </div>
       </div>
+      <div></div>
       {commentChild?.id ? (
         <div className="fixed bottom-12 w-full">
           <FooterDiscussionInputChild

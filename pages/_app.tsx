@@ -38,7 +38,6 @@ import { disableZoom } from '@/libs/disableZoom';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useDispatch();
-  // const [language,setLanguage] = useLocalStorage('language','ename')
   const loginModelState = useSelector(selectLoginModelState);
   const openLogin = useSelector(selectOpen);
   const [stopScroll, setStopScroll] = useState(false);
@@ -47,9 +46,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [language, setLanguage] = useLocalStorage('language', 'en');
 
   useEffect(()=>{
-    console.log(i18n.language,"i18n.language")
     router.push(router.asPath, router.asPath, { locale: language });
-    // i18n.changeLanguage('cn')
   },[])
 
   const Puller = styled(Box)(({ theme }) => ({

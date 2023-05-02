@@ -23,6 +23,8 @@ import { useDispatch } from 'react-redux';
 import { setOpenLogin } from '../../stores/authSlice';
 import { Input, List } from 'react-vant';
 import { useTranslation } from 'next-i18next';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import Puller from '@/components/Icon/puller';
 import {
   selectLoginModelState,
   seLoginModelState,
@@ -305,7 +307,7 @@ export default function index() {
   const CourseGap = (props) => {
     const { edit, color, data, type } = props;
     const deleteGapItem = async (id: number | string): Promise<any> => {
-      if(props.isNew){
+      if (props.isNew) {
         props.closeAdd();
         return;
       }
@@ -314,12 +316,13 @@ export default function index() {
         message: t('确定删除改gap记录吗？'),
         confirmButtonText: t('确定'),
         cancelButtonText: t('取消'),
-      }).then(async(res) => {
-          const {data} = await useRequest.post('/api/grade/delete', { id });
-          if(data?.message === 'success'){
+      })
+        .then(async (res) => {
+          const { data } = await useRequest.post('/api/grade/delete', { id });
+          if (data?.message === 'success') {
             mutate();
           }
-        
+
           // dispatch(setOpenLogin('login'));
           // router.push("/Login/signin");
           // console.log(res,"登录YoUni");
@@ -337,32 +340,147 @@ export default function index() {
     const [credit, setCredit] = React.useState(data?.credit);
     const submitChange = async () => {
       if (type === 'new') {
-        const {data:resData} = await useRequest.post('/api/grade/create', {
+        const { data: resData } = await useRequest.post('/api/grade/create', {
           courseId: courseId,
           credit: credit,
           score: score,
           termId: data.term.id,
         });
-        if(resData?.message === 'success'){
+        if (resData?.message === 'success') {
+          props.submit();
+        }else{
+          Toast.fail(resData?.message)
+          props.closeAdd();
           props.submit();
         }
         // setMethod(false);
-      }else{
-        const {data:resData} = await useRequest.post('/api/grade/update', {
+      } else {
+        const { data: resData } = await useRequest.post('/api/grade/update', {
           id: data?.id,
           courseId: courseId,
           credit: credit,
-          score: score,
+          score: Number(score),
           termId: data.term.id,
-        })
-        if(resData?.message === 'success'){
-          props.submit();
+        });
+        if (resData?.message === 'success') {
+          Toast.success(t('修改成功'));
+          props?.submit();
         }
       }
-      
+
       setMethod(false);
     };
+    const [openCourse, setOpenCourse] = useState(false);
+
+    const SelectCourse = React.useCallback((props) => {
+      const [value, setValue] = useState('');
+      const {
+        open,
+        isEdit,
+        mutate,
+        campusId,
+        selectCourse,
+      }: {
+        open: boolean;
+        isEdit: boolean;
+        mutate: any;
+        campusId: any;
+        selectCourse: (data) => void;
+      } = props;
+
+      const {
+        data: _courseData,
+        error: courseError,
+        mutate: m,
+      } = useFetch(openCourse?`/course/query`:null, 'page', {
+        keyword: value,
+        campusId: campusId,
+        pageSize: 100,
+      });
+
+      React.useEffect(() => {
+        m();
+      }, [campusId, value]);
+
+      const courseData = React.useMemo(
+        () =>
+          _courseData && !courseError
+            ? courseData
+              ? [...courseData].concat(..._courseData)
+              : [].concat(..._courseData)
+            : null,
+        [_courseData, campusId, value, courseError],
+      );
+      
+      return (
+        <SwipeableDrawer
+          className="z-20 bottom-footer-theTop"
+          disableDiscovery={true}
+          disableSwipeToOpen={true}
+          onClose={() => {
+            props.onClose();
+          }}
+          onOpen={() => {
+            props.onOpen();
+          }}
+          open={open}
+          anchor="bottom"
+        >
+          <div className="h-[60vh]">
+            <Puller></Puller>
+            <div className=" p-4 space-y-2">
+              <div className="flex items-center space-x-2">
+                <input
+                  className="bg-bg hover:outline-none  input border-none input-bordered w-full input-md"
+                  value={value}
+                  onChange={(e) => {
+                    setValue(e.target.value);
+                  }}
+                ></input>
+                {/* <div
+                  onClick={() => {
+                    if (!value) {
+                      Toast.fail(t('请输入课程名称'));
+                      return;
+                    }
+                    selectCourse({
+                      id: null,
+                      label: value,
+                    });
+                  }}
+                  className="btn text-white bg-[#FFD138] border-none"
+                >
+                  {t('自定义课程')}
+                </div> */}
+              </div>
+              {courseData?.map((item) => {
+                return (
+                  <div
+                    className="w-full flex flex-col justify-between h-12"
+                    onClick={() => {
+                      selectCourse({
+                        id: item.id,
+                        label: item.code,
+                        type: 'must',
+                      });
+                    }}
+                  >
+                    <div></div>
+                    <div className="text-gray-500  font-semibold text-sm">
+                      {item?.code}
+                    </div>
+                    <div className="w-full h-[0.1px] bg-[#F3F4F6] rounded-md border border-lg"></div>
+                  </div>
+                );
+              })}
+            </div>
+            {/* <PostGroupDetail topicName={props.topicName} mutate={()=>{mutate()}} isEdit={isEdit} data={props.data}></PostGroupDetail> */}
+          </div>
+        </SwipeableDrawer>
+      );
+    }, [openCourse]);
     const [isFocus, setFocus] = React.useState(false);
+    const [courseDetail,setCourseDetail] = React.useState<any>(null)
     return (
       <div
         className={classnames(
@@ -370,6 +488,34 @@ export default function index() {
           props.className ? props.className : null,
         )}
       >
+        <SelectCourse
+          campusId={campusId}
+          subjectId={data?.subject?.id}
+          selectCourse={(course) => {
+            if (!course) return;
+            const _tem = {
+              value: course.id,
+              label: course.label,
+            };
+            setCourseId(course.id);
+            setCourseDetail(course)
+            // updateData({
+            //   key: 'course',
+            //   value: _tem,
+            // });
+            setOpenCourse(false);
+            // updateForm({ [current]: course });
+            // setOpenCourse(false);
+            // setCurrent(current)
+          }}
+          onClose={() => {
+            setOpenCourse(false);
+          }}
+          onOpen={() => {
+            setOpenCourse(true);
+          }}
+          open={openCourse}
+        ></SelectCourse>
         <div className={`bg-[${color}] rounded-full w-3 h-16`}></div>
         <div className="w-full gap-card-shadow absolute top-0   items-center bg-white left-2 mr-4  h-16   flex justify-between">
           <div className={'mx-4 w-full'}>
@@ -382,20 +528,26 @@ export default function index() {
                   })}
                 >
                   {editMethod ? (
-                    <AutoInput
-                      onBlur={() => {
-                        setFocus(false);
-                      }}
-                      onFocus={() => {
-                        setFocus(true);
-                      }}
-                      isisFocus={isFocus}
-                      onChange={(value) => {
-                        setCourseId(value.id);
-                      }}
-                      className="w-full"
-                    ></AutoInput>
+                    <div onClick={()=>{
+                      setOpenCourse(true)
+                    }} className="h-[20px]">
+                      { (courseDetail?.label || data?.course?.code) || '请输入'}
+                    </div>
                   ) : (
+                    // <AutoInput
+                    //   onBlur={() => {
+                    //     setFocus(false);
+                    //   }}
+                    //   onFocus={() => {
+                    //     setFocus(true);
+                    //   }}
+                    //   isisFocus={isFocus}
+                    //   onChange={(value) => {
+                    //     setCourseId(value.id);
+                    //   }}
+
+                    //   className="w-full"
+                    // ></AutoInput>
                     <div
                       className={
                         'text-sm overflow-x-scroll w-14 whitespace-nowrap'
@@ -547,7 +699,9 @@ export default function index() {
         <AccordionDetails>
           <div className="space-y-2">
             {item.grades?.map((item, index) => {
-              return <CourseGap data={item} color={color}></CourseGap>;
+              return <CourseGap submit={() => {
+                mutate();
+              }} data={item} color={color}></CourseGap>;
             })}
             <CSSTransition
               in={newCourse}
@@ -563,11 +717,11 @@ export default function index() {
                   'hidden opacity-0': newCourse === false,
                   'opacity-1 block': newCourse === true,
                 })}
-                closeAdd={()=>{
-                  setNewCourse(false)
+                closeAdd={() => {
+                  setNewCourse(false);
                 }}
-                submit={()=>{
-                  mutate()
+                submit={() => {
+                  mutate();
                 }}
                 edit={true}
                 isNew

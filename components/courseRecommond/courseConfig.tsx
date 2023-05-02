@@ -26,8 +26,6 @@ import { useTranslation } from 'next-i18next';
 export default function config(props) {
   const router = useRouter();
 
-
-
   const { t } = useTranslation();
   function usePersistentState(key, defaultValue) {
     const isBrowser = typeof window !== 'undefined';
@@ -69,7 +67,6 @@ export default function config(props) {
     campusId: campusId,
   });
 
-
   const Puller = styled(Box)(({ theme }) => ({
     width: 33,
     height: 4,
@@ -85,7 +82,7 @@ export default function config(props) {
       <>
         <div className="flex mt-4 items-top space-x-8 w-full">
           <div className="min-w-[44px] text-[#798195] w-11 flex items-center justify-center text-center h-11 bg-[#F7F8F9] rounded-lg text-xs">
-            {data.label}
+            {data?.label}
           </div>
           <div className="w-full space-y-4">
             <div className="flex items-center space-x-10 h-10">
@@ -93,7 +90,7 @@ export default function config(props) {
                 {' '}
                 {t('优先')}
               </div>
-              {data?.professorMust.map((item) => {
+              {data?.professorMust?.map((item) => {
                 return (
                   <div className="ml-10 w-10 text-center text-xs text-[#798195]">
                     {item.label}
@@ -101,12 +98,12 @@ export default function config(props) {
                 );
               })}
             </div>
-            {data?.professorOption.length > 0 && (
+            {data?.professorOption?.length > 0 && (
               <div className="flex items-center space-x-10">
                 <div className="text-blueTitle text-xs font-semibold">
                   {t('可选')}
                 </div>
-                {data?.professorOption.map((item) => {
+                {data?.professorOption?.map((item) => {
                   return (
                     <div className="ml-10 w-10 text-center text-xs text-[#798195]">
                       {item.label}
@@ -117,7 +114,7 @@ export default function config(props) {
             )}
           </div>
         </div>
-        {data.note && (
+        {data?.note && (
           <div className="rounded-sm bg-[#F7F8F9] text-[#798195] w-full p-4 mt-4 text-xs">
             {data?.note}
           </div>
@@ -136,8 +133,13 @@ export default function config(props) {
     courseList,
     setCourseList,
     _setCurrent,
-    _current
-  }: { courseList: Course[]; setCourseList: any;_setCurrent:any;_current:any} = props;
+    _current,
+  }: {
+    courseList: Course[];
+    setCourseList: any;
+    _setCurrent: any;
+    _current: any;
+  } = props;
   const CourseId = React.useMemo(
     () => courseList[professorCurrent]?.id,
     [professorCurrent, courseList],
@@ -320,7 +322,9 @@ export default function config(props) {
                     : '选中'}
                 </div>
               </div>
-              <div className="text-[#A9B0C0] my-3 text-xs">{t('非常规情况')}</div>
+              <div className="text-[#A9B0C0] my-3 text-xs">
+                {t('非常规情况')}
+              </div>
               <div className="space-y-2">
                 <div
                   onClick={() => {
@@ -953,6 +957,7 @@ export default function config(props) {
     const values = Object.values(courseList) as Course[];
     return values.filter((item: Course) => item?.type === 'must');
   }, [courseList]);
+
   const optionStudyData = React.useMemo(() => {
     const values = Object.values(courseList) as Course[];
     return values.filter((item: Course) => item?.type === 'option');
@@ -960,6 +965,20 @@ export default function config(props) {
   React.useEffect(() => {
     console.log(mustStudyData, 'mustStudyData');
   }, [mustStudyData]);
+
+  function groupCoursesByTerm(courses: Course[]) {
+    const courseGroups = {};
+
+    for (const course of courses) {
+      if (!courseGroups[course.term]) {
+        courseGroups[course.term] = [];
+      }
+
+      courseGroups[course.term].push(course);
+    }
+
+    return courseGroups;
+  }
 
   const NoteArea = (props) => {
     const [open, setOpen] = useState(props?.data?.length > 0);
@@ -1016,6 +1035,24 @@ export default function config(props) {
       ),
     [courseList],
   );
+
+  /**
+   * for preview 归类整理
+   */
+  const previewCourseData = React.useMemo(() => {
+    const groupedCourses: { term; items }[] = [];
+    filteredData.forEach((course, index) => {
+      const group = groupedCourses.find((group) => group.term === course.term);
+      if (group) {
+        group.items.push(course);
+      } else {
+        groupedCourses.push({ term: course.term, items: [course] });
+      }
+    });
+    return groupedCourses;
+  }, [filteredData]);
+
+  console.log(previewCourseData, 'filteredData');
   const submit = () => {
     console.log(filteredData, 'filteredData');
   };
@@ -1036,7 +1073,6 @@ export default function config(props) {
   React.useEffect(() => {
     console.log(term, 'term');
   }, [term]);
-
 
   const [draggedItemId, setDraggedItemId] = useState(null);
 
@@ -1087,9 +1123,11 @@ export default function config(props) {
           campusId={campusId}
           selectCourse={(course) => {
             updateForm({ [current]: course });
-            updateForm({ [current]: {
-              term: props?.term[0]?.name,
-            }});
+            updateForm({
+              [current]: {
+                term: props?.term[0]?.name,
+              },
+            });
             // setOpenCourse(false);
             // setCurrent(current)
           }}
@@ -1423,15 +1461,26 @@ export default function config(props) {
                 <MustStudy data={mustStudyData}></MustStudy>
                 <OptionalStudy data={optionStudyData}></OptionalStudy>
               </div>
-              <div className="flex items-center space-x-2 mt-6">
-                <div className="w-1 h-4 bg-yellow-300 rounded-full"></div>
-                <div className="font-semibold">{termValue}</div>
-              </div>
-              {filteredData?.map((item: Course) => {
-                return (
-                  <CourseSelectFormItem data={item}></CourseSelectFormItem>
-                );
-              })}
+
+              {previewCourseData?.map(
+                (item: { items: Course[]; term: string }) => {
+                  return (
+                    <>
+                      <div className="flex items-center space-x-2 mt-6">
+                        <div className="w-1 h-4 bg-yellow-300 rounded-full"></div>
+                        <div className="font-semibold">{item?.term}</div>
+                      </div>
+                      {item?.items?.map((item) => {
+                        return (
+                          <CourseSelectFormItem
+                            data={item}
+                          ></CourseSelectFormItem>
+                        );
+                      })}
+                    </>
+                  );
+                },
+              )}
             </div>
           )}
         </div>

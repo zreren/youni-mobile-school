@@ -124,7 +124,7 @@ export default function Schedules() {
     // user: any[];
   }
   interface ExtendProps {
-    section:  CourseSection;
+    section: CourseSection;
     department: string;
     online: boolean;
     createdAt: string;
@@ -176,7 +176,7 @@ export default function Schedules() {
           console.log('catch');
         });
     };
-    const deleteTimetable = async (id:number)=>{
+    const deleteTimetable = async (id: number) => {
       Dialog.confirm({
         title: t('删除日程'),
         message: t('确定删除该日程吗？'),
@@ -184,12 +184,9 @@ export default function Schedules() {
         cancelButtonText: t('取消'),
       })
         .then(async () => {
-          const { data } = await useRequest.post(
-            `/api/timetable/delete`,
-            {
-              id: Number(id),
-            },
-          );
+          const { data } = await useRequest.post(`/api/timetable/delete`, {
+            id: Number(id),
+          });
           if (data.message === 'success') {
             props.setVisible(false);
             Toast.success(t('删除成功'));
@@ -203,7 +200,7 @@ export default function Schedules() {
         .catch(() => {
           console.log('catch');
         });
-    }
+    };
     if (!event) return;
     const {
       title,
@@ -610,7 +607,27 @@ export default function Schedules() {
     const { data, error, mutate } = useFetch('/curriculum/query', 'get', {
       termId: 1,
     });
-    
+
+    /**
+     * 分享课表
+     */
+    const shareCurriculum = async () => {
+      const { data: shareRes } = await useRequest.get('/api/curriculum/share', {
+        params: {
+          id: data?.data[0].id,
+        },
+      });
+
+      router.push({
+        pathname: '/Schedules/share',
+        query: {
+          id: user?.id,
+          curriculumId: data?.data[0].id,
+          campus: router.query.campus,
+        },
+      });
+    };
+
     return (
       <SwipeableDrawer
         anchor="bottom"
@@ -636,16 +653,7 @@ export default function Schedules() {
               title={t('保存到相册')}
             ></SaveToLibButton>
             <SaveToLibButton
-              onClick={() => {
-                router.push({
-                  pathname: '/Schedules/share',
-                  query: {
-                    id: user?.id,
-                    curriculumId: data?.data[0].id,
-                    campus: router.query.campus,
-                  },
-                });
-              }}
+              onClick={shareCurriculum}
               color="#FFD036"
               icon="share"
               title={t('分享课表')}

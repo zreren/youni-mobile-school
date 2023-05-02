@@ -106,6 +106,9 @@ export default function Schedules() {
       });
       if (data?.message === 'success') {
         Toast.success(t('收藏成功'));
+      }else{
+        Toast.fail(t("收藏失败,是否已登录？"));
+        setIsStart(false);
       }
     } else {
       setIsStart(false);
@@ -145,7 +148,7 @@ export default function Schedules() {
               onClick={() => {
                 try {
                   navigator.clipboard.writeText(window.location.href);
-                  Toast.success(t("'已复制到简介板，分享给好友吧！'"));
+                  Toast.success(t("已复制到简介板，分享给好友吧！"));
                 } catch (error) {
                   Toast.fail(t('复制失败'));
                 }
@@ -465,7 +468,7 @@ export default function Schedules() {
     );
   };
   return (
-    <div className="relative bg-bg schedule min-h-[840px]">
+    <div className="relative bg-bg schedule min-h-[840px] pb-20">
       <Footer></Footer>
       <Popup
         overlayClass={'Popup'}
@@ -478,7 +481,7 @@ export default function Schedules() {
       </Popup>
       <div className="pl-5 text-left f-11 yellow-gradient h-16 flex flex-col justify-center">
         <div className="text-base font-bold text-white">
-          第 {getWeekNumber(termInfo?.data?.startDate)} 周
+          {t('第')} {getWeekNumber(termInfo?.data?.startDate)} {t('周')}
         </div>
         <div className="text-xs text-white opacity-80 flex space-x-2 items-center">
           <div>
