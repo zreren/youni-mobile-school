@@ -149,6 +149,9 @@ function index(props) {
                         id: data?.id,
                         isPublic: e,
                       });
+                      // mutateCollection()
+                      // mutate();
+                      //mutate && mutate();
                     }}
                     size="24px"
                     activeColor="#FED440"
@@ -505,9 +508,10 @@ function index(props) {
     useEffect(() => {
       console.log(detailId, 'detailId');
       // if(!detailId) return;
+      // mutateCollection()
       mutate();
     }, [detailId]);
-    const { data: PostGroupData } = useFetch('/collection/list', 'get');
+    const { data: PostGroupData,mutate:mutateCollection } = useFetch('/collection/list', 'get');
     const [openDetail, setOpenDetail] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const checkPostGroupDetail = (id, isEdit?) => {
@@ -529,6 +533,8 @@ function index(props) {
             setOpenDetail(true);
           }}
           onClose={() => {
+            mutateCollection()
+            mutate()
             setOpenDetail(false);
           }}
           isEdit={isEdit}

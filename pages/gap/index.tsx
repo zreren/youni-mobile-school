@@ -57,24 +57,7 @@ export default function index() {
   const { data, error, mutate } = useFetch('/grade/list', 'get');
   const { data: total, error: totalError } = useFetch('/grade/stat', 'get');
   const [t] = useTranslation();
-  const deleteGapItem = async (id: number | string): Promise<any> => {
-    Dialog.confirm({
-      title: t('删除'),
-      message: t('确定删除改gap记录吗？'),
-      confirmButtonText: t('确定'),
-      cancelButtonText: t('取消'),
-    }).then((res) => {
-        useRequest.post('/api/grade/delete', { id });
-        mutate();
-        // dispatch(setOpenLogin('login'));
-        // router.push("/Login/signin");
-        // console.log(res,"登录YoUni");
-      })
-      .catch((err) => {
-        // router.push(`/${campus}`);
-        //  dispatch(setOpenLogin('register'))
-      });
-  };
+
   // if (error) return;
   // const addGrad
   const Header = (props) => {
@@ -315,20 +298,48 @@ export default function index() {
   };
   const CourseGap = (props) => {
     const { edit, color, data, type } = props;
-    console.log(data, 'CourseGap');
+    const deleteGapItem = async (id: number | string): Promise<any> => {
+      if(props.isNew){
+        props.closeAdd();
+        return;
+      }
+      Dialog.confirm({
+        title: t('删除'),
+        message: t('确定删除改gap记录吗？'),
+        confirmButtonText: t('确定'),
+        cancelButtonText: t('取消'),
+      }).then(async(res) => {
+          const {data} = await useRequest.post('/api/grade/delete', { id });
+          if(data?.message === 'success'){
+            mutate();
+          }
+        
+          // dispatch(setOpenLogin('login'));
+          // router.push("/Login/signin");
+          // console.log(res,"登录YoUni");
+        })
+        .catch((err) => {
+          // router.push(`/${campus}`);
+          //  dispatch(setOpenLogin('register'))
+        });
+    };
+    console.log(edit, 'CourseGap');
     const [editMethod, setMethod] = React.useState(edit ? edit : false);
     const [courseId, setCourseId] = React.useState(data?.course?.id);
     const [courseName, setCourseName] = React.useState(data?.course?.ename);
     const [score, setScore] = React.useState(data?.score);
     const [credit, setCredit] = React.useState(data?.credit);
-    const submitChange = () => {
+    const submitChange = async () => {
       if (type === 'new') {
-        useRequest.post('/api/grade/create', {
+        const {data:resData} = await useRequest.post('/api/grade/create', {
           courseId: courseId,
           credit: credit,
           score: score,
           termId: data.term.id,
         });
+        if(resData?.message === 'success'){
+          props.submit();
+        }
         // setMethod(false);
       }
       setMethod(false);
@@ -503,6 +514,7 @@ export default function index() {
                   );
                   if (data?.message === 'success') {
                     Toast.success(t('删除成功'));
+                    mutate();
                   } else {
                     Toast.fail(t('删除失败'));
                   }
@@ -533,7 +545,14 @@ export default function index() {
                   'hidden opacity-0': newCourse === false,
                   'opacity-1 block': newCourse === true,
                 })}
+                closeAdd={()=>{
+                  setNewCourse(false)
+                }}
+                submit={()=>{
+                  mutate()
+                }}
                 edit={true}
+                isNew
               ></CourseGap>
             </CSSTransition>
             <AddCourseGap

@@ -610,6 +610,7 @@ export default function Schedules() {
     const { data, error, mutate } = useFetch('/curriculum/query', 'get', {
       termId: 1,
     });
+    
     return (
       <SwipeableDrawer
         anchor="bottom"
