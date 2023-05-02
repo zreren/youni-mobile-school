@@ -23,7 +23,11 @@ import { useDispatch } from 'react-redux';
 import { setOpenLogin } from '../../stores/authSlice';
 import { Input, List } from 'react-vant';
 import { useTranslation } from 'next-i18next';
-
+import {
+  selectLoginModelState,
+  seLoginModelState,
+  selectOpen,
+} from '@/stores/authSlice';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Accordion = styled((props: AccordionProps) => (
@@ -57,7 +61,9 @@ export default function index() {
   const { data, error, mutate } = useFetch('/grade/list', 'get');
   const { data: total, error: totalError } = useFetch('/grade/stat', 'get');
   const [t] = useTranslation();
-
+  useEffect(() => {
+    dispatch(seLoginModelState(true));
+  }, []);
   // if (error) return;
   // const addGrad
   const Header = (props) => {
@@ -341,7 +347,19 @@ export default function index() {
           props.submit();
         }
         // setMethod(false);
+      }else{
+        const {data:resData} = await useRequest.post('/api/grade/update', {
+          id: data?.id,
+          courseId: courseId,
+          credit: credit,
+          score: score,
+          termId: data.term.id,
+        })
+        if(resData?.message === 'success'){
+          props.submit();
+        }
       }
+      
       setMethod(false);
     };
     const [isFocus, setFocus] = React.useState(false);

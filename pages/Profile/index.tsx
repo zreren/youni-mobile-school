@@ -71,6 +71,7 @@ function index(props) {
   useEffect(() => {
     console.log(t('my-button-text'), i18n.language, router.locales, 't i18n');
   });
+  
   useEffect(() => {
     dispatch(seLoginModelState(true));
   }, []);
