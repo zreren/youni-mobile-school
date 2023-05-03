@@ -400,12 +400,16 @@ export default function AddSchedule(props) {
         Toast.fail(t('编辑模式只能添加一天的课程'));
         return;
       }
+      // delete values.curriculum
       const requestQueen = dayOfWeek?.map(async (item) => {
         const data = await submitCourse({
           ...values,
           id: CURRICULUM?.curriculum.id,
           dayOfWeek: Number(item),
-          time: translateTime(time, endTime),
+          time: {
+            start: time,
+            end: endTime,
+          },
         });
         return data;
       });
@@ -428,7 +432,7 @@ export default function AddSchedule(props) {
     return (
       <div className="w-full space-y-4">
         <CCourseInput
-          title={t("课程名称")}
+          title={t('课程名称')}
           isNess
           value={CURRICULUM?.name}
           change={(val) => {
@@ -444,7 +448,8 @@ export default function AddSchedule(props) {
             <div className="w-full p-3">
               {' '}
               <span className="flex items-center text-sm font-medium bg-white text-blueTitle">
-                <NessIcon className="mr-1"></NessIcon>{t("上课日期")}
+                <NessIcon className="mr-1"></NessIcon>
+                {t('上课日期')}
               </span>
             </div>
             <div className="flex youni-form w-full pb-4 pl-4 pr-4 ">
@@ -473,7 +478,7 @@ export default function AddSchedule(props) {
           <div className="flex youni-form items-center justify-between h-full space-x-4">
             <div className="flex items-center">
               <NessIcon className="mr-1"></NessIcon>
-              <div className="text-sm text-blueTitle">{t("开始时间")}</div>
+              <div className="text-sm text-blueTitle">{t('开始时间')}</div>
             </div>
             <div>
               <DatetimePicker
@@ -497,7 +502,7 @@ export default function AddSchedule(props) {
                       clickable
                       label=""
                       value={val}
-                      placeholder={t("请选择日期")}
+                      placeholder={t('请选择日期')}
                       onClick={() => actions.open()}
                     />
                   );
@@ -637,7 +642,7 @@ export default function AddSchedule(props) {
 
         <div className="w-full h-12 p-4 bg-white rounded-lg">
           <div className="flex items-center justify-between h-full space-x-4">
-            <div className="text-sm text-blueTitle">{t("颜色")}</div>
+            <div className="text-sm text-blueTitle">{t('颜色')}</div>
             <CCourseColor
               value={CURRICULUM?.color}
               setColor={(val) => {
@@ -688,7 +693,7 @@ export default function AddSchedule(props) {
   const [value, setValue] = useState();
   return (
     <CommonLayout className="p-0 mb-10">
-    <Header title={t('课程表')}></Header>
+      <Header title={t('课程表')}></Header>
       <HeaderMenu
         id={id}
         switchMenu={(val) => {
@@ -702,7 +707,6 @@ export default function AddSchedule(props) {
     </CommonLayout>
   );
 }
-
 
 export const getStaticProps = async ({ locale }) => ({
   props: {

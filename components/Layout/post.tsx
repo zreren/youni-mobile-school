@@ -178,6 +178,7 @@ function index(props) {
     if (data?.message) {
       Toast.success('评论成功');
       mutate();
+      mutateComment();
     }
   };
   /**
