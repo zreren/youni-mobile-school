@@ -141,7 +141,7 @@ function index(props) {
                 ></Input>
                 <div className="mt-2 flex items-center">
                   <div className="w-[4px] h-4 bg-[#FFCE00] mr-2 rounded-full"></div>
-                  <div className="mr-4 text-blueTitle">是否公开</div>
+                  <div className="mr-4 text-blueTitle">{t('是否公开')}</div>
                   <Switch
                     checked={checked}
                     onChange={(e) => {
@@ -197,17 +197,17 @@ function index(props) {
             <div className="flex space-x-2">
               <div className="flex items-center space-x-1">
                 <PostGroupIcon1></PostGroupIcon1>
-                <div className="text-[#798195] text-xs">{data?.postCount}</div>
+                <div className="text-[#798195] text-xs">{data?.interactInfo?.postCount}</div>
               </div>
               <div className="flex items-center  space-x-1">
                 <PostGroupIcon2></PostGroupIcon2>
                 <div className="text-[#798195] text-xs">
-                  {data?.followCount}
+                  {data?.interactInfo?.followCount}
                 </div>
               </div>
               <div className="flex items-center  space-x-1">
                 <PostGroupIcon3></PostGroupIcon3>
-                <div className="text-[#798195] text-xs">{data?.viewCount}</div>
+                <div className="text-[#798195] text-xs">{data?.interactInfo?.viewCount}</div>
               </div>
             </div>
           </div>

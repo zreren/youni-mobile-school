@@ -1122,7 +1122,12 @@ export default function config(props) {
         <SelectCourse
           campusId={campusId}
           selectCourse={(course) => {
+            if(!props?.term[0]?.name){
+              Toast.fail(`${t('请先选择学期')}`)
+              return;
+            }
             updateForm({ [current]: course });
+            console.log('props?.term',props?.term)
             updateForm({
               [current]: {
                 term: props?.term[0]?.name,

@@ -35,56 +35,7 @@ export default function recommend(props) {
   useEffect(()=>{
     window.history.replaceState({}, '', `/${campus}/Course/recommend/${id}`);
   },[data])
-  const CourseSelector = (props) => {
-    const { isSelect } = props;
-    return (
-      <div
-        className={classnames(
-          'flex justify-center relative items-center w-14 h-14  p-[1px] rounded-2xl',
-          {
-            'border-[2px] border-[#FFDEAD]': isSelect,
-          },
-        )}
-      >
-        <div
-          className={classnames(
-            'border-[#FFDEAD] bg-[#FFFAF0] flex flex-col justify-center items-center  border-[2px] rounded-2xl h-12 w-12',
-          )}
-        >
-          <svg height={'14px'} width={'100%'}>
-            <text
-              x="50%"
-              text-anchor="middle"
-              y="10"
-              fill="#ff9832"
-              color="#ff9832"
-              fontSize={'10px'}
-            >
-              {' '}
-              MAT
-            </text>
-          </svg>
-          <svg height={'14px'} width={'100%'}>
-            <text
-              x="50%"
-              text-anchor="middle"
-              y="10"
-              fill="#ff9832"
-              fontWeight={600}
-              color="#ff9832"
-              fontSize={'10px'}
-            >
-              {' '}
-              321
-            </text>
-          </svg>
-        </div>
-        <div className="xueqiTag absolute rounded-[6px] p-[6px] text-[white] flex justify-center items-center text-xs w-5 h-5 bottom-0 right-0">
-          秋
-        </div>
-      </div>
-    );
-  };
+
   const Header = () => {
     return (
       <div className="w-screen h-[210px]">
@@ -183,7 +134,7 @@ export default function recommend(props) {
     return (
       <div className="w-full p-2 mt-4">
         <div className="font-semibold text-lg text-[#37455C]">
-          选课 <span className="text-[#2347D9]">介绍</span>
+          {t('选课')} <span className="text-[#2347D9]">{t('介绍')}</span>
         </div>
         <div className="mt-5 font-light px-1 text-[#37455C] text-sm">
           {data?.data?.body}
@@ -247,7 +198,7 @@ export default function recommend(props) {
         <div className="flex items-center justify-center">
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
           <div className="whitespace-nowrap text-[#DCDDE1] text-xs mx-2">
-            必修课
+            {t('必修课')}
           </div>
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
         </div>
@@ -292,7 +243,7 @@ export default function recommend(props) {
         <div className="flex items-center justify-center">
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
           <div className="whitespace-nowrap text-[#DCDDE1] text-xs mx-2">
-            选修课
+            {t('选修课')}
           </div>
           <div className="w-full h-[0.5px] bg-[#DCDDE1]"></div>
         </div>
@@ -315,10 +266,10 @@ export default function recommend(props) {
         <MustStudy data={data?.data?.form?.courseData?.filter((item)=>item.type !== 'option')}></MustStudy>
         <OptionalStudy  data={data?.data?.form?.courseData?.filter((item)=>item.type !== 'must')}></OptionalStudy>
         </div>
-        <div className="flex items-center space-x-2 mt-4">
+        {/* <div className="flex items-center space-x-2 mt-4">
           <div className="w-1 h-4 bg-yellow-300 rounded-full mt-2"></div>
           <div className="font-semibold">{data?.data?.form.term}</div>
-        </div>
+        </div> */}
       </div>
     );
   };
@@ -341,7 +292,7 @@ export default function recommend(props) {
           </div>
           <div className="w-full space-y-4">
             <div className="flex items-center space-x-10 h-10">
-              <div className="text-blueTitle text-xs font-semibold">优先</div>
+              <div className="text-blueTitle text-xs font-semibold">{t('优先')}</div>
               {data?.professorMust.map((item) => {
                 return (
                   <div className="ml-10 w-10 text-center text-xs text-[#798195]">
@@ -352,7 +303,7 @@ export default function recommend(props) {
             </div>
             {data?.professorOption.length > 0 && (
               <div className="flex items-center space-x-10">
-                <div className="text-blueTitle text-xs font-semibold">可选</div>
+                <div className="text-blueTitle text-xs font-semibold">{t('可选')}</div>
                 {data?.professorOption.map((item) => {
                   return (
                     <div className="ml-10 w-10 text-center text-xs text-[#798195]">
@@ -420,7 +371,7 @@ export default function recommend(props) {
           ></Waterfall>
         ) : (
           <div className="text-[#898E97] flex justify-center">
-            该话题暂时没有内容
+            {t('该话题暂时没有内容')}
           </div>
         )}
       </div>
@@ -474,6 +425,22 @@ export default function recommend(props) {
     `/campus/topic/posts?id=${topicId}`,
     'get',
   );
+    /**
+   * for preview 归类整理
+   */
+    const previewCourseData = React.useMemo(() => {
+      const groupedCourses: { term; items }[] = [];
+      data?.data?.form?.courseData.forEach((course, index) => {
+        const group = groupedCourses.find((group) => group.term === course.term);
+        if (group) {
+          group.items.push(course);
+        } else {
+          groupedCourses.push({ term: course.term, items: [course] });
+        }
+      });
+      return groupedCourses;
+    }, [data?.data?.form?.courseData]);
+
   return (
     <div className="w-screen min-h-screen pb-20">
       <Header></Header>
@@ -566,8 +533,20 @@ export default function recommend(props) {
         data?.data?.form?.courseData?.length > 1 ? <CourseRecommend></CourseRecommend> : null
       }
       <div className="px-5 mt-3">
-        {data?.data?.form?.courseData?.map((item: any) => {
-          return <CourseSelectFormItem data={item}></CourseSelectFormItem>;
+        {previewCourseData?.map((item: { items: Course[]; term: string }) => {
+          return (
+            <>
+              <div className="flex items-center space-x-2 mt-6">
+                <div className="w-1 h-4 bg-yellow-300 rounded-full"></div>
+                <div className="font-semibold">{item?.term}</div>
+              </div>
+              {item?.items?.map((item) => {
+                return (
+                  <CourseSelectFormItem data={item}></CourseSelectFormItem>
+                );
+              })}
+            </>
+          );
         })}
       </div>
     </div>
