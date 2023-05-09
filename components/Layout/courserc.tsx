@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Imagebg from './bg.png';
 import PostGroupIcon1 from './post-group/icon1.svg';
@@ -33,14 +33,14 @@ import ReturnBackIcon from './returnBack.svg';
  */
 export default function recommend(props) {
   const router = useRouter();
-  const {user} = useUser();
-  const {t} = useTranslation();
+  const { user } = useUser();
+  const { t } = useTranslation();
   const campus = router.query.campus;
-  const id = React.useMemo(() => router.query.id || props.id, [router,props])
-  const { data,mutate } = useFetch(`/post/detail?id=${id}`, 'get');
-  useEffect(()=>{
+  const id = React.useMemo(() => router.query.id || props.id, [router, props])
+  const { data, mutate } = useFetch(`/post/detail?id=${id}`, 'get');
+  useEffect(() => {
     window.history.replaceState({}, '', `/${campus}/Course/recommend/${id}`);
-  },[data])
+  }, [data])
 
   const Header = () => {
     return (
@@ -57,24 +57,24 @@ export default function recommend(props) {
             <ReturnBackIcon></ReturnBackIcon>
           </div>
           {
-            data?.data?.user?.id === user?.id  &&
+            data?.data?.user?.id === user?.id &&
             <div
-            className="absolute top-10 right-4 mt-2 border border-[#fff] w-14 h-6 text-xs rounded-full text-[white] whitespace-nowrap	flex justify-center items-center"
-            onClick={() => {
-              router.push({
-                pathname: '/[campus]/post/addPost',
-                query: {
-                  campus: router.query.campus,
-                  id: data?.data?.id,
-                  isEdit: true,
-                  type: 'course_recommend',
-                },
-              });
-              // router.back();
-            }}
-          >
-            {t('编辑')}
-          </div>
+              className="absolute top-10 right-4 mt-2 border border-[#fff] w-14 h-6 text-xs rounded-full text-[white] whitespace-nowrap	flex justify-center items-center"
+              onClick={() => {
+                router.push({
+                  pathname: '/[campus]/post/addPost',
+                  query: {
+                    campus: router.query.campus,
+                    id: data?.data?.id,
+                    isEdit: true,
+                    type: 'course_recommend',
+                  },
+                });
+                // router.back();
+              }}
+            >
+              {t('编辑')}
+            </div>
           }
           <div className="z-30 css2Overflow-ellipsis">{data?.data?.title}</div>
           {/* <div className="z-30">适用于UTSC校区</div> */}
@@ -147,7 +147,7 @@ export default function recommend(props) {
         </div>
         <div className="flex mt-4 px-1 items-center space-x-1">
           {data?.data?.topics.map((item) => {
-            return <div  onClick={() => {
+            return <div onClick={() => {
               setOpenDetail(true);
               setTopicName(item?.name);
               setTopicId(item?.id);
@@ -158,8 +158,8 @@ export default function recommend(props) {
     );
   };
   const MustStudy = (props) => {
-    const { data:data1 }: { data: Course[] } = props;
-    if(!data) return
+    const { data: data1 }: { data: Course[] } = props;
+    if (!data) return
     const CourseSelector = (props) => {
       const { isSelect } = props;
       return (
@@ -194,7 +194,7 @@ export default function recommend(props) {
             </svg> */}
           </div>
           <div className="xueqiTag absolute rounded-[5px] p-[5px] text-[white] flex justify-center items-center text-[10px] w-4 h-4 bottom-0 right-0">
-            {data?.data?.form?.term?.slice(0,1)}
+            {props.data?.term?.slice(0, 1)}
           </div>
         </div>
       );
@@ -234,12 +234,12 @@ export default function recommend(props) {
               'border-[#FFDEAD] bg-[#FFFAF0] flex flex-col justify-center items-center  border-[2px] rounded-2xl h-12 w-12',
             )}
           >
-           <div className="text-[10px] text-[#ff9832] flex justify-center text-center items-center">
+            <div className="text-[10px] text-[#ff9832] flex justify-center text-center items-center">
               {props.data.label}
             </div>
           </div>
           <div className="xueqiTag absolute rounded-[6px] p-[6px] text-[white] flex justify-center items-center text-xs w-5 h-5 bottom-0 right-0">
-          {data?.data?.form?.term?.slice(0,1)}
+            {props.data?.term?.slice(0, 1)}
           </div>
         </div>
       );
@@ -269,8 +269,8 @@ export default function recommend(props) {
           {t("选课")} <span className="text-[#2347D9]">{t("推荐")}</span>
         </div>
         <div className="flex w-full justify-between mt-5 items-center px-2 space-x-3">
-        <MustStudy data={data?.data?.form?.courseData?.filter((item)=>item.type !== 'option')}></MustStudy>
-        <OptionalStudy  data={data?.data?.form?.courseData?.filter((item)=>item.type !== 'must')}></OptionalStudy>
+          <MustStudy data={data?.data?.form?.courseData?.filter((item) => item.type !== 'option')}></MustStudy>
+          <OptionalStudy data={data?.data?.form?.courseData?.filter((item) => item.type !== 'must')}></OptionalStudy>
         </div>
         {/* <div className="flex items-center space-x-2 mt-4">
           <div className="w-1 h-4 bg-yellow-300 rounded-full mt-2"></div>
@@ -331,7 +331,7 @@ export default function recommend(props) {
       </>
     );
   };
-  const started =  React.useMemo(()=>data?.data?.interactInfo?.stared,[data?.data?.interactInfo?.stared])
+  const started = React.useMemo(() => data?.data?.interactInfo?.stared, [data?.data?.interactInfo?.stared])
 
   const dispatch = useDispatch();
   const PostGroupDetail = (props) => {
@@ -431,21 +431,21 @@ export default function recommend(props) {
     `/campus/topic/posts?id=${topicId}`,
     'get',
   );
-    /**
-   * for preview 归类整理
-   */
-    const previewCourseData = React.useMemo(() => {
-      const groupedCourses: { term; items }[] = [];
-      data?.data?.form?.courseData.forEach((course, index) => {
-        const group = groupedCourses.find((group) => group.term === course.term);
-        if (group) {
-          group.items.push(course);
-        } else {
-          groupedCourses.push({ term: course.term, items: [course] });
-        }
-      });
-      return groupedCourses;
-    }, [data?.data?.form?.courseData]);
+  /**
+ * for preview 归类整理
+ */
+  const previewCourseData = React.useMemo(() => {
+    const groupedCourses: { term; items }[] = [];
+    data?.data?.form?.courseData.forEach((course, index) => {
+      const group = groupedCourses.find((group) => group.term === course.term);
+      if (group) {
+        group.items.push(course);
+      } else {
+        groupedCourses.push({ term: course.term, items: [course] });
+      }
+    });
+    return groupedCourses;
+  }, [data?.data?.form?.courseData]);
 
   return (
     <div className="w-screen min-h-screen pb-20">
@@ -456,25 +456,25 @@ export default function recommend(props) {
             'w-full font-semibold space-x-2 h-10 rounded-lg  flex justify-center items-center ',
             {
               'bg-[#FF6E69] text-white': started,
-              'text-[#FF6E69] bg-[#FFEBEB]' : !started
+              'text-[#FF6E69] bg-[#FFEBEB]': !started
             },
           )}
         >
           {
-           started ? <LoveIcon></LoveIcon> : <LoveIconx></LoveIconx>
-          } 
+            started ? <LoveIcon></LoveIcon> : <LoveIconx></LoveIconx>
+          }
           <div
             className="text-sm"
-            onClick={async() => {
-              if(started){
-                await useRequest.post('/api/post/unstar',{
+            onClick={async () => {
+              if (started) {
+                await useRequest.post('/api/post/unstar', {
                   id: id
                 })
                 Toast.success(t('取消收藏'));
                 mutate()
                 // setStarted((pre)=>!pre)
-              }else{
-                if(!user) {
+              } else {
+                if (!user) {
                   Dialog.confirm({
                     title: t('登录'),
                     message: t('您还未登录，登录YoUni，自由添加课表、一键导入学校课程、一键分享给朋友！'),
@@ -491,20 +491,20 @@ export default function recommend(props) {
                       //  dispatch(setOpenLogin('register'))
                     });
 
-                    return;
+                  return;
                 }
-                await useRequest.post('/api/post/star',{
+                await useRequest.post('/api/post/star', {
                   id: id
                 })
                 Toast.success(t('收藏成功'));
                 mutate()
                 // setStarted((pre)=>!pre)
               }
-              
+
 
             }}
           >
-            { started ? t('已收藏') : t('收藏')}
+            {started ? t('已收藏') : t('收藏')}
           </div>
         </div>
         <div
