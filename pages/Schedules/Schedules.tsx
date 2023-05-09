@@ -87,6 +87,13 @@ export default function Schedules() {
   useEffect(() => {
     dispatch(seLoginModelState(true));
   }, []);
+  const { data: campusData } = useFetch('/campus/query', 'get', {
+    name: router.query.campus,
+  });
+
+  const campusId = useMemo(() => {
+    return campusData?.data?.[0]?.id || 1;
+  }, [campusData]);
   // const { defaultCurriculum } = useCurriculum();
   const [campusIdMapSchool, setCampusIdMapSchool] = useLocalStorage(
     'school',
@@ -101,7 +108,7 @@ export default function Schedules() {
     0,
   );
   const { data: termInfo } = useFetch('/campus/term/current', 'get', {
-    campusId: 1,
+    campusId: campusId,
   });
   interface CourseMode {
     id: number;
@@ -830,7 +837,7 @@ export default function Schedules() {
   const [curriculumId, setCurriculumId] = useState();
 
   const { data, error, mutate } = useFetch(`/curriculum/list`, 'get', {
-    campusId: 1,
+    campusId: campusId,
     // id: defaultCurriculum?.id,
   });
 
@@ -976,13 +983,13 @@ export default function Schedules() {
         <div>
           <div className="flex items-center pb-2 space-x-2">
             <div className="text-xs text-[#FAAD14] h-5 rounded whitespace-nowrap bg-[#FFFAE6] px-[6px] py-1">
-              日程
+              {t("日程")}
             </div>
             <div className="text-[#37455C] text-sm font-semibold">
-              {title || '日程日程日程'}
+              {title || '日程'}
             </div>
           </div>
-          <div className="text-[#A9B0C0] text-xs ">2022年9月7日</div>
+          <div className="text-[#A9B0C0] text-xs ">{props?.date}</div>
         </div>
         <ArrowRight></ArrowRight>
       </div>
@@ -995,14 +1002,14 @@ export default function Schedules() {
         <div className="space-y-2">
           <div className="flex items-center  space-x-2 ">
             <div className="text-xs font-medium text-[#13C2C2] h-5 rounded whitespace-nowrap bg-[#E6FFFB] px-[6px] py-1">
-              校历
+              {t('校历')}
             </div>
             <div className="text-[#37455C] text-sm font-semibold overflow-wrap">
               {title ||
                 'Last date to announce components of final grades (TERM F)'}
             </div>
           </div>
-          <div className="text-[#A9B0C0] text-xs ">2022年9月7日</div>
+          <div className="text-[#A9B0C0] text-xs ">{props?.data?.date}</div>
         </div>
         <div>
           {' '}
@@ -1011,7 +1018,7 @@ export default function Schedules() {
       </div>
     );
   };
-  const Identify = () => {
+  const Identify = (props) => {
     const router = useRouter();
     // const { t } = useTranslation('translations');
     return (
@@ -1020,7 +1027,7 @@ export default function Schedules() {
           <Polygon className="absolute top-0 left-0 h-20"></Polygon>
           {/* <ValidIcon className="absolute left-0"></ValidIcon> */}
           {/* <div>{t("profile.identify.student.certification")}</div> */}
-          <div className="pl-1 font-bold text-white">九月</div>
+          <div className="pl-1 font-bold text-white">{props.data}</div>
         </div>
         {/* <div className="flex flex-col items-center text-xs text-brown">
           <div>30秒认证在校生身份</div> <div>解锁YoUni全部功能</div>
@@ -1036,21 +1043,106 @@ export default function Schedules() {
   const Month = () => {
     const { data } = useFetch('/campus/calendar/query', 'get', {
       termId: termInfo?.data?.id,
+      campusId: campusId
     });
-    return (
-      <div className="h-screen text-gray-400 w-full flex justify-center mt-10">
-        <div className="mt-10">{t('暂无校历事件')}</div>
-      </div>
-    );
+
+    interface TimeObject {
+      type: number;
+      id: number;
+      ename: string;
+      cname: string;
+      startTime: string;
+      endTime: string;
+      date: string;
+      name: string;
+    }
+
+    interface SortedTimeObjects {
+      month: string;
+      timeObjects: TimeObject[];
+    }
+
+    function sortTimeObjectsByMonth(timeObjects: TimeObject[]): SortedTimeObjects[] {
+      const timeObjectsByMonth: { [month: string]: TimeObject[] } = {};
+      if (!timeObjects) return []
+      for (const timeObject of timeObjects) {
+        const date = new Date(timeObject.date);
+        const month = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+
+        if (!timeObjectsByMonth[month]) {
+          timeObjectsByMonth[month] = [];
+        }
+
+        timeObjectsByMonth[month].push(timeObject);
+      }
+
+      const sortedMonths = Object.keys(timeObjectsByMonth).sort();
+
+      return sortedMonths.map((month) => {
+        return {
+          month,
+          timeObjects: timeObjectsByMonth[month].sort((a, b) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+
+            if (dateA < dateB) {
+              return -1;
+            } else if (dateA > dateB) {
+              return 1;
+            } else {
+              return 0;
+            }
+          }),
+        };
+      });
+    }
+
+    const groupData = useMemo(() => {
+      return sortTimeObjectsByMonth([...(data?.data ?? []), ...(timeTableData?.data ?? [])]);
+    }, [data, timeTableData]);
+
+
+    if (!groupData) {
+      return (
+        <div className="h-screen text-gray-400 w-full flex justify-center mt-10">
+          <div className="mt-10">{t('暂无校历事件')}</div>
+        </div>
+      );
+    }
+    useEffect(() => {
+      console.log(groupData, "groupData")
+    }, [])
+    const [language, setLanguage] = useLocalStorage('language', null);
     return (
       <div className="w-full min-h-screen p-5">
-        <Identify></Identify>
-        <YearCard title="Classes start"></YearCard>
-        <YearCard></YearCard>
-        <YearCard></YearCard>
+        {
+          groupData?.map((item) => {
+            return (
+              <>
+                <Identify data={item?.month}></Identify>
+                {
+                  item?.timeObjects.map((child) => {
+                    if (child?.name && child.type === 2) {
+                      return (
+                        <Dayliy title={child?.name} date={child?.date}></Dayliy>
+                        // <Identify></Identify>
+                        // <YearCard title={child?.name}></YearCard>
+                      )
+                    }
+                    return (
+                      <YearCard data={child} title={language === 'en' ? child?.ename : child?.cname}></YearCard>
+                    )
+                  })
+                }
+              </>
+            )
+          })
+        }
+
+        {/* <YearCard></YearCard>
         <Dayliy></Dayliy>
         <Identify></Identify>
-        <YearCard title="Classes start"></YearCard>
+        <YearCard title="Classes start"></YearCard> */}
       </div>
     );
   };

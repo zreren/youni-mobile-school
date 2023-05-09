@@ -27,8 +27,8 @@ import { useTranslation } from 'next-i18next';
 // import { url } from 'inspector';
 
 function Calendar(props) {
-  const {t} = useTranslation()
-  const [language,setLanguage] = useLocalStorage('language',null);
+  const { t } = useTranslation()
+  const [language, setLanguage] = useLocalStorage('language', null);
   interface Event {
     dayOfWeek: number;
     // other properties
@@ -36,9 +36,8 @@ function Calendar(props) {
   function formatTimestamps(startTime, endTime) {
     const start = new Date(startTime);
     const end = new Date(endTime);
-    return `${start.getUTCHours() + 8}.${start.getUTCMinutes()}-${
-      end.getUTCHours() + 8
-    }.${end.getUTCMinutes()}`;
+    return `${start.getUTCHours() + 8}.${start.getUTCMinutes()}-${end.getUTCHours() + 8
+      }.${end.getUTCMinutes()}`;
   }
 
   /**
@@ -92,7 +91,7 @@ function Calendar(props) {
         extendedProps: {
           section: '',
           department: '日程',
-          type:2
+          type: 2
         },
         start: translateTimeFormat(item.startTime),
         end: translateTimeFormat(item.endTime),
@@ -104,7 +103,7 @@ function Calendar(props) {
     });
   }, [props.timeTable]);
 
-
+  // console.lo
 
   const Card = (props) => {
     const { title, extendedProps, dayOfWeek, students, color } = props;
@@ -381,7 +380,7 @@ function Calendar(props) {
       );
     };
     const todayItemCount = useMemo(() => {
-      console.log(groupedEvents,"groupedEvents")
+      console.log(groupedEvents, "groupedEvents")
       return generateNewArray(getWeekDates(), groupedEvents)?.filter(
         (item, index) => {
           console.log(item, 'generateNewArray list item');
@@ -393,12 +392,12 @@ function Calendar(props) {
       );
     }, [groupedEvents]);
     useEffect(() => {
-      console.log(groupedEvents,dayTimeEvents,mergeObjects([groupedEvents, dayTimeEvents]), 'dayTimeEvents');
+      console.log(groupedEvents, dayTimeEvents, mergeObjects([groupedEvents, dayTimeEvents]), 'dayTimeEvents');
     }, [groupedEvents]);
     type ObjectType = { [key: string]: any };
     function mergeObjects(objects: ObjectType[]): ObjectType {
-      console.log(objects,"objects,dayTimeEvents")
-      if(!objects[1] || !objects[0]) return {}
+      console.log(objects, "objects,dayTimeEvents")
+      if (!objects[1] || !objects[0]) return {}
       return objects.reduce((prev, curr) => {
         Object.keys(curr).forEach((key) => {
           if (Array.isArray(prev[key]) && Array.isArray(curr[key])) {
@@ -421,7 +420,7 @@ function Calendar(props) {
           console.log(item, 'list item');
           if (setting.view === 'today' && !isToday(item.time)) return null;
           const color = colorMap[index % 3];
-          if(!item) return;
+          if (!item) return;
           return (
             <>
               <Identify title={item.time} index={index}></Identify>
@@ -451,7 +450,7 @@ function Calendar(props) {
           <>
             {todayItemCount?.length === 0 && timeTable.length === 0 ? (
               <div className="w-full text-center bg-white rounded-lg p-4 text-[#A9B0C0] text-sm font-medium">
-                     {t('今日暂无课程或日程安排')}
+                {t('今日暂无课程或日程安排')}
               </div>
             ) : null}
             {/* <div className='btn btn-primary w-full '>前往添加</div> */}
@@ -695,71 +694,71 @@ function Calendar(props) {
         {
           timeGap >= 1 ? (
             <svg
-          height={'14px'}
-          width={'100%'}
-          className="z-30 relative"
-          xmlns="http://www.w3.org/2000/svg"
-          version="1.1"
-        >
-          <text
-            className="font-light leading-none	text-10  truncate"
-            font-size="10px"
-            x="50%"
-            text-anchor="middle"
-            y="10"
-            fill={arg.textColor}
-          >
-            Section {arg.event.extendedProps?.section?.name}
-          </text>
-        </svg>
-          ):null
+              height={'14px'}
+              width={'100%'}
+              className="z-30 relative"
+              xmlns="http://www.w3.org/2000/svg"
+              version="1.1"
+            >
+              <text
+                className="font-light leading-none	text-10  truncate"
+                font-size="10px"
+                x="50%"
+                text-anchor="middle"
+                y="10"
+                fill={arg.textColor}
+              >
+                Section {arg.event.extendedProps?.section?.name}
+              </text>
+            </svg>
+          ) : null
         }
-        
+
         {
           timeGap >= 1.2 ? (
             <svg
-          height={'14px'}
-          width={'100%'}
-          className="z-30 relative"
-          xmlns="http://www.w3.org/2000/svg"
-          version="1.1"
-        >
-          <text
-            font-size="10px"
-            x="50%"
-            text-anchor="middle"
-            y="10"
-            fill={arg.textColor}
-            className="font-light text-ellipsis	truncate whitespace-nowrap leading-none	 "
-          >
-            {arg.event.extendedProps.classroom}
-          </text>
-        </svg>
-          ):null
+              height={'14px'}
+              width={'100%'}
+              className="z-30 relative"
+              xmlns="http://www.w3.org/2000/svg"
+              version="1.1"
+            >
+              <text
+                font-size="10px"
+                x="50%"
+                text-anchor="middle"
+                y="10"
+                fill={arg.textColor}
+                className="font-light text-ellipsis	truncate whitespace-nowrap leading-none	 "
+              >
+                {arg.event.extendedProps.classroom}
+              </text>
+            </svg>
+          ) : null
         }
         {
           timeGap >= 1.5 ? (
             <svg
-            height={'14px'}
-            width={'100%'}
-            className="z-30 relative"
-            xmlns="http://www.w3.org/2000/svg"
-            version="1.1"
-          >
-            <text
-              font-size="10px"
-              x="50%"
-              text-anchor="middle"
-              y="10"
-              fill={arg.textColor}
-              className="font-light leading-none	text-10	  "
+              height={'14px'}
+              width={'100%'}
+              className="z-30 relative"
+              xmlns="http://www.w3.org/2000/svg"
+              version="1.1"
             >
-              {arg.event.extendedProps.online ? '线上课程' : '线下课程'}
-            </text>
-          </svg>
-          ):null
+              <text
+                font-size="10px"
+                x="50%"
+                text-anchor="middle"
+                y="10"
+                fill={arg.textColor}
+                className="font-light leading-none	text-10	  "
+              >
+                {arg.event.extendedProps.online ? '线上课程' : '线下课程'}
+              </text>
+            </svg>
+          ) : null
         }
-       
+
         {/*  
     <div className="font-bold	 scale-75 text-xs text-center  whitespace-nowrap">
       {arg.event.title}
@@ -800,18 +799,18 @@ function Calendar(props) {
           viewDidMount={(view: any) => {
             setting.view === 'week' || setting.view === 'day'
               ? ReactDOM.render(
-                  <div
-                    onClick={() => {
-                      changeView();
-                    }}
-                    className={classnames("w-full pl-2 h-full flex justify-center items-center",{
-                      'pl-2 ml-1': !calendarView
-                    })} 
-                  >
-                    <Icon></Icon>
-                  </div>,
-                  view.el.getElementsByClassName('fc-timegrid-axis')[0],
-                )
+                <div
+                  onClick={() => {
+                    changeView();
+                  }}
+                  className={classnames("w-full pl-2 h-full flex justify-center items-center", {
+                    'pl-2 ml-1': !calendarView
+                  })}
+                >
+                  <Icon></Icon>
+                </div>,
+                view.el.getElementsByClassName('fc-timegrid-axis')[0],
+              )
               : '';
             // find('.fc-timegrid-axis').html('<span>Your content</span>');
           }}

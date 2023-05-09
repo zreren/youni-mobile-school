@@ -25,6 +25,12 @@ import { grey } from '@mui/material/colors';
 import { useTranslation } from 'react-i18next';
 import ReturnBackIcon from './returnBack.svg';
 
+
+/**
+ * 组件 用于 渲染 课程配置的弹窗
+ * @param props 
+ * @returns 
+ */
 export default function recommend(props) {
   const router = useRouter();
   const {user} = useUser();
