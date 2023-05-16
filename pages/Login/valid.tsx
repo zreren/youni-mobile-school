@@ -115,7 +115,8 @@ export default function Valid() {
         if (data?.message === 'success') {
           setAccessToken(data?.data?.accessToken);
           Toast.success('success');
-          props.setState(2);
+          router.push('/Profile')
+          // props.setState(2);
         } else {
           Toast.fail(data?.message);
         }
@@ -260,6 +261,7 @@ export default function Valid() {
       if (data?.data?.accessToken) {
         setAccessToken(data?.data?.accessToken);
         props.setState(2);
+        router.push('/Profile')
       } else {
         Toast.fail(data?.message);
       }
@@ -318,7 +320,7 @@ export default function Valid() {
               : 'bg-gray-300 hover:bg-gray-300 ',
           )}
         >
-          Next
+          {t('Next')}
         </button>
         <div
           onClick={() => {
@@ -326,7 +328,7 @@ export default function Valid() {
           }}
           className="w-full mt-8 text-xs text-left text-darkYellow"
         >
-          No code?
+         {t('No code?')}
         </div>
       </div>
     );
@@ -541,7 +543,7 @@ export default function Valid() {
           Toast.success(t('登录成功'));
           setMyItem(data.data.token);
           router.push('/Profile', undefined, { shallow: true });
-          router.reload();
+          // router.reload();
           dispatch(setOpenLogin('close'));
         }
       } else {

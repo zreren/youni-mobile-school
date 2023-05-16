@@ -401,7 +401,7 @@ export default function SignIn(props) {
               },
             )}
           >
-            {loginWay === 'code' ? 'Send Code' : 'Login'}
+            {loginWay === 'code' ? t('Send Code') : t('Login')}
           </button>
         </div>
       );

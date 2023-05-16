@@ -94,7 +94,7 @@ export default function account() {
         }}
       >
         <MenuItem value={'cn'}>简体中文</MenuItem>
-        <MenuItem value={'en'}>English</MenuItem>
+        {/* <MenuItem value={'en'}>English</MenuItem> */}
       </Select>
     );
   };
@@ -114,20 +114,20 @@ export default function account() {
         setOpen(true);
       },
     },
-    {
-      title: t('偏好语言'),
-      intro: t('选择你熟悉的语言，以这些语言发布的内容将不会自动翻译。'),
-      action: <LanguageSelect></LanguageSelect>,
-      event: () => {},
-    },
+    // {
+    //   title: t('偏好语言'),
+    //   intro: t('选择你熟悉的语言，以这些语言发布的内容将不会自动翻译。'),
+    //   action: <LanguageSelect onChange={()=>{}}></LanguageSelect>,
+    //   event: () => {},
+    // },
   ];
   const List2 = [
-    {
-      title: t('翻译语言'),
-      intro: t('你希望内容被翻译成哪一种语言'),
-      action: <LanguageSelect></LanguageSelect>,
-      event: () => {},
-    },
+    // {
+    //   title: t('翻译语言'),
+    //   intro: t('你希望内容被翻译成哪一种语言'),
+    //   action: <LanguageSelect onChange={()=>{}}></LanguageSelect>,
+    //   event: () => {},
+    // },
     {
       title: t('始终显示翻译'),
       intro: t('开启后，支持翻译的内容将始终以所选的翻译语言显示。'),

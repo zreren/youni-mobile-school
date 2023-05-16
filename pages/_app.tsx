@@ -36,6 +36,7 @@ import Head from 'next/head';
 import useLocalStorage from '../hooks/useStore';
 import { disableZoom } from '@/libs/disableZoom';
 
+
 function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useDispatch();
   const loginModelState = useSelector(selectLoginModelState);
@@ -43,11 +44,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [stopScroll, setStopScroll] = useState(false);
   const router = useRouter();
   const { i18n } = useTranslation();
-  const [language, setLanguage] = useLocalStorage('language', 'en');
+  const [language, setLanguage] = useLocalStorage('language', 'cn');
   const [school, setSchool] = useLocalStorage('school', 'york');
 
   useEffect(()=>{
-    router.push(router.asPath, router.asPath, { locale: language });
+    router.push(router.asPath, router.asPath, { locale: 'cn' });
   },[])
 
   const Puller = styled(Box)(({ theme }) => ({

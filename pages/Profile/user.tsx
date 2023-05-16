@@ -392,7 +392,7 @@ function index(props) {
         mutate={() => {
           mutate();
         }}
-        myProfile={UserData?.data?.id !== user?.id}
+        myProfile={UserData?.data?.id === user?.id}
         data={{ user: UserData?.data }}
       ></ProfileHeader>
       <div className="w-full header-shadow overflow-hidden rounded-t-2xl -translate-y-[6px]">

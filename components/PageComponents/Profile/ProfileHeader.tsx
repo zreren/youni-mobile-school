@@ -55,7 +55,7 @@ export default function ProfileHeader(props) {
     return (
       <div className="flex items-center justify-between p-4 pb-2">
         <div className="flex items-center space-x-2 ">
-          <div className="flex flex-col items-center justify-center">
+          {/* <div className="flex flex-col items-center justify-center">
             <div className="font-bold text-blueTitle">{data?.user?.extraInfo?.following || 0 }</div>
             <div className="text-xs text-gray-400">{t("关注")}</div>
           </div>
@@ -81,8 +81,8 @@ export default function ProfileHeader(props) {
           <div className="flex flex-col items-center">
             <div className="font-bold text-blueTitle">{data?.user?.extraInfo?.followers || 0}</div>
             <div className="text-xs text-gray-400">{t("粉丝")}</div>
-          </div>
-          <div>
+          </div> */}
+          {/* <div>
             <svg
               width="2"
               height="15"
@@ -100,13 +100,13 @@ export default function ProfileHeader(props) {
                 fill-opacity="0.85"
               />
             </svg>
-          </div>
+          </div> */}
           <div className="flex flex-col items-center">
             <div className="font-bold text-blueTitle">{data?.user?.extraInfo?.likeAndStar || 0}</div>
             <div className="text-xs text-gray-400">{t("赞&收藏")}</div>
           </div>
         </div>
-        { myProfile === false ? <div onClick={()=>{follow(Number(router.query.id))}} className={
+        { !myProfile ? <div onClick={()=>{follow(Number(router.query.id))}} className={
           classnames(
             ' text-xs h-6 flex justify-center items-center  rounded-full w-12',
             {
@@ -133,7 +133,7 @@ export default function ProfileHeader(props) {
           <div className="flex flex-col justify-between w-full h-full pt-2">
             <div className="text-lg font-500">{data?.user?.nickName?data?.user?.nickName:"username"}</div>
             <div className="text-xs text-[#798195] font-400">
-              {data?.user?.campus ?data?.user?.campus[useLanguage('name')]:!loggedOut ?<div className='w-10 h-2 rounded-lg bg-bg animate-pulse'></div>:null}
+              {data?.user?.campus ?data?.user?.campus[useLanguage('name')]:!loggedOut ? null:null}
             </div>
             <div className="text-[10px] text-[#798195] font-400 mb-1">
                {myProfile? data?.user?.id?`YoID:${data?.user.id}`: !loggedOut?
@@ -160,7 +160,9 @@ export default function ProfileHeader(props) {
           <div onClick={()=>{
             router.push('/Setting/profile')
           }} className="pt-6">
-            <RightIcon></RightIcon> 
+            {
+              myProfile === true && <RightIcon></RightIcon> 
+            }
           </div>
         </div>
       </div>
