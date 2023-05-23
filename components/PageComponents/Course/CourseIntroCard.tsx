@@ -26,7 +26,7 @@ export default function CourseIntroCard(props) {
           {expand ? content : content?.slice(0, 160)}
           {content?.length >= 160 ? (expand ? null : '...') : null}
         </p>
-        {content.length >= 160 ? (
+        {content?.length >= 160 ? (
           <div className="card-actions justify-end">
             <button
               onClick={() => {
@@ -40,7 +40,7 @@ export default function CourseIntroCard(props) {
             </button>
           </div>
         ) : null}
-        {content.length === 0 ? <EmptyCourse></EmptyCourse> : null}
+        {content?.length === 0 ? <EmptyCourse></EmptyCourse> : null}
       </div>
     </div>
   );
