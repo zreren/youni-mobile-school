@@ -334,7 +334,15 @@ export default function Introduce(props: {
                     <div className="w-full grid grid-rows-2 grid-cols-2 gap-3">
                       {props.MyIntroduce.prerequisites.map((item) => {
                         return (
-                          <div className="bg-[#F7F8F9] font-semibold rounded-md w-full flex justify-center items-center h-8 text-xs text-[#798195]">
+                          <div onClick={()=>{
+                            router.push({
+                              pathname:"/[campus]/Course/[id]",
+                              query:{
+                                id: item.id,
+                                campus: router.query.campus
+                              }
+                            })
+                          }} className="bg-[#F7F8F9] font-semibold rounded-md w-full flex justify-center items-center h-8 text-xs text-[#798195]">
                             {item.code}
                           </div>
                         );
