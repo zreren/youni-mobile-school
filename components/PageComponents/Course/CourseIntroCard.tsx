@@ -6,6 +6,7 @@ import { useTranslation } from 'next-i18next';
 export default function CourseIntroCard(props) {
   const { content } = props;
   const [expand, setExpand] = React.useState(false);
+  console.log(content,"content")
   const EmptyCourse = () => {
     return (
       <div className="flex w-full bg-white flex-col justify-center items-center py-8  h-[100vh-300px]  rounded-lg">
@@ -40,7 +41,7 @@ export default function CourseIntroCard(props) {
             </button>
           </div>
         ) : null}
-        {content?.length === 0 ? <EmptyCourse></EmptyCourse> : null}
+        { !content?.length ? <EmptyCourse></EmptyCourse> : null}
       </div>
     </div>
   );
