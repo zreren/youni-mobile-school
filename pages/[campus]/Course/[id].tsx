@@ -12,6 +12,7 @@ import Introduce from '@/components/PageComponents/Course/Introduce';
 import FilterIcon from '@/public/filter.svg';
 import CDataGrip from '@/components/CDataGrip';
 import Waterfall from '@/components/Layout/Waterfall';
+import { Popup, Toast } from 'react-vant';
 import UserComment from '@/components/user-comment';
 // import UseFetch from '@/hooks/useFetch';
 import useFetch from '@/hooks/useFetch';
@@ -24,6 +25,8 @@ import EmptyProfessorIcon from './emptyProfessor.svg';
 import EmptyCourseIcon from './emptyCourse.svg';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import AddIcon from './assets/add.svg';
+import ShareIcon from './assets/share.svg';
 // import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function courseEvaluation() {
@@ -268,7 +271,7 @@ export default function courseEvaluation() {
         </Title>
         <div className="pb-20">
           {evaluationData?.length > 0 ? (
-            evaluationData.map((item, index) => {
+            evaluationData?.map((item, index) => {
               console.log(item, evaluationOrder, 'item');
               return <UserComment data={item} key={index}></UserComment>;
             })
@@ -324,9 +327,26 @@ export default function courseEvaluation() {
 
   return (
     <div className="w-screen min-h-screen bg-bg pb-2">
-      <Header
-        title={`${courseEvaluation?.data?.code || 'loading...'}`}
-      ></Header>
+      <Header title={`${courseEvaluation?.data?.code || 'loading...'}`}>
+        <ShareIcon onClick={()=>{
+          try {
+            navigator.clipboard.writeText(window.location.href);
+            Toast.success(t("已复制到简介板，分享给好友吧！"));
+          } catch (error) {
+            Toast.fail(t('复制失败'));
+          } 
+        }} className='mr-1'></ShareIcon>
+        <AddIcon onClick={()=>{
+          router.push({
+            pathname: `/[campus]/Course/evaluation`,
+            query: {
+              campus: router.query.campus,
+              id: CourseId,
+              name: courseEvaluation?.data?.code,
+            },
+          });
+        }}></AddIcon>
+      </Header>
       <HeaderMenu
         headerMenuList={headerMenuList}
         switchMenu={(val) => {
@@ -351,14 +371,10 @@ export default function courseEvaluation() {
   );
 }
 
-
-export async function getServerSideProps({
-  locale,
-  }){
-
+export async function getServerSideProps({ locale }) {
   return {
-      props: {
-          ...(await serverSideTranslations(locale, ['common',]))
-      },
-    }
-  }
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
+}
