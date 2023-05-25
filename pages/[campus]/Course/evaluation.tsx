@@ -253,7 +253,10 @@ export default function evaluation() {
     mutateSubject();
   }, [router.query]);
   // const campusId = typeof window !== undefined ?
-  const { data: tagList } = useFetch(`/campus/gpa/list?campusId=${campus?.id}`, 'get');
+  const { data: tagList } = useFetch(
+    `/campus/gpa/list?campusId=${campus?.id}`,
+    'get',
+  );
   const { data: professorTagsList } = useFetch(
     `/campus/gpa/list?campusId=${campus?.id || campusId}`,
     'get',
@@ -553,13 +556,15 @@ export default function evaluation() {
       `/course/detail?id=1`,
       'get',
     );
-    const { data: modeData } = useFetch('/campus/course_mode', 'get', {
-      id: campus?.id || 1,
+    const { data: modeData,mutate:modeMutate } = useFetch('/campus/course_mode', 'get', {
+      id: campusId,
     });
     useEffect(() => {
       mutateCourse();
     }, [data?.data?.course?.value]);
-
+    useEffect(()=>{
+      modeMutate()
+    },[campusId])
     const {
       data: courseData,
       error: courseError,
@@ -689,7 +694,15 @@ export default function evaluation() {
       );
       if (submitData?.message === 'success') {
         Toast.success(t('提交成功'));
-
+        if (data?.course.value) {
+          router.push({
+            pathname: '/[campus]/Course/[id]',
+            query: { campus: router.query.campus, id: data?.course.value },
+          });
+          //   pathname:'/[campus]/professor/detail/comment/[id]',
+          //   query:{campus:router.query.campus,id:data?.professor?.id}
+          // })
+        }
         // setData({})
         // router.push({
         //   pathname:'/[campus]/professor/detail/comment/[id]',
