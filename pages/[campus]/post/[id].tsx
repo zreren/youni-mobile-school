@@ -35,6 +35,9 @@ import { Cell, Dialog, Input } from 'react-vant';
 
 function index(props) {
   const router = useRouter();
+  const id = router.query.id;
+  const { data, mutate } = useFetch(`/post/detail?id=${id}`, 'get');
+
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
@@ -42,8 +45,6 @@ function index(props) {
     dispatch(seLoginModelState(true));
   }, []);
   // const { id } = props;
-  const id = router.query.id;
-  const { data, mutate } = useFetch(`/post/detail?id=${id}`, 'get');
   /**
    * @description 发送评论
    * @param e 评论内容

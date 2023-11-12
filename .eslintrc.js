@@ -1,11 +1,3 @@
-/*
- * @Author: linjingcheng 1152691418@qq.com
- * @Date: 2022-10-05 18:29:58
- * @LastEditors: linjingcheng 1152691418@qq.com
- * @LastEditTime: 2022-10-05 18:40:09
- * @FilePath: \eren-project\nestplus\.eslintrc.js
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -42,6 +34,5 @@ module.exports = {
     '@typescript-eslint/no-unsafe-argument' : 'off',
     '@typescript-eslint/no-unsafe-member-access' :'off',
     '@typescript-eslint/restrict-template-expressions' : 'off'
-    '@typescript-eslint/no-floating-promises' : 'off',
   },
 };

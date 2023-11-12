@@ -166,6 +166,7 @@ export default function config(props) {
         );
       }, [selectList]);
       const [customProfessor, setCustomProfessor] = useState('');
+       
       const isSelectCustom = React.useMemo(
         () => selectList?.some((i) => i.name === customProfessor),
         [customProfessor, selectList],

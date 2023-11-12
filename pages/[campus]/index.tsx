@@ -560,7 +560,6 @@ function SchoolPage(props) {
 }
 
 export async function getServerSideProps({ params, locale }) {
-  console.log(params, 'getServerSideProps params');
   const { data } = await useRequest.get(`/api/campus/query`, {
     params: {
       name: params.campus || 'york',
